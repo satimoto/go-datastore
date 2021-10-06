@@ -25,17 +25,14 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 	return i, err
 }
 
-const deleteNode = `-- name: DeleteNode :one
+const deleteNode = `-- name: DeleteNode :exec
 DELETE FROM nodes
   WHERE id = $1
-  RETURNING id, pubkey, address
 `
 
-func (q *Queries) DeleteNode(ctx context.Context, id int64) (Node, error) {
-	row := q.db.QueryRowContext(ctx, deleteNode, id)
-	var i Node
-	err := row.Scan(&i.ID, &i.Pubkey, &i.Address)
-	return i, err
+func (q *Queries) DeleteNode(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteNode, id)
+	return err
 }
 
 const getNode = `-- name: GetNode :one

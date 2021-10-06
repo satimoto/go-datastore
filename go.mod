@@ -4,9 +4,11 @@ go 1.17
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.15.0
+	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.3
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
+	github.com/twpayne/go-geom v1.4.1
 )
 
 require (
@@ -15,7 +17,6 @@ require (
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/joho/godotenv v1.4.0
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
