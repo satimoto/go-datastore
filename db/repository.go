@@ -20,13 +20,13 @@ type Repository interface {
 	GetNode(ctx context.Context, id int64) (Node, error)
 }
 
-type repositoryService struct {
+type RepositoryService struct {
 	*Queries
 	db *sql.DB
 }
 
 func NewRepository(db *sql.DB) Repository {
-	return &repositoryService{
+	return &RepositoryService{
 		Queries: New(db),
 		db:      db,
 	}
