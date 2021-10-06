@@ -22,13 +22,13 @@ type Repository interface {
 
 type RepositoryService struct {
 	*Queries
-	db *sql.DB
+	*sql.DB
 }
 
-func NewRepository(db *sql.DB) Repository {
+func NewRepository(d *sql.DB) Repository {
 	return &RepositoryService{
-		Queries: New(db),
-		db:      db,
+		Queries: New(d),
+		DB:      d,
 	}
 }
 
