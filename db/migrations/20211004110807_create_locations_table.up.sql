@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS display_texts (
 -- Geo Locations
 CREATE TABLE IF NOT EXISTS geo_locations (
     id BIGSERIAL PRIMARY KEY,
-    latitude DECIMAL NOT NULL,
-    longitude DECIMAL NOT NULL,
+    latitude TEXT NOT NULL,
+    longitude TEXT NOT NULL,
     name TEXT
 );
 
