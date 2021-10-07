@@ -3,10 +3,9 @@ INSERT INTO users (device_token, node_id)
   VALUES ($1, $2)
   RETURNING *;
 
--- name: DeleteUser :one
+-- name: DeleteUser :exec
 DELETE FROM users
-  WHERE id = $1
-  RETURNING *;
+  WHERE id = $1;
 
 -- name: GetUser :one
 SELECT * FROM users

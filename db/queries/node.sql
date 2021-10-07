@@ -3,10 +3,9 @@ INSERT INTO nodes (pubkey, address)
   VALUES ($1, $2)
   RETURNING *;
 
--- name: DeleteNode :one
+-- name: DeleteNode :exec
 DELETE FROM nodes
-  WHERE id = $1
-  RETURNING *;
+  WHERE id = $1;
 
 -- name: GetNode :one
 SELECT * FROM nodes
