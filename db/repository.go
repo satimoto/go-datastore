@@ -10,7 +10,7 @@ import (
 type Repository interface {
 	//User
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	DeleteUser(ctx context.Context, id int64) (User, error)
+	DeleteUser(ctx context.Context, id int64) error
 	GetUser(ctx context.Context, id int64) (User, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
@@ -20,15 +20,15 @@ type Repository interface {
 	GetNode(ctx context.Context, id int64) (Node, error)
 }
 
-type repoService struct {
+type RepositoryService struct {
 	*Queries
-	db *sql.DB
+	*sql.DB
 }
 
-func NewRepository(db *sql.DB) Repository {
-	return &repoService{
-		Queries: New(db),
-		db:      db,
+func NewRepository(d *sql.DB) Repository {
+	return &RepositoryService{
+		Queries: New(d),
+		DB:      d,
 	}
 }
 

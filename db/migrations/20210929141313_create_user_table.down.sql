@@ -1,4 +1,3 @@
-
 ALTER TABLE nodes DROP CONSTRAINT IF EXISTS uq_nodes_pubkey;
 
 ALTER TABLE users DROP CONSTRAINT IF EXISTS uq_users_device_token;
