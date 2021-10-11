@@ -12,9 +12,15 @@ type RegularHoursResponse struct {
 }
 
 func (r *MockRepositoryService) ListRegularHours(ctx context.Context, openingTimeID int64) ([]db.RegularHour, error) {
-	return r.listRegularHoursResponse.RegularHours, r.listRegularHoursResponse.Error
+	if len(r.listRegularHoursResponse) == 0 {
+		return []db.RegularHour{}, nil
+	}
+
+	response := r.listRegularHoursResponse[0]
+	r.listRegularHoursResponse = r.listRegularHoursResponse[1:]
+	return response.RegularHours, response.Error
 }
 
 func (r *MockRepositoryService) SetListRegularHoursResponse(response RegularHoursResponse) {
-	r.listRegularHoursResponse = response
+	r.listRegularHoursResponse = append(r.listRegularHoursResponse, response)
 }

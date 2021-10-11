@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS business_details (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     website TEXT,
-    logo_id BIGSERIAL
+    logo_id BIGINT
 );
 
 ALTER TABLE business_details
@@ -92,7 +92,7 @@ CREATE TYPE environmental_impact_category AS ENUM (
 
 CREATE TABLE IF NOT EXISTS energy_sources (
     id BIGSERIAL PRIMARY KEY,
-    energy_mix_id BIGSERIAL NOT NULL,
+    energy_mix_id BIGINT NOT NULL,
     source energy_source_category NOT NULL,
     percentage DECIMAL NOT NULL
 );
@@ -105,7 +105,7 @@ ALTER TABLE energy_sources
 
 CREATE TABLE IF NOT EXISTS environmental_impacts (
     id BIGSERIAL PRIMARY KEY,
-    energy_mix_id BIGSERIAL NOT NULL,
+    energy_mix_id BIGINT NOT NULL,
     source environmental_impact_category NOT NULL,
     amount DECIMAL NOT NULL
 );
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS opening_times (
 
 CREATE TABLE IF NOT EXISTS regular_hours (
     id BIGSERIAL PRIMARY KEY,
-    opening_time_id BIGSERIAL NOT NULL,
+    opening_time_id BIGINT NOT NULL,
     weekday SMALLINT NOT NULL,
     period_begin TEXT NOT NULL,
     period_end TEXT NOT NULL
@@ -155,7 +155,7 @@ ALTER TABLE regular_hours
 
 CREATE TABLE IF NOT EXISTS exceptional_periods (
     id BIGSERIAL PRIMARY KEY,
-    opening_time_id BIGSERIAL NOT NULL,
+    opening_time_id BIGINT NOT NULL,
     period_type period_type NOT NULL,
     period_begin TIMESTAMP NOT NULL,
     period_end TIMESTAMP NOT NULL
@@ -187,19 +187,19 @@ CREATE TABLE IF NOT EXISTS locations (
     postal_code TEXT NOT NULL,
     country TEXT NOT NULL,
     geom GEOMETRY(POINT, 4326) NOT NULL,
-    geo_location_id BIGSERIAL NOT NULL,
+    geo_location_id BIGINT NOT NULL,
     -- related_locations []related_locations
     -- evses []evses
     -- directions []location_directions
-    operator_id BIGSERIAL,
-    suboperator_id BIGSERIAL,
-    owner_id BIGSERIAL,
+    operator_id BIGINT,
+    suboperator_id BIGINT,
+    owner_id BIGINT,
     -- facilities []facilities
-    time_zone TEXT NOT NULL,
-    opening_time_id BIGSERIAL,
+    time_zone TEXT,
+    opening_time_id BIGINT,
     charging_when_closed BOOLEAN NOT NULL,
     -- images []location_images
-    energy_mix_id BIGSERIAL,
+    energy_mix_id BIGINT,
     last_updated TIMESTAMP NOT NULL
 );
 
@@ -237,8 +237,8 @@ ALTER TABLE locations
 
 -- Related Locations
 CREATE TABLE IF NOT EXISTS related_locations (
-    location_id BIGSERIAL NOT NULL,
-    geo_location_id BIGSERIAL NOT NULL
+    location_id BIGINT NOT NULL,
+    geo_location_id BIGINT NOT NULL
 );
 
 ALTER TABLE related_locations 
@@ -255,8 +255,8 @@ ALTER TABLE related_locations
 
 -- Location Directions
 CREATE TABLE IF NOT EXISTS location_directions (
-    location_id BIGSERIAL NOT NULL,
-    display_text_id BIGSERIAL NOT NULL
+    location_id BIGINT NOT NULL,
+    display_text_id BIGINT NOT NULL
 );
 
 ALTER TABLE location_directions 
@@ -273,8 +273,8 @@ ALTER TABLE location_directions
 
 -- Location Images
 CREATE TABLE IF NOT EXISTS location_images (
-    location_id BIGSERIAL NOT NULL,
-    image_id BIGSERIAL NOT NULL
+    location_id BIGINT NOT NULL,
+    image_id BIGINT NOT NULL
 );
 
 ALTER TABLE location_images
@@ -291,8 +291,8 @@ ALTER TABLE location_images
 
 -- Location Facilities
 CREATE TABLE IF NOT EXISTS location_facilities (
-    location_id BIGSERIAL NOT NULL,
-    facility_id BIGSERIAL NOT NULL
+    location_id BIGINT NOT NULL,
+    facility_id BIGINT NOT NULL
 );
 
 ALTER TABLE location_facilities 
