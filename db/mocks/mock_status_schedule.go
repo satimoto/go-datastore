@@ -12,9 +12,15 @@ type StatusSchedulesResponse struct {
 }
 
 func (r *MockRepositoryService) ListStatusSchedules(ctx context.Context, evseID int64) ([]db.StatusSchedule, error) {
-	return r.listStatusSchedulesResponse.StatusSchedules, r.listStatusSchedulesResponse.Error
+	if len(r.listStatusSchedulesResponse) == 0 {
+		return []db.StatusSchedule{}, nil
+	}
+
+	response := r.listStatusSchedulesResponse[0]
+	r.listStatusSchedulesResponse = r.listStatusSchedulesResponse[1:]
+	return response.StatusSchedules, response.Error
 }
 
 func (r *MockRepositoryService) SetListStatusSchedulesResponse(response StatusSchedulesResponse) {
-	r.listStatusSchedulesResponse = response
+	r.listStatusSchedulesResponse = append(r.listStatusSchedulesResponse, response)
 }

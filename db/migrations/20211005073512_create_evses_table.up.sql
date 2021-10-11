@@ -13,7 +13,7 @@ CREATE TYPE evse_status AS ENUM (
 
 CREATE TABLE IF NOT EXISTS status_schedules (
     id BIGSERIAL PRIMARY KEY,
-    evse_id BIGSERIAL NOT NULL,
+    evse_id BIGINT NOT NULL,
     period_begin TIMESTAMP NOT NULL,
     period_end TIMESTAMP,
     status evse_status NOT NULL
@@ -74,7 +74,7 @@ CREATE TYPE power_type AS ENUM (
 
 CREATE TABLE IF NOT EXISTS connectors (
     id BIGSERIAL PRIMARY KEY,
-    evse_id BIGSERIAL NOT NULL,
+    evse_id BIGINT NOT NULL,
     uid TEXT NOT NULL,
     standard connector_type NOT NULL,
     format connector_format NOT NULL,
@@ -113,7 +113,7 @@ INSERT INTO parking_restrictions (text, description) VALUES
 
 CREATE TABLE IF NOT EXISTS evses (
     id BIGSERIAL PRIMARY KEY,
-    location_id BIGSERIAL NOT NULL,
+    location_id BIGINT NOT NULL,
     uid TEXT NOT NULL,
     evse_id TEXT,
     status evse_status NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS evses (
     -- connectors []connectors
     floor_level TEXT,
     geom GEOMETRY(POINT, 4326),
-    geo_location_id BIGSERIAL,
+    geo_location_id BIGINT,
     physical_reference TEXT,
     -- directions []display_texts
     -- parking_restrictions []evse_parking_restrictions
@@ -140,8 +140,8 @@ ALTER TABLE evses
 
 -- Evse Directions
 CREATE TABLE IF NOT EXISTS evse_directions (
-    evse_id BIGSERIAL NOT NULL,
-    display_text_id BIGSERIAL NOT NULL
+    evse_id BIGINT NOT NULL,
+    display_text_id BIGINT NOT NULL
 );
 
 ALTER TABLE evse_directions 
@@ -158,8 +158,8 @@ ALTER TABLE evse_directions
 
 -- Evse Images
 CREATE TABLE IF NOT EXISTS evse_images (
-    evse_id BIGSERIAL NOT NULL,
-    image_id BIGSERIAL NOT NULL
+    evse_id BIGINT NOT NULL,
+    image_id BIGINT NOT NULL
 );
 
 ALTER TABLE evse_images
@@ -176,8 +176,8 @@ ALTER TABLE evse_images
 
 -- Evse Capabilities
 CREATE TABLE IF NOT EXISTS evse_capabilities (
-    evse_id BIGSERIAL NOT NULL,
-    capability_id BIGSERIAL NOT NULL
+    evse_id BIGINT NOT NULL,
+    capability_id BIGINT NOT NULL
 );
 
 ALTER TABLE evse_capabilities 
@@ -194,8 +194,8 @@ ALTER TABLE evse_capabilities
 
 -- Evse Parking Restrictions
 CREATE TABLE IF NOT EXISTS evse_parking_restrictions (
-    evse_id BIGSERIAL NOT NULL,
-    parking_restriction_id BIGSERIAL NOT NULL
+    evse_id BIGINT NOT NULL,
+    parking_restriction_id BIGINT NOT NULL
 );
 
 ALTER TABLE evse_parking_restrictions 

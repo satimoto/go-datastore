@@ -7,9 +7,15 @@ import (
 )
 
 func (r *MockRepositoryService) ListEvseParkingRestrictions(ctx context.Context, evseID int64) ([]db.ParkingRestriction, error) {
-	return r.listEvseParkingRestrictionsResponse.ParkingRestrictions, r.listEvseParkingRestrictionsResponse.Error
+	if len(r.listEvseParkingRestrictionsResponse) == 0 {
+		return []db.ParkingRestriction{}, nil
+	}
+
+	response := r.listEvseParkingRestrictionsResponse[0]
+	r.listEvseParkingRestrictionsResponse = r.listEvseParkingRestrictionsResponse[1:]
+	return response.ParkingRestrictions, response.Error
 }
 
 func (r *MockRepositoryService) SetListEvseParkingRestrictionsResponse(response ParkingRestrictionsResponse) {
-	r.listEvseParkingRestrictionsResponse = response
+	r.listEvseParkingRestrictionsResponse = append(r.listEvseParkingRestrictionsResponse, response)
 }
