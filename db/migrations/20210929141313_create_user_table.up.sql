@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     device_token TEXT NOT NULL,
-    node_id BIGSERIAL NOT NULL
+    node_id BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS nodes (
