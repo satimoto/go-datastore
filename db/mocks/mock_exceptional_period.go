@@ -12,17 +12,29 @@ type ExceptionalPeriodsResponse struct {
 }
 
 func (r *MockRepositoryService) ListExceptionalOpeningPeriods(ctx context.Context, openingTimeID int64) ([]db.ExceptionalPeriod, error) {
-	return r.listExceptionalOpeningPeriodsResponse.ExceptionalPeriods, r.listExceptionalOpeningPeriodsResponse.Error
+	if len(r.listExceptionalOpeningPeriodsResponse) == 0 {
+		return []db.ExceptionalPeriod{}, nil
+	}
+
+	response := r.listExceptionalOpeningPeriodsResponse[0]
+	r.listExceptionalOpeningPeriodsResponse = r.listExceptionalOpeningPeriodsResponse[1:]
+	return response.ExceptionalPeriods, response.Error
 }
 
 func (r *MockRepositoryService) ListExceptionalClosingPeriods(ctx context.Context, openingTimeID int64) ([]db.ExceptionalPeriod, error) {
-	return r.listExceptionalClosingPeriodsResponse.ExceptionalPeriods, r.listExceptionalClosingPeriodsResponse.Error
+	if len(r.listExceptionalClosingPeriodsResponse) == 0 {
+		return []db.ExceptionalPeriod{}, nil
+	}
+
+	response := r.listExceptionalClosingPeriodsResponse[0]
+	r.listExceptionalClosingPeriodsResponse = r.listExceptionalClosingPeriodsResponse[1:]
+	return response.ExceptionalPeriods, response.Error
 }
 
 func (r *MockRepositoryService) SetListExceptionalOpeningPeriodsResponse(response ExceptionalPeriodsResponse) {
-	r.listExceptionalOpeningPeriodsResponse = response
+	r.listExceptionalOpeningPeriodsResponse = append(r.listExceptionalOpeningPeriodsResponse, response)
 }
 
 func (r *MockRepositoryService) SetListExceptionalClosingPeriodsResponse(response ExceptionalPeriodsResponse) {
-	r.listExceptionalClosingPeriodsResponse = response
+	r.listExceptionalClosingPeriodsResponse = append(r.listExceptionalClosingPeriodsResponse, response)
 }

@@ -7,9 +7,15 @@ import (
 )
 
 func (r *MockRepositoryService) ListEvseCapabilities(ctx context.Context, evseID int64) ([]db.Capability, error) {
-	return r.listEvseCapabilitiesResponse.Capabilities, r.listEvseCapabilitiesResponse.Error
+	if len(r.listEvseCapabilitiesResponse) == 0 {
+		return []db.Capability{}, nil
+	}
+
+	response := r.listEvseCapabilitiesResponse[0]
+	r.listEvseCapabilitiesResponse = r.listEvseCapabilitiesResponse[1:]
+	return response.Capabilities, response.Error
 }
 
 func (r *MockRepositoryService) SetListEvseCapabilitiesResponse(response CapabilitiesResponse) {
-	r.listEvseCapabilitiesResponse = response
+	r.listEvseCapabilitiesResponse = append(r.listEvseCapabilitiesResponse, response)
 }
