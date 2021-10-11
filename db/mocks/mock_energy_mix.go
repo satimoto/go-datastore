@@ -12,17 +12,29 @@ type EnergyMixResponse struct {
 }
 
 func (r *MockRepositoryService) CreateEnergyMix(ctx context.Context, arg db.CreateEnergyMixParams) (db.EnergyMix, error) {
-	return r.createEnergyMixResponse.EnergyMix, r.createEnergyMixResponse.Error
+	if len(r.createEnergyMixResponse) == 0 {
+		return db.EnergyMix{}, ErrorNotFound()
+	}
+
+	response := r.createEnergyMixResponse[0]
+	r.createEnergyMixResponse = r.createEnergyMixResponse[1:]
+	return response.EnergyMix, response.Error
 }
 
 func (r *MockRepositoryService) GetEnergyMix(ctx context.Context, id int64) (db.EnergyMix, error) {
-	return r.getEnergyMixResponse.EnergyMix, r.getEnergyMixResponse.Error
+	if len(r.getEnergyMixResponse) == 0 {
+		return db.EnergyMix{}, ErrorNotFound()
+	}
+
+	response := r.getEnergyMixResponse[0]
+	r.getEnergyMixResponse = r.getEnergyMixResponse[1:]
+	return response.EnergyMix, response.Error
 }
 
 func (r *MockRepositoryService) SetCreateEnergyMixResponse(response EnergyMixResponse) {
-	r.createEnergyMixResponse = response
+	r.createEnergyMixResponse = append(r.createEnergyMixResponse, response)
 }
 
 func (r *MockRepositoryService) SetGetEnergyMixResponse(response EnergyMixResponse) {
-	r.getEnergyMixResponse = response
+	r.getEnergyMixResponse = append(r.getEnergyMixResponse, response)
 }

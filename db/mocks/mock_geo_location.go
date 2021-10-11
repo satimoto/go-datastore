@@ -17,17 +17,29 @@ type GeoLocationsResponse struct {
 }
 
 func (r *MockRepositoryService) CreateGeoLocation(ctx context.Context, arg db.CreateGeoLocationParams) (db.GeoLocation, error) {
-	return r.createGeoLocationResponse.GeoLocation, r.createGeoLocationResponse.Error
+	if len(r.createGeoLocationResponse) == 0 {
+		return db.GeoLocation{}, ErrorNotFound()
+	}
+
+	response := r.createGeoLocationResponse[0]
+	r.createGeoLocationResponse = r.createGeoLocationResponse[1:]
+	return response.GeoLocation, response.Error
 }
 
 func (r *MockRepositoryService) GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error) {
-	return r.getGeoLocationResponse.GeoLocation, r.getGeoLocationResponse.Error
+	if len(r.getGeoLocationResponse) == 0 {
+		
+		return db.GeoLocation{}, ErrorNotFound()
+	}
+	response := r.getGeoLocationResponse[0]
+	r.getGeoLocationResponse = r.getGeoLocationResponse[1:]
+	return response.GeoLocation, response.Error
 }
 
 func (r *MockRepositoryService) SetCreateGeoLocationResponse(response GeoLocationResponse) {
-	r.createGeoLocationResponse = response
+	r.createGeoLocationResponse = append(r.createGeoLocationResponse, response)
 }
 
 func (r *MockRepositoryService) SetGetGeoLocationResponse(response GeoLocationResponse) {
-	r.getGeoLocationResponse = response
+	r.getGeoLocationResponse = append(r.getGeoLocationResponse, response)
 }
