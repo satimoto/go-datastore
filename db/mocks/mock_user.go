@@ -17,7 +17,13 @@ type UsersResponse struct {
 }
 
 func (r *MockRepositoryService) CreateUser(ctx context.Context, arg db.CreateUserParams) (db.User, error) {
-	return r.createUserResponse.User, r.createUserResponse.Error
+	if len(r.createUserResponse) == 0 {
+		return db.User{}, ErrorNotFound()
+	}
+
+	response := r.createUserResponse[0]
+	r.createUserResponse = r.createUserResponse[1:]
+	return response.User, response.Error
 }
 
 func (r *MockRepositoryService) DeleteUser(ctx context.Context, id int64) error {
@@ -25,19 +31,37 @@ func (r *MockRepositoryService) DeleteUser(ctx context.Context, id int64) error 
 }
 
 func (r *MockRepositoryService) GetUser(ctx context.Context, id int64) (db.User, error) {
-	return r.getUserResponse.User, r.getUserResponse.Error
+	if len(r.getUserResponse) == 0 {
+		return db.User{}, ErrorNotFound()
+	}
+
+	response := r.getUserResponse[0]
+	r.getUserResponse = r.getUserResponse[1:]
+	return response.User, response.Error
 }
 
 func (r *MockRepositoryService) ListUsers(ctx context.Context) ([]db.User, error) {
-	return r.listUsersResponse.Users, r.listUsersResponse.Error
+	if len(r.listUsersResponse) == 0 {
+		return []db.User{}, nil
+	}
+
+	response := r.listUsersResponse[0]
+	r.listUsersResponse = r.listUsersResponse[1:]
+	return response.Users, response.Error
 }
 
 func (r *MockRepositoryService) UpdateUser(ctx context.Context, arg db.UpdateUserParams) (db.User, error) {
-	return r.updateUserResponse.User, r.updateUserResponse.Error
+	if len(r.updateUserResponse) == 0 {
+		return db.User{}, ErrorNotFound()
+	}
+
+	response := r.updateUserResponse[0]
+	r.updateUserResponse = r.updateUserResponse[1:]
+	return response.User, response.Error
 }
 
 func (r *MockRepositoryService) SetCreateUserResponse(response UserResponse) {
-	r.createUserResponse = response
+	r.createUserResponse = append(r.createUserResponse, response)
 }
 
 func (r *MockRepositoryService) SetDeleteUserResponse(err error) {
@@ -45,13 +69,13 @@ func (r *MockRepositoryService) SetDeleteUserResponse(err error) {
 }
 
 func (r *MockRepositoryService) SetGetUserResponse(response UserResponse) {
-	r.getUserResponse = response
+	r.getUserResponse = append(r.getUserResponse, response)
 }
 
 func (r *MockRepositoryService) SetListUsersResponse(response UsersResponse) {
-	r.listUsersResponse = response
+	r.listUsersResponse = append(r.listUsersResponse, response)
 }
 
 func (r *MockRepositoryService) SetUpdateUserResponse(response UserResponse) {
-	r.updateUserResponse = response
+	r.updateUserResponse = append(r.updateUserResponse, response)
 }

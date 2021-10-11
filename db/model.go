@@ -359,7 +359,7 @@ type Location struct {
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
-	TimeZone           string         `db:"time_zone" json:"timeZone"`
+	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
 	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`

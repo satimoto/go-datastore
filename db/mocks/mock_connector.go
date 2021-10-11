@@ -12,9 +12,15 @@ type ConnectorsResponse struct {
 }
 
 func (r *MockRepositoryService) ListConnectors(ctx context.Context, id int64) ([]db.Connector, error) {
-	return r.listConnectorsResponse.Connectors, r.listConnectorsResponse.Error
+	if len(r.listConnectorsResponse) == 0 {
+		return []db.Connector{}, nil
+	}
+
+	response := r.listConnectorsResponse[0]
+	r.listConnectorsResponse = r.listConnectorsResponse[1:]
+	return response.Connectors, response.Error
 }
 
 func (r *MockRepositoryService) SetListConnectorsResponse(response ConnectorsResponse) {
-	r.listConnectorsResponse = response
+	r.listConnectorsResponse = append(r.listConnectorsResponse, response)
 }
