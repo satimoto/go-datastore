@@ -44,7 +44,7 @@ type CreateLocationParams struct {
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
-	TimeZone           string         `db:"time_zone" json:"timeZone"`
+	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
@@ -270,7 +270,7 @@ type UpdateLocationParams struct {
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
 	Geom               interface{}    `db:"geom" json:"geom"`
-	TimeZone           string         `db:"time_zone" json:"timeZone"`
+	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -339,7 +339,7 @@ type UpdateLocationByUidParams struct {
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
 	Geom               interface{}    `db:"geom" json:"geom"`
-	TimeZone           string         `db:"time_zone" json:"timeZone"`
+	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
 }
