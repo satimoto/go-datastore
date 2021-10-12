@@ -8,6 +8,8 @@ type MockRepository interface {
 	db.Repository
 
 	SetListConnectorsResponse(response ConnectorsResponse)
+	SetCreateCredentialResponse(response CredentialResponse)
+	SetGetCredentialByPartyAndCountryCodeResponse(response CredentialResponse)
 	SetCreateEnergyMixResponse(response EnergyMixResponse)
 	SetGetEnergyMixResponse(response EnergyMixResponse)
 	SetCreateBusinessDetailResponse(response BusinessDetailResponse)
@@ -42,38 +44,40 @@ type MockRepository interface {
 }
 
 type MockRepositoryService struct {
-	listConnectorsResponse                []ConnectorsResponse
-	createEnergyMixResponse               []EnergyMixResponse
-	getEnergyMixResponse                  []EnergyMixResponse
-	createBusinessDetailResponse          []BusinessDetailResponse
-	getBusinessDetailResponse             []BusinessDetailResponse
-	listEvsesResponse                     []EvsesResponse
-	listEvseCapabilitiesResponse          []CapabilitiesResponse
-	listEvseDirectionsResponse            []DisplayTextsResponse
-	listEvseImagesResponse                []ImagesResponse
-	listEvseParkingRestrictionsResponse   []ParkingRestrictionsResponse
-	listExceptionalOpeningPeriodsResponse []ExceptionalPeriodsResponse
-	listExceptionalClosingPeriodsResponse []ExceptionalPeriodsResponse
-	createGeoLocationResponse             []GeoLocationResponse
-	getGeoLocationResponse                []GeoLocationResponse
-	createImageResponse                   []ImageResponse
-	getImageResponse                      []ImageResponse
-	listLocationDirectionsResponse        []DisplayTextsResponse
-	listLocationFacilitiesResponse        []FacilitiesResponse
-	listLocationImagesResponse            []ImagesResponse
-	listLocationsResponse                 []LocationsResponse
-	createNodeResponse                    []NodeResponse
-	getNodeResponse                       []NodeResponse
-	createOpeningTimeResponse             []OpeningTimeResponse
-	getOpeningTimeResponse                []OpeningTimeResponse
-	listRegularHoursResponse              []RegularHoursResponse
-	listRelatedLocationsResponse          []GeoLocationsResponse
-	listStatusSchedulesResponse           []StatusSchedulesResponse
-	createUserResponse                    []UserResponse
-	deleteUserResponse                    error
-	getUserResponse                       []UserResponse
-	listUsersResponse                     []UsersResponse
-	updateUserResponse                    []UserResponse
+	listConnectorsResponse                     []ConnectorsResponse
+	createCredentialResponse                   []CredentialResponse
+	getCredentialByPartyAndCountryCodeResponse []CredentialResponse
+	createEnergyMixResponse                    []EnergyMixResponse
+	getEnergyMixResponse                       []EnergyMixResponse
+	createBusinessDetailResponse               []BusinessDetailResponse
+	getBusinessDetailResponse                  []BusinessDetailResponse
+	listEvsesResponse                          []EvsesResponse
+	listEvseCapabilitiesResponse               []CapabilitiesResponse
+	listEvseDirectionsResponse                 []DisplayTextsResponse
+	listEvseImagesResponse                     []ImagesResponse
+	listEvseParkingRestrictionsResponse        []ParkingRestrictionsResponse
+	listExceptionalOpeningPeriodsResponse      []ExceptionalPeriodsResponse
+	listExceptionalClosingPeriodsResponse      []ExceptionalPeriodsResponse
+	createGeoLocationResponse                  []GeoLocationResponse
+	getGeoLocationResponse                     []GeoLocationResponse
+	createImageResponse                        []ImageResponse
+	getImageResponse                           []ImageResponse
+	listLocationDirectionsResponse             []DisplayTextsResponse
+	listLocationFacilitiesResponse             []FacilitiesResponse
+	listLocationImagesResponse                 []ImagesResponse
+	listLocationsResponse                      []LocationsResponse
+	createNodeResponse                         []NodeResponse
+	getNodeResponse                            []NodeResponse
+	createOpeningTimeResponse                  []OpeningTimeResponse
+	getOpeningTimeResponse                     []OpeningTimeResponse
+	listRegularHoursResponse                   []RegularHoursResponse
+	listRelatedLocationsResponse               []GeoLocationsResponse
+	listStatusSchedulesResponse                []StatusSchedulesResponse
+	createUserResponse                         []UserResponse
+	deleteUserResponse                         error
+	getUserResponse                            []UserResponse
+	listUsersResponse                          []UsersResponse
+	updateUserResponse                         []UserResponse
 }
 
 func NewMockRepository() MockRepository {

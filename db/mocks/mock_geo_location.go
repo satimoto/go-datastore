@@ -28,9 +28,9 @@ func (r *MockRepositoryService) CreateGeoLocation(ctx context.Context, arg db.Cr
 
 func (r *MockRepositoryService) GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error) {
 	if len(r.getGeoLocationResponse) == 0 {
-		
 		return db.GeoLocation{}, ErrorNotFound()
 	}
+
 	response := r.getGeoLocationResponse[0]
 	r.getGeoLocationResponse = r.getGeoLocationResponse[1:]
 	return response.GeoLocation, response.Error
