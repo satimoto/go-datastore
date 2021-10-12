@@ -254,6 +254,17 @@ type Connector struct {
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
 }
 
+type Credential struct {
+	ID               int64     `db:"id" json:"id"`
+	ClientToken      string    `db:"client_token" json:"clientToken"`
+	ServerToken      string    `db:"server_token" json:"serverToken"`
+	Url              string    `db:"url" json:"url"`
+	BusinessDetailID int64     `db:"business_detail_id" json:"businessDetailID"`
+	PartyID          string    `db:"party_id" json:"partyID"`
+	CountryCode      string    `db:"country_code" json:"countryCode"`
+	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
+}
+
 type DisplayText struct {
 	ID       int64  `db:"id" json:"id"`
 	Language string `db:"language" json:"language"`
