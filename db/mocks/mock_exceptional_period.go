@@ -6,35 +6,35 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type ExceptionalPeriodsResponse struct {
+type ExceptionalPeriodsPayload struct {
 	ExceptionalPeriods []db.ExceptionalPeriod
 	Error              error
 }
 
 func (r *MockRepositoryService) ListExceptionalOpeningPeriods(ctx context.Context, openingTimeID int64) ([]db.ExceptionalPeriod, error) {
-	if len(r.listExceptionalOpeningPeriodsResponse) == 0 {
+	if len(r.listExceptionalOpeningPeriodsPayload) == 0 {
 		return []db.ExceptionalPeriod{}, nil
 	}
 
-	response := r.listExceptionalOpeningPeriodsResponse[0]
-	r.listExceptionalOpeningPeriodsResponse = r.listExceptionalOpeningPeriodsResponse[1:]
+	response := r.listExceptionalOpeningPeriodsPayload[0]
+	r.listExceptionalOpeningPeriodsPayload = r.listExceptionalOpeningPeriodsPayload[1:]
 	return response.ExceptionalPeriods, response.Error
 }
 
 func (r *MockRepositoryService) ListExceptionalClosingPeriods(ctx context.Context, openingTimeID int64) ([]db.ExceptionalPeriod, error) {
-	if len(r.listExceptionalClosingPeriodsResponse) == 0 {
+	if len(r.listExceptionalClosingPeriodsPayload) == 0 {
 		return []db.ExceptionalPeriod{}, nil
 	}
 
-	response := r.listExceptionalClosingPeriodsResponse[0]
-	r.listExceptionalClosingPeriodsResponse = r.listExceptionalClosingPeriodsResponse[1:]
+	response := r.listExceptionalClosingPeriodsPayload[0]
+	r.listExceptionalClosingPeriodsPayload = r.listExceptionalClosingPeriodsPayload[1:]
 	return response.ExceptionalPeriods, response.Error
 }
 
-func (r *MockRepositoryService) SetListExceptionalOpeningPeriodsResponse(response ExceptionalPeriodsResponse) {
-	r.listExceptionalOpeningPeriodsResponse = append(r.listExceptionalOpeningPeriodsResponse, response)
+func (r *MockRepositoryService) SetListExceptionalOpeningPeriodsPayload(response ExceptionalPeriodsPayload) {
+	r.listExceptionalOpeningPeriodsPayload = append(r.listExceptionalOpeningPeriodsPayload, response)
 }
 
-func (r *MockRepositoryService) SetListExceptionalClosingPeriodsResponse(response ExceptionalPeriodsResponse) {
-	r.listExceptionalClosingPeriodsResponse = append(r.listExceptionalClosingPeriodsResponse, response)
+func (r *MockRepositoryService) SetListExceptionalClosingPeriodsPayload(response ExceptionalPeriodsPayload) {
+	r.listExceptionalClosingPeriodsPayload = append(r.listExceptionalClosingPeriodsPayload, response)
 }
