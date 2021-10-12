@@ -6,40 +6,40 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type GeoLocationResponse struct {
+type GeoLocationPayload struct {
 	GeoLocation db.GeoLocation
 	Error       error
 }
 
-type GeoLocationsResponse struct {
+type GeoLocationsPayload struct {
 	GeoLocations []db.GeoLocation
-	Error       error
+	Error        error
 }
 
 func (r *MockRepositoryService) CreateGeoLocation(ctx context.Context, arg db.CreateGeoLocationParams) (db.GeoLocation, error) {
-	if len(r.createGeoLocationResponse) == 0 {
+	if len(r.createGeoLocationPayload) == 0 {
 		return db.GeoLocation{}, ErrorNotFound()
 	}
 
-	response := r.createGeoLocationResponse[0]
-	r.createGeoLocationResponse = r.createGeoLocationResponse[1:]
+	response := r.createGeoLocationPayload[0]
+	r.createGeoLocationPayload = r.createGeoLocationPayload[1:]
 	return response.GeoLocation, response.Error
 }
 
 func (r *MockRepositoryService) GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error) {
-	if len(r.getGeoLocationResponse) == 0 {
+	if len(r.getGeoLocationPayload) == 0 {
 		return db.GeoLocation{}, ErrorNotFound()
 	}
 
-	response := r.getGeoLocationResponse[0]
-	r.getGeoLocationResponse = r.getGeoLocationResponse[1:]
+	response := r.getGeoLocationPayload[0]
+	r.getGeoLocationPayload = r.getGeoLocationPayload[1:]
 	return response.GeoLocation, response.Error
 }
 
-func (r *MockRepositoryService) SetCreateGeoLocationResponse(response GeoLocationResponse) {
-	r.createGeoLocationResponse = append(r.createGeoLocationResponse, response)
+func (r *MockRepositoryService) SetCreateGeoLocationPayload(response GeoLocationPayload) {
+	r.createGeoLocationPayload = append(r.createGeoLocationPayload, response)
 }
 
-func (r *MockRepositoryService) SetGetGeoLocationResponse(response GeoLocationResponse) {
-	r.getGeoLocationResponse = append(r.getGeoLocationResponse, response)
+func (r *MockRepositoryService) SetGetGeoLocationPayload(response GeoLocationPayload) {
+	r.getGeoLocationPayload = append(r.getGeoLocationPayload, response)
 }

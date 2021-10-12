@@ -6,21 +6,21 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type StatusSchedulesResponse struct {
+type StatusSchedulesPayload struct {
 	StatusSchedules []db.StatusSchedule
 	Error           error
 }
 
 func (r *MockRepositoryService) ListStatusSchedules(ctx context.Context, evseID int64) ([]db.StatusSchedule, error) {
-	if len(r.listStatusSchedulesResponse) == 0 {
+	if len(r.listStatusSchedulesPayload) == 0 {
 		return []db.StatusSchedule{}, nil
 	}
 
-	response := r.listStatusSchedulesResponse[0]
-	r.listStatusSchedulesResponse = r.listStatusSchedulesResponse[1:]
+	response := r.listStatusSchedulesPayload[0]
+	r.listStatusSchedulesPayload = r.listStatusSchedulesPayload[1:]
 	return response.StatusSchedules, response.Error
 }
 
-func (r *MockRepositoryService) SetListStatusSchedulesResponse(response StatusSchedulesResponse) {
-	r.listStatusSchedulesResponse = append(r.listStatusSchedulesResponse, response)
+func (r *MockRepositoryService) SetListStatusSchedulesPayload(response StatusSchedulesPayload) {
+	r.listStatusSchedulesPayload = append(r.listStatusSchedulesPayload, response)
 }
