@@ -7,6 +7,7 @@ import (
 type MockRepository interface {
 	db.Repository
 
+	SetGetConnectorByUidResponse(response ConnectorResponse)
 	SetListConnectorsResponse(response ConnectorsResponse)
 	SetCreateCredentialResponse(response CredentialResponse)
 	SetGetCredentialByPartyAndCountryCodeResponse(response CredentialResponse)
@@ -14,6 +15,7 @@ type MockRepository interface {
 	SetGetEnergyMixResponse(response EnergyMixResponse)
 	SetCreateBusinessDetailResponse(response BusinessDetailResponse)
 	SetGetBusinessDetailResponse(response BusinessDetailResponse)
+	SetGetEvseByUidResponse(response EvseResponse)
 	SetListEvsesResponse(response EvsesResponse)
 	SetListEvseCapabilitiesResponse(response CapabilitiesResponse)
 	SetListEvseDirectionsResponse(response DisplayTextsResponse)
@@ -25,6 +27,7 @@ type MockRepository interface {
 	SetGetGeoLocationResponse(response GeoLocationResponse)
 	SetCreateImageResponse(response ImageResponse)
 	SetGetImageResponse(response ImageResponse)
+	SetGetLocationByUidResponse(response LocationResponse)
 	SetListLocationDirectionsResponse(response DisplayTextsResponse)
 	SetListLocationFacilitiesResponse(response FacilitiesResponse)
 	SetListLocationImagesResponse(response ImagesResponse)
@@ -44,6 +47,7 @@ type MockRepository interface {
 }
 
 type MockRepositoryService struct {
+	getConnectorByUidResponse                  []ConnectorResponse
 	listConnectorsResponse                     []ConnectorsResponse
 	createCredentialResponse                   []CredentialResponse
 	getCredentialByPartyAndCountryCodeResponse []CredentialResponse
@@ -51,6 +55,7 @@ type MockRepositoryService struct {
 	getEnergyMixResponse                       []EnergyMixResponse
 	createBusinessDetailResponse               []BusinessDetailResponse
 	getBusinessDetailResponse                  []BusinessDetailResponse
+	getEvseByUidResponse                       []EvseResponse
 	listEvsesResponse                          []EvsesResponse
 	listEvseCapabilitiesResponse               []CapabilitiesResponse
 	listEvseDirectionsResponse                 []DisplayTextsResponse
@@ -62,6 +67,7 @@ type MockRepositoryService struct {
 	getGeoLocationResponse                     []GeoLocationResponse
 	createImageResponse                        []ImageResponse
 	getImageResponse                           []ImageResponse
+	getLocationByUidResponse                   []LocationResponse
 	listLocationDirectionsResponse             []DisplayTextsResponse
 	listLocationFacilitiesResponse             []FacilitiesResponse
 	listLocationImagesResponse                 []ImagesResponse

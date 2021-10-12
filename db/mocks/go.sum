@@ -32,6 +32,8 @@ github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINE
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/satimoto/go-datastore v0.0.2 h1:xYo1bSn3kEcSCXIbdKcn4tHYRNZL2azN3uWvOL3kP1U=
 github.com/satimoto/go-datastore v0.0.2/go.mod h1:7c9FKADIp4N+5B84fmOc7PtFBH5KwSZmlbczs/2efV8=
+github.com/satimoto/go-datastore v0.0.4 h1:JdNHMAlulALFGQfKAwChbrZmZaYEoGKoWuXGeGu431g=
+github.com/satimoto/go-datastore v0.0.4/go.mod h1:BboPyWGxgKIgbYgGSYKR88u6v+kjYmYbzpvbt9MpOV4=
 github.com/sirupsen/logrus v1.4.1/go.mod h1:ni0Sbl8bgC9z8RoU9G6nDWqqs/fq4eDPysMBDgk/93Q=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
 github.com/spf13/pflag v1.0.3/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=
