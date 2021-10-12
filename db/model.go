@@ -299,7 +299,7 @@ type Evse struct {
 	EvseID            sql.NullString `db:"evse_id" json:"evseID"`
 	Status            EvseStatus     `db:"status" json:"status"`
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
-	Geom              geom.Point     `db:"geom" json:"geom"`
+	Geom              interface{}    `db:"geom" json:"geom"`
 	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
@@ -365,7 +365,7 @@ type Location struct {
 	City               string         `db:"city" json:"city"`
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
-	Geom               interface{}    `db:"geom" json:"geom"`
+	Geom               geom.Point     `db:"geom" json:"geom"`
 	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
