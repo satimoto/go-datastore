@@ -7,15 +7,15 @@ import (
 )
 
 func (r *MockRepositoryService) ListEvseImages(ctx context.Context, evseID int64) ([]db.Image, error) {
-	if len(r.listEvseImagesResponse) == 0 {
+	if len(r.listEvseImagesPayload) == 0 {
 		return []db.Image{}, nil
 	}
 
-	response := r.listEvseImagesResponse[0]
-	r.listEvseImagesResponse = r.listEvseImagesResponse[1:]
+	response := r.listEvseImagesPayload[0]
+	r.listEvseImagesPayload = r.listEvseImagesPayload[1:]
 	return response.Images, response.Error
 }
 
-func (r *MockRepositoryService) SetListEvseImagesResponse(response ImagesResponse) {
-	r.listEvseImagesResponse = append(r.listEvseImagesResponse, response)
+func (r *MockRepositoryService) SetListEvseImagesPayload(response ImagesPayload) {
+	r.listEvseImagesPayload = append(r.listEvseImagesPayload, response)
 }

@@ -7,15 +7,15 @@ import (
 )
 
 func (r *MockRepositoryService) ListEvseDirections(ctx context.Context, evseID int64) ([]db.DisplayText, error) {
-	if len(r.listEvseDirectionsResponse) == 0 {
+	if len(r.listEvseDirectionsPayload) == 0 {
 		return []db.DisplayText{}, nil
 	}
 
-	response := r.listEvseDirectionsResponse[0]
-	r.listEvseDirectionsResponse = r.listEvseDirectionsResponse[1:]
+	response := r.listEvseDirectionsPayload[0]
+	r.listEvseDirectionsPayload = r.listEvseDirectionsPayload[1:]
 	return response.DisplayTexts, response.Error
 }
 
-func (r *MockRepositoryService) SetListEvseDirectionsResponse(response DisplayTextsResponse) {
-	r.listEvseDirectionsResponse = append(r.listEvseDirectionsResponse, response)
+func (r *MockRepositoryService) SetListEvseDirectionsPayload(response DisplayTextsPayload) {
+	r.listEvseDirectionsPayload = append(r.listEvseDirectionsPayload, response)
 }
