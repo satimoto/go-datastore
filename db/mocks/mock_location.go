@@ -24,7 +24,6 @@ func (r *MockRepositoryService) GetLocationByUid(ctx context.Context, uid string
 	response := r.getLocationByUidPayload[0]
 	r.getLocationByUidPayload = r.getLocationByUidPayload[1:]
 	return response.Location, response.Error
-
 }
 
 func (r *MockRepositoryService) ListLocations(ctx context.Context) ([]db.Location, error) {
@@ -37,10 +36,24 @@ func (r *MockRepositoryService) ListLocations(ctx context.Context) ([]db.Locatio
 	return response.Locations, response.Error
 }
 
+func (r *MockRepositoryService) UpdateLocationByUid(ctx context.Context, arg db.UpdateLocationByUidParams) (db.Location, error) {
+	if len(r.updateLocationByUidPayload) == 0 {
+		return db.Location{}, nil
+	}
+
+	response := r.updateLocationByUidPayload[0]
+	r.updateLocationByUidPayload = r.updateLocationByUidPayload[1:]
+	return response.Locations, response.Error
+}
+
 func (r *MockRepositoryService) SetGetLocationByUidPayload(response LocationPayload) {
 	r.getLocationByUidPayload = append(r.getLocationByUidPayload, response)
 }
 
 func (r *MockRepositoryService) SetListLocationsPayload(response LocationsPayload) {
 	r.listLocationsPayload = append(r.listLocationsPayload, response)
+}
+
+func (r *MockRepositoryService) SetUpdateLocationByUidPayload(response LocationPayload) {
+	r.updateLocationByUidPayload = append(r.updateLocationByUidPayload, response)
 }
