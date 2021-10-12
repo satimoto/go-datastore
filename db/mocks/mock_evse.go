@@ -37,10 +37,24 @@ func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64)
 	return response.Evses, response.Error
 }
 
+func (r *MockRepositoryService) UpdateEvseByUid(ctx context.Context, arg db.UpdateEvseByUidParams) (db.Evse, error) {
+	if len(r.updateEvseByUidPayload) == 0 {
+		return db.Evse{}, nil
+	}
+
+	response := r.updateEvseByUidPayload[0]
+	r.updateEvseByUidPayload = r.updateEvseByUidPayload[1:]
+	return response.Evses, response.Error
+}
+
 func (r *MockRepositoryService) SetGetEvseByUidPayload(response EvsePayload) {
 	r.getEvseByUidPayload = append(r.getEvseByUidPayload, response)
 }
 
 func (r *MockRepositoryService) SetListEvsesPayload(response EvsesPayload) {
 	r.listEvsesPayload = append(r.listEvsesPayload, response)
+}
+
+func (r *MockRepositoryService) SetUpdateEvseByUidPayload(response EvsePayload) {
+	r.updateEvseByUidPayload = append(r.updateEvseByUidPayload, response)
 }
