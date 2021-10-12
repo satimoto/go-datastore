@@ -6,35 +6,35 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type BusinessDetailResponse struct {
+type BusinessDetailPayload struct {
 	BusinessDetail db.BusinessDetail
 	Error          error
 }
 
 func (r *MockRepositoryService) CreateBusinessDetail(ctx context.Context, arg db.CreateBusinessDetailParams) (db.BusinessDetail, error) {
-	if len(r.createBusinessDetailResponse) == 0 {
+	if len(r.createBusinessDetailPayload) == 0 {
 		return db.BusinessDetail{}, ErrorNotFound()
 	}
-	
-	response := r.createBusinessDetailResponse[0]
-	r.createBusinessDetailResponse = r.createBusinessDetailResponse[1:]
+
+	response := r.createBusinessDetailPayload[0]
+	r.createBusinessDetailPayload = r.createBusinessDetailPayload[1:]
 	return response.BusinessDetail, response.Error
 }
 
 func (r *MockRepositoryService) GetBusinessDetail(ctx context.Context, id int64) (db.BusinessDetail, error) {
-	if len(r.getBusinessDetailResponse) == 0 {
+	if len(r.getBusinessDetailPayload) == 0 {
 		return db.BusinessDetail{}, ErrorNotFound()
 	}
-	
-	response := r.getBusinessDetailResponse[0]
-	r.getBusinessDetailResponse = r.getBusinessDetailResponse[1:]
+
+	response := r.getBusinessDetailPayload[0]
+	r.getBusinessDetailPayload = r.getBusinessDetailPayload[1:]
 	return response.BusinessDetail, response.Error
 }
 
-func (r *MockRepositoryService) SetCreateBusinessDetailResponse(response BusinessDetailResponse) {
-	r.createBusinessDetailResponse = append(r.createBusinessDetailResponse, response)
+func (r *MockRepositoryService) SetCreateBusinessDetailPayload(response BusinessDetailPayload) {
+	r.createBusinessDetailPayload = append(r.createBusinessDetailPayload, response)
 }
 
-func (r *MockRepositoryService) SetGetBusinessDetailResponse(response BusinessDetailResponse) {
-	r.getBusinessDetailResponse = append(r.getBusinessDetailResponse, response)
+func (r *MockRepositoryService) SetGetBusinessDetailPayload(response BusinessDetailPayload) {
+	r.getBusinessDetailPayload = append(r.getBusinessDetailPayload, response)
 }

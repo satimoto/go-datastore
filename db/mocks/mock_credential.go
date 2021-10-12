@@ -6,35 +6,35 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type CredentialResponse struct {
+type CredentialPayload struct {
 	Credential db.Credential
 	Error      error
 }
 
 func (r *MockRepositoryService) CreateCredential(ctx context.Context, arg db.CreateCredentialParams) (db.Credential, error) {
-	if len(r.createCredentialResponse) == 0 {
+	if len(r.createCredentialPayload) == 0 {
 		return db.Credential{}, ErrorNotFound()
 	}
 
-	response := r.createCredentialResponse[0]
-	r.createCredentialResponse = r.createCredentialResponse[1:]
+	response := r.createCredentialPayload[0]
+	r.createCredentialPayload = r.createCredentialPayload[1:]
 	return response.Credential, response.Error
 }
 
 func (r *MockRepositoryService) GetCredentialByPartyAndCountryCode(ctx context.Context, arg db.GetCredentialByPartyAndCountryCodeParams) (db.Credential, error) {
-	if len(r.getCredentialByPartyAndCountryCodeResponse) == 0 {
+	if len(r.getCredentialByPartyAndCountryCodePayload) == 0 {
 		return db.Credential{}, ErrorNotFound()
 	}
 
-	response := r.getCredentialByPartyAndCountryCodeResponse[0]
-	r.getCredentialByPartyAndCountryCodeResponse = r.getCredentialByPartyAndCountryCodeResponse[1:]
+	response := r.getCredentialByPartyAndCountryCodePayload[0]
+	r.getCredentialByPartyAndCountryCodePayload = r.getCredentialByPartyAndCountryCodePayload[1:]
 	return response.Credential, response.Error
 }
 
-func (r *MockRepositoryService) SetCreateCredentialResponse(response CredentialResponse) {
-	r.createCredentialResponse = append(r.createCredentialResponse, response)
+func (r *MockRepositoryService) SetCreateCredentialPayload(response CredentialPayload) {
+	r.createCredentialPayload = append(r.createCredentialPayload, response)
 }
 
-func (r *MockRepositoryService) SetGetCredentialByPartyAndCountryCodeResponse(response CredentialResponse) {
-	r.getCredentialByPartyAndCountryCodeResponse = append(r.getCredentialByPartyAndCountryCodeResponse, response)
+func (r *MockRepositoryService) SetGetCredentialByPartyAndCountryCodePayload(response CredentialPayload) {
+	r.getCredentialByPartyAndCountryCodePayload = append(r.getCredentialByPartyAndCountryCodePayload, response)
 }
