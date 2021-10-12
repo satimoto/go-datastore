@@ -7,8 +7,6 @@ import (
 	"context"
 	"database/sql"
 	"time"
-
-	"github.com/twpayne/go-geom"
 )
 
 const createEvse = `-- name: CreateEvse :one
@@ -32,7 +30,7 @@ type CreateEvseParams struct {
 	EvseID            sql.NullString `db:"evse_id" json:"evseID"`
 	Status            EvseStatus     `db:"status" json:"status"`
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
-	Geom              geom.Point     `db:"geom" json:"geom"`
+	Geom              interface{}    `db:"geom" json:"geom"`
 	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
@@ -190,7 +188,7 @@ type UpdateEvseParams struct {
 	EvseID            sql.NullString `db:"evse_id" json:"evseID"`
 	Status            EvseStatus     `db:"status" json:"status"`
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
-	Geom              geom.Point     `db:"geom" json:"geom"`
+	Geom              interface{}    `db:"geom" json:"geom"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -239,7 +237,7 @@ type UpdateEvseByUidParams struct {
 	EvseID            sql.NullString `db:"evse_id" json:"evseID"`
 	Status            EvseStatus     `db:"status" json:"status"`
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
-	Geom              geom.Point     `db:"geom" json:"geom"`
+	Geom              interface{}    `db:"geom" json:"geom"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
