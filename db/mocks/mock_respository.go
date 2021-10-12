@@ -7,15 +7,27 @@ import (
 type MockRepository interface {
 	db.Repository
 
-	SetGetConnectorByUidPayload(response ConnectorPayload)
-	SetListConnectorsPayload(response ConnectorsPayload)
-	SetCreateCredentialPayload(response CredentialPayload)
-	SetGetCredentialByPartyAndCountryCodePayload(response CredentialPayload)
-	SetCreateEnergyMixPayload(response EnergyMixPayload)
-	SetGetEnergyMixPayload(response EnergyMixPayload)
 	SetCreateBusinessDetailPayload(response BusinessDetailPayload)
+	SetCreateCredentialPayload(response CredentialPayload)
+	SetCreateEnergyMixPayload(response EnergyMixPayload)
+	SetCreateGeoLocationPayload(response GeoLocationPayload)
+	SetCreateImagePayload(response ImagePayload)
+	SetCreateNodePayload(response NodePayload)
+	SetCreateOpeningTimePayload(response OpeningTimePayload)
+	SetCreateUserPayload(response UserPayload)
+	SetDeleteUserPayload(err error)
 	SetGetBusinessDetailPayload(response BusinessDetailPayload)
+	SetGetConnectorByUidPayload(response ConnectorPayload)
+	SetGetCredentialByPartyAndCountryCodePayload(response CredentialPayload)
+	SetGetEnergyMixPayload(response EnergyMixPayload)
 	SetGetEvseByUidPayload(response EvsePayload)
+	SetGetGeoLocationPayload(response GeoLocationPayload)
+	SetGetImagePayload(response ImagePayload)
+	SetGetLocationByUidPayload(response LocationPayload)
+	SetGetNodePayload(response NodePayload)
+	SetGetOpeningTimePayload(response OpeningTimePayload)
+	SetGetUserPayload(response UserPayload)
+	SetListConnectorsPayload(response ConnectorsPayload)
 	SetListEvsesPayload(response EvsesPayload)
 	SetListEvseCapabilitiesPayload(response CapabilitiesPayload)
 	SetListEvseDirectionsPayload(response DisplayTextsPayload)
@@ -23,39 +35,42 @@ type MockRepository interface {
 	SetListEvseParkingRestrictionsPayload(response ParkingRestrictionsPayload)
 	SetListExceptionalOpeningPeriodsPayload(response ExceptionalPeriodsPayload)
 	SetListExceptionalClosingPeriodsPayload(response ExceptionalPeriodsPayload)
-	SetCreateGeoLocationPayload(response GeoLocationPayload)
-	SetGetGeoLocationPayload(response GeoLocationPayload)
-	SetCreateImagePayload(response ImagePayload)
-	SetGetImagePayload(response ImagePayload)
-	SetGetLocationByUidPayload(response LocationPayload)
 	SetListLocationDirectionsPayload(response DisplayTextsPayload)
 	SetListLocationFacilitiesPayload(response FacilitiesPayload)
 	SetListLocationImagesPayload(response ImagesPayload)
 	SetListLocationsPayload(response LocationsPayload)
-	SetCreateNodePayload(response NodePayload)
-	SetGetNodePayload(response NodePayload)
-	SetCreateOpeningTimePayload(response OpeningTimePayload)
-	SetGetOpeningTimePayload(response OpeningTimePayload)
 	SetListRegularHoursPayload(response RegularHoursPayload)
 	SetListRelatedLocationsPayload(response GeoLocationsPayload)
 	SetListStatusSchedulesPayload(response StatusSchedulesPayload)
-	SetCreateUserPayload(response UserPayload)
-	SetDeleteUserPayload(err error)
-	SetGetUserPayload(response UserPayload)
 	SetListUsersPayload(response UsersPayload)
+	SetUpdateConnectorByUidPayload(response ConnectorPayload)
+	SetUpdateEvseByUidPayload(response EvsePayload)
+	SetUpdateLocationByUidPayload(response LocationPayload)
 	SetUpdateUserPayload(response UserPayload)
 }
 
 type MockRepositoryService struct {
-	getConnectorByUidPayload                  []ConnectorPayload
-	listConnectorsPayload                     []ConnectorsPayload
-	createCredentialPayload                   []CredentialPayload
-	getCredentialByPartyAndCountryCodePayload []CredentialPayload
-	createEnergyMixPayload                    []EnergyMixPayload
-	getEnergyMixPayload                       []EnergyMixPayload
 	createBusinessDetailPayload               []BusinessDetailPayload
+	createCredentialPayload                   []CredentialPayload
+	createEnergyMixPayload                    []EnergyMixPayload
+	createGeoLocationPayload                  []GeoLocationPayload
+	createImagePayload                        []ImagePayload
+	createNodePayload                         []NodePayload
+	createOpeningTimePayload                  []OpeningTimePayload
+	createUserPayload                         []UserPayload
+	deleteUserPayload                         error
 	getBusinessDetailPayload                  []BusinessDetailPayload
+	getConnectorByUidPayload                  []ConnectorPayload
+	getCredentialByPartyAndCountryCodePayload []CredentialPayload
+	getEnergyMixPayload                       []EnergyMixPayload
 	getEvseByUidPayload                       []EvsePayload
+	getGeoLocationPayload                     []GeoLocationPayload
+	getImagePayload                           []ImagePayload
+	getLocationByUidPayload                   []LocationPayload
+	getNodePayload                            []NodePayload
+	getOpeningTimePayload                     []OpeningTimePayload
+	getUserPayload                            []UserPayload
+	listConnectorsPayload                     []ConnectorsPayload
 	listEvsesPayload                          []EvsesPayload
 	listEvseCapabilitiesPayload               []CapabilitiesPayload
 	listEvseDirectionsPayload                 []DisplayTextsPayload
@@ -63,26 +78,17 @@ type MockRepositoryService struct {
 	listEvseParkingRestrictionsPayload        []ParkingRestrictionsPayload
 	listExceptionalOpeningPeriodsPayload      []ExceptionalPeriodsPayload
 	listExceptionalClosingPeriodsPayload      []ExceptionalPeriodsPayload
-	createGeoLocationPayload                  []GeoLocationPayload
-	getGeoLocationPayload                     []GeoLocationPayload
-	createImagePayload                        []ImagePayload
-	getImagePayload                           []ImagePayload
-	getLocationByUidPayload                   []LocationPayload
 	listLocationDirectionsPayload             []DisplayTextsPayload
 	listLocationFacilitiesPayload             []FacilitiesPayload
 	listLocationImagesPayload                 []ImagesPayload
 	listLocationsPayload                      []LocationsPayload
-	createNodePayload                         []NodePayload
-	getNodePayload                            []NodePayload
-	createOpeningTimePayload                  []OpeningTimePayload
-	getOpeningTimePayload                     []OpeningTimePayload
 	listRegularHoursPayload                   []RegularHoursPayload
 	listRelatedLocationsPayload               []GeoLocationsPayload
 	listStatusSchedulesPayload                []StatusSchedulesPayload
-	createUserPayload                         []UserPayload
-	deleteUserPayload                         error
-	getUserPayload                            []UserPayload
 	listUsersPayload                          []UsersPayload
+	updateConnectorByUidPayload               []ConnectorPayload
+	updateEvseByUidPayload                    []EvsePayload
+	updateLocationByUidPayload                []LocationPayload
 	updateUserPayload                         []UserPayload
 }
 

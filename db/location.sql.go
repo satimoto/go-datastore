@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/twpayne/go-geom"
 )
 
 const createLocation = `-- name: CreateLocation :one
@@ -39,7 +41,7 @@ type CreateLocationParams struct {
 	City               string         `db:"city" json:"city"`
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
-	Geom               interface{}    `db:"geom" json:"geom"`
+	Geom               geom.Point     `db:"geom" json:"geom"`
 	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
@@ -269,7 +271,7 @@ type UpdateLocationParams struct {
 	City               string         `db:"city" json:"city"`
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
-	Geom               interface{}    `db:"geom" json:"geom"`
+	Geom               geom.Point     `db:"geom" json:"geom"`
 	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
@@ -338,7 +340,7 @@ type UpdateLocationByUidParams struct {
 	City               string         `db:"city" json:"city"`
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
-	Geom               interface{}    `db:"geom" json:"geom"`
+	Geom               geom.Point     `db:"geom" json:"geom"`
 	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
