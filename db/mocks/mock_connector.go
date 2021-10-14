@@ -43,7 +43,7 @@ func (r *MockRepositoryService) UpdateConnectorByUid(ctx context.Context, arg db
 
 	response := r.updateConnectorByUidPayload[0]
 	r.updateConnectorByUidPayload = r.updateConnectorByUidPayload[1:]
-	return response.Connectors, response.Error
+	return response.Connector, response.Error
 }
 
 func (r *MockRepositoryService) SetGetConnectorByUidPayload(response ConnectorPayload) {

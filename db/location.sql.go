@@ -383,3 +383,18 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 	)
 	return i, err
 }
+
+const updateLocationLastUpdated = `-- name: UpdateLocationLastUpdated :exec
+UPDATE locations SET last_updated = $2
+  WHERE id = $1
+`
+
+type UpdateLocationLastUpdatedParams struct {
+	ID          int64     `db:"id" json:"id"`
+	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
+}
+
+func (q *Queries) UpdateLocationLastUpdated(ctx context.Context, arg UpdateLocationLastUpdatedParams) error {
+	_, err := q.db.ExecContext(ctx, updateLocationLastUpdated, arg.ID, arg.LastUpdated)
+	return err
+}
