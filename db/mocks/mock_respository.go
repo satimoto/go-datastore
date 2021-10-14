@@ -20,9 +20,11 @@ type MockRepository interface {
 	SetGetConnectorByUidPayload(response ConnectorPayload)
 	SetGetCredentialByPartyAndCountryCodePayload(response CredentialPayload)
 	SetGetEnergyMixPayload(response EnergyMixPayload)
+	SetGetEvsePayload(response EvsePayload)
 	SetGetEvseByUidPayload(response EvsePayload)
 	SetGetGeoLocationPayload(response GeoLocationPayload)
 	SetGetImagePayload(response ImagePayload)
+	SetGetLocationPayload(response LocationPayload)
 	SetGetLocationByUidPayload(response LocationPayload)
 	SetGetNodePayload(response NodePayload)
 	SetGetOpeningTimePayload(response OpeningTimePayload)
@@ -63,9 +65,11 @@ type MockRepositoryService struct {
 	getConnectorByUidPayload                  []ConnectorPayload
 	getCredentialByPartyAndCountryCodePayload []CredentialPayload
 	getEnergyMixPayload                       []EnergyMixPayload
+	getEvsePayload                            []EvsePayload
 	getEvseByUidPayload                       []EvsePayload
 	getGeoLocationPayload                     []GeoLocationPayload
 	getImagePayload                           []ImagePayload
+	getLocationPayload                        []LocationPayload
 	getLocationByUidPayload                   []LocationPayload
 	getNodePayload                            []NodePayload
 	getOpeningTimePayload                     []OpeningTimePayload

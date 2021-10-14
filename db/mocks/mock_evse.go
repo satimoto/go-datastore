@@ -16,6 +16,16 @@ type EvsesPayload struct {
 	Error error
 }
 
+func (r *MockRepositoryService) GetEvse(ctx context.Context, id int64) (db.Evse, error) {
+	if len(r.getEvsePayload) == 0 {
+		return db.Evse{}, nil
+	}
+
+	response := r.getEvsePayload[0]
+	r.getEvsePayload = r.getEvsePayload[1:]
+	return response.Evse, response.Error
+}
+
 func (r *MockRepositoryService) GetEvseByUid(ctx context.Context, uid string) (db.Evse, error) {
 	if len(r.getEvseByUidPayload) == 0 {
 		return db.Evse{}, nil
@@ -24,7 +34,6 @@ func (r *MockRepositoryService) GetEvseByUid(ctx context.Context, uid string) (d
 	response := r.getEvseByUidPayload[0]
 	r.getEvseByUidPayload = r.getEvseByUidPayload[1:]
 	return response.Evse, response.Error
-
 }
 
 func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error) {
@@ -44,7 +53,11 @@ func (r *MockRepositoryService) UpdateEvseByUid(ctx context.Context, arg db.Upda
 
 	response := r.updateEvseByUidPayload[0]
 	r.updateEvseByUidPayload = r.updateEvseByUidPayload[1:]
-	return response.Evses, response.Error
+	return response.Evse, response.Error
+}
+
+func (r *MockRepositoryService) SetGetEvsePayload(response EvsePayload) {
+	r.getEvsePayload = append(r.getEvsePayload, response)
 }
 
 func (r *MockRepositoryService) SetGetEvseByUidPayload(response EvsePayload) {

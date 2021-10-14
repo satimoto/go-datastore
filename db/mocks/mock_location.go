@@ -16,6 +16,16 @@ type LocationsPayload struct {
 	Error     error
 }
 
+func (r *MockRepositoryService) GetLocation(ctx context.Context, id int64) (db.Location, error) {
+	if len(r.getLocationPayload) == 0 {
+		return db.Location{}, nil
+	}
+
+	response := r.getLocationPayload[0]
+	r.getLocationPayload = r.getLocationPayload[1:]
+	return response.Location, response.Error
+}
+
 func (r *MockRepositoryService) GetLocationByUid(ctx context.Context, uid string) (db.Location, error) {
 	if len(r.getLocationByUidPayload) == 0 {
 		return db.Location{}, nil
@@ -43,7 +53,11 @@ func (r *MockRepositoryService) UpdateLocationByUid(ctx context.Context, arg db.
 
 	response := r.updateLocationByUidPayload[0]
 	r.updateLocationByUidPayload = r.updateLocationByUidPayload[1:]
-	return response.Locations, response.Error
+	return response.Location, response.Error
+}
+
+func (r *MockRepositoryService) SetGetLocationPayload(response LocationPayload) {
+	r.getLocationPayload = append(r.getLocationPayload, response)
 }
 
 func (r *MockRepositoryService) SetGetLocationByUidPayload(response LocationPayload) {
