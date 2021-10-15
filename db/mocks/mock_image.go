@@ -6,40 +6,41 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type ImagePayload struct {
+type ImageMockData struct {
 	Image db.Image
 	Error error
 }
 
-type ImagesPayload struct {
+type ImagesMockData struct {
 	Images []db.Image
 	Error  error
 }
 
 func (r *MockRepositoryService) CreateImage(ctx context.Context, arg db.CreateImageParams) (db.Image, error) {
-	if len(r.createImagePayload) == 0 {
-		return db.Image{}, ErrorNotFound()
-	}
-
-	response := r.createImagePayload[0]
-	r.createImagePayload = r.createImagePayload[1:]
-	return response.Image, response.Error
+	r.createImageMockData = append(r.createImageMockData, arg)
+	return db.Image{}, nil
 }
 
 func (r *MockRepositoryService) GetImage(ctx context.Context, id int64) (db.Image, error) {
-	if len(r.getImagePayload) == 0 {
+	if len(r.getImageMockData) == 0 {
 		return db.Image{}, ErrorNotFound()
 	}
 
-	response := r.getImagePayload[0]
-	r.getImagePayload = r.getImagePayload[1:]
+	response := r.getImageMockData[0]
+	r.getImageMockData = r.getImageMockData[1:]
 	return response.Image, response.Error
 }
 
-func (r *MockRepositoryService) SetCreateImagePayload(response ImagePayload) {
-	r.createImagePayload = append(r.createImagePayload, response)
+func (r *MockRepositoryService) GetCreateImageMockData() (db.CreateImageParams, error) {
+	if len(r.createImageMockData) == 0 {
+		return db.CreateImageParams{}, ErrorNotFound()
+	}
+
+	response := r.createImageMockData[0]
+	r.createImageMockData = r.createImageMockData[1:]
+	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetImagePayload(response ImagePayload) {
-	r.getImagePayload = append(r.getImagePayload, response)
+func (r *MockRepositoryService) SetGetImageMockData(response ImageMockData) {
+	r.getImageMockData = append(r.getImageMockData, response)
 }
