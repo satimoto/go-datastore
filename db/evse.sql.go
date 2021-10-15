@@ -267,3 +267,18 @@ func (q *Queries) UpdateEvseByUid(ctx context.Context, arg UpdateEvseByUidParams
 	)
 	return i, err
 }
+
+const updateEvseLastUpdated = `-- name: UpdateEvseLastUpdated :exec
+UPDATE evses SET last_updated = $2
+  WHERE id = $1
+`
+
+type UpdateEvseLastUpdatedParams struct {
+	ID          int64     `db:"id" json:"id"`
+	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
+}
+
+func (q *Queries) UpdateEvseLastUpdated(ctx context.Context, arg UpdateEvseLastUpdatedParams) error {
+	_, err := q.db.ExecContext(ctx, updateEvseLastUpdated, arg.ID, arg.LastUpdated)
+	return err
+}
