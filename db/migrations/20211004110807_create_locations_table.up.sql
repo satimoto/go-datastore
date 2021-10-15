@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS images (
     thumbnail TEXT,
     category image_category NOT NULL,
     type TEXT NOT NULL,
-    width SMALLINT,
-    height SMALLINT
+    width INTEGER,
+    height INTEGER
 );
 
 -- Facilities

@@ -352,8 +352,8 @@ type Image struct {
 	Thumbnail sql.NullString `db:"thumbnail" json:"thumbnail"`
 	Category  ImageCategory  `db:"category" json:"category"`
 	Type      string         `db:"type" json:"type"`
-	Width     int16          `db:"width" json:"width"`
-	Height    int16          `db:"height" json:"height"`
+	Width     sql.NullInt32  `db:"width" json:"width"`
+	Height    sql.NullInt32  `db:"height" json:"height"`
 }
 
 type Location struct {

@@ -6,55 +6,97 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type EvsePayload struct {
+type EvseMockData struct {
 	Evse  db.Evse
 	Error error
 }
 
-type EvsesPayload struct {
+type EvsesMockData struct {
 	Evses []db.Evse
 	Error error
 }
 
-func (r *MockRepositoryService) GetEvseByUid(ctx context.Context, uid string) (db.Evse, error) {
-	if len(r.getEvseByUidPayload) == 0 {
+func (r *MockRepositoryService) CreateEvse(ctx context.Context, arg db.CreateEvseParams) (db.Evse, error) {
+	r.createEvseMockData = append(r.createEvseMockData, arg)
+	return db.Evse{}, nil
+}
+
+func (r *MockRepositoryService) GetEvse(ctx context.Context, id int64) (db.Evse, error) {
+	if len(r.getEvseMockData) == 0 {
 		return db.Evse{}, nil
 	}
 
-	response := r.getEvseByUidPayload[0]
-	r.getEvseByUidPayload = r.getEvseByUidPayload[1:]
+	response := r.getEvseMockData[0]
+	r.getEvseMockData = r.getEvseMockData[1:]
 	return response.Evse, response.Error
+}
 
+func (r *MockRepositoryService) GetEvseByUid(ctx context.Context, uid string) (db.Evse, error) {
+	if len(r.getEvseByUidMockData) == 0 {
+		return db.Evse{}, nil
+	}
+
+	response := r.getEvseByUidMockData[0]
+	r.getEvseByUidMockData = r.getEvseByUidMockData[1:]
+	return response.Evse, response.Error
 }
 
 func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error) {
-	if len(r.listEvsesPayload) == 0 {
+	if len(r.listEvsesMockData) == 0 {
 		return []db.Evse{}, nil
 	}
 
-	response := r.listEvsesPayload[0]
-	r.listEvsesPayload = r.listEvsesPayload[1:]
+	response := r.listEvsesMockData[0]
+	r.listEvsesMockData = r.listEvsesMockData[1:]
 	return response.Evses, response.Error
 }
 
 func (r *MockRepositoryService) UpdateEvseByUid(ctx context.Context, arg db.UpdateEvseByUidParams) (db.Evse, error) {
-	if len(r.updateEvseByUidPayload) == 0 {
+	if len(r.updateEvseByUidMockData) == 0 {
 		return db.Evse{}, nil
 	}
 
-	response := r.updateEvseByUidPayload[0]
-	r.updateEvseByUidPayload = r.updateEvseByUidPayload[1:]
-	return response.Evses, response.Error
+	response := r.updateEvseByUidMockData[0]
+	r.updateEvseByUidMockData = r.updateEvseByUidMockData[1:]
+	return response.Evse, response.Error
 }
 
-func (r *MockRepositoryService) SetGetEvseByUidPayload(response EvsePayload) {
-	r.getEvseByUidPayload = append(r.getEvseByUidPayload, response)
+func (r *MockRepositoryService) UpdateEvseLastUpdated(ctx context.Context, arg db.UpdateEvseLastUpdatedParams) error {
+	if len(r.updateEvseLastUpdatedMockData) == 0 {
+		return nil
+	}
+
+	response := r.updateEvseLastUpdatedMockData[0]
+	r.updateEvseLastUpdatedMockData = r.updateEvseLastUpdatedMockData[1:]
+	return response
 }
 
-func (r *MockRepositoryService) SetListEvsesPayload(response EvsesPayload) {
-	r.listEvsesPayload = append(r.listEvsesPayload, response)
+func (r *MockRepositoryService) GetCreateEvseMockData() (db.CreateEvseParams, error) {
+	if len(r.createEvseMockData) == 0 {
+		return db.CreateEvseParams{}, ErrorNotFound()
+	}
+
+	response := r.createEvseMockData[0]
+	r.createEvseMockData = r.createEvseMockData[1:]
+	return response, nil
 }
 
-func (r *MockRepositoryService) SetUpdateEvseByUidPayload(response EvsePayload) {
-	r.updateEvseByUidPayload = append(r.updateEvseByUidPayload, response)
+func (r *MockRepositoryService) SetGetEvseMockData(response EvseMockData) {
+	r.getEvseMockData = append(r.getEvseMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetEvseByUidMockData(response EvseMockData) {
+	r.getEvseByUidMockData = append(r.getEvseByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetListEvsesMockData(response EvsesMockData) {
+	r.listEvsesMockData = append(r.listEvsesMockData, response)
+}
+
+func (r *MockRepositoryService) SetUpdateEvseByUidMockData(response EvseMockData) {
+	r.updateEvseByUidMockData = append(r.updateEvseByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetUpdateEvseLastUpdatedMockData(err error) {
+	r.updateEvseLastUpdatedMockData = append(r.updateEvseLastUpdatedMockData, err)
 }
