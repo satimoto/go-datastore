@@ -6,54 +6,69 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type ConnectorPayload struct {
+type ConnectorMockData struct {
 	Connector db.Connector
 	Error     error
 }
 
-type ConnectorsPayload struct {
+type ConnectorsMockData struct {
 	Connectors []db.Connector
 	Error      error
 }
 
+func (r *MockRepositoryService) CreateConnector(ctx context.Context, arg db.CreateConnectorParams) (db.Connector, error) {
+	r.createConnectorMockData = append(r.createConnectorMockData, arg)
+	return db.Connector{}, nil
+}
+
 func (r *MockRepositoryService) GetConnectorByUid(ctx context.Context, arg db.GetConnectorByUidParams) (db.Connector, error) {
-	if len(r.getConnectorByUidPayload) == 0 {
+	if len(r.getConnectorByUidMockData) == 0 {
 		return db.Connector{}, nil
 	}
 
-	response := r.getConnectorByUidPayload[0]
-	r.getConnectorByUidPayload = r.getConnectorByUidPayload[1:]
+	response := r.getConnectorByUidMockData[0]
+	r.getConnectorByUidMockData = r.getConnectorByUidMockData[1:]
 	return response.Connector, response.Error
 }
 
 func (r *MockRepositoryService) ListConnectors(ctx context.Context, id int64) ([]db.Connector, error) {
-	if len(r.listConnectorsPayload) == 0 {
+	if len(r.listConnectorsMockData) == 0 {
 		return []db.Connector{}, nil
 	}
 
-	response := r.listConnectorsPayload[0]
-	r.listConnectorsPayload = r.listConnectorsPayload[1:]
+	response := r.listConnectorsMockData[0]
+	r.listConnectorsMockData = r.listConnectorsMockData[1:]
 	return response.Connectors, response.Error
 }
 
 func (r *MockRepositoryService) UpdateConnectorByUid(ctx context.Context, arg db.UpdateConnectorByUidParams) (db.Connector, error) {
-	if len(r.updateConnectorByUidPayload) == 0 {
+	if len(r.updateConnectorByUidMockData) == 0 {
 		return db.Connector{}, nil
 	}
 
-	response := r.updateConnectorByUidPayload[0]
-	r.updateConnectorByUidPayload = r.updateConnectorByUidPayload[1:]
+	response := r.updateConnectorByUidMockData[0]
+	r.updateConnectorByUidMockData = r.updateConnectorByUidMockData[1:]
 	return response.Connector, response.Error
 }
 
-func (r *MockRepositoryService) SetGetConnectorByUidPayload(response ConnectorPayload) {
-	r.getConnectorByUidPayload = append(r.getConnectorByUidPayload, response)
+func (r *MockRepositoryService) GetCreateConnectorMockData() (db.CreateConnectorParams, error) {
+	if len(r.createConnectorMockData) == 0 {
+		return db.CreateConnectorParams{}, ErrorNotFound()
+	}
+
+	response := r.createConnectorMockData[0]
+	r.createConnectorMockData = r.createConnectorMockData[1:]
+	return response, nil
 }
 
-func (r *MockRepositoryService) SetListConnectorsPayload(response ConnectorsPayload) {
-	r.listConnectorsPayload = append(r.listConnectorsPayload, response)
+func (r *MockRepositoryService) SetGetConnectorByUidMockData(response ConnectorMockData) {
+	r.getConnectorByUidMockData = append(r.getConnectorByUidMockData, response)
 }
 
-func (r *MockRepositoryService) SetUpdateConnectorByUidPayload(response ConnectorPayload) {
-	r.updateConnectorByUidPayload = append(r.updateConnectorByUidPayload, response)
+func (r *MockRepositoryService) SetListConnectorsMockData(response ConnectorsMockData) {
+	r.listConnectorsMockData = append(r.listConnectorsMockData, response)
+}
+
+func (r *MockRepositoryService) SetUpdateConnectorByUidMockData(response ConnectorMockData) {
+	r.updateConnectorByUidMockData = append(r.updateConnectorByUidMockData, response)
 }
