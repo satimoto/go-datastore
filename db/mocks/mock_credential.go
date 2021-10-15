@@ -6,35 +6,36 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type CredentialPayload struct {
+type CredentialMockData struct {
 	Credential db.Credential
 	Error      error
 }
 
 func (r *MockRepositoryService) CreateCredential(ctx context.Context, arg db.CreateCredentialParams) (db.Credential, error) {
-	if len(r.createCredentialPayload) == 0 {
-		return db.Credential{}, ErrorNotFound()
-	}
-
-	response := r.createCredentialPayload[0]
-	r.createCredentialPayload = r.createCredentialPayload[1:]
-	return response.Credential, response.Error
+	r.createCredentialMockData = append(r.createCredentialMockData, arg)
+	return db.Credential{}, nil
 }
 
 func (r *MockRepositoryService) GetCredentialByPartyAndCountryCode(ctx context.Context, arg db.GetCredentialByPartyAndCountryCodeParams) (db.Credential, error) {
-	if len(r.getCredentialByPartyAndCountryCodePayload) == 0 {
+	if len(r.getCredentialByPartyAndCountryCodeMockData) == 0 {
 		return db.Credential{}, ErrorNotFound()
 	}
 
-	response := r.getCredentialByPartyAndCountryCodePayload[0]
-	r.getCredentialByPartyAndCountryCodePayload = r.getCredentialByPartyAndCountryCodePayload[1:]
+	response := r.getCredentialByPartyAndCountryCodeMockData[0]
+	r.getCredentialByPartyAndCountryCodeMockData = r.getCredentialByPartyAndCountryCodeMockData[1:]
 	return response.Credential, response.Error
 }
 
-func (r *MockRepositoryService) SetCreateCredentialPayload(response CredentialPayload) {
-	r.createCredentialPayload = append(r.createCredentialPayload, response)
+func (r *MockRepositoryService) GetCreateCredentialMockData() (db.CreateCredentialParams, error) {
+	if len(r.createCredentialMockData) == 0 {
+		return db.CreateCredentialParams{}, ErrorNotFound()
+	}
+
+	response := r.createCredentialMockData[0]
+	r.createCredentialMockData = r.createCredentialMockData[1:]
+	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetCredentialByPartyAndCountryCodePayload(response CredentialPayload) {
-	r.getCredentialByPartyAndCountryCodePayload = append(r.getCredentialByPartyAndCountryCodePayload, response)
+func (r *MockRepositoryService) SetGetCredentialByPartyAndCountryCodeMockData(response CredentialMockData) {
+	r.getCredentialByPartyAndCountryCodeMockData = append(r.getCredentialByPartyAndCountryCodeMockData, response)
 }

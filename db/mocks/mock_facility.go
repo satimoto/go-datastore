@@ -2,7 +2,7 @@ package mocks
 
 import "github.com/satimoto/go-datastore/db"
 
-type FacilitiesPayload struct {
+type FacilitiesMockData struct {
 	Facilities []db.Facility
 	Error      error
 }

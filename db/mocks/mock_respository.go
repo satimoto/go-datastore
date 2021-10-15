@@ -7,89 +7,109 @@ import (
 type MockRepository interface {
 	db.Repository
 
-	SetCreateBusinessDetailPayload(response BusinessDetailPayload)
-	SetCreateCredentialPayload(response CredentialPayload)
-	SetCreateEnergyMixPayload(response EnergyMixPayload)
-	SetCreateGeoLocationPayload(response GeoLocationPayload)
-	SetCreateImagePayload(response ImagePayload)
-	SetCreateNodePayload(response NodePayload)
-	SetCreateOpeningTimePayload(response OpeningTimePayload)
-	SetCreateUserPayload(response UserPayload)
-	SetDeleteUserPayload(err error)
-	SetGetBusinessDetailPayload(response BusinessDetailPayload)
-	SetGetConnectorByUidPayload(response ConnectorPayload)
-	SetGetCredentialByPartyAndCountryCodePayload(response CredentialPayload)
-	SetGetEnergyMixPayload(response EnergyMixPayload)
-	SetGetEvseByUidPayload(response EvsePayload)
-	SetGetGeoLocationPayload(response GeoLocationPayload)
-	SetGetImagePayload(response ImagePayload)
-	SetGetLocationByUidPayload(response LocationPayload)
-	SetGetNodePayload(response NodePayload)
-	SetGetOpeningTimePayload(response OpeningTimePayload)
-	SetGetUserPayload(response UserPayload)
-	SetListConnectorsPayload(response ConnectorsPayload)
-	SetListEvsesPayload(response EvsesPayload)
-	SetListEvseCapabilitiesPayload(response CapabilitiesPayload)
-	SetListEvseDirectionsPayload(response DisplayTextsPayload)
-	SetListEvseImagesPayload(response ImagesPayload)
-	SetListEvseParkingRestrictionsPayload(response ParkingRestrictionsPayload)
-	SetListExceptionalOpeningPeriodsPayload(response ExceptionalPeriodsPayload)
-	SetListExceptionalClosingPeriodsPayload(response ExceptionalPeriodsPayload)
-	SetListLocationDirectionsPayload(response DisplayTextsPayload)
-	SetListLocationFacilitiesPayload(response FacilitiesPayload)
-	SetListLocationImagesPayload(response ImagesPayload)
-	SetListLocationsPayload(response LocationsPayload)
-	SetListRegularHoursPayload(response RegularHoursPayload)
-	SetListRelatedLocationsPayload(response GeoLocationsPayload)
-	SetListStatusSchedulesPayload(response StatusSchedulesPayload)
-	SetListUsersPayload(response UsersPayload)
-	SetUpdateConnectorByUidPayload(response ConnectorPayload)
-	SetUpdateEvseByUidPayload(response EvsePayload)
-	SetUpdateLocationByUidPayload(response LocationPayload)
-	SetUpdateUserPayload(response UserPayload)
+	GetCreateBusinessDetailMockData() (db.CreateBusinessDetailParams, error)
+	GetCreateConnectorMockData() (db.CreateConnectorParams, error)
+	GetCreateCredentialMockData() (db.CreateCredentialParams, error)
+	GetCreateDisplayTextMockData() (db.CreateDisplayTextParams, error)
+	GetCreateEnergyMixMockData() (db.CreateEnergyMixParams, error)
+	GetCreateEvseMockData() (db.CreateEvseParams, error)
+	GetCreateGeoLocationMockData() (db.CreateGeoLocationParams, error)
+	GetCreateImageMockData() (db.CreateImageParams, error)
+	GetCreateNodeMockData() (db.CreateNodeParams, error)
+	GetCreateOpeningTimeMockData() (bool, error)
+	GetCreateStatusScheduleMockData() (db.CreateStatusScheduleParams, error)
+	GetCreateUserMockData() (db.CreateUserParams, error)
+	GetSetEvseDirectionMockData() (db.SetEvseDirectionParams, error)
+	GetSetEvseImageMockData() (db.SetEvseImageParams, error)
+	SetDeleteUserMockData(err error)
+	SetGetBusinessDetailMockData(response BusinessDetailMockData)
+	SetGetConnectorByUidMockData(response ConnectorMockData)
+	SetGetCredentialByPartyAndCountryCodeMockData(response CredentialMockData)
+	SetGetEnergyMixMockData(response EnergyMixMockData)
+	SetGetEvseMockData(response EvseMockData)
+	SetGetEvseByUidMockData(response EvseMockData)
+	SetGetGeoLocationMockData(response GeoLocationMockData)
+	SetGetImageMockData(response ImageMockData)
+	SetGetLocationMockData(response LocationMockData)
+	SetGetLocationByUidMockData(response LocationMockData)
+	SetGetNodeMockData(response NodeMockData)
+	SetGetOpeningTimeMockData(response OpeningTimeMockData)
+	SetGetUserMockData(response UserMockData)
+	SetListConnectorsMockData(response ConnectorsMockData)
+	SetListEvsesMockData(response EvsesMockData)
+	SetListEvseCapabilitiesMockData(response CapabilitiesMockData)
+	SetListEvseDirectionsMockData(response DisplayTextsMockData)
+	SetListEvseImagesMockData(response ImagesMockData)
+	SetListEvseParkingRestrictionsMockData(response ParkingRestrictionsMockData)
+	SetListExceptionalOpeningPeriodsMockData(response ExceptionalPeriodsMockData)
+	SetListExceptionalClosingPeriodsMockData(response ExceptionalPeriodsMockData)
+	SetListLocationDirectionsMockData(response DisplayTextsMockData)
+	SetListLocationFacilitiesMockData(response FacilitiesMockData)
+	SetListLocationImagesMockData(response ImagesMockData)
+	SetListLocationsMockData(response LocationsMockData)
+	SetListRegularHoursMockData(response RegularHoursMockData)
+	SetListRelatedLocationsMockData(response GeoLocationsMockData)
+	SetListStatusSchedulesMockData(response StatusSchedulesMockData)
+	SetListUsersMockData(response UsersMockData)
+	SetUpdateConnectorByUidMockData(response ConnectorMockData)
+	SetUpdateEvseByUidMockData(response EvseMockData)
+	SetUpdateEvseLastUpdatedMockData(err error)
+	SetUpdateLocationByUidMockData(response LocationMockData)
+	SetUpdateLocationLastUpdatedMockData(err error)
+	SetUpdateUserMockData(response UserMockData)
 }
 
 type MockRepositoryService struct {
-	createBusinessDetailPayload               []BusinessDetailPayload
-	createCredentialPayload                   []CredentialPayload
-	createEnergyMixPayload                    []EnergyMixPayload
-	createGeoLocationPayload                  []GeoLocationPayload
-	createImagePayload                        []ImagePayload
-	createNodePayload                         []NodePayload
-	createOpeningTimePayload                  []OpeningTimePayload
-	createUserPayload                         []UserPayload
-	deleteUserPayload                         error
-	getBusinessDetailPayload                  []BusinessDetailPayload
-	getConnectorByUidPayload                  []ConnectorPayload
-	getCredentialByPartyAndCountryCodePayload []CredentialPayload
-	getEnergyMixPayload                       []EnergyMixPayload
-	getEvseByUidPayload                       []EvsePayload
-	getGeoLocationPayload                     []GeoLocationPayload
-	getImagePayload                           []ImagePayload
-	getLocationByUidPayload                   []LocationPayload
-	getNodePayload                            []NodePayload
-	getOpeningTimePayload                     []OpeningTimePayload
-	getUserPayload                            []UserPayload
-	listConnectorsPayload                     []ConnectorsPayload
-	listEvsesPayload                          []EvsesPayload
-	listEvseCapabilitiesPayload               []CapabilitiesPayload
-	listEvseDirectionsPayload                 []DisplayTextsPayload
-	listEvseImagesPayload                     []ImagesPayload
-	listEvseParkingRestrictionsPayload        []ParkingRestrictionsPayload
-	listExceptionalOpeningPeriodsPayload      []ExceptionalPeriodsPayload
-	listExceptionalClosingPeriodsPayload      []ExceptionalPeriodsPayload
-	listLocationDirectionsPayload             []DisplayTextsPayload
-	listLocationFacilitiesPayload             []FacilitiesPayload
-	listLocationImagesPayload                 []ImagesPayload
-	listLocationsPayload                      []LocationsPayload
-	listRegularHoursPayload                   []RegularHoursPayload
-	listRelatedLocationsPayload               []GeoLocationsPayload
-	listStatusSchedulesPayload                []StatusSchedulesPayload
-	listUsersPayload                          []UsersPayload
-	updateConnectorByUidPayload               []ConnectorPayload
-	updateEvseByUidPayload                    []EvsePayload
-	updateLocationByUidPayload                []LocationPayload
-	updateUserPayload                         []UserPayload
+	createBusinessDetailMockData               []db.CreateBusinessDetailParams
+	createConnectorMockData                    []db.CreateConnectorParams
+	createCredentialMockData                   []db.CreateCredentialParams
+	createDisplayTextMockData                  []db.CreateDisplayTextParams
+	createEnergyMixMockData                    []db.CreateEnergyMixParams
+	createEvseMockData                         []db.CreateEvseParams
+	createGeoLocationMockData                  []db.CreateGeoLocationParams
+	createImageMockData                        []db.CreateImageParams
+	createNodeMockData                         []db.CreateNodeParams
+	createOpeningTimeMockData                  []bool
+	createStatusScheduleMockData               []db.CreateStatusScheduleParams
+	createUserMockData                         []db.CreateUserParams
+	deleteUserMockData                         []error
+	getBusinessDetailMockData                  []BusinessDetailMockData
+	getConnectorByUidMockData                  []ConnectorMockData
+	getCredentialByPartyAndCountryCodeMockData []CredentialMockData
+	getEnergyMixMockData                       []EnergyMixMockData
+	getEvseMockData                            []EvseMockData
+	getEvseByUidMockData                       []EvseMockData
+	getGeoLocationMockData                     []GeoLocationMockData
+	getImageMockData                           []ImageMockData
+	getLocationMockData                        []LocationMockData
+	getLocationByUidMockData                   []LocationMockData
+	getNodeMockData                            []NodeMockData
+	getOpeningTimeMockData                     []OpeningTimeMockData
+	getUserMockData                            []UserMockData
+	listConnectorsMockData                     []ConnectorsMockData
+	listEvsesMockData                          []EvsesMockData
+	listEvseCapabilitiesMockData               []CapabilitiesMockData
+	listEvseDirectionsMockData                 []DisplayTextsMockData
+	listEvseImagesMockData                     []ImagesMockData
+	listEvseParkingRestrictionsMockData        []ParkingRestrictionsMockData
+	listExceptionalOpeningPeriodsMockData      []ExceptionalPeriodsMockData
+	listExceptionalClosingPeriodsMockData      []ExceptionalPeriodsMockData
+	listLocationDirectionsMockData             []DisplayTextsMockData
+	listLocationFacilitiesMockData             []FacilitiesMockData
+	listLocationImagesMockData                 []ImagesMockData
+	listLocationsMockData                      []LocationsMockData
+	listRegularHoursMockData                   []RegularHoursMockData
+	listRelatedLocationsMockData               []GeoLocationsMockData
+	listStatusSchedulesMockData                []StatusSchedulesMockData
+	listUsersMockData                          []UsersMockData
+	setEvseDirectionMockData                   []db.SetEvseDirectionParams
+	setEvseImageMockData                       []db.SetEvseImageParams
+	updateConnectorByUidMockData               []ConnectorMockData
+	updateEvseByUidMockData                    []EvseMockData
+	updateEvseLastUpdatedMockData              []error
+	updateLocationByUidMockData                []LocationMockData
+	updateLocationLastUpdatedMockData              []error
+	updateUserMockData                         []UserMockData
 }
 
 func NewMockRepository() MockRepository {

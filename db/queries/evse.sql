@@ -56,3 +56,7 @@ UPDATE evses SET (
   ) = ($2, $3, $4, $5, $6, $7)
   WHERE uid = $1
   RETURNING *;
+
+-- name: UpdateEvseLastUpdated :exec
+UPDATE evses SET last_updated = $2
+  WHERE id = $1;
