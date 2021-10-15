@@ -6,35 +6,36 @@ import (
 	"github.com/satimoto/go-datastore/db"
 )
 
-type OpeningTimePayload struct {
+type OpeningTimeMockData struct {
 	OpeningTime db.OpeningTime
 	Error       error
 }
 
 func (r *MockRepositoryService) CreateOpeningTime(ctx context.Context, twentyfourseven bool) (db.OpeningTime, error) {
-	if len(r.createOpeningTimePayload) == 0 {
-		return db.OpeningTime{}, ErrorNotFound()
-	}
-
-	response := r.createOpeningTimePayload[0]
-	r.createOpeningTimePayload = r.createOpeningTimePayload[1:]
-	return response.OpeningTime, response.Error
+	r.createOpeningTimeMockData = append(r.createOpeningTimeMockData, twentyfourseven)
+	return db.OpeningTime{}, nil
 }
 
 func (r *MockRepositoryService) GetOpeningTime(ctx context.Context, id int64) (db.OpeningTime, error) {
-	if len(r.getOpeningTimePayload) == 0 {
+	if len(r.getOpeningTimeMockData) == 0 {
 		return db.OpeningTime{}, ErrorNotFound()
 	}
 
-	response := r.createOpeningTimePayload[0]
-	r.getOpeningTimePayload = r.getOpeningTimePayload[1:]
+	response := r.getOpeningTimeMockData[0]
+	r.getOpeningTimeMockData = r.getOpeningTimeMockData[1:]
 	return response.OpeningTime, response.Error
 }
 
-func (r *MockRepositoryService) SetCreateOpeningTimePayload(response OpeningTimePayload) {
-	r.createOpeningTimePayload = append(r.createOpeningTimePayload, response)
+func (r *MockRepositoryService) GetCreateOpeningTimeMockData() (bool, error) {
+	if len(r.createOpeningTimeMockData) == 0 {
+		return false, ErrorNotFound()
+	}
+
+	response := r.createOpeningTimeMockData[0]
+	r.createOpeningTimeMockData = r.createOpeningTimeMockData[1:]
+	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetOpeningTimePayload(response OpeningTimePayload) {
-	r.getOpeningTimePayload = append(r.getOpeningTimePayload, response)
+func (r *MockRepositoryService) SetGetOpeningTimeMockData(response OpeningTimeMockData) {
+	r.getOpeningTimeMockData = append(r.getOpeningTimeMockData, response)
 }

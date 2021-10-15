@@ -2,7 +2,7 @@ package mocks
 
 import "github.com/satimoto/go-datastore/db"
 
-type ParkingRestrictionsPayload struct {
+type ParkingRestrictionsMockData struct {
 	ParkingRestrictions []db.ParkingRestriction
 	Error               error
 }

@@ -7,15 +7,15 @@ import (
 )
 
 func (r *MockRepositoryService) ListLocationImages(ctx context.Context, locationID int64) ([]db.Image, error) {
-	if len(r.listLocationImagesPayload) == 0 {
+	if len(r.listLocationImagesMockData) == 0 {
 		return []db.Image{}, nil
 	}
 
-	response := r.listLocationImagesPayload[0]
-	r.listLocationImagesPayload = r.listLocationImagesPayload[1:]
+	response := r.listLocationImagesMockData[0]
+	r.listLocationImagesMockData = r.listLocationImagesMockData[1:]
 	return response.Images, response.Error
 }
 
-func (r *MockRepositoryService) SetListLocationImagesPayload(response ImagesPayload) {
-	r.listLocationImagesPayload = append(r.listLocationImagesPayload, response)
+func (r *MockRepositoryService) SetListLocationImagesMockData(response ImagesMockData) {
+	r.listLocationImagesMockData = append(r.listLocationImagesMockData, response)
 }
