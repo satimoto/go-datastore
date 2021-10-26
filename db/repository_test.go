@@ -5,32 +5,33 @@ import (
 	"testing"
 
 	"github.com/satimoto/go-datastore/db"
-	"github.com/satimoto/go-datastore/db/mocks"
+	"github.com/satimoto/go-datastore-mocks/db"
 )
 
 func TestCreateNode(t *testing.T) {
 	ctx := context.Background()
-	mockRepositoryService := mocks.NewMockRepository()
 
 	t.Run("Create Node", func(t *testing.T) {
-		expectNode := db.Node{
+		mockRepositoryService := mocks.NewMockRepositoryService()
+
+		node := db.Node{
 			Pubkey:  "abcdef1234567890",
 			Address: "192.168.0.1:1234",
 		}
 
-		mockRepositoryService.SetCreateNodeResponse(mocks.NodeResponse{Node: expectNode, Error: nil})
-
-		node, err := mockRepositoryService.CreateNode(ctx, db.CreateNodeParams{
+		_, err := mockRepositoryService.CreateNode(ctx, db.CreateNodeParams{
 			Pubkey:  "abcdef1234567890",
 			Address: "192.168.0.1:1234",
 		})
 
-		if node.Pubkey != expectNode.Pubkey {
-			t.Errorf("Pubkey: got %v, want %v", expectNode.Pubkey, node.Pubkey)
+		mockNode, err := mockRepositoryService.GetCreateNodeMockData()
+
+		if node.Pubkey != mockNode.Pubkey {
+			t.Errorf("Pubkey: got %v, want %v", mockNode.Pubkey, node.Pubkey)
 		}
 
-		if node.Address != expectNode.Address {
-			t.Errorf("Address: got %v, want %v", expectNode.Address, node.Address)
+		if node.Address != mockNode.Address {
+			t.Errorf("Address: got %v, want %v", mockNode.Address, node.Address)
 		}
 
 		if err != nil {
