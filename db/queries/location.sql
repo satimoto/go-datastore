@@ -13,10 +13,11 @@ INSERT INTO locations (
     suboperator_id, 
     owner_id, 
     time_zone, 
+    opening_time_id,
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   RETURNING *;
 
 -- name: DeleteLocation :exec
@@ -49,10 +50,16 @@ UPDATE locations SET (
     postal_code, 
     country, 
     geom, 
+    geo_location_id, 
+    operator_id, 
+    suboperator_id, 
+    owner_id, 
     time_zone, 
+    opening_time_id,
     charging_when_closed,
+    energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   WHERE id = $1
   RETURNING *;
 
@@ -65,10 +72,16 @@ UPDATE locations SET (
     postal_code, 
     country, 
     geom, 
+    geo_location_id, 
+    operator_id, 
+    suboperator_id, 
+    owner_id, 
     time_zone, 
+    opening_time_id,
     charging_when_closed,
+    energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   WHERE uid = $1
   RETURNING *;
 
