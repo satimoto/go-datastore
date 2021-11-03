@@ -42,6 +42,17 @@ func (q *Queries) DeleteBusinessDetail(ctx context.Context, id int64) error {
 	return err
 }
 
+const deleteBusinessDetailLogo = `-- name: DeleteBusinessDetailLogo :exec
+DELETE FROM images im
+  USING business_details bd
+  WHERE bd.logo_id == im.id AND bd.id == $1
+`
+
+func (q *Queries) DeleteBusinessDetailLogo(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteBusinessDetailLogo, id)
+	return err
+}
+
 const getBusinessDetail = `-- name: GetBusinessDetail :one
 SELECT id, name, website, logo_id FROM business_details
   WHERE id = $1

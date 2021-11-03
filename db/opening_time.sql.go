@@ -44,15 +44,19 @@ func (q *Queries) GetOpeningTime(ctx context.Context, id int64) (OpeningTime, er
 }
 
 const updateOpeningTime = `-- name: UpdateOpeningTime :one
-UPDATE opening_times SET (
-    twentyfourseven
-  ) = ($2)
+UPDATE opening_times 
+  SET twentyfourseven = $2
   WHERE id = $1
   RETURNING id, twentyfourseven
 `
 
-func (q *Queries) UpdateOpeningTime(ctx context.Context, id int64) (OpeningTime, error) {
-	row := q.db.QueryRowContext(ctx, updateOpeningTime, id)
+type UpdateOpeningTimeParams struct {
+	ID              int64 `db:"id" json:"id"`
+	Twentyfourseven bool  `db:"twentyfourseven" json:"twentyfourseven"`
+}
+
+func (q *Queries) UpdateOpeningTime(ctx context.Context, arg UpdateOpeningTimeParams) (OpeningTime, error) {
+	row := q.db.QueryRowContext(ctx, updateOpeningTime, arg.ID, arg.Twentyfourseven)
 	var i OpeningTime
 	err := row.Scan(&i.ID, &i.Twentyfourseven)
 	return i, err
