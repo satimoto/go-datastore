@@ -26,10 +26,11 @@ INSERT INTO locations (
     suboperator_id, 
     owner_id, 
     time_zone, 
+    opening_time_id,
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
@@ -47,6 +48,7 @@ type CreateLocationParams struct {
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
 	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
@@ -67,6 +69,7 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 		arg.SuboperatorID,
 		arg.OwnerID,
 		arg.TimeZone,
+		arg.OpeningTimeID,
 		arg.ChargingWhenClosed,
 		arg.EnergyMixID,
 		arg.LastUpdated,
@@ -255,10 +258,16 @@ UPDATE locations SET (
     postal_code, 
     country, 
     geom, 
+    geo_location_id, 
+    operator_id, 
+    suboperator_id, 
+    owner_id, 
     time_zone, 
+    opening_time_id,
     charging_when_closed,
+    energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   WHERE id = $1
   RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
@@ -272,8 +281,14 @@ type UpdateLocationParams struct {
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
 	Geom               geom.Point     `db:"geom" json:"geom"`
+	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
+	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
+	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
 	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -287,8 +302,14 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 		arg.PostalCode,
 		arg.Country,
 		arg.Geom,
+		arg.GeoLocationID,
+		arg.OperatorID,
+		arg.SuboperatorID,
+		arg.OwnerID,
 		arg.TimeZone,
+		arg.OpeningTimeID,
 		arg.ChargingWhenClosed,
+		arg.EnergyMixID,
 		arg.LastUpdated,
 	)
 	var i Location
@@ -324,10 +345,16 @@ UPDATE locations SET (
     postal_code, 
     country, 
     geom, 
+    geo_location_id, 
+    operator_id, 
+    suboperator_id, 
+    owner_id, 
     time_zone, 
+    opening_time_id,
     charging_when_closed,
+    energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   WHERE uid = $1
   RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
@@ -341,8 +368,14 @@ type UpdateLocationByUidParams struct {
 	PostalCode         string         `db:"postal_code" json:"postalCode"`
 	Country            string         `db:"country" json:"country"`
 	Geom               geom.Point     `db:"geom" json:"geom"`
+	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
+	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
+	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
 	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
 	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -356,8 +389,14 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 		arg.PostalCode,
 		arg.Country,
 		arg.Geom,
+		arg.GeoLocationID,
+		arg.OperatorID,
+		arg.SuboperatorID,
+		arg.OwnerID,
 		arg.TimeZone,
+		arg.OpeningTimeID,
 		arg.ChargingWhenClosed,
+		arg.EnergyMixID,
 		arg.LastUpdated,
 	)
 	var i Location

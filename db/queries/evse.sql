@@ -39,9 +39,10 @@ UPDATE evses SET (
     status, 
     floor_level, 
     geom, 
+    geo_location_id, 
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
   RETURNING *;
 
@@ -51,9 +52,10 @@ UPDATE evses SET (
     status, 
     floor_level, 
     geom, 
+    geo_location_id, 
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE uid = $1
   RETURNING *;
 
