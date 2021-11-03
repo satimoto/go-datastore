@@ -7,6 +7,11 @@ INSERT INTO business_details (name, website, logo_id)
 DELETE FROM business_details
   WHERE id = $1;
 
+-- name: DeleteBusinessDetailLogo :exec
+DELETE FROM images im
+  USING business_details bd
+  WHERE bd.logo_id == im.id AND bd.id == $1;
+
 -- name: GetBusinessDetail :one
 SELECT * FROM business_details
   WHERE id = $1;

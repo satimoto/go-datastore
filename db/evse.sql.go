@@ -176,9 +176,10 @@ UPDATE evses SET (
     status, 
     floor_level, 
     geom, 
+    geo_location_id, 
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
   RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated
 `
@@ -189,6 +190,7 @@ type UpdateEvseParams struct {
 	Status            EvseStatus     `db:"status" json:"status"`
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
 	Geom              interface{}    `db:"geom" json:"geom"`
+	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -200,6 +202,7 @@ func (q *Queries) UpdateEvse(ctx context.Context, arg UpdateEvseParams) (Evse, e
 		arg.Status,
 		arg.FloorLevel,
 		arg.Geom,
+		arg.GeoLocationID,
 		arg.PhysicalReference,
 		arg.LastUpdated,
 	)
@@ -225,9 +228,10 @@ UPDATE evses SET (
     status, 
     floor_level, 
     geom, 
+    geo_location_id, 
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE uid = $1
   RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated
 `
@@ -238,6 +242,7 @@ type UpdateEvseByUidParams struct {
 	Status            EvseStatus     `db:"status" json:"status"`
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
 	Geom              interface{}    `db:"geom" json:"geom"`
+	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -249,6 +254,7 @@ func (q *Queries) UpdateEvseByUid(ctx context.Context, arg UpdateEvseByUidParams
 		arg.Status,
 		arg.FloorLevel,
 		arg.Geom,
+		arg.GeoLocationID,
 		arg.PhysicalReference,
 		arg.LastUpdated,
 	)
