@@ -93,6 +93,16 @@ func (q *Queries) DeleteConnectorByUid(ctx context.Context, arg DeleteConnectorB
 	return err
 }
 
+const deleteConnectors = `-- name: DeleteConnectors :exec
+DELETE FROM connectors
+  WHERE evse_id = $1
+`
+
+func (q *Queries) DeleteConnectors(ctx context.Context, evseID int64) error {
+	_, err := q.db.ExecContext(ctx, deleteConnectors, evseID)
+	return err
+}
+
 const getConnector = `-- name: GetConnector :one
 SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE id = $1
