@@ -13,8 +13,7 @@ SELECT * FROM opening_times
   WHERE id = $1;
 
 -- name: UpdateOpeningTime :one
-UPDATE opening_times SET (
-    twentyfourseven
-  ) = ($2)
+UPDATE opening_times 
+  SET twentyfourseven = $2
   WHERE id = $1
   RETURNING *;

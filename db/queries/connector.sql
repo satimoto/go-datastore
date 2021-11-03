@@ -21,6 +21,10 @@ DELETE FROM connectors
 DELETE FROM connectors
   WHERE evse_id = $1 AND uid = $2;
 
+-- name: DeleteConnectors :exec
+DELETE FROM connectors
+  WHERE evse_id = $1;
+
 -- name: GetConnector :one
 SELECT * FROM connectors
   WHERE id = $1;
