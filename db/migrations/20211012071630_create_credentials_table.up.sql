@@ -1,7 +1,9 @@
+-- Credentials
 CREATE TABLE IF NOT EXISTS credentials (
     id BIGSERIAL PRIMARY KEY,
-    client_token TEXT NOT NULL,
-    server_token TEXT NOT NULL,
+    client_token TEXT,
+    server_token TEXT,
+    version TEXT,
     url TEXT NOT NULL,
     business_detail_id BIGINT NOT NULL,
     party_id TEXT NOT NULL,
@@ -15,6 +17,6 @@ ALTER TABLE credentials
 
 ALTER TABLE credentials 
     ADD CONSTRAINT fk_credentials_business_details_id
-     FOREIGN KEY (business_details_id) 
-     REFERENCES business_details(id) 
-     ON DELETE CASCADE;
+    FOREIGN KEY (business_details_id) 
+    REFERENCES business_details(id) 
+    ON DELETE CASCADE;

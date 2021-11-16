@@ -22,6 +22,10 @@ SELECT * FROM credentials
 SELECT * FROM credentials
   WHERE party_id = $1 AND country_code = $2;
 
+-- name: GetCredentialByServerToken :one
+SELECT * FROM credentials
+  WHERE server_token = $1;
+
 -- name: UpdateCredential :one
 UPDATE credentials SET (
     client_token, 
