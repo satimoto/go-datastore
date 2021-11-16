@@ -255,14 +255,15 @@ type Connector struct {
 }
 
 type Credential struct {
-	ID               int64     `db:"id" json:"id"`
-	ClientToken      string    `db:"client_token" json:"clientToken"`
-	ServerToken      string    `db:"server_token" json:"serverToken"`
-	Url              string    `db:"url" json:"url"`
-	BusinessDetailID int64     `db:"business_detail_id" json:"businessDetailID"`
-	PartyID          string    `db:"party_id" json:"partyID"`
-	CountryCode      string    `db:"country_code" json:"countryCode"`
-	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
+	ID               int64          `db:"id" json:"id"`
+	ClientToken      sql.NullString `db:"client_token" json:"clientToken"`
+	ServerToken      sql.NullString `db:"server_token" json:"serverToken"`
+	Version          sql.NullString `db:"version" json:"version"`
+	Url              string         `db:"url" json:"url"`
+	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
+	PartyID          string         `db:"party_id" json:"partyID"`
+	CountryCode      string         `db:"country_code" json:"countryCode"`
+	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 type DisplayText struct {
@@ -434,4 +435,18 @@ type User struct {
 	ID          int64  `db:"id" json:"id"`
 	DeviceToken string `db:"device_token" json:"deviceToken"`
 	NodeID      int64  `db:"node_id" json:"nodeID"`
+}
+
+type Version struct {
+	ID           int64  `db:"id" json:"id"`
+	CredentialID int64  `db:"credential_id" json:"credentialID"`
+	Version      string `db:"version" json:"version"`
+	Url          string `db:"url" json:"url"`
+}
+
+type VersionEndpoint struct {
+	ID         int64  `db:"id" json:"id"`
+	VersionID  int64  `db:"version_id" json:"versionID"`
+	Identifier string `db:"identifier" json:"identifier"`
+	Url        string `db:"url" json:"url"`
 }
