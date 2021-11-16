@@ -5,6 +5,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -18,17 +19,17 @@ INSERT INTO credentials (
     country_code, 
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-  RETURNING id, client_token, server_token, url, business_detail_id, party_id, country_code, last_updated
+  RETURNING id, client_token, server_token, version, url, business_detail_id, party_id, country_code, last_updated
 `
 
 type CreateCredentialParams struct {
-	ClientToken      string    `db:"client_token" json:"clientToken"`
-	ServerToken      string    `db:"server_token" json:"serverToken"`
-	Url              string    `db:"url" json:"url"`
-	BusinessDetailID int64     `db:"business_detail_id" json:"businessDetailID"`
-	PartyID          string    `db:"party_id" json:"partyID"`
-	CountryCode      string    `db:"country_code" json:"countryCode"`
-	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
+	ClientToken      sql.NullString `db:"client_token" json:"clientToken"`
+	ServerToken      sql.NullString `db:"server_token" json:"serverToken"`
+	Url              string         `db:"url" json:"url"`
+	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
+	PartyID          string         `db:"party_id" json:"partyID"`
+	CountryCode      string         `db:"country_code" json:"countryCode"`
+	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateCredential(ctx context.Context, arg CreateCredentialParams) (Credential, error) {
@@ -46,6 +47,7 @@ func (q *Queries) CreateCredential(ctx context.Context, arg CreateCredentialPara
 		&i.ID,
 		&i.ClientToken,
 		&i.ServerToken,
+		&i.Version,
 		&i.Url,
 		&i.BusinessDetailID,
 		&i.PartyID,
@@ -66,7 +68,7 @@ func (q *Queries) DeleteCredential(ctx context.Context, id int64) error {
 }
 
 const getCredential = `-- name: GetCredential :one
-SELECT id, client_token, server_token, url, business_detail_id, party_id, country_code, last_updated FROM credentials
+SELECT id, client_token, server_token, version, url, business_detail_id, party_id, country_code, last_updated FROM credentials
   WHERE id = $1
 `
 
@@ -77,6 +79,7 @@ func (q *Queries) GetCredential(ctx context.Context, id int64) (Credential, erro
 		&i.ID,
 		&i.ClientToken,
 		&i.ServerToken,
+		&i.Version,
 		&i.Url,
 		&i.BusinessDetailID,
 		&i.PartyID,
@@ -87,7 +90,7 @@ func (q *Queries) GetCredential(ctx context.Context, id int64) (Credential, erro
 }
 
 const getCredentialByPartyAndCountryCode = `-- name: GetCredentialByPartyAndCountryCode :one
-SELECT id, client_token, server_token, url, business_detail_id, party_id, country_code, last_updated FROM credentials
+SELECT id, client_token, server_token, version, url, business_detail_id, party_id, country_code, last_updated FROM credentials
   WHERE party_id = $1 AND country_code = $2
 `
 
@@ -103,6 +106,29 @@ func (q *Queries) GetCredentialByPartyAndCountryCode(ctx context.Context, arg Ge
 		&i.ID,
 		&i.ClientToken,
 		&i.ServerToken,
+		&i.Version,
+		&i.Url,
+		&i.BusinessDetailID,
+		&i.PartyID,
+		&i.CountryCode,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
+const getCredentialByServerToken = `-- name: GetCredentialByServerToken :one
+SELECT id, client_token, server_token, version, url, business_detail_id, party_id, country_code, last_updated FROM credentials
+  WHERE server_token = $1
+`
+
+func (q *Queries) GetCredentialByServerToken(ctx context.Context, serverToken sql.NullString) (Credential, error) {
+	row := q.db.QueryRowContext(ctx, getCredentialByServerToken, serverToken)
+	var i Credential
+	err := row.Scan(
+		&i.ID,
+		&i.ClientToken,
+		&i.ServerToken,
+		&i.Version,
 		&i.Url,
 		&i.BusinessDetailID,
 		&i.PartyID,
@@ -122,17 +148,17 @@ UPDATE credentials SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7)
   WHERE id = $1
-  RETURNING id, client_token, server_token, url, business_detail_id, party_id, country_code, last_updated
+  RETURNING id, client_token, server_token, version, url, business_detail_id, party_id, country_code, last_updated
 `
 
 type UpdateCredentialParams struct {
-	ID          int64     `db:"id" json:"id"`
-	ClientToken string    `db:"client_token" json:"clientToken"`
-	ServerToken string    `db:"server_token" json:"serverToken"`
-	Url         string    `db:"url" json:"url"`
-	PartyID     string    `db:"party_id" json:"partyID"`
-	CountryCode string    `db:"country_code" json:"countryCode"`
-	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
+	ID          int64          `db:"id" json:"id"`
+	ClientToken sql.NullString `db:"client_token" json:"clientToken"`
+	ServerToken sql.NullString `db:"server_token" json:"serverToken"`
+	Url         string         `db:"url" json:"url"`
+	PartyID     string         `db:"party_id" json:"partyID"`
+	CountryCode string         `db:"country_code" json:"countryCode"`
+	LastUpdated time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateCredential(ctx context.Context, arg UpdateCredentialParams) (Credential, error) {
@@ -150,6 +176,7 @@ func (q *Queries) UpdateCredential(ctx context.Context, arg UpdateCredentialPara
 		&i.ID,
 		&i.ClientToken,
 		&i.ServerToken,
+		&i.Version,
 		&i.Url,
 		&i.BusinessDetailID,
 		&i.PartyID,

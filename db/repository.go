@@ -25,7 +25,7 @@ type RepositoryService struct {
 	*sql.DB
 }
 
-func NewRepository(d *sql.DB) Repository {
+func NewRepositoryService(d *sql.DB) *RepositoryService {
 	return &RepositoryService{
 		Queries: New(d),
 		DB:      d,
