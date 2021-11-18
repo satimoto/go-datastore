@@ -514,6 +514,10 @@ github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb
 github.com/sagikazarmark/crypt v0.1.0/go.mod h1:B/mN0msZuINBtQ1zZLEQcegFJJf9vnYIR88KRMEuODE=
 github.com/satimoto/go-datastore-mocks v0.0.5 h1:LNpYznFoqS0Fzt9QIWnf3POt/3OeEi/eryGvfC/OLJA=
 github.com/satimoto/go-datastore-mocks v0.0.5/go.mod h1:/9aDpu59RRfXLjWqqBtSms1zyYaXSuATKRGQ4q83j8s=
+github.com/satimoto/go-datastore-mocks v0.0.6 h1:b16RsNSROOn3B/QR6IDkRgBloM4GFHRT7NnQygS83WM=
+github.com/satimoto/go-datastore-mocks v0.0.6/go.mod h1:EKeIw7eMGRYXOxp7iUKISCsx7oKlTeYJFEqb0OcJtVA=
+github.com/satimoto/go-datastore-mocks v0.0.7 h1:QfPfvt8zM7vevaw8YUxA/SuAWmbbXVIHFumsTuiI4H4=
+github.com/satimoto/go-datastore-mocks v0.0.7/go.mod h1:fBhVJVF1lC3C8e994weHGqcXdOpVLgjx0XZwodMU20Y=
 github.com/satimoto/go-datastore/db/mocks v0.0.0-20211007150556-47e47453d283 h1:F6OoPCo++hte+sYHfga++kXTiC16X2d8GdH/EBe6DXg=
 github.com/satimoto/go-datastore/db/mocks v0.0.0-20211007150556-47e47453d283/go.mod h1:zt4UnUlsNedS8DTJ8E43f9zp1XLVD6zrA8I2oOvkn3U=
 github.com/satimoto/go-datastore/db/mocks v0.0.0-20211011082415-185a8303f97e h1:kb5ICXI9RKf+TrFONEnXmtpmhdrRQQjEu9lArnzgsrw=
