@@ -6,7 +6,6 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.15.0
 	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.3
-	github.com/satimoto/go-datastore-mocks v0.0.7
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
 	github.com/twpayne/go-geom v1.4.1
