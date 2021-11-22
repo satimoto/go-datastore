@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -24,7 +25,8 @@ var migrateCommand = &cobra.Command{
 		dbUser, _ := cmd.Flags().GetString("db_user")
 		dbPass, _ := cmd.Flags().GetString("db_pass")
 		down, _ := cmd.Flags().GetBool("down")
-		forceVersion, _ := cmd.Flags().GetInt("force")
+		forceVersion, _ := cmd.Flags().GetString("force")
+		steps, _ := cmd.Flags().GetString("steps")
 		migrationsPath, _ := cmd.Flags().GetString("migrations_path")
 		sslMode, _ := cmd.Flags().GetString("ssl_mode")
 
@@ -49,11 +51,21 @@ var migrateCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		if forceVersion != 0 {
-			m.Force(forceVersion)
+		if len(forceVersion) > 0 {
+			if value, err := strconv.Atoi(forceVersion); err == nil {
+				m.Force(value)
+			}
 		}
 
-		if down {
+		if len(steps) > 0 {
+			if value, err := strconv.Atoi(steps); err == nil {
+				if down {
+					err = m.Steps(-value)
+				} else {
+					err = m.Steps(value)
+				}
+			}
+		} else if down {
 			err = m.Down()
 		} else {
 			err = m.Up()
@@ -76,7 +88,8 @@ func main() {
 	migrateCommand.Flags().StringP("db_name", "n", viper.GetString("DB_NAME"), "Database name")
 	migrateCommand.Flags().StringP("migrations_path", "m", viper.GetString("MIGRATIONS_PATH"), "Migration files path")
 	migrateCommand.Flags().StringP("ssl_mode", "s", "disable", "Database SSL mode")
-	migrateCommand.Flags().StringP("force", "f", "", "Force a migration version")
+	migrateCommand.Flags().StringP("force", "F", "", "Force a migration version")
+	migrateCommand.Flags().StringP("steps", "S", "", "Steps to migrate")
 	migrateCommand.Flags().BoolP("down", "D", false, "Reverse migrations")
 	migrateCommand.Execute()
 }
