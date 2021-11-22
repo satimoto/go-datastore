@@ -272,6 +272,13 @@ type DisplayText struct {
 	Text     string `db:"text" json:"text"`
 }
 
+type EmailSubscription struct {
+	ID          int64     `db:"id" json:"id"`
+	Email       string    `db:"email" json:"email"`
+	IsVerified  bool      `db:"is_verified" json:"isVerified"`
+	CreatedDate time.Time `db:"created_date" json:"createdDate"`
+}
+
 type EnergyMix struct {
 	ID                int64          `db:"id" json:"id"`
 	IsGreenEnergy     bool           `db:"is_green_energy" json:"isGreenEnergy"`

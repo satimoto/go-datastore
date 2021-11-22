@@ -11,14 +11,6 @@ CREATE TYPE evse_status AS ENUM (
     'UNKNOWN'
 );
 
-CREATE TABLE IF NOT EXISTS status_schedules (
-    id BIGSERIAL PRIMARY KEY,
-    evse_id BIGINT NOT NULL,
-    period_begin TIMESTAMP NOT NULL,
-    period_end TIMESTAMP,
-    status evse_status NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS capabilities (
     id BIGSERIAL PRIMARY KEY,
     text TEXT NOT NULL,
@@ -33,6 +25,48 @@ INSERT INTO capabilities (text, description) VALUES
     ('RFID_READER', 'RFID Tokens Accepted'),
     ('UNLOCK_CAPABLE', 'Remove Unlock');
 
+CREATE TABLE IF NOT EXISTS parking_restrictions (
+    id BIGSERIAL PRIMARY KEY,
+    text TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+
+INSERT INTO parking_restrictions (text, description) VALUES 
+    ('EV_ONLY', 'Reserved parking spot for electric vehicles'),
+    ('PLUGGED', 'Parking is only allowed while plugged in'),
+    ('DISABLED', 'Reserved parking spot for disabled people'),
+    ('CUSTOMERS', 'Parking spot for customers/guests only'),
+    ('RFID_READER', 'RFID Tokens Accepted'),
+    ('MOTORCYCLES', 'Parking spot for motorcycles or scooters');
+
+CREATE TABLE IF NOT EXISTS evses (
+    id BIGSERIAL PRIMARY KEY,
+    location_id BIGINT NOT NULL,
+    uid TEXT NOT NULL,
+    evse_id TEXT,
+    status evse_status NOT NULL,
+    -- status_schedule []status_schedules
+    -- capabilities []evse_capabilities 
+    -- connectors []connectors
+    floor_level TEXT,
+    geom GEOMETRY(POINT, 4326),
+    geo_location_id BIGINT,
+    physical_reference TEXT,
+    -- directions []display_texts
+    -- parking_restrictions []evse_parking_restrictions
+    -- images []images
+    last_updated TIMESTAMP NOT NULL
+);
+
+CREATE INDEX idx_evses_uid ON evses (uid);
+
+ALTER TABLE evses 
+    ADD CONSTRAINT fk_evses_location_id 
+    FOREIGN KEY (location_id) 
+    REFERENCES locations(id) 
+    ON DELETE CASCADE;
+
+-- Connectors
 CREATE TYPE connector_type AS ENUM (
     'CHADEMO', 
     'DOMESTIC_A',
@@ -95,47 +129,6 @@ ALTER TABLE connectors
     ADD CONSTRAINT fk_connectors_evse_id 
     FOREIGN KEY (evse_id) 
     REFERENCES evses(id) 
-    ON DELETE CASCADE;
-
-CREATE TABLE IF NOT EXISTS parking_restrictions (
-    id BIGSERIAL PRIMARY KEY,
-    text TEXT NOT NULL,
-    description TEXT NOT NULL
-);
-
-INSERT INTO parking_restrictions (text, description) VALUES 
-    ('EV_ONLY', 'Reserved parking spot for electric vehicles'),
-    ('PLUGGED', 'Parking is only allowed while plugged in'),
-    ('DISABLED', 'Reserved parking spot for disabled people'),
-    ('CUSTOMERS', 'Parking spot for customers/guests only'),
-    ('RFID_READER', 'RFID Tokens Accepted'),
-    ('MOTORCYCLES', 'Parking spot for motorcycles or scooters');
-
-CREATE TABLE IF NOT EXISTS evses (
-    id BIGSERIAL PRIMARY KEY,
-    location_id BIGINT NOT NULL,
-    uid TEXT NOT NULL,
-    evse_id TEXT,
-    status evse_status NOT NULL,
-    -- status_schedule []status_schedules
-    -- capabilities []evse_capabilities 
-    -- connectors []connectors
-    floor_level TEXT,
-    geom GEOMETRY(POINT, 4326),
-    geo_location_id BIGINT,
-    physical_reference TEXT,
-    -- directions []display_texts
-    -- parking_restrictions []evse_parking_restrictions
-    -- images []images
-    last_updated TIMESTAMP NOT NULL
-);
-
-CREATE INDEX idx_evses_uid ON evses (uid);
-
-ALTER TABLE evses 
-    ADD CONSTRAINT fk_evses_location_id 
-    FOREIGN KEY (location_id) 
-    REFERENCES locations(id) 
     ON DELETE CASCADE;
 
 -- Evse Directions
@@ -208,4 +201,19 @@ ALTER TABLE evse_parking_restrictions
     ADD CONSTRAINT fk_evse_parking_restrictions_parking_restriction_id
     FOREIGN KEY (parking_restriction_id) 
     REFERENCES parking_restrictions(id) 
+    ON DELETE CASCADE;
+
+-- Status Schedules
+CREATE TABLE IF NOT EXISTS status_schedules (
+    id BIGSERIAL PRIMARY KEY,
+    evse_id BIGINT NOT NULL,
+    period_begin TIMESTAMP NOT NULL,
+    period_end TIMESTAMP,
+    status evse_status NOT NULL
+);
+
+ALTER TABLE status_schedules 
+    ADD CONSTRAINT fk_status_schedules_evse_id
+    FOREIGN KEY (evse_id) 
+    REFERENCES evses(id) 
     ON DELETE CASCADE;
