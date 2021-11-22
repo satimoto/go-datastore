@@ -90,6 +90,15 @@ CREATE TYPE environmental_impact_category AS ENUM (
     'CARBON_DIOXIDE'
 );
 
+CREATE TABLE IF NOT EXISTS energy_mixes (
+    id BIGSERIAL PRIMARY KEY,
+    is_green_energy BOOLEAN NOT NULL,
+    -- energy_sources []energy_sources
+    -- environ_impact []environmental_impacts
+    supplier_name TEXT,
+    energy_product_name TEXT 
+);
+
 CREATE TABLE IF NOT EXISTS energy_sources (
     id BIGSERIAL PRIMARY KEY,
     energy_mix_id BIGINT NOT NULL,
@@ -115,15 +124,6 @@ ALTER TABLE environmental_impacts
     FOREIGN KEY (energy_mix_id) 
     REFERENCES energy_mixes(id) 
     ON DELETE CASCADE;
-
-CREATE TABLE IF NOT EXISTS energy_mixes (
-    id BIGSERIAL PRIMARY KEY,
-    is_green_energy BOOLEAN NOT NULL,
-    -- energy_sources []energy_sources
-    -- environ_impact []environmental_impacts
-    supplier_name TEXT,
-    energy_product_name TEXT 
-);
 
 -- Location Hours
 CREATE TYPE period_type AS ENUM (
