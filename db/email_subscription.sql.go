@@ -11,24 +11,32 @@ import (
 const createEmailSubscription = `-- name: CreateEmailSubscription :one
 INSERT INTO email_subscriptions (
     email,
+    code,
     is_verified, 
     created_date
-  ) VALUES ($1, $2, $3)
-  RETURNING id, email, is_verified, created_date
+  ) VALUES ($1, $2, $3, $4)
+  RETURNING id, email, code, is_verified, created_date
 `
 
 type CreateEmailSubscriptionParams struct {
 	Email       string    `db:"email" json:"email"`
+	Code        string    `db:"code" json:"code"`
 	IsVerified  bool      `db:"is_verified" json:"isVerified"`
 	CreatedDate time.Time `db:"created_date" json:"createdDate"`
 }
 
 func (q *Queries) CreateEmailSubscription(ctx context.Context, arg CreateEmailSubscriptionParams) (EmailSubscription, error) {
-	row := q.db.QueryRowContext(ctx, createEmailSubscription, arg.Email, arg.IsVerified, arg.CreatedDate)
+	row := q.db.QueryRowContext(ctx, createEmailSubscription,
+		arg.Email,
+		arg.Code,
+		arg.IsVerified,
+		arg.CreatedDate,
+	)
 	var i EmailSubscription
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.Code,
 		&i.IsVerified,
 		&i.CreatedDate,
 	)
@@ -36,7 +44,7 @@ func (q *Queries) CreateEmailSubscription(ctx context.Context, arg CreateEmailSu
 }
 
 const getEmailSubscriptionByEmail = `-- name: GetEmailSubscriptionByEmail :one
-SELECT id, email, is_verified, created_date FROM email_subscriptions
+SELECT id, email, code, is_verified, created_date FROM email_subscriptions
   WHERE email = $1
 `
 
@@ -46,6 +54,42 @@ func (q *Queries) GetEmailSubscriptionByEmail(ctx context.Context, email string)
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.Code,
+		&i.IsVerified,
+		&i.CreatedDate,
+	)
+	return i, err
+}
+
+const updateEmailSubscription = `-- name: UpdateEmailSubscription :one
+UPDATE email_subscriptions SET (
+    email, 
+    code, 
+    is_verified
+  ) = ($2, $3, $4)
+  WHERE id = $1
+  RETURNING id, email, code, is_verified, created_date
+`
+
+type UpdateEmailSubscriptionParams struct {
+	ID         int64  `db:"id" json:"id"`
+	Email      string `db:"email" json:"email"`
+	Code       string `db:"code" json:"code"`
+	IsVerified bool   `db:"is_verified" json:"isVerified"`
+}
+
+func (q *Queries) UpdateEmailSubscription(ctx context.Context, arg UpdateEmailSubscriptionParams) (EmailSubscription, error) {
+	row := q.db.QueryRowContext(ctx, updateEmailSubscription,
+		arg.ID,
+		arg.Email,
+		arg.Code,
+		arg.IsVerified,
+	)
+	var i EmailSubscription
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Code,
 		&i.IsVerified,
 		&i.CreatedDate,
 	)
