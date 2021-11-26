@@ -273,11 +273,12 @@ type DisplayText struct {
 }
 
 type EmailSubscription struct {
-	ID          int64     `db:"id" json:"id"`
-	Email       string    `db:"email" json:"email"`
-	Code        string    `db:"code" json:"code"`
-	IsVerified  bool      `db:"is_verified" json:"isVerified"`
-	CreatedDate time.Time `db:"created_date" json:"createdDate"`
+	ID               int64     `db:"id" json:"id"`
+	Email            string    `db:"email" json:"email"`
+	VerificationCode string    `db:"verification_code" json:"verificationCode"`
+	Locale           string    `db:"locale" json:"locale"`
+	IsVerified       bool      `db:"is_verified" json:"isVerified"`
+	CreatedDate      time.Time `db:"created_date" json:"createdDate"`
 }
 
 type EnergyMix struct {
