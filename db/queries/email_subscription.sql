@@ -1,11 +1,16 @@
 -- name: CreateEmailSubscription :one
 INSERT INTO email_subscriptions (
     email,
-    code,
+    locale,
+    verification_code,
     is_verified, 
     created_date
-  ) VALUES ($1, $2, $3, $4)
+  ) VALUES ($1, $2, $3, $4, $5)
   RETURNING *;
+
+-- name: DeleteEmailSubscription :exec
+DELETE FROM email_subscriptions
+  WHERE id = $1;
 
 -- name: GetEmailSubscriptionByEmail :one
 SELECT * FROM email_subscriptions
@@ -14,8 +19,9 @@ SELECT * FROM email_subscriptions
 -- name: UpdateEmailSubscription :one
 UPDATE email_subscriptions SET (
     email, 
-    code, 
+    locale, 
+    verification_code, 
     is_verified
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
   RETURNING *;
