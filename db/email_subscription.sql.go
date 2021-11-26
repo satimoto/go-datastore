@@ -11,24 +11,27 @@ import (
 const createEmailSubscription = `-- name: CreateEmailSubscription :one
 INSERT INTO email_subscriptions (
     email,
-    code,
+    locale,
+    verification_code,
     is_verified, 
     created_date
-  ) VALUES ($1, $2, $3, $4)
-  RETURNING id, email, code, is_verified, created_date
+  ) VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, email, verification_code, locale, is_verified, created_date
 `
 
 type CreateEmailSubscriptionParams struct {
-	Email       string    `db:"email" json:"email"`
-	Code        string    `db:"code" json:"code"`
-	IsVerified  bool      `db:"is_verified" json:"isVerified"`
-	CreatedDate time.Time `db:"created_date" json:"createdDate"`
+	Email            string    `db:"email" json:"email"`
+	Locale           string    `db:"locale" json:"locale"`
+	VerificationCode string    `db:"verification_code" json:"verificationCode"`
+	IsVerified       bool      `db:"is_verified" json:"isVerified"`
+	CreatedDate      time.Time `db:"created_date" json:"createdDate"`
 }
 
 func (q *Queries) CreateEmailSubscription(ctx context.Context, arg CreateEmailSubscriptionParams) (EmailSubscription, error) {
 	row := q.db.QueryRowContext(ctx, createEmailSubscription,
 		arg.Email,
-		arg.Code,
+		arg.Locale,
+		arg.VerificationCode,
 		arg.IsVerified,
 		arg.CreatedDate,
 	)
@@ -36,15 +39,26 @@ func (q *Queries) CreateEmailSubscription(ctx context.Context, arg CreateEmailSu
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.Code,
+		&i.VerificationCode,
+		&i.Locale,
 		&i.IsVerified,
 		&i.CreatedDate,
 	)
 	return i, err
 }
 
+const deleteEmailSubscription = `-- name: DeleteEmailSubscription :exec
+DELETE FROM email_subscriptions
+  WHERE id = $1
+`
+
+func (q *Queries) DeleteEmailSubscription(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteEmailSubscription, id)
+	return err
+}
+
 const getEmailSubscriptionByEmail = `-- name: GetEmailSubscriptionByEmail :one
-SELECT id, email, code, is_verified, created_date FROM email_subscriptions
+SELECT id, email, verification_code, locale, is_verified, created_date FROM email_subscriptions
   WHERE email = $1
 `
 
@@ -54,7 +68,8 @@ func (q *Queries) GetEmailSubscriptionByEmail(ctx context.Context, email string)
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.Code,
+		&i.VerificationCode,
+		&i.Locale,
 		&i.IsVerified,
 		&i.CreatedDate,
 	)
@@ -64,32 +79,36 @@ func (q *Queries) GetEmailSubscriptionByEmail(ctx context.Context, email string)
 const updateEmailSubscription = `-- name: UpdateEmailSubscription :one
 UPDATE email_subscriptions SET (
     email, 
-    code, 
+    locale, 
+    verification_code, 
     is_verified
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
-  RETURNING id, email, code, is_verified, created_date
+  RETURNING id, email, verification_code, locale, is_verified, created_date
 `
 
 type UpdateEmailSubscriptionParams struct {
-	ID         int64  `db:"id" json:"id"`
-	Email      string `db:"email" json:"email"`
-	Code       string `db:"code" json:"code"`
-	IsVerified bool   `db:"is_verified" json:"isVerified"`
+	ID               int64  `db:"id" json:"id"`
+	Email            string `db:"email" json:"email"`
+	Locale           string `db:"locale" json:"locale"`
+	VerificationCode string `db:"verification_code" json:"verificationCode"`
+	IsVerified       bool   `db:"is_verified" json:"isVerified"`
 }
 
 func (q *Queries) UpdateEmailSubscription(ctx context.Context, arg UpdateEmailSubscriptionParams) (EmailSubscription, error) {
 	row := q.db.QueryRowContext(ctx, updateEmailSubscription,
 		arg.ID,
 		arg.Email,
-		arg.Code,
+		arg.Locale,
+		arg.VerificationCode,
 		arg.IsVerified,
 	)
 	var i EmailSubscription
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.Code,
+		&i.VerificationCode,
+		&i.Locale,
 		&i.IsVerified,
 		&i.CreatedDate,
 	)
