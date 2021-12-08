@@ -13,16 +13,18 @@ INSERT INTO email_subscriptions (
     email,
     locale,
     verification_code,
+    unsubscribe_code,
     is_verified, 
     created_date
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, email, verification_code, locale, is_verified, created_date
+  ) VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, email, verification_code, unsubscribe_code, locale, is_verified, created_date
 `
 
 type CreateEmailSubscriptionParams struct {
 	Email            string    `db:"email" json:"email"`
 	Locale           string    `db:"locale" json:"locale"`
 	VerificationCode string    `db:"verification_code" json:"verificationCode"`
+	UnsubscribeCode  string    `db:"unsubscribe_code" json:"unsubscribeCode"`
 	IsVerified       bool      `db:"is_verified" json:"isVerified"`
 	CreatedDate      time.Time `db:"created_date" json:"createdDate"`
 }
@@ -32,6 +34,7 @@ func (q *Queries) CreateEmailSubscription(ctx context.Context, arg CreateEmailSu
 		arg.Email,
 		arg.Locale,
 		arg.VerificationCode,
+		arg.UnsubscribeCode,
 		arg.IsVerified,
 		arg.CreatedDate,
 	)
@@ -40,6 +43,7 @@ func (q *Queries) CreateEmailSubscription(ctx context.Context, arg CreateEmailSu
 		&i.ID,
 		&i.Email,
 		&i.VerificationCode,
+		&i.UnsubscribeCode,
 		&i.Locale,
 		&i.IsVerified,
 		&i.CreatedDate,
@@ -58,7 +62,7 @@ func (q *Queries) DeleteEmailSubscription(ctx context.Context, id int64) error {
 }
 
 const getEmailSubscriptionByEmail = `-- name: GetEmailSubscriptionByEmail :one
-SELECT id, email, verification_code, locale, is_verified, created_date FROM email_subscriptions
+SELECT id, email, verification_code, unsubscribe_code, locale, is_verified, created_date FROM email_subscriptions
   WHERE email = $1
 `
 
@@ -69,6 +73,7 @@ func (q *Queries) GetEmailSubscriptionByEmail(ctx context.Context, email string)
 		&i.ID,
 		&i.Email,
 		&i.VerificationCode,
+		&i.UnsubscribeCode,
 		&i.Locale,
 		&i.IsVerified,
 		&i.CreatedDate,
@@ -84,7 +89,7 @@ UPDATE email_subscriptions SET (
     is_verified
   ) = ($2, $3, $4, $5)
   WHERE id = $1
-  RETURNING id, email, verification_code, locale, is_verified, created_date
+  RETURNING id, email, verification_code, unsubscribe_code, locale, is_verified, created_date
 `
 
 type UpdateEmailSubscriptionParams struct {
@@ -108,6 +113,7 @@ func (q *Queries) UpdateEmailSubscription(ctx context.Context, arg UpdateEmailSu
 		&i.ID,
 		&i.Email,
 		&i.VerificationCode,
+		&i.UnsubscribeCode,
 		&i.Locale,
 		&i.IsVerified,
 		&i.CreatedDate,
