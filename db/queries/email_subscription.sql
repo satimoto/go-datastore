@@ -3,9 +3,10 @@ INSERT INTO email_subscriptions (
     email,
     locale,
     verification_code,
+    unsubscribe_code,
     is_verified, 
     created_date
-  ) VALUES ($1, $2, $3, $4, $5)
+  ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
 -- name: DeleteEmailSubscription :exec

@@ -276,6 +276,7 @@ type EmailSubscription struct {
 	ID               int64     `db:"id" json:"id"`
 	Email            string    `db:"email" json:"email"`
 	VerificationCode string    `db:"verification_code" json:"verificationCode"`
+	UnsubscribeCode  string    `db:"unsubscribe_code" json:"unsubscribeCode"`
 	Locale           string    `db:"locale" json:"locale"`
 	IsVerified       bool      `db:"is_verified" json:"isVerified"`
 	CreatedDate      time.Time `db:"created_date" json:"createdDate"`
