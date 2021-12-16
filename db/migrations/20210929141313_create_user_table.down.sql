@@ -1,12 +1,14 @@
-ALTER TABLE IF EXISTS nodes 
-  DROP CONSTRAINT IF EXISTS uq_nodes_pubkey;
+
+-- Authentications
+DROP TABLE IF EXISTS authentications;
+
+DROP TYPE IF EXISTS authentication_actions;
+
+-- Users
+ALTER TABLE IF EXISTS users 
+  DROP CONSTRAINT IF EXISTS uq_users_node_key;
 
 ALTER TABLE IF EXISTS users 
   DROP CONSTRAINT IF EXISTS uq_users_device_token;
-
-ALTER TABLE IF EXISTS users 
-  DROP CONSTRAINT IF EXISTS fk_users_node_id;
-
-DROP TABLE IF EXISTS nodes;
 
 DROP TABLE IF EXISTS users;
