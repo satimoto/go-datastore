@@ -8,88 +8,118 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (device_token, node_id)
-  VALUES ($1, $2)
-  RETURNING id, device_token, node_id
+INSERT INTO users (
+    linking_key,
+    node_key,
+    node_address,
+    device_token
+  ) VALUES ($1, $2, $3, $4)
+  RETURNING id, linking_key, node_key, node_address, device_token
 `
 
 type CreateUserParams struct {
+	LinkingKey  string `db:"linking_key" json:"linkingKey"`
+	NodeKey     string `db:"node_key" json:"nodeKey"`
+	NodeAddress string `db:"node_address" json:"nodeAddress"`
 	DeviceToken string `db:"device_token" json:"deviceToken"`
-	NodeID      int64  `db:"node_id" json:"nodeID"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.DeviceToken, arg.NodeID)
+	row := q.db.QueryRowContext(ctx, createUser,
+		arg.LinkingKey,
+		arg.NodeKey,
+		arg.NodeAddress,
+		arg.DeviceToken,
+	)
 	var i User
-	err := row.Scan(&i.ID, &i.DeviceToken, &i.NodeID)
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingKey,
+		&i.NodeKey,
+		&i.NodeAddress,
+		&i.DeviceToken,
+	)
 	return i, err
 }
 
-const deleteUser = `-- name: DeleteUser :exec
-DELETE FROM users
-  WHERE id = $1
-`
-
-func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteUser, id)
-	return err
-}
-
 const getUser = `-- name: GetUser :one
-SELECT id, device_token, node_id FROM users
+SELECT id, linking_key, node_key, node_address, device_token FROM users
   WHERE id = $1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUser, id)
 	var i User
-	err := row.Scan(&i.ID, &i.DeviceToken, &i.NodeID)
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingKey,
+		&i.NodeKey,
+		&i.NodeAddress,
+		&i.DeviceToken,
+	)
 	return i, err
 }
 
-const listUsers = `-- name: ListUsers :many
-SELECT id, device_token, node_id FROM users
-  ORDER BY id
+const getUserByLinkingKey = `-- name: GetUserByLinkingKey :one
+SELECT id, linking_key, node_key, node_address, device_token FROM users
+  WHERE linking_key = $1
 `
 
-func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.QueryContext(ctx, listUsers)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []User
-	for rows.Next() {
-		var i User
-		if err := rows.Scan(&i.ID, &i.DeviceToken, &i.NodeID); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) GetUserByLinkingKey(ctx context.Context, linkingKey string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByLinkingKey, linkingKey)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingKey,
+		&i.NodeKey,
+		&i.NodeAddress,
+		&i.DeviceToken,
+	)
+	return i, err
+}
+
+const getUserByNodeKey = `-- name: GetUserByNodeKey :one
+SELECT id, linking_key, node_key, node_address, device_token FROM users
+  WHERE node_key = $1
+`
+
+func (q *Queries) GetUserByNodeKey(ctx context.Context, nodeKey string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByNodeKey, nodeKey)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingKey,
+		&i.NodeKey,
+		&i.NodeAddress,
+		&i.DeviceToken,
+	)
+	return i, err
 }
 
 const updateUser = `-- name: UpdateUser :one
-UPDATE users
-  SET device_token = $2
+UPDATE users SET (
+    node_address,
+    device_token
+  ) = ($2, $3)
   WHERE id = $1
-  RETURNING id, device_token, node_id
+  RETURNING id, linking_key, node_key, node_address, device_token
 `
 
 type UpdateUserParams struct {
 	ID          int64  `db:"id" json:"id"`
+	NodeAddress string `db:"node_address" json:"nodeAddress"`
 	DeviceToken string `db:"device_token" json:"deviceToken"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUser, arg.ID, arg.DeviceToken)
+	row := q.db.QueryRowContext(ctx, updateUser, arg.ID, arg.NodeAddress, arg.DeviceToken)
 	var i User
-	err := row.Scan(&i.ID, &i.DeviceToken, &i.NodeID)
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingKey,
+		&i.NodeKey,
+		&i.NodeAddress,
+		&i.DeviceToken,
+	)
 	return i, err
 }
