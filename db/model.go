@@ -10,6 +10,27 @@ import (
 	"github.com/twpayne/go-geom"
 )
 
+type AuthenticationActions string
+
+const (
+	AuthenticationActionsRegister AuthenticationActions = "register"
+	AuthenticationActionsLogin    AuthenticationActions = "login"
+	AuthenticationActionsLink     AuthenticationActions = "link"
+	AuthenticationActionsAuth     AuthenticationActions = "auth"
+)
+
+func (e *AuthenticationActions) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = AuthenticationActions(s)
+	case string:
+		*e = AuthenticationActions(s)
+	default:
+		return fmt.Errorf("unsupported scan type for AuthenticationActions: %T", src)
+	}
+	return nil
+}
+
 type ConnectorFormat string
 
 const (
@@ -227,6 +248,15 @@ func (e *PowerType) Scan(src interface{}) error {
 	return nil
 }
 
+type Authentication struct {
+	ID         int64                 `db:"id" json:"id"`
+	Code       string                `db:"code" json:"code"`
+	Action     AuthenticationActions `db:"action" json:"action"`
+	Challenge  string                `db:"challenge" json:"challenge"`
+	Signature  sql.NullString        `db:"signature" json:"signature"`
+	LinkingKey sql.NullString        `db:"linking_key" json:"linkingKey"`
+}
+
 type BusinessDetail struct {
 	ID      int64          `db:"id" json:"id"`
 	Name    string         `db:"name" json:"name"`
@@ -403,12 +433,6 @@ type LocationImage struct {
 	ImageID    int64 `db:"image_id" json:"imageID"`
 }
 
-type Node struct {
-	ID      int64  `db:"id" json:"id"`
-	Pubkey  string `db:"pubkey" json:"pubkey"`
-	Address string `db:"address" json:"address"`
-}
-
 type OpeningTime struct {
 	ID              int64 `db:"id" json:"id"`
 	Twentyfourseven bool  `db:"twentyfourseven" json:"twentyfourseven"`
@@ -443,8 +467,10 @@ type StatusSchedule struct {
 
 type User struct {
 	ID          int64  `db:"id" json:"id"`
+	LinkingKey  string `db:"linking_key" json:"linkingKey"`
+	NodeKey     string `db:"node_key" json:"nodeKey"`
+	NodeAddress string `db:"node_address" json:"nodeAddress"`
 	DeviceToken string `db:"device_token" json:"deviceToken"`
-	NodeID      int64  `db:"node_id" json:"nodeID"`
 }
 
 type Version struct {
