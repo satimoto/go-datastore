@@ -38,6 +38,14 @@ type Authentication struct {
 	LinkingKey sql.NullString        `db:"linking_key" json:"linkingKey"`
 }
 
+type ChannelRequest struct {
+	ID          int64         `db:"id" json:"id"`
+	Pubkey      []byte        `db:"pubkey" json:"pubkey"`
+	PaymentHash []byte        `db:"payment_hash" json:"paymentHash"`
+	PaymentAddr []byte        `db:"payment_addr" json:"paymentAddr"`
+	AmountMsat  int64         `db:"amount_msat" json:"amountMsat"`
+	FundingTxID []byte        `db:"funding_tx_id" json:"fundingTxID"`
+	OutputIndex sql.NullInt64 `db:"output_index" json:"outputIndex"`
 }
 
 type EmailSubscription struct {
