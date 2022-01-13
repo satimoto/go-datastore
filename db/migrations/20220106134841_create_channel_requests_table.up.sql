@@ -8,3 +8,6 @@ CREATE TABLE IF NOT EXISTS channel_requests (
     funding_tx_id BYTEA,
     output_index BIGINT
 );
+
+ALTER TABLE channel_requests 
+    ADD CONSTRAINT uq_channel_requests_payment_hash UNIQUE (payment_hash);
