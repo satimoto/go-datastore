@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS channel_requests (
     id            BIGSERIAL PRIMARY KEY,
     status        channel_request_status NOT NULL,
     pubkey        BYTEA NOT NULL,
+    preimage      BYTEA NOT NULL,
     payment_hash  BYTEA NOT NULL,
     payment_addr  BYTEA NOT NULL,
     amount_msat   BIGINT NOT NULL, 
