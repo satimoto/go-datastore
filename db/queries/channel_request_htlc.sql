@@ -15,6 +15,11 @@ SELECT * FROM channel_request_htlcs
 SELECT * FROM channel_request_htlcs
   WHERE chan_id = $1 AND htlc_id = $2;
 
+-- name: ListChannelRequestHtlcs :many
+SELECT * FROM channel_request_htlcs
+  WHERE channel_request_id = $1
+  ORDER BY id;
+
 -- name: UpdateChannelRequestHtlc :one
 UPDATE channel_request_htlcs SET 
     is_settled = $2

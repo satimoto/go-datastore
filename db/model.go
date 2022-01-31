@@ -296,6 +296,7 @@ type ChannelRequest struct {
 	ID          int64                `db:"id" json:"id"`
 	Status      ChannelRequestStatus `db:"status" json:"status"`
 	Pubkey      []byte               `db:"pubkey" json:"pubkey"`
+	Preimage    []byte               `db:"preimage" json:"preimage"`
 	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
 	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`
 	AmountMsat  int64                `db:"amount_msat" json:"amountMsat"`

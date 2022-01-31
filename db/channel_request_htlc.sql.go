@@ -83,6 +83,41 @@ func (q *Queries) GetChannelRequestHtlcByCircuitKey(ctx context.Context, arg Get
 	return i, err
 }
 
+const listChannelRequestHtlcs = `-- name: ListChannelRequestHtlcs :many
+SELECT id, channel_request_id, chan_id, htlc_id, is_settled FROM channel_request_htlcs
+  WHERE channel_request_id = $1
+  ORDER BY id
+`
+
+func (q *Queries) ListChannelRequestHtlcs(ctx context.Context, channelRequestID int64) ([]ChannelRequestHtlc, error) {
+	rows, err := q.db.QueryContext(ctx, listChannelRequestHtlcs, channelRequestID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ChannelRequestHtlc
+	for rows.Next() {
+		var i ChannelRequestHtlc
+		if err := rows.Scan(
+			&i.ID,
+			&i.ChannelRequestID,
+			&i.ChanID,
+			&i.HtlcID,
+			&i.IsSettled,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateChannelRequestHtlc = `-- name: UpdateChannelRequestHtlc :one
 UPDATE channel_request_htlcs SET 
     is_settled = $2
