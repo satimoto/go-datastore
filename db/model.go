@@ -31,6 +31,28 @@ func (e *AuthenticationActions) Scan(src interface{}) error {
 	return nil
 }
 
+type ChannelRequestStatus string
+
+const (
+	ChannelRequestStatusREQUESTED        ChannelRequestStatus = "REQUESTED"
+	ChannelRequestStatusAWAITINGPAYMENTS ChannelRequestStatus = "AWAITING_PAYMENTS"
+	ChannelRequestStatusOPENINGCHANNEL   ChannelRequestStatus = "OPENING_CHANNEL"
+	ChannelRequestStatusCOMPLETED        ChannelRequestStatus = "COMPLETED"
+	ChannelRequestStatusFAILED           ChannelRequestStatus = "FAILED"
+)
+
+func (e *ChannelRequestStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ChannelRequestStatus(s)
+	case string:
+		*e = ChannelRequestStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ChannelRequestStatus: %T", src)
+	}
+	return nil
+}
+
 type ConnectorFormat string
 
 const (
@@ -271,13 +293,23 @@ type Capability struct {
 }
 
 type ChannelRequest struct {
-	ID          int64         `db:"id" json:"id"`
-	Pubkey      []byte        `db:"pubkey" json:"pubkey"`
-	PaymentHash []byte        `db:"payment_hash" json:"paymentHash"`
-	PaymentAddr []byte        `db:"payment_addr" json:"paymentAddr"`
-	AmountMsat  int64         `db:"amount_msat" json:"amountMsat"`
-	FundingTxID []byte        `db:"funding_tx_id" json:"fundingTxID"`
-	OutputIndex sql.NullInt64 `db:"output_index" json:"outputIndex"`
+	ID          int64                `db:"id" json:"id"`
+	Status      ChannelRequestStatus `db:"status" json:"status"`
+	Pubkey      []byte               `db:"pubkey" json:"pubkey"`
+	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
+	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`
+	AmountMsat  int64                `db:"amount_msat" json:"amountMsat"`
+	SettledMsat int64                `db:"settled_msat" json:"settledMsat"`
+	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
+	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
+}
+
+type ChannelRequestHtlc struct {
+	ID               int64 `db:"id" json:"id"`
+	ChannelRequestID int64 `db:"channel_request_id" json:"channelRequestID"`
+	ChanID           int64 `db:"chan_id" json:"chanID"`
+	HtlcID           int64 `db:"htlc_id" json:"htlcID"`
+	IsSettled        bool  `db:"is_settled" json:"isSettled"`
 }
 
 type Connector struct {
