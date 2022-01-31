@@ -2,11 +2,12 @@
 INSERT INTO channel_requests (
     status,
     pubkey, 
+    preimage, 
     payment_hash, 
     payment_addr,
     amount_msat,
     settled_msat
-  ) VALUES ($1, $2, $3, $4, $5, $6)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
   RETURNING *;
 
 -- name: DeleteChannelRequest :exec

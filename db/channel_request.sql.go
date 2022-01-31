@@ -12,17 +12,19 @@ const createChannelRequest = `-- name: CreateChannelRequest :one
 INSERT INTO channel_requests (
     status,
     pubkey, 
+    preimage, 
     payment_hash, 
     payment_addr,
     amount_msat,
     settled_msat
-  ) VALUES ($1, $2, $3, $4, $5, $6)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
   RETURNING id, status, pubkey, preimage, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index
 `
 
 type CreateChannelRequestParams struct {
 	Status      ChannelRequestStatus `db:"status" json:"status"`
 	Pubkey      []byte               `db:"pubkey" json:"pubkey"`
+	Preimage    []byte               `db:"preimage" json:"preimage"`
 	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
 	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`
 	AmountMsat  int64                `db:"amount_msat" json:"amountMsat"`
@@ -33,6 +35,7 @@ func (q *Queries) CreateChannelRequest(ctx context.Context, arg CreateChannelReq
 	row := q.db.QueryRowContext(ctx, createChannelRequest,
 		arg.Status,
 		arg.Pubkey,
+		arg.Preimage,
 		arg.PaymentHash,
 		arg.PaymentAddr,
 		arg.AmountMsat,
