@@ -20,6 +20,11 @@ SELECT * FROM channel_request_htlcs
   WHERE channel_request_id = $1
   ORDER BY id;
 
+-- name: ListUnsettledChannelRequestHtlcs :many
+SELECT * FROM channel_request_htlcs
+  WHERE channel_request_id = $1 AND is_settled != true
+  ORDER BY id;
+
 -- name: UpdateChannelRequestHtlc :one
 UPDATE channel_request_htlcs SET 
     is_settled = $2
