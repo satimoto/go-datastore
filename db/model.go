@@ -36,6 +36,7 @@ type ChannelRequestStatus string
 const (
 	ChannelRequestStatusREQUESTED        ChannelRequestStatus = "REQUESTED"
 	ChannelRequestStatusAWAITINGPAYMENTS ChannelRequestStatus = "AWAITING_PAYMENTS"
+	ChannelRequestStatusSETTLINGHTLCS    ChannelRequestStatus = "SETTLING_HTLCS"
 	ChannelRequestStatusOPENINGCHANNEL   ChannelRequestStatus = "OPENING_CHANNEL"
 	ChannelRequestStatusCOMPLETED        ChannelRequestStatus = "COMPLETED"
 	ChannelRequestStatusFAILED           ChannelRequestStatus = "FAILED"

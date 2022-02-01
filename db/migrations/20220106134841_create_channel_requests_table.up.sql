@@ -2,6 +2,7 @@
 CREATE TYPE channel_request_status AS ENUM (
     'REQUESTED', 
     'AWAITING_PAYMENTS',
+    'SETTLING_HTLCS',
     'OPENING_CHANNEL',
     'COMPLETED',
     'FAILED'
