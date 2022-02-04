@@ -157,18 +157,19 @@ func (q *Queries) UpdateChannelRequest(ctx context.Context, arg UpdateChannelReq
 }
 
 const updateChannelRequestByChannelPoint = `-- name: UpdateChannelRequestByChannelPoint :one
-UPDATE channel_requests SET status = $2
-  WHERE id = $1
+UPDATE channel_requests SET status = $3
+  WHERE funding_tx_id = $1 AND output_index = $2
   RETURNING id, status, pubkey, preimage, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index
 `
 
 type UpdateChannelRequestByChannelPointParams struct {
-	ID     int64                `db:"id" json:"id"`
-	Status ChannelRequestStatus `db:"status" json:"status"`
+	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
+	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
+	Status      ChannelRequestStatus `db:"status" json:"status"`
 }
 
 func (q *Queries) UpdateChannelRequestByChannelPoint(ctx context.Context, arg UpdateChannelRequestByChannelPointParams) (ChannelRequest, error) {
-	row := q.db.QueryRowContext(ctx, updateChannelRequestByChannelPoint, arg.ID, arg.Status)
+	row := q.db.QueryRowContext(ctx, updateChannelRequestByChannelPoint, arg.FundingTxID, arg.OutputIndex, arg.Status)
 	var i ChannelRequest
 	err := row.Scan(
 		&i.ID,

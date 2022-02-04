@@ -33,6 +33,6 @@ UPDATE channel_requests SET (
   RETURNING *;
 
 -- name: UpdateChannelRequestByChannelPoint :one
-UPDATE channel_requests SET status = $2
-  WHERE id = $1
+UPDATE channel_requests SET status = $3
+  WHERE funding_tx_id = $1 AND output_index = $2
   RETURNING *;
