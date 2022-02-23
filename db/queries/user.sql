@@ -1,28 +1,24 @@
 -- name: CreateUser :one
 INSERT INTO users (
-    linking_key,
-    node_key,
-    node_address,
+    linking_pubkey,
+    node_pubkey,
     device_token
-  ) VALUES ($1, $2, $3, $4)
+  ) VALUES ($1, $2, $3)
   RETURNING *;
 
 -- name: GetUser :one
 SELECT * FROM users
   WHERE id = $1;
 
--- name: GetUserByLinkingKey :one
+-- name: GetUserByLinkingPubkey :one
 SELECT * FROM users
-  WHERE linking_key = $1;
+  WHERE linking_pubkey = $1;
 
--- name: GetUserByNodeKey :one
+-- name: GetUserByNodePubkey :one
 SELECT * FROM users
-  WHERE node_key = $1;
+  WHERE node_pubkey = $1;
 
 -- name: UpdateUser :one
-UPDATE users SET (
-    node_address,
-    device_token
-  ) = ($2, $3)
+UPDATE users SET device_token = $2
   WHERE id = $1
   RETURNING *;
