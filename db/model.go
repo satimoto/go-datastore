@@ -272,12 +272,12 @@ func (e *PowerType) Scan(src interface{}) error {
 }
 
 type Authentication struct {
-	ID         int64                 `db:"id" json:"id"`
-	Code       string                `db:"code" json:"code"`
-	Action     AuthenticationActions `db:"action" json:"action"`
-	Challenge  string                `db:"challenge" json:"challenge"`
-	Signature  sql.NullString        `db:"signature" json:"signature"`
-	LinkingKey sql.NullString        `db:"linking_key" json:"linkingKey"`
+	ID            int64                 `db:"id" json:"id"`
+	Code          string                `db:"code" json:"code"`
+	Action        AuthenticationActions `db:"action" json:"action"`
+	Challenge     string                `db:"challenge" json:"challenge"`
+	Signature     sql.NullString        `db:"signature" json:"signature"`
+	LinkingPubkey sql.NullString        `db:"linking_pubkey" json:"linkingPubkey"`
 }
 
 type BusinessDetail struct {
@@ -510,11 +510,10 @@ type StatusSchedule struct {
 }
 
 type User struct {
-	ID          int64  `db:"id" json:"id"`
-	LinkingKey  string `db:"linking_key" json:"linkingKey"`
-	NodeKey     string `db:"node_key" json:"nodeKey"`
-	NodeAddress string `db:"node_address" json:"nodeAddress"`
-	DeviceToken string `db:"device_token" json:"deviceToken"`
+	ID            int64  `db:"id" json:"id"`
+	LinkingPubkey string `db:"linking_pubkey" json:"linkingPubkey"`
+	NodePubkey    string `db:"node_pubkey" json:"nodePubkey"`
+	DeviceToken   string `db:"device_token" json:"deviceToken"`
 }
 
 type Version struct {

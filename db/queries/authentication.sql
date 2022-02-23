@@ -21,7 +21,7 @@ SELECT * FROM authentications
 -- name: UpdateAuthentication :one
 UPDATE authentications SET (
     signature, 
-    linking_key
+    linking_pubkey
   ) = ($2, $3)
   WHERE id = $1
   RETURNING *;

@@ -14,7 +14,7 @@ INSERT INTO authentications (
     action, 
     challenge
   ) VALUES ($1, $2, $3)
-  RETURNING id, code, action, challenge, signature, linking_key
+  RETURNING id, code, action, challenge, signature, linking_pubkey
 `
 
 type CreateAuthenticationParams struct {
@@ -32,7 +32,7 @@ func (q *Queries) CreateAuthentication(ctx context.Context, arg CreateAuthentica
 		&i.Action,
 		&i.Challenge,
 		&i.Signature,
-		&i.LinkingKey,
+		&i.LinkingPubkey,
 	)
 	return i, err
 }
@@ -48,7 +48,7 @@ func (q *Queries) DeleteAuthentication(ctx context.Context, id int64) error {
 }
 
 const getAuthenticationByChallenge = `-- name: GetAuthenticationByChallenge :one
-SELECT id, code, action, challenge, signature, linking_key FROM authentications
+SELECT id, code, action, challenge, signature, linking_pubkey FROM authentications
   WHERE challenge = $1
 `
 
@@ -61,13 +61,13 @@ func (q *Queries) GetAuthenticationByChallenge(ctx context.Context, challenge st
 		&i.Action,
 		&i.Challenge,
 		&i.Signature,
-		&i.LinkingKey,
+		&i.LinkingPubkey,
 	)
 	return i, err
 }
 
 const getAuthenticationByCode = `-- name: GetAuthenticationByCode :one
-SELECT id, code, action, challenge, signature, linking_key FROM authentications
+SELECT id, code, action, challenge, signature, linking_pubkey FROM authentications
   WHERE code = $1
 `
 
@@ -80,7 +80,7 @@ func (q *Queries) GetAuthenticationByCode(ctx context.Context, code string) (Aut
 		&i.Action,
 		&i.Challenge,
 		&i.Signature,
-		&i.LinkingKey,
+		&i.LinkingPubkey,
 	)
 	return i, err
 }
@@ -88,20 +88,20 @@ func (q *Queries) GetAuthenticationByCode(ctx context.Context, code string) (Aut
 const updateAuthentication = `-- name: UpdateAuthentication :one
 UPDATE authentications SET (
     signature, 
-    linking_key
+    linking_pubkey
   ) = ($2, $3)
   WHERE id = $1
-  RETURNING id, code, action, challenge, signature, linking_key
+  RETURNING id, code, action, challenge, signature, linking_pubkey
 `
 
 type UpdateAuthenticationParams struct {
-	ID         int64          `db:"id" json:"id"`
-	Signature  sql.NullString `db:"signature" json:"signature"`
-	LinkingKey sql.NullString `db:"linking_key" json:"linkingKey"`
+	ID            int64          `db:"id" json:"id"`
+	Signature     sql.NullString `db:"signature" json:"signature"`
+	LinkingPubkey sql.NullString `db:"linking_pubkey" json:"linkingPubkey"`
 }
 
 func (q *Queries) UpdateAuthentication(ctx context.Context, arg UpdateAuthenticationParams) (Authentication, error) {
-	row := q.db.QueryRowContext(ctx, updateAuthentication, arg.ID, arg.Signature, arg.LinkingKey)
+	row := q.db.QueryRowContext(ctx, updateAuthentication, arg.ID, arg.Signature, arg.LinkingPubkey)
 	var i Authentication
 	err := row.Scan(
 		&i.ID,
@@ -109,7 +109,7 @@ func (q *Queries) UpdateAuthentication(ctx context.Context, arg UpdateAuthentica
 		&i.Action,
 		&i.Challenge,
 		&i.Signature,
-		&i.LinkingKey,
+		&i.LinkingPubkey,
 	)
 	return i, err
 }

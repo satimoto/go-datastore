@@ -9,41 +9,33 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    linking_key,
-    node_key,
-    node_address,
+    linking_pubkey,
+    node_pubkey,
     device_token
-  ) VALUES ($1, $2, $3, $4)
-  RETURNING id, linking_key, node_key, node_address, device_token
+  ) VALUES ($1, $2, $3)
+  RETURNING id, linking_pubkey, node_pubkey, device_token
 `
 
 type CreateUserParams struct {
-	LinkingKey  string `db:"linking_key" json:"linkingKey"`
-	NodeKey     string `db:"node_key" json:"nodeKey"`
-	NodeAddress string `db:"node_address" json:"nodeAddress"`
-	DeviceToken string `db:"device_token" json:"deviceToken"`
+	LinkingPubkey string `db:"linking_pubkey" json:"linkingPubkey"`
+	NodePubkey    string `db:"node_pubkey" json:"nodePubkey"`
+	DeviceToken   string `db:"device_token" json:"deviceToken"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser,
-		arg.LinkingKey,
-		arg.NodeKey,
-		arg.NodeAddress,
-		arg.DeviceToken,
-	)
+	row := q.db.QueryRowContext(ctx, createUser, arg.LinkingPubkey, arg.NodePubkey, arg.DeviceToken)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.LinkingKey,
-		&i.NodeKey,
-		&i.NodeAddress,
+		&i.LinkingPubkey,
+		&i.NodePubkey,
 		&i.DeviceToken,
 	)
 	return i, err
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, linking_key, node_key, node_address, device_token FROM users
+SELECT id, linking_pubkey, node_pubkey, device_token FROM users
   WHERE id = $1
 `
 
@@ -52,73 +44,65 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.LinkingKey,
-		&i.NodeKey,
-		&i.NodeAddress,
+		&i.LinkingPubkey,
+		&i.NodePubkey,
 		&i.DeviceToken,
 	)
 	return i, err
 }
 
-const getUserByLinkingKey = `-- name: GetUserByLinkingKey :one
-SELECT id, linking_key, node_key, node_address, device_token FROM users
-  WHERE linking_key = $1
+const getUserByLinkingPubkey = `-- name: GetUserByLinkingPubkey :one
+SELECT id, linking_pubkey, node_pubkey, device_token FROM users
+  WHERE linking_pubkey = $1
 `
 
-func (q *Queries) GetUserByLinkingKey(ctx context.Context, linkingKey string) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserByLinkingKey, linkingKey)
+func (q *Queries) GetUserByLinkingPubkey(ctx context.Context, linkingPubkey string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByLinkingPubkey, linkingPubkey)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.LinkingKey,
-		&i.NodeKey,
-		&i.NodeAddress,
+		&i.LinkingPubkey,
+		&i.NodePubkey,
 		&i.DeviceToken,
 	)
 	return i, err
 }
 
-const getUserByNodeKey = `-- name: GetUserByNodeKey :one
-SELECT id, linking_key, node_key, node_address, device_token FROM users
-  WHERE node_key = $1
+const getUserByNodePubkey = `-- name: GetUserByNodePubkey :one
+SELECT id, linking_pubkey, node_pubkey, device_token FROM users
+  WHERE node_pubkey = $1
 `
 
-func (q *Queries) GetUserByNodeKey(ctx context.Context, nodeKey string) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUserByNodeKey, nodeKey)
+func (q *Queries) GetUserByNodePubkey(ctx context.Context, nodePubkey string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByNodePubkey, nodePubkey)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.LinkingKey,
-		&i.NodeKey,
-		&i.NodeAddress,
+		&i.LinkingPubkey,
+		&i.NodePubkey,
 		&i.DeviceToken,
 	)
 	return i, err
 }
 
 const updateUser = `-- name: UpdateUser :one
-UPDATE users SET (
-    node_address,
-    device_token
-  ) = ($2, $3)
+UPDATE users SET device_token = $2
   WHERE id = $1
-  RETURNING id, linking_key, node_key, node_address, device_token
+  RETURNING id, linking_pubkey, node_pubkey, device_token
 `
 
 type UpdateUserParams struct {
 	ID          int64  `db:"id" json:"id"`
-	NodeAddress string `db:"node_address" json:"nodeAddress"`
 	DeviceToken string `db:"device_token" json:"deviceToken"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUser, arg.ID, arg.NodeAddress, arg.DeviceToken)
+	row := q.db.QueryRowContext(ctx, updateUser, arg.ID, arg.DeviceToken)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.LinkingKey,
-		&i.NodeKey,
-		&i.NodeAddress,
+		&i.LinkingPubkey,
+		&i.NodePubkey,
 		&i.DeviceToken,
 	)
 	return i, err
