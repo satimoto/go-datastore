@@ -3,7 +3,7 @@ ALTER TABLE IF EXISTS users
     DROP CONSTRAINT IF EXISTS fk_users_node_id;
 
 ALTER TABLE users
-    DROP node_id;
+    DROP IF EXISTS node_id;
 
 -- Nodes
 ALTER TABLE IF EXISTS nodes 

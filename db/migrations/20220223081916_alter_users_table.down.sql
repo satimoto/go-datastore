@@ -5,6 +5,8 @@ ALTER TABLE IF EXISTS users
 ALTER TABLE IF EXISTS users 
     ADD node_address TEXT;
 ALTER TABLE IF EXISTS users 
+    ALTER node_address SET DEFAULT '';
+ALTER TABLE IF EXISTS users 
     ALTER node_address SET NOT NULL;
 
 ALTER TABLE IF EXISTS users 

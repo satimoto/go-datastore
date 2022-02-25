@@ -480,6 +480,7 @@ type LocationImage struct {
 type Node struct {
 	ID         int64  `db:"id" json:"id"`
 	Pubkey     string `db:"pubkey" json:"pubkey"`
+	Addr       string `db:"addr" json:"addr"`
 	Alias      string `db:"alias" json:"alias"`
 	Color      string `db:"color" json:"color"`
 	CommitHash string `db:"commit_hash" json:"commitHash"`
@@ -521,11 +522,11 @@ type StatusSchedule struct {
 }
 
 type User struct {
-	ID            int64  `db:"id" json:"id"`
-	LinkingPubkey string `db:"linking_pubkey" json:"linkingPubkey"`
-	Pubkey        string `db:"pubkey" json:"pubkey"`
-	DeviceToken   string `db:"device_token" json:"deviceToken"`
-	NodeID        int64  `db:"node_id" json:"nodeID"`
+	ID            int64         `db:"id" json:"id"`
+	LinkingPubkey string        `db:"linking_pubkey" json:"linkingPubkey"`
+	Pubkey        string        `db:"pubkey" json:"pubkey"`
+	DeviceToken   string        `db:"device_token" json:"deviceToken"`
+	NodeID        sql.NullInt64 `db:"node_id" json:"nodeID"`
 }
 
 type Version struct {
