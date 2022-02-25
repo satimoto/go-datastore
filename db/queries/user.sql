@@ -1,9 +1,10 @@
 -- name: CreateUser :one
 INSERT INTO users (
+    device_token,
     linking_pubkey,
-    node_pubkey,
-    device_token
-  ) VALUES ($1, $2, $3)
+    node_id,
+    pubkey
+  ) VALUES ($1, $2, $3, $4)
   RETURNING *;
 
 -- name: GetUser :one
@@ -14,9 +15,9 @@ SELECT * FROM users
 SELECT * FROM users
   WHERE linking_pubkey = $1;
 
--- name: GetUserByNodePubkey :one
+-- name: GetUserByPubkey :one
 SELECT * FROM users
-  WHERE node_pubkey = $1;
+  WHERE pubkey = $1;
 
 -- name: UpdateUser :one
 UPDATE users SET device_token = $2
