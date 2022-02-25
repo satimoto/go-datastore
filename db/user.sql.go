@@ -5,6 +5,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -18,10 +19,10 @@ INSERT INTO users (
 `
 
 type CreateUserParams struct {
-	DeviceToken   string `db:"device_token" json:"deviceToken"`
-	LinkingPubkey string `db:"linking_pubkey" json:"linkingPubkey"`
-	NodeID        int64  `db:"node_id" json:"nodeID"`
-	Pubkey        string `db:"pubkey" json:"pubkey"`
+	DeviceToken   string        `db:"device_token" json:"deviceToken"`
+	LinkingPubkey string        `db:"linking_pubkey" json:"linkingPubkey"`
+	NodeID        sql.NullInt64 `db:"node_id" json:"nodeID"`
+	Pubkey        string        `db:"pubkey" json:"pubkey"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {

@@ -10,18 +10,20 @@ import (
 const createNode = `-- name: CreateNode :one
 INSERT INTO nodes (
     pubkey,
+    addr,
     alias,
     color,
     commit_hash,
     version,
     channels,
     peers
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-  RETURNING id, pubkey, alias, color, commit_hash, version, channels, peers
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  RETURNING id, pubkey, addr, alias, color, commit_hash, version, channels, peers
 `
 
 type CreateNodeParams struct {
 	Pubkey     string `db:"pubkey" json:"pubkey"`
+	Addr       string `db:"addr" json:"addr"`
 	Alias      string `db:"alias" json:"alias"`
 	Color      string `db:"color" json:"color"`
 	CommitHash string `db:"commit_hash" json:"commitHash"`
@@ -33,6 +35,7 @@ type CreateNodeParams struct {
 func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, error) {
 	row := q.db.QueryRowContext(ctx, createNode,
 		arg.Pubkey,
+		arg.Addr,
 		arg.Alias,
 		arg.Color,
 		arg.CommitHash,
@@ -44,6 +47,7 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 	err := row.Scan(
 		&i.ID,
 		&i.Pubkey,
+		&i.Addr,
 		&i.Alias,
 		&i.Color,
 		&i.CommitHash,
@@ -55,7 +59,7 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 }
 
 const getNode = `-- name: GetNode :one
-SELECT id, pubkey, alias, color, commit_hash, version, channels, peers FROM nodes
+SELECT id, pubkey, addr, alias, color, commit_hash, version, channels, peers FROM nodes
   WHERE id = $1
 `
 
@@ -65,6 +69,7 @@ func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Pubkey,
+		&i.Addr,
 		&i.Alias,
 		&i.Color,
 		&i.CommitHash,
@@ -76,7 +81,7 @@ func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
 }
 
 const getNodeByPubkey = `-- name: GetNodeByPubkey :one
-SELECT id, pubkey, alias, color, commit_hash, version, channels, peers FROM nodes
+SELECT id, pubkey, addr, alias, color, commit_hash, version, channels, peers FROM nodes
   WHERE pubkey = $1
 `
 
@@ -86,6 +91,7 @@ func (q *Queries) GetNodeByPubkey(ctx context.Context, pubkey string) (Node, err
 	err := row.Scan(
 		&i.ID,
 		&i.Pubkey,
+		&i.Addr,
 		&i.Alias,
 		&i.Color,
 		&i.CommitHash,
@@ -98,19 +104,21 @@ func (q *Queries) GetNodeByPubkey(ctx context.Context, pubkey string) (Node, err
 
 const updateNode = `-- name: UpdateNode :one
 UPDATE nodes SET (
+    addr,
     alias,
     color,
     commit_hash,
     version,
     channels,
     peers
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
-  RETURNING id, pubkey, alias, color, commit_hash, version, channels, peers
+  RETURNING id, pubkey, addr, alias, color, commit_hash, version, channels, peers
 `
 
 type UpdateNodeParams struct {
 	ID         int64  `db:"id" json:"id"`
+	Addr       string `db:"addr" json:"addr"`
 	Alias      string `db:"alias" json:"alias"`
 	Color      string `db:"color" json:"color"`
 	CommitHash string `db:"commit_hash" json:"commitHash"`
@@ -122,6 +130,7 @@ type UpdateNodeParams struct {
 func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) (Node, error) {
 	row := q.db.QueryRowContext(ctx, updateNode,
 		arg.ID,
+		arg.Addr,
 		arg.Alias,
 		arg.Color,
 		arg.CommitHash,
@@ -133,6 +142,7 @@ func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) (Node, e
 	err := row.Scan(
 		&i.ID,
 		&i.Pubkey,
+		&i.Addr,
 		&i.Alias,
 		&i.Color,
 		&i.CommitHash,

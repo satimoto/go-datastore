@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS nodes (
     id            BIGSERIAL PRIMARY KEY,
     pubkey        TEXT NOT NULL,
+    addr          TEXT NOT NULL,
     alias         TEXT NOT NULL,
     color         TEXT NOT NULL,
     commit_hash   TEXT NOT NULL,
