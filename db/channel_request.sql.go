@@ -23,7 +23,7 @@ INSERT INTO channel_requests (
 
 type CreateChannelRequestParams struct {
 	Status      ChannelRequestStatus `db:"status" json:"status"`
-	Pubkey      []byte               `db:"pubkey" json:"pubkey"`
+	Pubkey      string               `db:"pubkey" json:"pubkey"`
 	Preimage    []byte               `db:"preimage" json:"preimage"`
 	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
 	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`

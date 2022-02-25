@@ -296,7 +296,7 @@ type Capability struct {
 type ChannelRequest struct {
 	ID          int64                `db:"id" json:"id"`
 	Status      ChannelRequestStatus `db:"status" json:"status"`
-	Pubkey      []byte               `db:"pubkey" json:"pubkey"`
+	Pubkey      string               `db:"pubkey" json:"pubkey"`
 	Preimage    []byte               `db:"preimage" json:"preimage"`
 	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
 	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`
@@ -477,6 +477,17 @@ type LocationImage struct {
 	ImageID    int64 `db:"image_id" json:"imageID"`
 }
 
+type Node struct {
+	ID         int64  `db:"id" json:"id"`
+	Pubkey     string `db:"pubkey" json:"pubkey"`
+	Alias      string `db:"alias" json:"alias"`
+	Color      string `db:"color" json:"color"`
+	CommitHash string `db:"commit_hash" json:"commitHash"`
+	Version    string `db:"version" json:"version"`
+	Channels   int64  `db:"channels" json:"channels"`
+	Peers      int64  `db:"peers" json:"peers"`
+}
+
 type OpeningTime struct {
 	ID              int64 `db:"id" json:"id"`
 	Twentyfourseven bool  `db:"twentyfourseven" json:"twentyfourseven"`
@@ -512,8 +523,9 @@ type StatusSchedule struct {
 type User struct {
 	ID            int64  `db:"id" json:"id"`
 	LinkingPubkey string `db:"linking_pubkey" json:"linkingPubkey"`
-	NodePubkey    string `db:"node_pubkey" json:"nodePubkey"`
+	Pubkey        string `db:"pubkey" json:"pubkey"`
 	DeviceToken   string `db:"device_token" json:"deviceToken"`
+	NodeID        int64  `db:"node_id" json:"nodeID"`
 }
 
 type Version struct {
