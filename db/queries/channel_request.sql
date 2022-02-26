@@ -1,8 +1,8 @@
 -- name: CreateChannelRequest :one
 INSERT INTO channel_requests (
+    user_id,
     status,
     pubkey, 
-    preimage, 
     payment_hash, 
     payment_addr,
     amount_msat,
@@ -29,6 +29,11 @@ UPDATE channel_requests SET (
     funding_tx_id, 
     output_index
   ) = ($2, $3, $4, $5)
+  WHERE id = $1
+  RETURNING *;
+
+-- name: UpdateChannelRequestStatus :one
+UPDATE channel_requests SET status = $2
   WHERE id = $1
   RETURNING *;
 
