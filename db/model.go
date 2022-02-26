@@ -36,6 +36,7 @@ type ChannelRequestStatus string
 const (
 	ChannelRequestStatusREQUESTED        ChannelRequestStatus = "REQUESTED"
 	ChannelRequestStatusAWAITINGPAYMENTS ChannelRequestStatus = "AWAITING_PAYMENTS"
+	ChannelRequestStatusAWAITINGPREIMAGE ChannelRequestStatus = "AWAITING_PREIMAGE"
 	ChannelRequestStatusSETTLINGHTLCS    ChannelRequestStatus = "SETTLING_HTLCS"
 	ChannelRequestStatusOPENINGCHANNEL   ChannelRequestStatus = "OPENING_CHANNEL"
 	ChannelRequestStatusCOMPLETED        ChannelRequestStatus = "COMPLETED"
@@ -295,9 +296,9 @@ type Capability struct {
 
 type ChannelRequest struct {
 	ID          int64                `db:"id" json:"id"`
+	UserID      int64                `db:"user_id" json:"userID"`
 	Status      ChannelRequestStatus `db:"status" json:"status"`
 	Pubkey      string               `db:"pubkey" json:"pubkey"`
-	Preimage    []byte               `db:"preimage" json:"preimage"`
 	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
 	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`
 	AmountMsat  int64                `db:"amount_msat" json:"amountMsat"`
