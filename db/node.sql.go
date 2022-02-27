@@ -102,6 +102,44 @@ func (q *Queries) GetNodeByPubkey(ctx context.Context, pubkey string) (Node, err
 	return i, err
 }
 
+const listNodes = `-- name: ListNodes :many
+SELECT id, pubkey, addr, alias, color, commit_hash, version, channels, peers FROM nodes
+  ORDER BY peers ASC
+`
+
+func (q *Queries) ListNodes(ctx context.Context) ([]Node, error) {
+	rows, err := q.db.QueryContext(ctx, listNodes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Node
+	for rows.Next() {
+		var i Node
+		if err := rows.Scan(
+			&i.ID,
+			&i.Pubkey,
+			&i.Addr,
+			&i.Alias,
+			&i.Color,
+			&i.CommitHash,
+			&i.Version,
+			&i.Channels,
+			&i.Peers,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateNode = `-- name: UpdateNode :one
 UPDATE nodes SET (
     addr,
