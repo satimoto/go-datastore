@@ -14,6 +14,17 @@ CREATE TABLE IF NOT EXISTS nodes (
 ALTER TABLE nodes 
     ADD CONSTRAINT uq_nodes_pubkey UNIQUE (pubkey);
 
+-- Channel Requests
+ALTER TABLE channel_requests
+    ADD node_id BIGINT;
+ALTER TABLE channel_requests
+    ALTER node_id SET NOT NULL;
+
+ALTER TABLE channel_requests 
+    ADD CONSTRAINT fk_channel_requests_node_id
+    FOREIGN KEY (node_id) 
+    REFERENCES nodes(id);
+
 -- Users
 ALTER TABLE users
     ADD node_id BIGINT;
