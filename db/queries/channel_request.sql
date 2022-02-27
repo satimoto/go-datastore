@@ -1,13 +1,14 @@
 -- name: CreateChannelRequest :one
 INSERT INTO channel_requests (
     user_id,
+    node_id,
     status,
     pubkey, 
     payment_hash, 
     payment_addr,
     amount_msat,
     settled_msat
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING *;
 
 -- name: DeleteChannelRequest :exec

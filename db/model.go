@@ -305,6 +305,7 @@ type ChannelRequest struct {
 	SettledMsat int64                `db:"settled_msat" json:"settledMsat"`
 	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
 	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
+	NodeID      int64                `db:"node_id" json:"nodeID"`
 }
 
 type ChannelRequestHtlc struct {
