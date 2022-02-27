@@ -19,6 +19,10 @@ SELECT * FROM nodes
 SELECT * FROM nodes
   WHERE pubkey = $1;
 
+-- name: ListNodes :many
+SELECT * FROM nodes
+  ORDER BY peers ASC;
+
 -- name: UpdateNode :one
 UPDATE nodes SET (
     addr,
