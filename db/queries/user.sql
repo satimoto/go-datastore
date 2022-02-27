@@ -20,6 +20,9 @@ SELECT * FROM users
   WHERE pubkey = $1;
 
 -- name: UpdateUser :one
-UPDATE users SET device_token = $2
+UPDATE users SET (
+    node_id, 
+    device_token
+  ) = ($2, $3)
   WHERE id = $1
   RETURNING *;

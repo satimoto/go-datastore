@@ -98,18 +98,22 @@ func (q *Queries) GetUserByPubkey(ctx context.Context, pubkey string) (User, err
 }
 
 const updateUser = `-- name: UpdateUser :one
-UPDATE users SET device_token = $2
+UPDATE users SET (
+    node_id, 
+    device_token
+  ) = ($2, $3)
   WHERE id = $1
   RETURNING id, linking_pubkey, pubkey, device_token, node_id
 `
 
 type UpdateUserParams struct {
-	ID          int64  `db:"id" json:"id"`
-	DeviceToken string `db:"device_token" json:"deviceToken"`
+	ID          int64         `db:"id" json:"id"`
+	NodeID      sql.NullInt64 `db:"node_id" json:"nodeID"`
+	DeviceToken string        `db:"device_token" json:"deviceToken"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUser, arg.ID, arg.DeviceToken)
+	row := q.db.QueryRowContext(ctx, updateUser, arg.ID, arg.NodeID, arg.DeviceToken)
 	var i User
 	err := row.Scan(
 		&i.ID,
