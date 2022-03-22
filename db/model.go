@@ -272,6 +272,27 @@ func (e *PowerType) Scan(src interface{}) error {
 	return nil
 }
 
+type TariffDimension string
+
+const (
+	TariffDimensionENERGY      TariffDimension = "ENERGY"
+	TariffDimensionFLAT        TariffDimension = "FLAT"
+	TariffDimensionPARKINGTIME TariffDimension = "PARKING_TIME"
+	TariffDimensionTIME        TariffDimension = "TIME"
+)
+
+func (e *TariffDimension) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TariffDimension(s)
+	case string:
+		*e = TariffDimension(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TariffDimension: %T", src)
+	}
+	return nil
+}
+
 type Authentication struct {
 	ID            int64                 `db:"id" json:"id"`
 	Code          string                `db:"code" json:"code"`
@@ -346,6 +367,12 @@ type DisplayText struct {
 	ID       int64  `db:"id" json:"id"`
 	Language string `db:"language" json:"language"`
 	Text     string `db:"text" json:"text"`
+}
+
+type Element struct {
+	ID            int64         `db:"id" json:"id"`
+	TariffID      int64         `db:"tariff_id" json:"tariffID"`
+	RestrictionID sql.NullInt64 `db:"restriction_id" json:"restrictionID"`
 }
 
 type EmailSubscription struct {
@@ -502,6 +529,14 @@ type ParkingRestriction struct {
 	Description string `db:"description" json:"description"`
 }
 
+type PriceComponent struct {
+	ID        int64           `db:"id" json:"id"`
+	ElementID int64           `db:"element_id" json:"elementID"`
+	Type      TariffDimension `db:"type" json:"type"`
+	Price     float64         `db:"price" json:"price"`
+	StepSize  int32           `db:"step_size" json:"stepSize"`
+}
+
 type RegularHour struct {
 	ID            int64  `db:"id" json:"id"`
 	OpeningTimeID int64  `db:"opening_time_id" json:"openingTimeID"`
@@ -515,12 +550,45 @@ type RelatedLocation struct {
 	GeoLocationID int64 `db:"geo_location_id" json:"geoLocationID"`
 }
 
+type Restriction struct {
+	ID          int64           `db:"id" json:"id"`
+	StartTime   sql.NullString  `db:"start_time" json:"startTime"`
+	EndTime     sql.NullString  `db:"end_time" json:"endTime"`
+	StartDate   sql.NullString  `db:"start_date" json:"startDate"`
+	EndDate     sql.NullString  `db:"end_date" json:"endDate"`
+	MinKwh      sql.NullFloat64 `db:"min_kwh" json:"minKwh"`
+	MaxKwh      sql.NullFloat64 `db:"max_kwh" json:"maxKwh"`
+	MinPower    sql.NullFloat64 `db:"min_power" json:"minPower"`
+	MaxPower    sql.NullFloat64 `db:"max_power" json:"maxPower"`
+	MinDuration sql.NullInt32   `db:"min_duration" json:"minDuration"`
+	MaxDuration sql.NullInt32   `db:"max_duration" json:"maxDuration"`
+}
+
+type RestrictionWeekday struct {
+	RestrictionID int64 `db:"restriction_id" json:"restrictionID"`
+	WeekdayID     int64 `db:"weekday_id" json:"weekdayID"`
+}
+
 type StatusSchedule struct {
 	ID          int64        `db:"id" json:"id"`
 	EvseID      int64        `db:"evse_id" json:"evseID"`
 	PeriodBegin time.Time    `db:"period_begin" json:"periodBegin"`
 	PeriodEnd   sql.NullTime `db:"period_end" json:"periodEnd"`
 	Status      EvseStatus   `db:"status" json:"status"`
+}
+
+type Tariff struct {
+	ID           int64          `db:"id" json:"id"`
+	Uid          string         `db:"uid" json:"uid"`
+	Currency     string         `db:"currency" json:"currency"`
+	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated  time.Time      `db:"last_updated" json:"lastUpdated"`
+}
+
+type TariffAltText struct {
+	TariffID      int64 `db:"tariff_id" json:"tariffID"`
+	DisplayTextID int64 `db:"display_text_id" json:"displayTextID"`
 }
 
 type User struct {
@@ -543,4 +611,10 @@ type VersionEndpoint struct {
 	VersionID  int64  `db:"version_id" json:"versionID"`
 	Identifier string `db:"identifier" json:"identifier"`
 	Url        string `db:"url" json:"url"`
+}
+
+type Weekday struct {
+	ID          int64  `db:"id" json:"id"`
+	Text        string `db:"text" json:"text"`
+	Description string `db:"description" json:"description"`
 }
