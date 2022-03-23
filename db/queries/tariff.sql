@@ -8,10 +8,9 @@ INSERT INTO Tariffs (
   ) VALUES ($1, $2, $3, $4, $5)
   RETURNING *;
 
--- name: DeleteTariffByUid :one
+-- name: DeleteTariffByUid :exec
 DELETE FROM Tariffs
-  WHERE uid = $1
-  RETURNING *;
+  WHERE uid = $1;
 
 -- name: GetTariffByUid :one
 SELECT * FROM Tariffs

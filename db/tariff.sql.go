@@ -48,24 +48,14 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 	return i, err
 }
 
-const deleteTariffByUid = `-- name: DeleteTariffByUid :one
+const deleteTariffByUid = `-- name: DeleteTariffByUid :exec
 DELETE FROM Tariffs
   WHERE uid = $1
-  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated
 `
 
-func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) (Tariff, error) {
-	row := q.db.QueryRowContext(ctx, deleteTariffByUid, uid)
-	var i Tariff
-	err := row.Scan(
-		&i.ID,
-		&i.Uid,
-		&i.Currency,
-		&i.TariffAltUrl,
-		&i.EnergyMixID,
-		&i.LastUpdated,
-	)
-	return i, err
+func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
+	_, err := q.db.ExecContext(ctx, deleteTariffByUid, uid)
+	return err
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
