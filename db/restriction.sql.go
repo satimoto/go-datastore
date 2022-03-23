@@ -70,7 +70,7 @@ func (q *Queries) CreateRestriction(ctx context.Context, arg CreateRestrictionPa
 const deleteRestrictions = `-- name: DeleteRestrictions :exec
 DELETE FROM restrictions r
   USING elements e
-  WHERE e.restriction_id == r.id AND e.tariff_id == $1
+  WHERE r.id == e.restriction_id AND e.tariff_id == $1
 `
 
 func (q *Queries) DeleteRestrictions(ctx context.Context, tariffID int64) error {

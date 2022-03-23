@@ -16,7 +16,7 @@ INSERT INTO restrictions (
 -- name: DeleteRestrictions :exec
 DELETE FROM restrictions r
   USING elements e
-  WHERE e.restriction_id == r.id AND e.tariff_id == $1;
+  WHERE r.id == e.restriction_id AND e.tariff_id == $1;
 
 -- name: GetRestriction :one
 SELECT * FROM restrictions
