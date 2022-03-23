@@ -42,13 +42,14 @@ func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceCompo
 	return i, err
 }
 
-const deletePriceComponent = `-- name: DeletePriceComponent :exec
-DELETE FROM price_components
-  WHERE element_id = $1
+const deletePriceComponents = `-- name: DeletePriceComponents :exec
+DELETE FROM price_components pc
+  USING elements e
+  WHERE pc.element_id == e.id AND e.tariff_id == $1
 `
 
-func (q *Queries) DeletePriceComponent(ctx context.Context, elementID int64) error {
-	_, err := q.db.ExecContext(ctx, deletePriceComponent, elementID)
+func (q *Queries) DeletePriceComponents(ctx context.Context, tariffID int64) error {
+	_, err := q.db.ExecContext(ctx, deletePriceComponents, tariffID)
 	return err
 }
 
