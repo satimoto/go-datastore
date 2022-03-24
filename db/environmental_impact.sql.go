@@ -7,7 +7,7 @@ import (
 	"context"
 )
 
-const createEnvironmentalImpacts = `-- name: CreateEnvironmentalImpacts :one
+const createEnvironmentalImpact = `-- name: CreateEnvironmentalImpact :one
 INSERT INTO environmental_impacts (
     energy_mix_id, 
     source, 
@@ -16,14 +16,14 @@ INSERT INTO environmental_impacts (
   RETURNING id, energy_mix_id, source, amount
 `
 
-type CreateEnvironmentalImpactsParams struct {
+type CreateEnvironmentalImpactParams struct {
 	EnergyMixID int64                       `db:"energy_mix_id" json:"energyMixID"`
 	Source      EnvironmentalImpactCategory `db:"source" json:"source"`
 	Amount      float64                     `db:"amount" json:"amount"`
 }
 
-func (q *Queries) CreateEnvironmentalImpacts(ctx context.Context, arg CreateEnvironmentalImpactsParams) (EnvironmentalImpact, error) {
-	row := q.db.QueryRowContext(ctx, createEnvironmentalImpacts, arg.EnergyMixID, arg.Source, arg.Amount)
+func (q *Queries) CreateEnvironmentalImpact(ctx context.Context, arg CreateEnvironmentalImpactParams) (EnvironmentalImpact, error) {
+	row := q.db.QueryRowContext(ctx, createEnvironmentalImpact, arg.EnergyMixID, arg.Source, arg.Amount)
 	var i EnvironmentalImpact
 	err := row.Scan(
 		&i.ID,

@@ -1,4 +1,4 @@
--- name: CreateEnvironmentalImpacts :one
+-- name: CreateEnvironmentalImpact :one
 INSERT INTO environmental_impacts (
     energy_mix_id, 
     source, 
