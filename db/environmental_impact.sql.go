@@ -19,7 +19,7 @@ INSERT INTO environmental_impacts (
 type CreateEnvironmentalImpactsParams struct {
 	EnergyMixID int64                       `db:"energy_mix_id" json:"energyMixID"`
 	Source      EnvironmentalImpactCategory `db:"source" json:"source"`
-	Amount      string                      `db:"amount" json:"amount"`
+	Amount      float64                     `db:"amount" json:"amount"`
 }
 
 func (q *Queries) CreateEnvironmentalImpacts(ctx context.Context, arg CreateEnvironmentalImpactsParams) (EnvironmentalImpact, error) {

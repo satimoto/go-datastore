@@ -19,7 +19,7 @@ INSERT INTO energy_sources (
 type CreateEnergySourceParams struct {
 	EnergyMixID int64                `db:"energy_mix_id" json:"energyMixID"`
 	Source      EnergySourceCategory `db:"source" json:"source"`
-	Percentage  string               `db:"percentage" json:"percentage"`
+	Percentage  float64              `db:"percentage" json:"percentage"`
 }
 
 func (q *Queries) CreateEnergySource(ctx context.Context, arg CreateEnergySourceParams) (EnergySource, error) {
