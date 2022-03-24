@@ -396,14 +396,14 @@ type EnergySource struct {
 	ID          int64                `db:"id" json:"id"`
 	EnergyMixID int64                `db:"energy_mix_id" json:"energyMixID"`
 	Source      EnergySourceCategory `db:"source" json:"source"`
-	Percentage  string               `db:"percentage" json:"percentage"`
+	Percentage  float64              `db:"percentage" json:"percentage"`
 }
 
 type EnvironmentalImpact struct {
 	ID          int64                       `db:"id" json:"id"`
 	EnergyMixID int64                       `db:"energy_mix_id" json:"energyMixID"`
 	Source      EnvironmentalImpactCategory `db:"source" json:"source"`
-	Amount      string                      `db:"amount" json:"amount"`
+	Amount      float64                     `db:"amount" json:"amount"`
 }
 
 type Evse struct {

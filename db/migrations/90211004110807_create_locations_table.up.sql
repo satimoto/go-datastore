@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS energy_sources (
     id BIGSERIAL PRIMARY KEY,
     energy_mix_id BIGINT NOT NULL,
     source energy_source_category NOT NULL,
-    percentage DECIMAL NOT NULL
+    percentage FLOAT NOT NULL
 );
 
 ALTER TABLE energy_sources 
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS environmental_impacts (
     id BIGSERIAL PRIMARY KEY,
     energy_mix_id BIGINT NOT NULL,
     source environmental_impact_category NOT NULL,
-    amount DECIMAL NOT NULL
+    amount FLOAT NOT NULL
 );
 
 ALTER TABLE environmental_impacts 
