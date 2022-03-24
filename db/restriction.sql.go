@@ -101,3 +101,65 @@ func (q *Queries) GetRestriction(ctx context.Context, id int64) (Restriction, er
 	)
 	return i, err
 }
+
+const updateRestriction = `-- name: UpdateRestriction :one
+UPDATE restrictions SET (
+    start_time,
+    end_time,
+    start_date,
+    end_date,
+    min_kwh,
+    max_kwh,
+    min_power,
+    max_power,
+    min_duration,
+    max_duration
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  WHERE id = $1
+  RETURNING id, start_time, end_time, start_date, end_date, min_kwh, max_kwh, min_power, max_power, min_duration, max_duration
+`
+
+type UpdateRestrictionParams struct {
+	ID          int64           `db:"id" json:"id"`
+	StartTime   sql.NullString  `db:"start_time" json:"startTime"`
+	EndTime     sql.NullString  `db:"end_time" json:"endTime"`
+	StartDate   sql.NullString  `db:"start_date" json:"startDate"`
+	EndDate     sql.NullString  `db:"end_date" json:"endDate"`
+	MinKwh      sql.NullFloat64 `db:"min_kwh" json:"minKwh"`
+	MaxKwh      sql.NullFloat64 `db:"max_kwh" json:"maxKwh"`
+	MinPower    sql.NullFloat64 `db:"min_power" json:"minPower"`
+	MaxPower    sql.NullFloat64 `db:"max_power" json:"maxPower"`
+	MinDuration sql.NullInt32   `db:"min_duration" json:"minDuration"`
+	MaxDuration sql.NullInt32   `db:"max_duration" json:"maxDuration"`
+}
+
+func (q *Queries) UpdateRestriction(ctx context.Context, arg UpdateRestrictionParams) (Restriction, error) {
+	row := q.db.QueryRowContext(ctx, updateRestriction,
+		arg.ID,
+		arg.StartTime,
+		arg.EndTime,
+		arg.StartDate,
+		arg.EndDate,
+		arg.MinKwh,
+		arg.MaxKwh,
+		arg.MinPower,
+		arg.MaxPower,
+		arg.MinDuration,
+		arg.MaxDuration,
+	)
+	var i Restriction
+	err := row.Scan(
+		&i.ID,
+		&i.StartTime,
+		&i.EndTime,
+		&i.StartDate,
+		&i.EndDate,
+		&i.MinKwh,
+		&i.MaxKwh,
+		&i.MinPower,
+		&i.MaxPower,
+		&i.MinDuration,
+		&i.MaxDuration,
+	)
+	return i, err
+}
