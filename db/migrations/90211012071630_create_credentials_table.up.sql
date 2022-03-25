@@ -1,14 +1,14 @@
 -- Credentials
 CREATE TABLE IF NOT EXISTS credentials (
-    id BIGSERIAL PRIMARY KEY,
-    client_token TEXT,
-    server_token TEXT,
-    version TEXT,
-    url TEXT NOT NULL,
+    id                 BIGSERIAL PRIMARY KEY,
+    client_token       TEXT,
+    server_token       TEXT,
+    version            TEXT,
+    url                TEXT NOT NULL,
     business_detail_id BIGINT NOT NULL,
-    party_id TEXT NOT NULL,
-    country_code TEXT NOT NULL,
-    last_updated TIMESTAMP NOT NULL
+    party_id           TEXT NOT NULL,
+    country_code       TEXT NOT NULL,
+    last_updated       TIMESTAMP NOT NULL
 );
 
 ALTER TABLE credentials 

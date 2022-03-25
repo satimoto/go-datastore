@@ -1,16 +1,16 @@
 -- Display Texts
 CREATE TABLE IF NOT EXISTS display_texts (
-    id BIGSERIAL PRIMARY KEY,
+    id       BIGSERIAL PRIMARY KEY,
     language TEXT NOT NULL,
-    text TEXT NOT NULL
+    text     TEXT NOT NULL
 );
 
 -- Geo Locations
 CREATE TABLE IF NOT EXISTS geo_locations (
-    id BIGSERIAL PRIMARY KEY,
-    latitude TEXT NOT NULL,
+    id        BIGSERIAL PRIMARY KEY,
+    latitude  TEXT NOT NULL,
     longitude TEXT NOT NULL,
-    name TEXT
+    name      TEXT
 );
 
 -- Images
@@ -25,19 +25,19 @@ CREATE TYPE image_category AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS images (
-    id BIGSERIAL PRIMARY KEY,
-    url TEXT NOT NULL,
+    id        BIGSERIAL PRIMARY KEY,
+    url       TEXT NOT NULL,
     thumbnail TEXT,
-    category image_category NOT NULL,
-    type TEXT NOT NULL,
-    width INTEGER,
-    height INTEGER
+    category  image_category NOT NULL,
+    type      TEXT NOT NULL,
+    width     INTEGER,
+    height    INTEGER
 );
 
 -- Facilities
 CREATE TABLE IF NOT EXISTS facilities (
-    id BIGSERIAL PRIMARY KEY,
-    text TEXT NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    text        TEXT NOT NULL,
     description TEXT NOT NULL
 );
 
@@ -61,8 +61,8 @@ INSERT INTO facilities (text, description) VALUES
 
 -- Business Details
 CREATE TABLE IF NOT EXISTS business_details (
-    id BIGSERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    id      BIGSERIAL PRIMARY KEY,
+    name    TEXT NOT NULL,
     website TEXT,
     logo_id BIGINT
 );
@@ -91,19 +91,19 @@ CREATE TYPE environmental_impact_category AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS energy_mixes (
-    id BIGSERIAL PRIMARY KEY,
-    is_green_energy BOOLEAN NOT NULL,
-    -- energy_sources []energy_sources
-    -- environ_impact []environmental_impacts
-    supplier_name TEXT,
+    id                  BIGSERIAL PRIMARY KEY,
+    is_green_energy     BOOLEAN NOT NULL,
+    -- energy_sources   []energy_sources
+    -- environ_impact   []environmental_impacts
+    supplier_name       TEXT,
     energy_product_name TEXT 
 );
 
 CREATE TABLE IF NOT EXISTS energy_sources (
-    id BIGSERIAL PRIMARY KEY,
+    id            BIGSERIAL PRIMARY KEY,
     energy_mix_id BIGINT NOT NULL,
-    source energy_source_category NOT NULL,
-    percentage FLOAT NOT NULL
+    source        energy_source_category NOT NULL,
+    percentage    FLOAT NOT NULL
 );
 
 ALTER TABLE energy_sources 
@@ -113,10 +113,10 @@ ALTER TABLE energy_sources
     ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS environmental_impacts (
-    id BIGSERIAL PRIMARY KEY,
+    id            BIGSERIAL PRIMARY KEY,
     energy_mix_id BIGINT NOT NULL,
-    source environmental_impact_category NOT NULL,
-    amount FLOAT NOT NULL
+    source        environmental_impact_category NOT NULL,
+    amount        FLOAT NOT NULL
 );
 
 ALTER TABLE environmental_impacts 
@@ -132,19 +132,19 @@ CREATE TYPE period_type AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS opening_times (
-    id BIGSERIAL PRIMARY KEY,
-    -- regular_hours []regular_hours
-    twentyfourseven BOOLEAN NOT NULL
+    id                      BIGSERIAL PRIMARY KEY,
+    -- regular_hours        []regular_hours
+    twentyfourseven         BOOLEAN NOT NULL
     -- exceptional_openings []exceptional_periods
     -- exceptional_closings []exceptional_periods
 );
 
 CREATE TABLE IF NOT EXISTS regular_hours (
-    id BIGSERIAL PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     opening_time_id BIGINT NOT NULL,
-    weekday SMALLINT NOT NULL,
-    period_begin TEXT NOT NULL,
-    period_end TEXT NOT NULL
+    weekday         SMALLINT NOT NULL,
+    period_begin    TEXT NOT NULL,
+    period_end      TEXT NOT NULL
 );
 
 ALTER TABLE regular_hours 
@@ -154,11 +154,11 @@ ALTER TABLE regular_hours
     ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS exceptional_periods (
-    id BIGSERIAL PRIMARY KEY,
+    id              BIGSERIAL PRIMARY KEY,
     opening_time_id BIGINT NOT NULL,
-    period_type period_type NOT NULL,
-    period_begin TIMESTAMP NOT NULL,
-    period_end TIMESTAMP NOT NULL
+    period_type     period_type NOT NULL,
+    period_begin    TIMESTAMP NOT NULL,
+    period_end      TIMESTAMP NOT NULL
 );
 
 ALTER TABLE exceptional_periods 
@@ -178,29 +178,29 @@ CREATE TYPE location_type AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS locations (
-    id BIGSERIAL PRIMARY KEY,
-    uid TEXT NOT NULL,
-    type location_type NOT NULL,
-    name TEXT,
-    address TEXT NOT NULL,
-    city TEXT NOT NULL,
-    postal_code TEXT NOT NULL,
-    country TEXT NOT NULL,
-    geom GEOMETRY(POINT, 4326) NOT NULL,
-    geo_location_id BIGINT NOT NULL,
+    id                   BIGSERIAL PRIMARY KEY,
+    uid                  TEXT NOT NULL,
+    type                 location_type NOT NULL,
+    name                 TEXT,
+    address              TEXT NOT NULL,
+    city                 TEXT NOT NULL,
+    postal_code          TEXT NOT NULL,
+    country              TEXT NOT NULL,
+    geom                 GEOMETRY(POINT, 4326) NOT NULL,
+    geo_location_id      BIGINT NOT NULL,
     -- related_locations []related_locations
-    -- evses []evses
-    -- directions []location_directions
-    operator_id BIGINT,
-    suboperator_id BIGINT,
-    owner_id BIGINT,
-    -- facilities []facilities
-    time_zone TEXT,
-    opening_time_id BIGINT,
+    -- evses             []evses
+    -- directions        []location_directions
+    operator_id          BIGINT,
+    suboperator_id       BIGINT,
+    owner_id             BIGINT,
+    -- facilities        []facilities
+    time_zone            TEXT,
+    opening_time_id      BIGINT,
     charging_when_closed BOOLEAN NOT NULL,
-    -- images []location_images
-    energy_mix_id BIGINT,
-    last_updated TIMESTAMP NOT NULL
+    -- images            []location_images
+    energy_mix_id        BIGINT,
+    last_updated         TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_locations_uid ON locations (uid);
@@ -237,7 +237,7 @@ ALTER TABLE locations
 
 -- Related Locations
 CREATE TABLE IF NOT EXISTS related_locations (
-    location_id BIGINT NOT NULL,
+    location_id     BIGINT NOT NULL,
     geo_location_id BIGINT NOT NULL
 );
 
@@ -255,7 +255,7 @@ ALTER TABLE related_locations
 
 -- Location Directions
 CREATE TABLE IF NOT EXISTS location_directions (
-    location_id BIGINT NOT NULL,
+    location_id     BIGINT NOT NULL,
     display_text_id BIGINT NOT NULL
 );
 
@@ -274,7 +274,7 @@ ALTER TABLE location_directions
 -- Location Images
 CREATE TABLE IF NOT EXISTS location_images (
     location_id BIGINT NOT NULL,
-    image_id BIGINT NOT NULL
+    image_id    BIGINT NOT NULL
 );
 
 ALTER TABLE location_images

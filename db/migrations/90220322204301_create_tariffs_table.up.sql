@@ -1,13 +1,13 @@
 -- Tariffs
 CREATE TABLE IF NOT EXISTS tariffs (
-    id BIGSERIAL PRIMARY KEY,
-    uid TEXT NOT NULL,
-    currency TEXT NOT NULL,
+    id                 BIGSERIAL PRIMARY KEY,
+    uid                TEXT NOT NULL,
+    currency           TEXT NOT NULL,
     -- tariff_alt_text []display_texts
-    tariff_alt_url TEXT,
-    -- elements []tariff_elements
-    energy_mix_id BIGINT,
-    last_updated TIMESTAMP NOT NULL
+    tariff_alt_url     TEXT,
+    -- elements        []tariff_elements
+    energy_mix_id      BIGINT,
+    last_updated       TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_tariffs_uid ON tariffs (uid);
@@ -20,7 +20,7 @@ ALTER TABLE tariffs
 
 -- Tariff Alt Texts
 CREATE TABLE IF NOT EXISTS tariff_alt_texts (
-    tariff_id BIGINT NOT NULL,
+    tariff_id       BIGINT NOT NULL,
     display_text_id BIGINT NOT NULL
 );
 
@@ -38,24 +38,24 @@ ALTER TABLE tariff_alt_texts
 
 -- Tariff Restrictions
 CREATE TABLE IF NOT EXISTS restrictions (
-    id BIGSERIAL PRIMARY KEY,
-    start_time TEXT,
-    end_time TEXT,
-    start_date TEXT,
-    end_date TEXT,
-    min_kwh FLOAT,
-    max_kwh FLOAT,
-    min_power FLOAT,
-    max_power FLOAT,
-    min_duration INTEGER,
-    max_duration INTEGER
+    id             BIGSERIAL PRIMARY KEY,
+    start_time     TEXT,
+    end_time       TEXT,
+    start_date     TEXT,
+    end_date       TEXT,
+    min_kwh        FLOAT,
+    max_kwh        FLOAT,
+    min_power      FLOAT,
+    max_power      FLOAT,
+    min_duration   INTEGER,
+    max_duration   INTEGER
     -- day_of_week []weekdays
 );
 
 -- Day Of Week
 CREATE TABLE IF NOT EXISTS weekdays (
-    id BIGSERIAL PRIMARY KEY,
-    text TEXT NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    text        TEXT NOT NULL,
     description TEXT NOT NULL
 );
 
@@ -71,7 +71,7 @@ INSERT INTO weekdays (text, description) VALUES
 -- Tariff Restriction Weekdays
 CREATE TABLE IF NOT EXISTS restriction_weekdays (
     restriction_id BIGINT NOT NULL,
-    weekday_id BIGINT NOT NULL
+    weekday_id     BIGINT NOT NULL
 );
 
 ALTER TABLE restriction_weekdays 
@@ -88,10 +88,10 @@ ALTER TABLE restriction_weekdays
 
 -- Tariff Elements
 CREATE TABLE IF NOT EXISTS elements (
-    id BIGSERIAL PRIMARY KEY,
-    tariff_id BIGINT NOT NULL,
+    id                  BIGSERIAL PRIMARY KEY,
+    tariff_id           BIGINT NOT NULL,
     -- price_components []display_texts
-    restriction_id BIGINT
+    restriction_id      BIGINT
 );
 
 ALTER TABLE elements 
@@ -115,11 +115,11 @@ CREATE TYPE tariff_dimension AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS price_components (
-    id BIGSERIAL PRIMARY KEY,
+    id         BIGSERIAL PRIMARY KEY,
     element_id BIGINT NOT NULL,
-    type tariff_dimension NOT NULL,
-    price FLOAT NOT NULL,
-    step_size INTEGER NOT NULL
+    type       tariff_dimension NOT NULL,
+    price      FLOAT NOT NULL,
+    step_size  INTEGER NOT NULL
 );
 
 ALTER TABLE price_components 

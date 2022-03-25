@@ -6,18 +6,18 @@ CREATE TYPE authentication_actions AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS authentications (
-    id BIGSERIAL PRIMARY KEY,
-    code TEXT NOT NULL,
-    action authentication_actions NOT NULL,
-    challenge TEXT NOT NULL,
-    signature TEXT,
+    id          BIGSERIAL PRIMARY KEY,
+    code        TEXT NOT NULL,
+    action      authentication_actions NOT NULL,
+    challenge   TEXT NOT NULL,
+    signature   TEXT,
     linking_key TEXT
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    id BIGSERIAL PRIMARY KEY,
-    linking_key TEXT NOT NULL,
-    node_key TEXT NOT NULL,
+    id           BIGSERIAL PRIMARY KEY,
+    linking_key  TEXT NOT NULL,
+    node_key     TEXT NOT NULL,
     node_address TEXT NOT NULL,
     device_token TEXT NOT NULL
 );

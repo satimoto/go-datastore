@@ -3,8 +3,9 @@ INSERT INTO users (
     device_token,
     linking_pubkey,
     node_id,
+    token_id,
     pubkey
-  ) VALUES ($1, $2, $3, $4)
+  ) VALUES ($1, $2, $3, $4, $5)
   RETURNING *;
 
 -- name: GetUser :one
@@ -21,8 +22,9 @@ SELECT * FROM users
 
 -- name: UpdateUser :one
 UPDATE users SET (
+    device_token,
     node_id, 
-    device_token
-  ) = ($2, $3)
+    token_id
+  ) = ($2, $3, $4)
   WHERE id = $1
   RETURNING *;

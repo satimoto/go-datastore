@@ -26,8 +26,8 @@ INSERT INTO capabilities (text, description) VALUES
     ('UNLOCK_CAPABLE', 'Remove Unlock');
 
 CREATE TABLE IF NOT EXISTS parking_restrictions (
-    id BIGSERIAL PRIMARY KEY,
-    text TEXT NOT NULL,
+    id          BIGSERIAL PRIMARY KEY,
+    text        TEXT NOT NULL,
     description TEXT NOT NULL
 );
 
@@ -40,22 +40,22 @@ INSERT INTO parking_restrictions (text, description) VALUES
     ('MOTORCYCLES', 'Parking spot for motorcycles or scooters');
 
 CREATE TABLE IF NOT EXISTS evses (
-    id BIGSERIAL PRIMARY KEY,
-    location_id BIGINT NOT NULL,
-    uid TEXT NOT NULL,
-    evse_id TEXT,
-    status evse_status NOT NULL,
-    -- status_schedule []status_schedules
-    -- capabilities []evse_capabilities 
-    -- connectors []connectors
-    floor_level TEXT,
-    geom GEOMETRY(POINT, 4326),
-    geo_location_id BIGINT,
-    physical_reference TEXT,
-    -- directions []display_texts
+    id                      BIGSERIAL PRIMARY KEY,
+    location_id             BIGINT NOT NULL,
+    uid                     TEXT NOT NULL,
+    evse_id                 TEXT,
+    status                  evse_status NOT NULL,
+    -- status_schedule      []status_schedules
+    -- capabilities         []evse_capabilities 
+    -- connectors           []connectors
+    floor_level             TEXT,
+    geom                    GEOMETRY(POINT, 4326),
+    geo_location_id         BIGINT,
+    physical_reference      TEXT,
+    -- directions           []display_texts
     -- parking_restrictions []evse_parking_restrictions
-    -- images []images
-    last_updated TIMESTAMP NOT NULL
+    -- images               []images
+    last_updated            TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_evses_uid ON evses (uid);
@@ -107,17 +107,17 @@ CREATE TYPE power_type AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS connectors (
-    id BIGSERIAL PRIMARY KEY,
-    evse_id BIGINT NOT NULL,
-    uid TEXT NOT NULL,
-    standard connector_type NOT NULL,
-    format connector_format NOT NULL,
-    power_type power_type NOT NULL,
-    voltage INTEGER NOT NULL,
-    amperage INTEGER NOT NULL,
-    tariff_id TEXT,
+    id                   BIGSERIAL PRIMARY KEY,
+    evse_id              BIGINT NOT NULL,
+    uid                  TEXT NOT NULL,
+    standard             connector_type NOT NULL,
+    format               connector_format NOT NULL,
+    power_type           power_type NOT NULL,
+    voltage              INTEGER NOT NULL,
+    amperage             INTEGER NOT NULL,
+    tariff_id            TEXT,
     terms_and_conditions TEXT,
-    last_updated TIMESTAMP NOT NULL
+    last_updated         TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_connectors_uid ON connectors (uid);
@@ -133,7 +133,7 @@ ALTER TABLE connectors
 
 -- Evse Directions
 CREATE TABLE IF NOT EXISTS evse_directions (
-    evse_id BIGINT NOT NULL,
+    evse_id         BIGINT NOT NULL,
     display_text_id BIGINT NOT NULL
 );
 
@@ -151,7 +151,7 @@ ALTER TABLE evse_directions
 
 -- Evse Images
 CREATE TABLE IF NOT EXISTS evse_images (
-    evse_id BIGINT NOT NULL,
+    evse_id  BIGINT NOT NULL,
     image_id BIGINT NOT NULL
 );
 
@@ -169,7 +169,7 @@ ALTER TABLE evse_images
 
 -- Evse Capabilities
 CREATE TABLE IF NOT EXISTS evse_capabilities (
-    evse_id BIGINT NOT NULL,
+    evse_id       BIGINT NOT NULL,
     capability_id BIGINT NOT NULL
 );
 
@@ -187,7 +187,7 @@ ALTER TABLE evse_capabilities
 
 -- Evse Parking Restrictions
 CREATE TABLE IF NOT EXISTS evse_parking_restrictions (
-    evse_id BIGINT NOT NULL,
+    evse_id                BIGINT NOT NULL,
     parking_restriction_id BIGINT NOT NULL
 );
 
@@ -205,11 +205,11 @@ ALTER TABLE evse_parking_restrictions
 
 -- Status Schedules
 CREATE TABLE IF NOT EXISTS status_schedules (
-    id BIGSERIAL PRIMARY KEY,
-    evse_id BIGINT NOT NULL,
+    id           BIGSERIAL PRIMARY KEY,
+    evse_id      BIGINT NOT NULL,
     period_begin TIMESTAMP NOT NULL,
-    period_end TIMESTAMP,
-    status evse_status NOT NULL
+    period_end   TIMESTAMP,
+    status       evse_status NOT NULL
 );
 
 ALTER TABLE status_schedules 

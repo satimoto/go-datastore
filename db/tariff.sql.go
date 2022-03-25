@@ -10,7 +10,7 @@ import (
 )
 
 const createTariff = `-- name: CreateTariff :one
-INSERT INTO Tariffs (
+INSERT INTO tariffs (
     uid, 
     currency, 
     tariff_alt_url, 
@@ -49,7 +49,7 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 }
 
 const deleteTariffByUid = `-- name: DeleteTariffByUid :exec
-DELETE FROM Tariffs
+DELETE FROM tariffs
   WHERE uid = $1
 `
 
@@ -59,7 +59,7 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
-SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated FROM Tariffs
+SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated FROM tariffs
   WHERE uid = $1
 `
 
@@ -78,7 +78,7 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 }
 
 const updateTariffByUid = `-- name: UpdateTariffByUid :one
-UPDATE Tariffs SET (
+UPDATE tariffs SET (
     currency, 
     tariff_alt_url,
     energy_mix_id, 
