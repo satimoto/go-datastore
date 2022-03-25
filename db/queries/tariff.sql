@@ -1,5 +1,5 @@
 -- name: CreateTariff :one
-INSERT INTO Tariffs (
+INSERT INTO tariffs (
     uid, 
     currency, 
     tariff_alt_url, 
@@ -9,15 +9,15 @@ INSERT INTO Tariffs (
   RETURNING *;
 
 -- name: DeleteTariffByUid :exec
-DELETE FROM Tariffs
+DELETE FROM tariffs
   WHERE uid = $1;
 
 -- name: GetTariffByUid :one
-SELECT * FROM Tariffs
+SELECT * FROM tariffs
   WHERE uid = $1;
 
 -- name: UpdateTariffByUid :one
-UPDATE Tariffs SET (
+UPDATE tariffs SET (
     currency, 
     tariff_alt_url,
     energy_mix_id, 

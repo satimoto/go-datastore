@@ -293,6 +293,46 @@ func (e *TariffDimension) Scan(src interface{}) error {
 	return nil
 }
 
+type TokenType string
+
+const (
+	TokenTypeOTHER TokenType = "OTHER"
+	TokenTypeRFID  TokenType = "RFID"
+)
+
+func (e *TokenType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TokenType(s)
+	case string:
+		*e = TokenType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TokenType: %T", src)
+	}
+	return nil
+}
+
+type TokenWhitelistType string
+
+const (
+	TokenWhitelistTypeALWAYS         TokenWhitelistType = "ALWAYS"
+	TokenWhitelistTypeALLOWED        TokenWhitelistType = "ALLOWED"
+	TokenWhitelistTypeALLOWEDOFFLINE TokenWhitelistType = "ALLOWED_OFFLINE"
+	TokenWhitelistTypeNEVER          TokenWhitelistType = "NEVER"
+)
+
+func (e *TokenWhitelistType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TokenWhitelistType(s)
+	case string:
+		*e = TokenWhitelistType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TokenWhitelistType: %T", src)
+	}
+	return nil
+}
+
 type Authentication struct {
 	ID            int64                 `db:"id" json:"id"`
 	Code          string                `db:"code" json:"code"`
@@ -591,12 +631,26 @@ type TariffAltText struct {
 	DisplayTextID int64 `db:"display_text_id" json:"displayTextID"`
 }
 
+type Token struct {
+	ID           int64              `db:"id" json:"id"`
+	Uid          string             `db:"uid" json:"uid"`
+	Type         TokenType          `db:"type" json:"type"`
+	AuthID       string             `db:"auth_id" json:"authID"`
+	VisualNumber sql.NullString     `db:"visual_number" json:"visualNumber"`
+	Issuer       string             `db:"issuer" json:"issuer"`
+	Valid        bool               `db:"valid" json:"valid"`
+	Whitelist    TokenWhitelistType `db:"whitelist" json:"whitelist"`
+	Language     string             `db:"language" json:"language"`
+	LastUpdated  time.Time          `db:"last_updated" json:"lastUpdated"`
+}
+
 type User struct {
 	ID            int64         `db:"id" json:"id"`
 	LinkingPubkey string        `db:"linking_pubkey" json:"linkingPubkey"`
 	Pubkey        string        `db:"pubkey" json:"pubkey"`
 	DeviceToken   string        `db:"device_token" json:"deviceToken"`
 	NodeID        sql.NullInt64 `db:"node_id" json:"nodeID"`
+	TokenID       sql.NullInt64 `db:"token_id" json:"tokenID"`
 }
 
 type Version struct {

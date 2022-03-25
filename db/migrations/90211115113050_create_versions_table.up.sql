@@ -1,9 +1,9 @@
 -- Versions
 CREATE TABLE IF NOT EXISTS versions (
-    id BIGSERIAL PRIMARY KEY,
+    id            BIGSERIAL PRIMARY KEY,
     credential_id BIGINT NOT NULL,
-    version TEXT NOT NULL,
-    url TEXT NOT NULL
+    version       TEXT NOT NULL,
+    url           TEXT NOT NULL
 );
 
 ALTER TABLE versions 
@@ -14,10 +14,10 @@ ALTER TABLE versions
 
 -- Version Endpoints
 CREATE TABLE IF NOT EXISTS version_endpoints (
-    id BIGSERIAL PRIMARY KEY,
+    id         BIGSERIAL PRIMARY KEY,
     version_id BIGINT NOT NULL,
     identifier TEXT NOT NULL,
-    url TEXT NOT NULL
+    url        TEXT NOT NULL
 );
 
 ALTER TABLE version_endpoints 
