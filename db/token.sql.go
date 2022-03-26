@@ -97,6 +97,62 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 	return i, err
 }
 
+const listTokens = `-- name: ListTokens :many
+SELECT id, uid, type, auth_id, visual_number, issuer, valid, whitelist, language, last_updated FROM tokens
+  WHERE 
+    ($1::text == '' or last_updated > $1::text) and 
+    ($2::text == '' or last_updated < $2::text)
+  ORDER BY id
+  LIMIT $4::bigint
+  OFFSET $3::bigint
+`
+
+type ListTokensParams struct {
+	FilterDateFrom string `db:"filter_date_from" json:"filterDateFrom"`
+	FilterDateTo   string `db:"filter_date_to" json:"filterDateTo"`
+	FilterOffset   int64  `db:"filter_offset" json:"filterOffset"`
+	FilterLimit    int64  `db:"filter_limit" json:"filterLimit"`
+}
+
+func (q *Queries) ListTokens(ctx context.Context, arg ListTokensParams) ([]Token, error) {
+	rows, err := q.db.QueryContext(ctx, listTokens,
+		arg.FilterDateFrom,
+		arg.FilterDateTo,
+		arg.FilterOffset,
+		arg.FilterLimit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Token
+	for rows.Next() {
+		var i Token
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.Type,
+			&i.AuthID,
+			&i.VisualNumber,
+			&i.Issuer,
+			&i.Valid,
+			&i.Whitelist,
+			&i.Language,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTokenByUid = `-- name: UpdateTokenByUid :one
 UPDATE tokens SET (
     type,
