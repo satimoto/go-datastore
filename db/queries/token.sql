@@ -5,11 +5,12 @@ INSERT INTO tokens (
     auth_id,
     visual_number,
     issuer,
+    allowed,
     valid,
     whitelist,
     language,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING *;
 
 -- name: DeleteTokenByUid :exec
@@ -35,10 +36,11 @@ UPDATE tokens SET (
     auth_id,
     visual_number,
     issuer,
+    allowed,
     valid,
     whitelist,
     language,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE uid = $1
   RETURNING *;

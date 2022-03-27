@@ -293,6 +293,28 @@ func (e *TariffDimension) Scan(src interface{}) error {
 	return nil
 }
 
+type TokenAllowedType string
+
+const (
+	TokenAllowedTypeALLOWED    TokenAllowedType = "ALLOWED"
+	TokenAllowedTypeBLOCKED    TokenAllowedType = "BLOCKED"
+	TokenAllowedTypeEXPIRED    TokenAllowedType = "EXPIRED"
+	TokenAllowedTypeNOCREDIT   TokenAllowedType = "NO_CREDIT"
+	TokenAllowedTypeNOTALLOWED TokenAllowedType = "NOT_ALLOWED"
+)
+
+func (e *TokenAllowedType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = TokenAllowedType(s)
+	case string:
+		*e = TokenAllowedType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for TokenAllowedType: %T", src)
+	}
+	return nil
+}
+
 type TokenType string
 
 const (
@@ -638,6 +660,7 @@ type Token struct {
 	AuthID       string             `db:"auth_id" json:"authID"`
 	VisualNumber sql.NullString     `db:"visual_number" json:"visualNumber"`
 	Issuer       string             `db:"issuer" json:"issuer"`
+	Allowed      TokenAllowedType   `db:"allowed" json:"allowed"`
 	Valid        bool               `db:"valid" json:"valid"`
 	Whitelist    TokenWhitelistType `db:"whitelist" json:"whitelist"`
 	Language     string             `db:"language" json:"language"`
