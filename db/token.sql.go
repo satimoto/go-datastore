@@ -16,12 +16,13 @@ INSERT INTO tokens (
     auth_id,
     visual_number,
     issuer,
+    allowed,
     valid,
     whitelist,
     language,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-  RETURNING id, uid, type, auth_id, visual_number, issuer, valid, whitelist, language, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  RETURNING id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated
 `
 
 type CreateTokenParams struct {
@@ -30,6 +31,7 @@ type CreateTokenParams struct {
 	AuthID       string             `db:"auth_id" json:"authID"`
 	VisualNumber sql.NullString     `db:"visual_number" json:"visualNumber"`
 	Issuer       string             `db:"issuer" json:"issuer"`
+	Allowed      TokenAllowedType   `db:"allowed" json:"allowed"`
 	Valid        bool               `db:"valid" json:"valid"`
 	Whitelist    TokenWhitelistType `db:"whitelist" json:"whitelist"`
 	Language     string             `db:"language" json:"language"`
@@ -43,6 +45,7 @@ func (q *Queries) CreateToken(ctx context.Context, arg CreateTokenParams) (Token
 		arg.AuthID,
 		arg.VisualNumber,
 		arg.Issuer,
+		arg.Allowed,
 		arg.Valid,
 		arg.Whitelist,
 		arg.Language,
@@ -56,6 +59,7 @@ func (q *Queries) CreateToken(ctx context.Context, arg CreateTokenParams) (Token
 		&i.AuthID,
 		&i.VisualNumber,
 		&i.Issuer,
+		&i.Allowed,
 		&i.Valid,
 		&i.Whitelist,
 		&i.Language,
@@ -75,7 +79,7 @@ func (q *Queries) DeleteTokenByUid(ctx context.Context, uid string) error {
 }
 
 const getTokenByUid = `-- name: GetTokenByUid :one
-SELECT id, uid, type, auth_id, visual_number, issuer, valid, whitelist, language, last_updated FROM tokens
+SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE uid = $1
 `
 
@@ -89,6 +93,7 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 		&i.AuthID,
 		&i.VisualNumber,
 		&i.Issuer,
+		&i.Allowed,
 		&i.Valid,
 		&i.Whitelist,
 		&i.Language,
@@ -98,7 +103,7 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 }
 
 const listTokens = `-- name: ListTokens :many
-SELECT id, uid, type, auth_id, visual_number, issuer, valid, whitelist, language, last_updated FROM tokens
+SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE 
     ($1::text == '' or last_updated > $1::text) and 
     ($2::text == '' or last_updated < $2::text)
@@ -135,6 +140,7 @@ func (q *Queries) ListTokens(ctx context.Context, arg ListTokensParams) ([]Token
 			&i.AuthID,
 			&i.VisualNumber,
 			&i.Issuer,
+			&i.Allowed,
 			&i.Valid,
 			&i.Whitelist,
 			&i.Language,
@@ -159,13 +165,14 @@ UPDATE tokens SET (
     auth_id,
     visual_number,
     issuer,
+    allowed,
     valid,
     whitelist,
     language,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE uid = $1
-  RETURNING id, uid, type, auth_id, visual_number, issuer, valid, whitelist, language, last_updated
+  RETURNING id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated
 `
 
 type UpdateTokenByUidParams struct {
@@ -174,6 +181,7 @@ type UpdateTokenByUidParams struct {
 	AuthID       string             `db:"auth_id" json:"authID"`
 	VisualNumber sql.NullString     `db:"visual_number" json:"visualNumber"`
 	Issuer       string             `db:"issuer" json:"issuer"`
+	Allowed      TokenAllowedType   `db:"allowed" json:"allowed"`
 	Valid        bool               `db:"valid" json:"valid"`
 	Whitelist    TokenWhitelistType `db:"whitelist" json:"whitelist"`
 	Language     string             `db:"language" json:"language"`
@@ -187,6 +195,7 @@ func (q *Queries) UpdateTokenByUid(ctx context.Context, arg UpdateTokenByUidPara
 		arg.AuthID,
 		arg.VisualNumber,
 		arg.Issuer,
+		arg.Allowed,
 		arg.Valid,
 		arg.Whitelist,
 		arg.Language,
@@ -200,6 +209,7 @@ func (q *Queries) UpdateTokenByUid(ctx context.Context, arg UpdateTokenByUidPara
 		&i.AuthID,
 		&i.VisualNumber,
 		&i.Issuer,
+		&i.Allowed,
 		&i.Valid,
 		&i.Whitelist,
 		&i.Language,

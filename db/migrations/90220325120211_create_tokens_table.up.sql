@@ -1,4 +1,12 @@
 -- Tokens
+CREATE TYPE token_allowed_type AS ENUM (
+    'ALLOWED', 
+    'BLOCKED', 
+    'EXPIRED', 
+    'NO_CREDIT', 
+    'NOT_ALLOWED'
+);
+
 CREATE TYPE token_type AS ENUM (
     'OTHER', 
     'RFID'
@@ -18,6 +26,7 @@ CREATE TABLE IF NOT EXISTS tokens (
     auth_id         TEXT NOT NULL,
     visual_number   TEXT,
     issuer          TEXT NOT NULL,
+    allowed         token_allowed_type NOT NULL,
     valid           BOOLEAN NOT NULL,
     whitelist       token_whitelist_type NOT NULL,
     language        TEXT NOT NULL,
