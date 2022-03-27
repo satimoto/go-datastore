@@ -13,3 +13,5 @@ DROP TABLE IF EXISTS tokens;
 DROP TYPE IF EXISTS token_whitelist_type;
 
 DROP TYPE IF EXISTS token_type;
+
+DROP TYPE IF EXISTS token_allowed_type;
