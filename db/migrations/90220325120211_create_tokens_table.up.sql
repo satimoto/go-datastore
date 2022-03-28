@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS tokens (
     allowed         token_allowed_type NOT NULL,
     valid           BOOLEAN NOT NULL,
     whitelist       token_whitelist_type NOT NULL,
-    language        TEXT NOT NULL,
+    language        TEXT,
     last_updated    TIMESTAMP NOT NULL
 );
 
