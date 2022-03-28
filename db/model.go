@@ -663,7 +663,7 @@ type Token struct {
 	Allowed      TokenAllowedType   `db:"allowed" json:"allowed"`
 	Valid        bool               `db:"valid" json:"valid"`
 	Whitelist    TokenWhitelistType `db:"whitelist" json:"whitelist"`
-	Language     string             `db:"language" json:"language"`
+	Language     sql.NullString     `db:"language" json:"language"`
 	LastUpdated  time.Time          `db:"last_updated" json:"lastUpdated"`
 }
 
