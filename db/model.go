@@ -10,6 +10,25 @@ import (
 	"github.com/twpayne/go-geom"
 )
 
+type AuthMethodType string
+
+const (
+	AuthMethodTypeAUTHREQUEST AuthMethodType = "AUTH_REQUEST"
+	AuthMethodTypeWHITELIST   AuthMethodType = "WHITELIST"
+)
+
+func (e *AuthMethodType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = AuthMethodType(s)
+	case string:
+		*e = AuthMethodType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for AuthMethodType: %T", src)
+	}
+	return nil
+}
+
 type AuthenticationActions string
 
 const (
@@ -51,6 +70,29 @@ func (e *ChannelRequestStatus) Scan(src interface{}) error {
 		*e = ChannelRequestStatus(s)
 	default:
 		return fmt.Errorf("unsupported scan type for ChannelRequestStatus: %T", src)
+	}
+	return nil
+}
+
+type ChargingPeriodDimensionType string
+
+const (
+	ChargingPeriodDimensionTypeENERGY      ChargingPeriodDimensionType = "ENERGY"
+	ChargingPeriodDimensionTypeFLAT        ChargingPeriodDimensionType = "FLAT"
+	ChargingPeriodDimensionTypeMAXCURRENT  ChargingPeriodDimensionType = "MAX_CURRENT"
+	ChargingPeriodDimensionTypeMINCURRENT  ChargingPeriodDimensionType = "MIN_CURRENT"
+	ChargingPeriodDimensionTypePARKINGTIME ChargingPeriodDimensionType = "PARKING_TIME"
+	ChargingPeriodDimensionTypeTIME        ChargingPeriodDimensionType = "TIME"
+)
+
+func (e *ChargingPeriodDimensionType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = ChargingPeriodDimensionType(s)
+	case string:
+		*e = ChargingPeriodDimensionType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for ChargingPeriodDimensionType: %T", src)
 	}
 	return nil
 }
@@ -272,6 +314,27 @@ func (e *PowerType) Scan(src interface{}) error {
 	return nil
 }
 
+type SessionStatusType string
+
+const (
+	SessionStatusTypeACTIVE    SessionStatusType = "ACTIVE"
+	SessionStatusTypeCOMPLETED SessionStatusType = "COMPLETED"
+	SessionStatusTypeINVALID   SessionStatusType = "INVALID"
+	SessionStatusTypePENDING   SessionStatusType = "PENDING"
+)
+
+func (e *SessionStatusType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = SessionStatusType(s)
+	case string:
+		*e = SessionStatusType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for SessionStatusType: %T", src)
+	}
+	return nil
+}
+
 type TariffDimension string
 
 const (
@@ -397,6 +460,18 @@ type ChannelRequestHtlc struct {
 	ChanID           int64 `db:"chan_id" json:"chanID"`
 	HtlcID           int64 `db:"htlc_id" json:"htlcID"`
 	IsSettled        bool  `db:"is_settled" json:"isSettled"`
+}
+
+type ChargingPeriod struct {
+	ID            int64     `db:"id" json:"id"`
+	StartDateTime time.Time `db:"start_date_time" json:"startDateTime"`
+}
+
+type ChargingPeriodDimension struct {
+	ID               int64                       `db:"id" json:"id"`
+	ChargingPeriodID int64                       `db:"charging_period_id" json:"chargingPeriodID"`
+	Type             ChargingPeriodDimensionType `db:"type" json:"type"`
+	Volume           float64                     `db:"volume" json:"volume"`
 }
 
 type Connector struct {
@@ -629,6 +704,27 @@ type Restriction struct {
 type RestrictionWeekday struct {
 	RestrictionID int64 `db:"restriction_id" json:"restrictionID"`
 	WeekdayID     int64 `db:"weekday_id" json:"weekdayID"`
+}
+
+type Session struct {
+	ID            int64             `db:"id" json:"id"`
+	Uid           string            `db:"uid" json:"uid"`
+	StartDatetime time.Time         `db:"start_datetime" json:"startDatetime"`
+	EndDatetime   sql.NullTime      `db:"end_datetime" json:"endDatetime"`
+	Kwh           float64           `db:"kwh" json:"kwh"`
+	AuthID        string            `db:"auth_id" json:"authID"`
+	AuthMethod    AuthMethodType    `db:"auth_method" json:"authMethod"`
+	LocationID    int64             `db:"location_id" json:"locationID"`
+	MeterID       sql.NullString    `db:"meter_id" json:"meterID"`
+	Currency      string            `db:"currency" json:"currency"`
+	TotalCost     sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status        SessionStatusType `db:"status" json:"status"`
+	LastUpdated   time.Time         `db:"last_updated" json:"lastUpdated"`
+}
+
+type SessionChargingPeriod struct {
+	SessionID        int64 `db:"session_id" json:"sessionID"`
+	ChargingPeriodID int64 `db:"charging_period_id" json:"chargingPeriodID"`
 }
 
 type StatusSchedule struct {
