@@ -97,6 +97,29 @@ func (e *ChargingPeriodDimensionType) Scan(src interface{}) error {
 	return nil
 }
 
+type CommandResponseType string
+
+const (
+	CommandResponseTypeREQUESTED      CommandResponseType = "REQUESTED"
+	CommandResponseTypeNOTSUPPORTED   CommandResponseType = "NOT_SUPPORTED"
+	CommandResponseTypeREJECTED       CommandResponseType = "REJECTED"
+	CommandResponseTypeACCEPTED       CommandResponseType = "ACCEPTED"
+	CommandResponseTypeTIMEOUT        CommandResponseType = "TIMEOUT"
+	CommandResponseTypeUNKNOWNSESSION CommandResponseType = "UNKNOWN_SESSION"
+)
+
+func (e *CommandResponseType) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = CommandResponseType(s)
+	case string:
+		*e = CommandResponseType(s)
+	default:
+		return fmt.Errorf("unsupported scan type for CommandResponseType: %T", src)
+	}
+	return nil
+}
+
 type ConnectorFormat string
 
 const (
@@ -495,6 +518,38 @@ type ChargingPeriodDimension struct {
 	ChargingPeriodID int64                       `db:"charging_period_id" json:"chargingPeriodID"`
 	Type             ChargingPeriodDimensionType `db:"type" json:"type"`
 	Volume           float64                     `db:"volume" json:"volume"`
+}
+
+type CommandReservation struct {
+	ID            int64               `db:"id" json:"id"`
+	Status        CommandResponseType `db:"status" json:"status"`
+	TokenID       int64               `db:"token_id" json:"tokenID"`
+	ExpiryDate    time.Time           `db:"expiry_date" json:"expiryDate"`
+	ReservationID sql.NullInt64       `db:"reservation_id" json:"reservationID"`
+	LocationID    string              `db:"location_id" json:"locationID"`
+	EvseUid       sql.NullString      `db:"evse_uid" json:"evseUid"`
+}
+
+type CommandStart struct {
+	ID         int64               `db:"id" json:"id"`
+	Status     CommandResponseType `db:"status" json:"status"`
+	TokenID    int64               `db:"token_id" json:"tokenID"`
+	LocationID string              `db:"location_id" json:"locationID"`
+	EvseUid    sql.NullString      `db:"evse_uid" json:"evseUid"`
+}
+
+type CommandStop struct {
+	ID        int64               `db:"id" json:"id"`
+	Status    CommandResponseType `db:"status" json:"status"`
+	SessionID string              `db:"session_id" json:"sessionID"`
+}
+
+type CommandUnlock struct {
+	ID          int64               `db:"id" json:"id"`
+	Status      CommandResponseType `db:"status" json:"status"`
+	LocationID  string              `db:"location_id" json:"locationID"`
+	EvseUid     string              `db:"evse_uid" json:"evseUid"`
+	ConnectorID string              `db:"connector_id" json:"connectorID"`
 }
 
 type Connector struct {
