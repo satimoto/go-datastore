@@ -440,6 +440,29 @@ type Capability struct {
 	Description string `db:"description" json:"description"`
 }
 
+type Cdr struct {
+	ID               int64           `db:"id" json:"id"`
+	Uid              string          `db:"uid" json:"uid"`
+	StartDateTime    time.Time       `db:"start_date_time" json:"startDateTime"`
+	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
+	AuthID           string          `db:"auth_id" json:"authID"`
+	AuthMethod       AuthMethodType  `db:"auth_method" json:"authMethod"`
+	LocationID       int64           `db:"location_id" json:"locationID"`
+	MeterID          sql.NullString  `db:"meter_id" json:"meterID"`
+	Currency         string          `db:"currency" json:"currency"`
+	TotalCost        float64         `db:"total_cost" json:"totalCost"`
+	TotalEnergy      float64         `db:"total_energy" json:"totalEnergy"`
+	TotalTime        float64         `db:"total_time" json:"totalTime"`
+	TotalParkingTime sql.NullFloat64 `db:"total_parking_time" json:"totalParkingTime"`
+	Remark           sql.NullString  `db:"remark" json:"remark"`
+	LastUpdated      time.Time       `db:"last_updated" json:"lastUpdated"`
+}
+
+type CdrChargingPeriod struct {
+	CdrID            int64 `db:"cdr_id" json:"cdrID"`
+	ChargingPeriodID int64 `db:"charging_period_id" json:"chargingPeriodID"`
+}
+
 type ChannelRequest struct {
 	ID          int64                `db:"id" json:"id"`
 	UserID      int64                `db:"user_id" json:"userID"`
@@ -742,6 +765,7 @@ type Tariff struct {
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated  time.Time      `db:"last_updated" json:"lastUpdated"`
+	CdrID        sql.NullInt64  `db:"cdr_id" json:"cdrID"`
 }
 
 type TariffAltText struct {

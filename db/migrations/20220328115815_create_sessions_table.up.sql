@@ -12,20 +12,20 @@ CREATE TYPE session_status_type AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
-    id                 BIGSERIAL PRIMARY KEY,
-    uid                TEXT NOT NULL,
-    start_datetime     TIMESTAMP NOT NULL,
-    end_datetime       TIMESTAMP,
-    kwh                FLOAT NOT NULL,
-    auth_id            TEXT NOT NULL,
-    auth_method        auth_method_type NOT NULL,
-    location_id        BIGINT NOT NULL,
-    meter_id           TEXT,
-    currency           TEXT NOT NULL,
+    id                  BIGSERIAL PRIMARY KEY,
+    uid                 TEXT NOT NULL,
+    start_datetime      TIMESTAMP NOT NULL,
+    end_datetime        TIMESTAMP,
+    kwh                 FLOAT NOT NULL,
+    auth_id             TEXT NOT NULL,
+    auth_method         auth_method_type NOT NULL,
+    location_id         BIGINT NOT NULL,
+    meter_id            TEXT,
+    currency            TEXT NOT NULL,
     -- charging_periods []session_charging_periods
-    total_cost         FLOAT,
-    status             session_status_type NOT NULL,
-    last_updated       TIMESTAMP NOT NULL
+    total_cost          FLOAT,
+    status              session_status_type NOT NULL,
+    last_updated        TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_sessions_uid ON sessions (uid);

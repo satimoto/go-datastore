@@ -12,16 +12,18 @@ import (
 const createTariff = `-- name: CreateTariff :one
 INSERT INTO tariffs (
     uid, 
+    cdr_id,
     currency, 
     tariff_alt_url, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
 	Uid          string         `db:"uid" json:"uid"`
+	CdrID        sql.NullInt64  `db:"cdr_id" json:"cdrID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
@@ -31,6 +33,7 @@ type CreateTariffParams struct {
 func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tariff, error) {
 	row := q.db.QueryRowContext(ctx, createTariff,
 		arg.Uid,
+		arg.CdrID,
 		arg.Currency,
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
@@ -44,13 +47,14 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
 		&i.LastUpdated,
+		&i.CdrID,
 	)
 	return i, err
 }
 
 const deleteTariffByUid = `-- name: DeleteTariffByUid :exec
 DELETE FROM tariffs
-  WHERE uid = $1
+  WHERE uid = $1 AND cdr_id IS NULL
 `
 
 func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
@@ -59,8 +63,8 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
-SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated FROM tariffs
-  WHERE uid = $1
+SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
+  WHERE uid = $1 AND cdr_id IS NULL
 `
 
 func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error) {
@@ -73,8 +77,46 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
 		&i.LastUpdated,
+		&i.CdrID,
 	)
 	return i, err
+}
+
+const listTariffsByCdr = `-- name: ListTariffsByCdr :many
+SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
+  WHERE cdr_id = $1
+  ORDER BY id
+`
+
+func (q *Queries) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]Tariff, error) {
+	rows, err := q.db.QueryContext(ctx, listTariffsByCdr, cdrID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Tariff
+	for rows.Next() {
+		var i Tariff
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.Currency,
+			&i.TariffAltUrl,
+			&i.EnergyMixID,
+			&i.LastUpdated,
+			&i.CdrID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const updateTariffByUid = `-- name: UpdateTariffByUid :one
@@ -84,8 +126,8 @@ UPDATE tariffs SET (
     energy_mix_id, 
     last_updated
   ) = ($2, $3, $4, $5)
-  WHERE uid = $1
-  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated
+  WHERE uid = $1 AND cdr_id IS NULL
+  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
 `
 
 type UpdateTariffByUidParams struct {
@@ -112,6 +154,7 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
 		&i.LastUpdated,
+		&i.CdrID,
 	)
 	return i, err
 }
