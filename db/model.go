@@ -525,7 +525,7 @@ type CommandReservation struct {
 	Status        CommandResponseType `db:"status" json:"status"`
 	TokenID       int64               `db:"token_id" json:"tokenID"`
 	ExpiryDate    time.Time           `db:"expiry_date" json:"expiryDate"`
-	ReservationID sql.NullInt64       `db:"reservation_id" json:"reservationID"`
+	ReservationID int64               `db:"reservation_id" json:"reservationID"`
 	LocationID    string              `db:"location_id" json:"locationID"`
 	EvseUid       sql.NullString      `db:"evse_uid" json:"evseUid"`
 }

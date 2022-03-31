@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS command_reservations (
     status         command_response_type NOT NULL,
     token_id       BIGINT NOT NULL,
     expiry_date    TIMESTAMP NOT NULL,
-    reservation_id BIGSERIAL,
+    reservation_id BIGSERIAL NOT NULL,
     location_id    TEXT NOT NULL,
     evse_uid       TEXT
 );
