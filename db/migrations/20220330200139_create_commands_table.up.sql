@@ -26,11 +26,12 @@ ALTER TABLE command_reservations
 
 -- Command starts
 CREATE TABLE IF NOT EXISTS command_starts (
-    id          BIGSERIAL PRIMARY KEY,
-    status      command_response_type NOT NULL,
-    token_id    BIGINT NOT NULL,
-    location_id TEXT NOT NULL,
-    evse_uid    TEXT
+    id               BIGSERIAL PRIMARY KEY,
+    status           command_response_type NOT NULL,
+    token_id         BIGINT NOT NULL,
+    authorization_id TEXT,
+    location_id      TEXT NOT NULL,
+    evse_uid         TEXT
 );
 
 ALTER TABLE command_starts

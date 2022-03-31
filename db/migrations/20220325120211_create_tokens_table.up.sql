@@ -41,6 +41,58 @@ ALTER TABLE tokens
     REFERENCES users(id) 
     ON DELETE RESTRICT;
 
+-- Token authorizations
+CREATE TABLE IF NOT EXISTS token_authorizations (
+    id               BIGSERIAL PRIMARY KEY,
+    token_id         BIGINT NOT NULL,
+    authorization_id TEXT NOT NULL,
+    location_id      TEXT NOT NULL
+    -- evse_uids     []token_authorization_evses
+    -- connector_ids []token_authorization_connectors
+);
+
+ALTER TABLE token_authorizations 
+    ADD CONSTRAINT fk_token_authorizations_token_id
+    FOREIGN KEY (token_id) 
+    REFERENCES tokens(id)
+    ON DELETE RESTRICT;
+
+-- Token authorization evses
+CREATE TABLE IF NOT EXISTS token_authorization_evses (
+    token_authorization_id BIGINT NOT NULL,
+    evse_id                BIGINT NOT NULL
+);
+
+ALTER TABLE token_authorization_evses 
+    ADD CONSTRAINT fk_token_authorization_evses_token_authorization_id
+    FOREIGN KEY (token_authorization_id) 
+    REFERENCES token_authorizations(id)
+    ON DELETE CASCADE;
+
+ALTER TABLE token_authorization_evses 
+    ADD CONSTRAINT fk_token_authorization_evses_evse_id
+    FOREIGN KEY (evse_id) 
+    REFERENCES evses(id)
+    ON DELETE CASCADE;
+
+-- Token authorization connectors
+CREATE TABLE IF NOT EXISTS token_authorization_connectors (
+    token_authorization_id BIGINT NOT NULL,
+    connector_id           BIGINT NOT NULL
+);
+
+ALTER TABLE token_authorization_connectors 
+    ADD CONSTRAINT fk_token_authorization_connectors_token_authorization_id
+    FOREIGN KEY (token_authorization_id) 
+    REFERENCES token_authorizations(id)
+    ON DELETE CASCADE;
+
+ALTER TABLE token_authorization_connectors 
+    ADD CONSTRAINT fk_token_authorization_connectors_connector_id
+    FOREIGN KEY (connector_id) 
+    REFERENCES connectors(id)
+    ON DELETE CASCADE;
+
 -- Users
 ALTER TABLE users
     ADD token_id BIGINT;

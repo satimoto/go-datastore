@@ -20,11 +20,10 @@ DELETE FROM tokens
 -- name: GetToken :one
 SELECT * FROM tokens
   WHERE id = $1;
-  
+
 -- name: GetTokenByUid :one
 SELECT * FROM tokens
   WHERE uid = $1;
-
 
 -- name: ListTokens :many
 SELECT * FROM tokens

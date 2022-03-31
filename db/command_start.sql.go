@@ -15,7 +15,7 @@ INSERT INTO command_starts (
     location_id,
     evse_uid
   ) VALUES ($1, $2, $3, $4)
-  RETURNING id, status, token_id, location_id, evse_uid
+  RETURNING id, status, token_id, authorization_id, location_id, evse_uid
 `
 
 type CreateCommandStartParams struct {
@@ -37,6 +37,7 @@ func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStart
 		&i.ID,
 		&i.Status,
 		&i.TokenID,
+		&i.AuthorizationID,
 		&i.LocationID,
 		&i.EvseUid,
 	)
@@ -44,7 +45,7 @@ func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStart
 }
 
 const getCommandStart = `-- name: GetCommandStart :one
-SELECT id, status, token_id, location_id, evse_uid FROM command_starts
+SELECT id, status, token_id, authorization_id, location_id, evse_uid FROM command_starts
   WHERE id = $1
 `
 
@@ -55,6 +56,7 @@ func (q *Queries) GetCommandStart(ctx context.Context, id int64) (CommandStart, 
 		&i.ID,
 		&i.Status,
 		&i.TokenID,
+		&i.AuthorizationID,
 		&i.LocationID,
 		&i.EvseUid,
 	)
@@ -64,7 +66,7 @@ func (q *Queries) GetCommandStart(ctx context.Context, id int64) (CommandStart, 
 const updateCommandStart = `-- name: UpdateCommandStart :one
 UPDATE command_starts SET status = $2
   WHERE id = $1
-  RETURNING id, status, token_id, location_id, evse_uid
+  RETURNING id, status, token_id, authorization_id, location_id, evse_uid
 `
 
 type UpdateCommandStartParams struct {
@@ -79,6 +81,7 @@ func (q *Queries) UpdateCommandStart(ctx context.Context, arg UpdateCommandStart
 		&i.ID,
 		&i.Status,
 		&i.TokenID,
+		&i.AuthorizationID,
 		&i.LocationID,
 		&i.EvseUid,
 	)
