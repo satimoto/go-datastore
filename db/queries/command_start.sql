@@ -7,6 +7,10 @@ INSERT INTO command_starts (
   ) VALUES ($1, $2, $3, $4)
   RETURNING *;
 
+-- name: GetCommandStart :one
+SELECT * FROM command_starts
+  WHERE id = $1;
+
 -- name: UpdateCommandStart :one
 UPDATE command_starts SET status = $2
   WHERE id = $1

@@ -7,6 +7,10 @@ INSERT INTO command_unlocks (
   ) VALUES ($1, $2, $3, $4)
   RETURNING *;
 
+-- name: GetCommandUnlock :one
+SELECT * FROM command_unlocks
+  WHERE id = $1;
+
 -- name: UpdateCommandUnlock :one
 UPDATE command_unlocks SET status = $2
   WHERE id = $1

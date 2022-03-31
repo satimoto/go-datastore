@@ -43,6 +43,24 @@ func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStart
 	return i, err
 }
 
+const getCommandStart = `-- name: GetCommandStart :one
+SELECT id, status, token_id, location_id, evse_uid FROM command_starts
+  WHERE id = $1
+`
+
+func (q *Queries) GetCommandStart(ctx context.Context, id int64) (CommandStart, error) {
+	row := q.db.QueryRowContext(ctx, getCommandStart, id)
+	var i CommandStart
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.TokenID,
+		&i.LocationID,
+		&i.EvseUid,
+	)
+	return i, err
+}
+
 const updateCommandStart = `-- name: UpdateCommandStart :one
 UPDATE command_starts SET status = $2
   WHERE id = $1

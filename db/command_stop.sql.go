@@ -27,6 +27,18 @@ func (q *Queries) CreateCommandStop(ctx context.Context, arg CreateCommandStopPa
 	return i, err
 }
 
+const getCommandStop = `-- name: GetCommandStop :one
+SELECT id, status, session_id FROM command_stops
+  WHERE id = $1
+`
+
+func (q *Queries) GetCommandStop(ctx context.Context, id int64) (CommandStop, error) {
+	row := q.db.QueryRowContext(ctx, getCommandStop, id)
+	var i CommandStop
+	err := row.Scan(&i.ID, &i.Status, &i.SessionID)
+	return i, err
+}
+
 const updateCommandStop = `-- name: UpdateCommandStop :one
 UPDATE command_stops SET status = $2
   WHERE id = $1
