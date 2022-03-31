@@ -12,6 +12,7 @@ import (
 const createCdr = `-- name: CreateCdr :one
 INSERT INTO cdrs (
     uid,
+    authorization_id,
     start_date_time,
     stop_date_time,
     auth_id,
@@ -25,12 +26,13 @@ INSERT INTO cdrs (
     total_parking_time,
     remark,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
   RETURNING id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
 `
 
 type CreateCdrParams struct {
 	Uid              string          `db:"uid" json:"uid"`
+	AuthorizationID  sql.NullString  `db:"authorization_id" json:"authorizationID"`
 	StartDateTime    time.Time       `db:"start_date_time" json:"startDateTime"`
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
 	AuthID           string          `db:"auth_id" json:"authID"`
@@ -49,6 +51,7 @@ type CreateCdrParams struct {
 func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, error) {
 	row := q.db.QueryRowContext(ctx, createCdr,
 		arg.Uid,
+		arg.AuthorizationID,
 		arg.StartDateTime,
 		arg.StopDateTime,
 		arg.AuthID,

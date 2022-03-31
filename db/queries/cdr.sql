@@ -1,6 +1,7 @@
 -- name: CreateCdr :one
 INSERT INTO cdrs (
     uid,
+    authorization_id,
     start_date_time,
     stop_date_time,
     auth_id,
@@ -14,7 +15,7 @@ INSERT INTO cdrs (
     total_parking_time,
     remark,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
   RETURNING *;
 
 -- name: GetCdrByUid :one
