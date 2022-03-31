@@ -846,10 +846,10 @@ type Token struct {
 }
 
 type TokenAuthorization struct {
-	ID              int64  `db:"id" json:"id"`
-	TokenID         int64  `db:"token_id" json:"tokenID"`
-	AuthorizationID string `db:"authorization_id" json:"authorizationID"`
-	LocationID      string `db:"location_id" json:"locationID"`
+	ID              int64          `db:"id" json:"id"`
+	TokenID         int64          `db:"token_id" json:"tokenID"`
+	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
+	LocationID      sql.NullString `db:"location_id" json:"locationID"`
 }
 
 type TokenAuthorizationConnector struct {

@@ -5,6 +5,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createTokenAuthorization = `-- name: CreateTokenAuthorization :one
@@ -17,9 +18,9 @@ INSERT INTO token_authorizations (
 `
 
 type CreateTokenAuthorizationParams struct {
-	TokenID         int64  `db:"token_id" json:"tokenID"`
-	AuthorizationID string `db:"authorization_id" json:"authorizationID"`
-	LocationID      string `db:"location_id" json:"locationID"`
+	TokenID         int64          `db:"token_id" json:"tokenID"`
+	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
+	LocationID      sql.NullString `db:"location_id" json:"locationID"`
 }
 
 func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenAuthorizationParams) (TokenAuthorization, error) {
