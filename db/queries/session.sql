@@ -1,6 +1,7 @@
 -- name: CreateSession :one
 INSERT INTO sessions (
     uid,
+    authorization_id,
     start_datetime,
     end_datetime,
     kwh,
@@ -12,7 +13,7 @@ INSERT INTO sessions (
     total_cost,
     status,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   RETURNING *;
 
 -- name: GetSessionByUid :one
@@ -21,6 +22,7 @@ SELECT * FROM sessions
 
 -- name: UpdateSessionByUid :one
 UPDATE sessions SET (
+    authorization_id,
     start_datetime,
     end_datetime,
     kwh,
@@ -32,6 +34,6 @@ UPDATE sessions SET (
     total_cost,
     status,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   WHERE uid = $1
   RETURNING *;

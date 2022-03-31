@@ -12,6 +12,7 @@ import (
 const createSession = `-- name: CreateSession :one
 INSERT INTO sessions (
     uid,
+    authorization_id,
     start_datetime,
     end_datetime,
     kwh,
@@ -23,28 +24,30 @@ INSERT INTO sessions (
     total_cost,
     status,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   RETURNING id, uid, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type CreateSessionParams struct {
-	Uid           string            `db:"uid" json:"uid"`
-	StartDatetime time.Time         `db:"start_datetime" json:"startDatetime"`
-	EndDatetime   sql.NullTime      `db:"end_datetime" json:"endDatetime"`
-	Kwh           float64           `db:"kwh" json:"kwh"`
-	AuthID        string            `db:"auth_id" json:"authID"`
-	AuthMethod    AuthMethodType    `db:"auth_method" json:"authMethod"`
-	LocationID    int64             `db:"location_id" json:"locationID"`
-	MeterID       sql.NullString    `db:"meter_id" json:"meterID"`
-	Currency      string            `db:"currency" json:"currency"`
-	TotalCost     sql.NullFloat64   `db:"total_cost" json:"totalCost"`
-	Status        SessionStatusType `db:"status" json:"status"`
-	LastUpdated   time.Time         `db:"last_updated" json:"lastUpdated"`
+	Uid             string            `db:"uid" json:"uid"`
+	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
+	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
+	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
+	Kwh             float64           `db:"kwh" json:"kwh"`
+	AuthID          string            `db:"auth_id" json:"authID"`
+	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
+	LocationID      int64             `db:"location_id" json:"locationID"`
+	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
+	Currency        string            `db:"currency" json:"currency"`
+	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status          SessionStatusType `db:"status" json:"status"`
+	LastUpdated     time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
 	row := q.db.QueryRowContext(ctx, createSession,
 		arg.Uid,
+		arg.AuthorizationID,
 		arg.StartDatetime,
 		arg.EndDatetime,
 		arg.Kwh,
@@ -106,6 +109,7 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 
 const updateSessionByUid = `-- name: UpdateSessionByUid :one
 UPDATE sessions SET (
+    authorization_id,
     start_datetime,
     end_datetime,
     kwh,
@@ -117,29 +121,31 @@ UPDATE sessions SET (
     total_cost,
     status,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   WHERE uid = $1
   RETURNING id, uid, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type UpdateSessionByUidParams struct {
-	Uid           string            `db:"uid" json:"uid"`
-	StartDatetime time.Time         `db:"start_datetime" json:"startDatetime"`
-	EndDatetime   sql.NullTime      `db:"end_datetime" json:"endDatetime"`
-	Kwh           float64           `db:"kwh" json:"kwh"`
-	AuthID        string            `db:"auth_id" json:"authID"`
-	AuthMethod    AuthMethodType    `db:"auth_method" json:"authMethod"`
-	LocationID    int64             `db:"location_id" json:"locationID"`
-	MeterID       sql.NullString    `db:"meter_id" json:"meterID"`
-	Currency      string            `db:"currency" json:"currency"`
-	TotalCost     sql.NullFloat64   `db:"total_cost" json:"totalCost"`
-	Status        SessionStatusType `db:"status" json:"status"`
-	LastUpdated   time.Time         `db:"last_updated" json:"lastUpdated"`
+	Uid             string            `db:"uid" json:"uid"`
+	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
+	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
+	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
+	Kwh             float64           `db:"kwh" json:"kwh"`
+	AuthID          string            `db:"auth_id" json:"authID"`
+	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
+	LocationID      int64             `db:"location_id" json:"locationID"`
+	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
+	Currency        string            `db:"currency" json:"currency"`
+	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status          SessionStatusType `db:"status" json:"status"`
+	LastUpdated     time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUidParams) (Session, error) {
 	row := q.db.QueryRowContext(ctx, updateSessionByUid,
 		arg.Uid,
+		arg.AuthorizationID,
 		arg.StartDatetime,
 		arg.EndDatetime,
 		arg.Kwh,
