@@ -17,9 +17,14 @@ INSERT INTO tokens (
 DELETE FROM tokens
   WHERE uid = $1;
 
+-- name: GetToken :one
+SELECT * FROM tokens
+  WHERE id = $1;
+  
 -- name: GetTokenByUid :one
 SELECT * FROM tokens
   WHERE uid = $1;
+
 
 -- name: ListTokens :many
 SELECT * FROM tokens

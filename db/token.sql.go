@@ -78,6 +78,30 @@ func (q *Queries) DeleteTokenByUid(ctx context.Context, uid string) error {
 	return err
 }
 
+const getToken = `-- name: GetToken :one
+SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+  WHERE id = $1
+`
+
+func (q *Queries) GetToken(ctx context.Context, id int64) (Token, error) {
+	row := q.db.QueryRowContext(ctx, getToken, id)
+	var i Token
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.Type,
+		&i.AuthID,
+		&i.VisualNumber,
+		&i.Issuer,
+		&i.Allowed,
+		&i.Valid,
+		&i.Whitelist,
+		&i.Language,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getTokenByUid = `-- name: GetTokenByUid :one
 SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE uid = $1
