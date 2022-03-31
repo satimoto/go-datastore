@@ -26,7 +26,7 @@ INSERT INTO cdrs (
     remark,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-  RETURNING id, uid, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
+  RETURNING id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
 `
 
 type CreateCdrParams struct {
@@ -67,6 +67,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.AuthorizationID,
 		&i.StartDateTime,
 		&i.StopDateTime,
 		&i.AuthID,
@@ -85,7 +86,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 }
 
 const getCdrByUid = `-- name: GetCdrByUid :one
-SELECT id, uid, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE uid = $1
 `
 
@@ -95,6 +96,7 @@ func (q *Queries) GetCdrByUid(ctx context.Context, uid string) (Cdr, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.AuthorizationID,
 		&i.StartDateTime,
 		&i.StopDateTime,
 		&i.AuthID,

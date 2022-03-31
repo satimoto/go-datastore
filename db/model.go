@@ -466,6 +466,7 @@ type Capability struct {
 type Cdr struct {
 	ID               int64           `db:"id" json:"id"`
 	Uid              string          `db:"uid" json:"uid"`
+	AuthorizationID  sql.NullString  `db:"authorization_id" json:"authorizationID"`
 	StartDateTime    time.Time       `db:"start_date_time" json:"startDateTime"`
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
 	AuthID           string          `db:"auth_id" json:"authID"`
@@ -531,11 +532,12 @@ type CommandReservation struct {
 }
 
 type CommandStart struct {
-	ID         int64               `db:"id" json:"id"`
-	Status     CommandResponseType `db:"status" json:"status"`
-	TokenID    int64               `db:"token_id" json:"tokenID"`
-	LocationID string              `db:"location_id" json:"locationID"`
-	EvseUid    sql.NullString      `db:"evse_uid" json:"evseUid"`
+	ID              int64               `db:"id" json:"id"`
+	Status          CommandResponseType `db:"status" json:"status"`
+	TokenID         int64               `db:"token_id" json:"tokenID"`
+	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
+	LocationID      string              `db:"location_id" json:"locationID"`
+	EvseUid         sql.NullString      `db:"evse_uid" json:"evseUid"`
 }
 
 type CommandStop struct {
@@ -785,19 +787,20 @@ type RestrictionWeekday struct {
 }
 
 type Session struct {
-	ID            int64             `db:"id" json:"id"`
-	Uid           string            `db:"uid" json:"uid"`
-	StartDatetime time.Time         `db:"start_datetime" json:"startDatetime"`
-	EndDatetime   sql.NullTime      `db:"end_datetime" json:"endDatetime"`
-	Kwh           float64           `db:"kwh" json:"kwh"`
-	AuthID        string            `db:"auth_id" json:"authID"`
-	AuthMethod    AuthMethodType    `db:"auth_method" json:"authMethod"`
-	LocationID    int64             `db:"location_id" json:"locationID"`
-	MeterID       sql.NullString    `db:"meter_id" json:"meterID"`
-	Currency      string            `db:"currency" json:"currency"`
-	TotalCost     sql.NullFloat64   `db:"total_cost" json:"totalCost"`
-	Status        SessionStatusType `db:"status" json:"status"`
-	LastUpdated   time.Time         `db:"last_updated" json:"lastUpdated"`
+	ID              int64             `db:"id" json:"id"`
+	Uid             string            `db:"uid" json:"uid"`
+	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
+	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
+	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
+	Kwh             float64           `db:"kwh" json:"kwh"`
+	AuthID          string            `db:"auth_id" json:"authID"`
+	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
+	LocationID      int64             `db:"location_id" json:"locationID"`
+	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
+	Currency        string            `db:"currency" json:"currency"`
+	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status          SessionStatusType `db:"status" json:"status"`
+	LastUpdated     time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 type SessionChargingPeriod struct {
@@ -840,6 +843,23 @@ type Token struct {
 	Whitelist    TokenWhitelistType `db:"whitelist" json:"whitelist"`
 	Language     sql.NullString     `db:"language" json:"language"`
 	LastUpdated  time.Time          `db:"last_updated" json:"lastUpdated"`
+}
+
+type TokenAuthorization struct {
+	ID              int64  `db:"id" json:"id"`
+	TokenID         int64  `db:"token_id" json:"tokenID"`
+	AuthorizationID string `db:"authorization_id" json:"authorizationID"`
+	LocationID      string `db:"location_id" json:"locationID"`
+}
+
+type TokenAuthorizationConnector struct {
+	TokenAuthorizationID int64 `db:"token_authorization_id" json:"tokenAuthorizationID"`
+	ConnectorID          int64 `db:"connector_id" json:"connectorID"`
+}
+
+type TokenAuthorizationEvse struct {
+	TokenAuthorizationID int64 `db:"token_authorization_id" json:"tokenAuthorizationID"`
+	EvseID               int64 `db:"evse_id" json:"evseID"`
 }
 
 type User struct {

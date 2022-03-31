@@ -9,6 +9,6 @@ DELETE FROM display_texts dt
 
 -- name: ListTariffAltTexts :many
 SELECT dt.* FROM display_texts dt
-  INNER JOIN tariff_alt_texts tt ON tariff_alt_texts.display_text_id == dt.id
+  INNER JOIN tariff_alt_texts tt ON tt.display_text_id == dt.id
   WHERE tt.tariff_id == $1
   ORDER BY dt.id;

@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS cdrs (
     id                  BIGSERIAL PRIMARY KEY,
     uid                 TEXT NOT NULL,
+    authorization_id    TEXT,
     start_date_time     TIMESTAMP NOT NULL,
     stop_date_time      TIMESTAMP,
     auth_id             TEXT NOT NULL,
