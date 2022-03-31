@@ -49,6 +49,26 @@ func (q *Queries) CreateCommandReservation(ctx context.Context, arg CreateComman
 	return i, err
 }
 
+const getCommandReservation = `-- name: GetCommandReservation :one
+SELECT id, status, token_id, expiry_date, reservation_id, location_id, evse_uid FROM command_reservations
+  WHERE id = $1
+`
+
+func (q *Queries) GetCommandReservation(ctx context.Context, id int64) (CommandReservation, error) {
+	row := q.db.QueryRowContext(ctx, getCommandReservation, id)
+	var i CommandReservation
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.TokenID,
+		&i.ExpiryDate,
+		&i.ReservationID,
+		&i.LocationID,
+		&i.EvseUid,
+	)
+	return i, err
+}
+
 const updateCommandReservation = `-- name: UpdateCommandReservation :one
 UPDATE command_reservations SET (
     status,

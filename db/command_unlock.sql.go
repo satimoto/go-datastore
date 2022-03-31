@@ -42,6 +42,24 @@ func (q *Queries) CreateCommandUnlock(ctx context.Context, arg CreateCommandUnlo
 	return i, err
 }
 
+const getCommandUnlock = `-- name: GetCommandUnlock :one
+SELECT id, status, location_id, evse_uid, connector_id FROM command_unlocks
+  WHERE id = $1
+`
+
+func (q *Queries) GetCommandUnlock(ctx context.Context, id int64) (CommandUnlock, error) {
+	row := q.db.QueryRowContext(ctx, getCommandUnlock, id)
+	var i CommandUnlock
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.LocationID,
+		&i.EvseUid,
+		&i.ConnectorID,
+	)
+	return i, err
+}
+
 const updateCommandUnlock = `-- name: UpdateCommandUnlock :one
 UPDATE command_unlocks SET status = $2
   WHERE id = $1

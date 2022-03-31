@@ -8,6 +8,10 @@ INSERT INTO command_reservations (
   ) VALUES ($1, $2, $3, $4, $5)
   RETURNING *;
 
+-- name: GetCommandReservation :one
+SELECT * FROM command_reservations
+  WHERE id = $1;
+
 -- name: UpdateCommandReservation :one
 UPDATE command_reservations SET (
     status,
