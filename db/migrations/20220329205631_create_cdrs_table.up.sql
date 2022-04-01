@@ -1,3 +1,28 @@
+-- Calibrations
+CREATE TABLE IF NOT EXISTS calibrations (
+    id                      BIGSERIAL PRIMARY KEY,
+    encoding_method         TEXT NOT NULL,
+    encoding_method_version INTEGER,
+    public_key              TEXT,
+    -- calibration_values   []cdr_calibration_values
+    url                     TEXT
+);
+
+-- Calibration values
+CREATE TABLE IF NOT EXISTS calibration_values (
+    id             BIGSERIAL PRIMARY KEY,
+    calibration_id BIGINT NOT NULL,
+    nature         TEXT NOT NULL,
+    plain_data     TEXT NOT NULL,
+    signed_data    TEXT NOT NULL
+);
+
+ALTER TABLE calibration_values
+    ADD CONSTRAINT fk_calibration_values_calibration_id
+    FOREIGN KEY (calibration_id) 
+    REFERENCES calibrations(id) 
+    ON DELETE CASCADE;
+
 -- CDRs
 CREATE TABLE IF NOT EXISTS cdrs (
     id                  BIGSERIAL PRIMARY KEY,
@@ -12,6 +37,7 @@ CREATE TABLE IF NOT EXISTS cdrs (
     currency            TEXT NOT NULL,
     -- tariffs          []tariffs
     -- charging_periods []cdr_charging_periods
+    calibration_id      BIGINT,
     total_cost          FLOAT NOT NULL,
     total_energy        FLOAT NOT NULL,
     total_time          FLOAT NOT NULL,
@@ -26,6 +52,12 @@ ALTER TABLE cdrs
     ADD CONSTRAINT fk_cdrs_location_id
     FOREIGN KEY (location_id) 
     REFERENCES locations(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE cdrs
+    ADD CONSTRAINT fk_cdrs_calibration_id
+    FOREIGN KEY (calibration_id) 
+    REFERENCES calibrations(id) 
     ON DELETE RESTRICT;
 
 -- Tariffs
