@@ -111,6 +111,7 @@ CREATE TYPE tariff_dimension AS ENUM (
     'ENERGY', 
     'FLAT',
     'PARKING_TIME',
+    'SESSION_TIME',
     'TIME'
 );
 
