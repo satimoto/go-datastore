@@ -43,12 +43,12 @@ ALTER TABLE tokens
 
 -- Token authorizations
 CREATE TABLE IF NOT EXISTS token_authorizations (
-    id               BIGSERIAL PRIMARY KEY,
-    token_id         BIGINT NOT NULL,
-    authorization_id TEXT NOT NULL,
-    location_id      TEXT
-    -- evse_uids     []token_authorization_evses
-    -- connector_ids []token_authorization_connectors
+    id                BIGSERIAL PRIMARY KEY,
+    token_id          BIGINT NOT NULL,
+    authorization_id  TEXT NOT NULL,
+    location_id       TEXT
+    -- evse_uids      []token_authorization_evses
+    -- connector_uids []token_authorization_connectors
 );
 
 ALTER TABLE token_authorizations 
@@ -60,7 +60,7 @@ ALTER TABLE token_authorizations
 -- Token authorization evses
 CREATE TABLE IF NOT EXISTS token_authorization_evses (
     token_authorization_id BIGINT NOT NULL,
-    evse_id                BIGINT NOT NULL
+    evse_uid               TEXT NOT NULL
 );
 
 ALTER TABLE token_authorization_evses 
@@ -70,15 +70,15 @@ ALTER TABLE token_authorization_evses
     ON DELETE CASCADE;
 
 ALTER TABLE token_authorization_evses 
-    ADD CONSTRAINT fk_token_authorization_evses_evse_id
-    FOREIGN KEY (evse_id) 
-    REFERENCES evses(id)
+    ADD CONSTRAINT fk_token_authorization_evses_evse_uid
+    FOREIGN KEY (evse_uid) 
+    REFERENCES evses(uid)
     ON DELETE CASCADE;
 
 -- Token authorization connectors
 CREATE TABLE IF NOT EXISTS token_authorization_connectors (
     token_authorization_id BIGINT NOT NULL,
-    connector_id           BIGINT NOT NULL
+    connector_uid          TEXT NOT NULL
 );
 
 ALTER TABLE token_authorization_connectors 
@@ -88,9 +88,9 @@ ALTER TABLE token_authorization_connectors
     ON DELETE CASCADE;
 
 ALTER TABLE token_authorization_connectors 
-    ADD CONSTRAINT fk_token_authorization_connectors_connector_id
-    FOREIGN KEY (connector_id) 
-    REFERENCES connectors(id)
+    ADD CONSTRAINT fk_token_authorization_connectors_connector_uid
+    FOREIGN KEY (connector_uid) 
+    REFERENCES connectors(uid)
     ON DELETE CASCADE;
 
 -- Users
