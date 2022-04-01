@@ -457,6 +457,22 @@ type BusinessDetail struct {
 	LogoID  sql.NullInt64  `db:"logo_id" json:"logoID"`
 }
 
+type Calibration struct {
+	ID                    int64          `db:"id" json:"id"`
+	EncodingMethod        string         `db:"encoding_method" json:"encodingMethod"`
+	EncodingMethodVersion sql.NullInt32  `db:"encoding_method_version" json:"encodingMethodVersion"`
+	PublicKey             sql.NullString `db:"public_key" json:"publicKey"`
+	Url                   sql.NullString `db:"url" json:"url"`
+}
+
+type CalibrationValue struct {
+	ID            int64  `db:"id" json:"id"`
+	CalibrationID int64  `db:"calibration_id" json:"calibrationID"`
+	Nature        string `db:"nature" json:"nature"`
+	PlainData     string `db:"plain_data" json:"plainData"`
+	SignedData    string `db:"signed_data" json:"signedData"`
+}
+
 type Capability struct {
 	ID          int64  `db:"id" json:"id"`
 	Text        string `db:"text" json:"text"`
@@ -474,6 +490,7 @@ type Cdr struct {
 	LocationID       int64           `db:"location_id" json:"locationID"`
 	MeterID          sql.NullString  `db:"meter_id" json:"meterID"`
 	Currency         string          `db:"currency" json:"currency"`
+	CalibrationID    sql.NullInt64   `db:"calibration_id" json:"calibrationID"`
 	TotalCost        float64         `db:"total_cost" json:"totalCost"`
 	TotalEnergy      float64         `db:"total_energy" json:"totalEnergy"`
 	TotalTime        float64         `db:"total_time" json:"totalTime"`

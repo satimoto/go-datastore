@@ -20,14 +20,15 @@ INSERT INTO cdrs (
     location_id,
     meter_id,
     currency,
+    calibration_id,
     total_cost,
     total_energy,
     total_time,
     total_parking_time,
     remark,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-  RETURNING id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+  RETURNING id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
 `
 
 type CreateCdrParams struct {
@@ -40,6 +41,7 @@ type CreateCdrParams struct {
 	LocationID       int64           `db:"location_id" json:"locationID"`
 	MeterID          sql.NullString  `db:"meter_id" json:"meterID"`
 	Currency         string          `db:"currency" json:"currency"`
+	CalibrationID    sql.NullInt64   `db:"calibration_id" json:"calibrationID"`
 	TotalCost        float64         `db:"total_cost" json:"totalCost"`
 	TotalEnergy      float64         `db:"total_energy" json:"totalEnergy"`
 	TotalTime        float64         `db:"total_time" json:"totalTime"`
@@ -59,6 +61,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 		arg.LocationID,
 		arg.MeterID,
 		arg.Currency,
+		arg.CalibrationID,
 		arg.TotalCost,
 		arg.TotalEnergy,
 		arg.TotalTime,
@@ -78,6 +81,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 		&i.LocationID,
 		&i.MeterID,
 		&i.Currency,
+		&i.CalibrationID,
 		&i.TotalCost,
 		&i.TotalEnergy,
 		&i.TotalTime,
@@ -89,7 +93,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 }
 
 const getCdrByUid = `-- name: GetCdrByUid :one
-SELECT id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE uid = $1
 `
 
@@ -107,6 +111,7 @@ func (q *Queries) GetCdrByUid(ctx context.Context, uid string) (Cdr, error) {
 		&i.LocationID,
 		&i.MeterID,
 		&i.Currency,
+		&i.CalibrationID,
 		&i.TotalCost,
 		&i.TotalEnergy,
 		&i.TotalTime,

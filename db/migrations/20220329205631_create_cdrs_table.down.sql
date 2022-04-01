@@ -16,8 +16,20 @@ ALTER TABLE tariffs
 
 -- CDRs
 ALTER TABLE IF EXISTS cdrs 
+    DROP CONSTRAINT IF EXISTS fk_cdrs_calibration_id;
+
+ALTER TABLE IF EXISTS cdrs 
     DROP CONSTRAINT IF EXISTS fk_cdrs_location_id;
 
 DROP INDEX IF EXISTS idx_cdrs_uid;
 
 DROP TABLE IF EXISTS cdrs;
+
+-- Calibration values
+ALTER TABLE IF EXISTS calibration_values 
+    DROP CONSTRAINT IF EXISTS fk_calibration_values_calibration_id;
+
+DROP TABLE IF EXISTS calibration_values;
+
+-- Calibrations
+DROP TABLE IF EXISTS calibrations;
