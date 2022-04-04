@@ -69,6 +69,8 @@ UPDATE locations SET (
 
 -- name: UpdateLocationByUid :one
 UPDATE locations SET (
+    country_code,
+    party_id,
     type, 
     name, 
     address, 
@@ -85,7 +87,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
   WHERE uid = $1
   RETURNING *;
 

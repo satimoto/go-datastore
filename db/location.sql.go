@@ -362,6 +362,8 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 
 const updateLocationByUid = `-- name: UpdateLocationByUid :one
 UPDATE locations SET (
+    country_code,
+    party_id,
     type, 
     name, 
     address, 
@@ -378,13 +380,15 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
   WHERE uid = $1
   RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type UpdateLocationByUidParams struct {
 	Uid                string         `db:"uid" json:"uid"`
+	CountryCode        string         `db:"country_code" json:"countryCode"`
+	PartyID            string         `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -406,6 +410,8 @@ type UpdateLocationByUidParams struct {
 func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByUidParams) (Location, error) {
 	row := q.db.QueryRowContext(ctx, updateLocationByUid,
 		arg.Uid,
+		arg.CountryCode,
+		arg.PartyID,
 		arg.Type,
 		arg.Name,
 		arg.Address,
