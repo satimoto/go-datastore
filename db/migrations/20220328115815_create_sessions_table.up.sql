@@ -14,6 +14,8 @@ CREATE TYPE session_status_type AS ENUM (
 CREATE TABLE IF NOT EXISTS sessions (
     id                  BIGSERIAL PRIMARY KEY,
     uid                 TEXT NOT NULL,
+    country_code        TEXT NOT NULL,
+    party_id            TEXT NOT NULL,
     authorization_id    TEXT,
     start_datetime      TIMESTAMP NOT NULL,
     end_datetime        TIMESTAMP,

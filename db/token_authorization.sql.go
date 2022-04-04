@@ -12,24 +12,36 @@ const createTokenAuthorization = `-- name: CreateTokenAuthorization :one
 INSERT INTO token_authorizations (
     token_id,
     authorization_id,
+    country_code,
+    party_id,
     location_id
-  ) VALUES ($1, $2, $3)
-  RETURNING id, token_id, authorization_id, location_id
+  ) VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, token_id, authorization_id, country_code, party_id, location_id
 `
 
 type CreateTokenAuthorizationParams struct {
 	TokenID         int64          `db:"token_id" json:"tokenID"`
 	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
+	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
 }
 
 func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenAuthorizationParams) (TokenAuthorization, error) {
-	row := q.db.QueryRowContext(ctx, createTokenAuthorization, arg.TokenID, arg.AuthorizationID, arg.LocationID)
+	row := q.db.QueryRowContext(ctx, createTokenAuthorization,
+		arg.TokenID,
+		arg.AuthorizationID,
+		arg.CountryCode,
+		arg.PartyID,
+		arg.LocationID,
+	)
 	var i TokenAuthorization
 	err := row.Scan(
 		&i.ID,
 		&i.TokenID,
 		&i.AuthorizationID,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.LocationID,
 	)
 	return i, err

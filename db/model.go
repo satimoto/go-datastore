@@ -364,6 +364,7 @@ const (
 	TariffDimensionENERGY      TariffDimension = "ENERGY"
 	TariffDimensionFLAT        TariffDimension = "FLAT"
 	TariffDimensionPARKINGTIME TariffDimension = "PARKING_TIME"
+	TariffDimensionSESSIONTIME TariffDimension = "SESSION_TIME"
 	TariffDimensionTIME        TariffDimension = "TIME"
 )
 
@@ -482,6 +483,8 @@ type Capability struct {
 type Cdr struct {
 	ID               int64           `db:"id" json:"id"`
 	Uid              string          `db:"uid" json:"uid"`
+	CountryCode      string          `db:"country_code" json:"countryCode"`
+	PartyID          string          `db:"party_id" json:"partyID"`
 	AuthorizationID  sql.NullString  `db:"authorization_id" json:"authorizationID"`
 	StartDateTime    time.Time       `db:"start_date_time" json:"startDateTime"`
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
@@ -592,8 +595,9 @@ type Credential struct {
 	Version          sql.NullString `db:"version" json:"version"`
 	Url              string         `db:"url" json:"url"`
 	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
-	PartyID          string         `db:"party_id" json:"partyID"`
 	CountryCode      string         `db:"country_code" json:"countryCode"`
+	PartyID          string         `db:"party_id" json:"partyID"`
+	IsHub            bool           `db:"is_hub" json:"isHub"`
 	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -707,6 +711,8 @@ type Image struct {
 type Location struct {
 	ID                 int64          `db:"id" json:"id"`
 	Uid                string         `db:"uid" json:"uid"`
+	CountryCode        string         `db:"country_code" json:"countryCode"`
+	PartyID            string         `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -806,6 +812,8 @@ type RestrictionWeekday struct {
 type Session struct {
 	ID              int64             `db:"id" json:"id"`
 	Uid             string            `db:"uid" json:"uid"`
+	CountryCode     string            `db:"country_code" json:"countryCode"`
+	PartyID         string            `db:"party_id" json:"partyID"`
 	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
 	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
 	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
@@ -836,6 +844,8 @@ type StatusSchedule struct {
 type Tariff struct {
 	ID           int64          `db:"id" json:"id"`
 	Uid          string         `db:"uid" json:"uid"`
+	CountryCode  string         `db:"country_code" json:"countryCode"`
+	PartyID      string         `db:"party_id" json:"partyID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
@@ -866,6 +876,8 @@ type TokenAuthorization struct {
 	ID              int64          `db:"id" json:"id"`
 	TokenID         int64          `db:"token_id" json:"tokenID"`
 	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
+	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
 }
 

@@ -14,6 +14,8 @@ import (
 const createLocation = `-- name: CreateLocation :one
 INSERT INTO locations (
     uid, 
+    country_code,
+    party_id,
     type, 
     name, 
     address, 
@@ -30,12 +32,14 @@ INSERT INTO locations (
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-  RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type CreateLocationParams struct {
 	Uid                string         `db:"uid" json:"uid"`
+	CountryCode        string         `db:"country_code" json:"countryCode"`
+	PartyID            string         `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -57,6 +61,8 @@ type CreateLocationParams struct {
 func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) (Location, error) {
 	row := q.db.QueryRowContext(ctx, createLocation,
 		arg.Uid,
+		arg.CountryCode,
+		arg.PartyID,
 		arg.Type,
 		arg.Name,
 		arg.Address,
@@ -78,6 +84,8 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Type,
 		&i.Name,
 		&i.Address,
@@ -111,7 +119,7 @@ func (q *Queries) DeleteLocation(ctx context.Context, id int64) error {
 const deleteLocationByUid = `-- name: DeleteLocationByUid :one
 DELETE FROM locations
   WHERE uid = $1
-  RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location, error) {
@@ -120,6 +128,8 @@ func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Type,
 		&i.Name,
 		&i.Address,
@@ -141,7 +151,7 @@ func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location
 }
 
 const getLocation = `-- name: GetLocation :one
-SELECT id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE id = $1
 `
 
@@ -151,6 +161,8 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Type,
 		&i.Name,
 		&i.Address,
@@ -172,7 +184,7 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 }
 
 const getLocationByUid = `-- name: GetLocationByUid :one
-SELECT id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE uid = $1
 `
 
@@ -182,6 +194,8 @@ func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, e
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Type,
 		&i.Name,
 		&i.Address,
@@ -203,7 +217,7 @@ func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, e
 }
 
 const listLocations = `-- name: ListLocations :many
-SELECT id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   ORDER BY name
 `
 
@@ -219,6 +233,8 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Uid,
+			&i.CountryCode,
+			&i.PartyID,
 			&i.Type,
 			&i.Name,
 			&i.Address,
@@ -251,6 +267,8 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 
 const updateLocation = `-- name: UpdateLocation :one
 UPDATE locations SET (
+    country_code,
+    party_id,
     type, 
     name, 
     address, 
@@ -267,13 +285,15 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
   WHERE id = $1
-  RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type UpdateLocationParams struct {
 	ID                 int64          `db:"id" json:"id"`
+	CountryCode        string         `db:"country_code" json:"countryCode"`
+	PartyID            string         `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -295,6 +315,8 @@ type UpdateLocationParams struct {
 func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) (Location, error) {
 	row := q.db.QueryRowContext(ctx, updateLocation,
 		arg.ID,
+		arg.CountryCode,
+		arg.PartyID,
 		arg.Type,
 		arg.Name,
 		arg.Address,
@@ -316,6 +338,8 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Type,
 		&i.Name,
 		&i.Address,
@@ -356,7 +380,7 @@ UPDATE locations SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   WHERE uid = $1
-  RETURNING id, uid, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type UpdateLocationByUidParams struct {
@@ -403,6 +427,8 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Type,
 		&i.Name,
 		&i.Address,

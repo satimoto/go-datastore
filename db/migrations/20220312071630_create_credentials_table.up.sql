@@ -6,8 +6,9 @@ CREATE TABLE IF NOT EXISTS credentials (
     version            TEXT,
     url                TEXT NOT NULL,
     business_detail_id BIGINT NOT NULL,
-    party_id           TEXT NOT NULL,
     country_code       TEXT NOT NULL,
+    party_id           TEXT NOT NULL,
+    is_hub             BOOLEAN NOT NULL,
     last_updated       TIMESTAMP NOT NULL
 );
 
