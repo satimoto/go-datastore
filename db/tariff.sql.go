@@ -12,17 +12,21 @@ import (
 const createTariff = `-- name: CreateTariff :one
 INSERT INTO tariffs (
     uid, 
+    country_code,
+    party_id,
     cdr_id,
     currency, 
     tariff_alt_url, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6)
-  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
 	Uid          string         `db:"uid" json:"uid"`
+	CountryCode  string         `db:"country_code" json:"countryCode"`
+	PartyID      string         `db:"party_id" json:"partyID"`
 	CdrID        sql.NullInt64  `db:"cdr_id" json:"cdrID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
@@ -33,6 +37,8 @@ type CreateTariffParams struct {
 func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tariff, error) {
 	row := q.db.QueryRowContext(ctx, createTariff,
 		arg.Uid,
+		arg.CountryCode,
+		arg.PartyID,
 		arg.CdrID,
 		arg.Currency,
 		arg.TariffAltUrl,
@@ -43,6 +49,8 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Currency,
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
@@ -63,7 +71,7 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
-SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL
 `
 
@@ -73,6 +81,8 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Currency,
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
@@ -83,7 +93,7 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 }
 
 const listTariffsByCdr = `-- name: ListTariffsByCdr :many
-SELECT id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
   WHERE cdr_id = $1
   ORDER BY id
 `
@@ -100,6 +110,8 @@ func (q *Queries) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]
 		if err := rows.Scan(
 			&i.ID,
 			&i.Uid,
+			&i.CountryCode,
+			&i.PartyID,
 			&i.Currency,
 			&i.TariffAltUrl,
 			&i.EnergyMixID,
@@ -121,17 +133,21 @@ func (q *Queries) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]
 
 const updateTariffByUid = `-- name: UpdateTariffByUid :one
 UPDATE tariffs SET (
+    country_code,
+    party_id,
     currency, 
     tariff_alt_url,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5)
+  ) = ($2, $3, $4, $5, $6, $7)
   WHERE uid = $1 AND cdr_id IS NULL
-  RETURNING id, uid, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
+  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
 `
 
 type UpdateTariffByUidParams struct {
 	Uid          string         `db:"uid" json:"uid"`
+	CountryCode  string         `db:"country_code" json:"countryCode"`
+	PartyID      string         `db:"party_id" json:"partyID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
@@ -141,6 +157,8 @@ type UpdateTariffByUidParams struct {
 func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidParams) (Tariff, error) {
 	row := q.db.QueryRowContext(ctx, updateTariffByUid,
 		arg.Uid,
+		arg.CountryCode,
+		arg.PartyID,
 		arg.Currency,
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
@@ -150,6 +168,8 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
 		&i.Currency,
 		&i.TariffAltUrl,
 		&i.EnergyMixID,

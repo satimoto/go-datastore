@@ -1,12 +1,14 @@
 -- name: CreateTariff :one
 INSERT INTO tariffs (
     uid, 
+    country_code,
+    party_id,
     cdr_id,
     currency, 
     tariff_alt_url, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING *;
 
 -- name: DeleteTariffByUid :exec
@@ -24,10 +26,12 @@ SELECT * FROM tariffs
 
 -- name: UpdateTariffByUid :one
 UPDATE tariffs SET (
+    country_code,
+    party_id,
     currency, 
     tariff_alt_url,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5)
+  ) = ($2, $3, $4, $5, $6, $7)
   WHERE uid = $1 AND cdr_id IS NULL
   RETURNING *;

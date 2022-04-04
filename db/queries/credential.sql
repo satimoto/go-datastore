@@ -4,10 +4,11 @@ INSERT INTO credentials (
     server_token, 
     url, 
     business_detail_id, 
-    party_id, 
     country_code, 
+    party_id, 
+    is_hub,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING *;
 
 -- name: DeleteCredential :exec
@@ -31,9 +32,10 @@ UPDATE credentials SET (
     client_token, 
     server_token, 
     url, 
-    party_id, 
     country_code,
+    party_id, 
+    is_hub,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
   RETURNING *;

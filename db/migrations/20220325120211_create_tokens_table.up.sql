@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS token_authorizations (
     id                BIGSERIAL PRIMARY KEY,
     token_id          BIGINT NOT NULL,
     authorization_id  TEXT NOT NULL,
+    country_code      TEXT,
+    party_id          TEXT,
     location_id       TEXT
     -- evse_uids      []token_authorization_evses
     -- connector_uids []token_authorization_connectors

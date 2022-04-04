@@ -2,6 +2,8 @@
 CREATE TABLE IF NOT EXISTS tariffs (
     id                 BIGSERIAL PRIMARY KEY,
     uid                TEXT NOT NULL,
+    country_code       TEXT NOT NULL,
+    party_id           TEXT NOT NULL,
     currency           TEXT NOT NULL,
     -- tariff_alt_text []display_texts
     tariff_alt_url     TEXT,
