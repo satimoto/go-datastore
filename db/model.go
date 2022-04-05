@@ -844,8 +844,8 @@ type StatusSchedule struct {
 type Tariff struct {
 	ID           int64          `db:"id" json:"id"`
 	Uid          string         `db:"uid" json:"uid"`
-	CountryCode  string         `db:"country_code" json:"countryCode"`
-	PartyID      string         `db:"party_id" json:"partyID"`
+	CountryCode  sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID      sql.NullString `db:"party_id" json:"partyID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
