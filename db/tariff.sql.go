@@ -18,20 +18,22 @@ INSERT INTO tariffs (
     currency, 
     tariff_alt_url, 
     energy_mix_id, 
+    tariff_restriction_id,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
   RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
-	Uid          string         `db:"uid" json:"uid"`
-	CountryCode  sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID      sql.NullString `db:"party_id" json:"partyID"`
-	CdrID        sql.NullInt64  `db:"cdr_id" json:"cdrID"`
-	Currency     string         `db:"currency" json:"currency"`
-	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated  time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                 string         `db:"uid" json:"uid"`
+	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID             sql.NullString `db:"party_id" json:"partyID"`
+	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
+	Currency            string         `db:"currency" json:"currency"`
+	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tariff, error) {
@@ -43,6 +45,7 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 		arg.Currency,
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
+		arg.TariffRestrictionID,
 		arg.LastUpdated,
 	)
 	var i Tariff
@@ -141,20 +144,22 @@ UPDATE tariffs SET (
     currency, 
     tariff_alt_url,
     energy_mix_id, 
+    tariff_restriction_id,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE uid = $1 AND cdr_id IS NULL
   RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type UpdateTariffByUidParams struct {
-	Uid          string         `db:"uid" json:"uid"`
-	CountryCode  sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID      sql.NullString `db:"party_id" json:"partyID"`
-	Currency     string         `db:"currency" json:"currency"`
-	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated  time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                 string         `db:"uid" json:"uid"`
+	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID             sql.NullString `db:"party_id" json:"partyID"`
+	Currency            string         `db:"currency" json:"currency"`
+	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidParams) (Tariff, error) {
@@ -165,6 +170,7 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 		arg.Currency,
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
+		arg.TariffRestrictionID,
 		arg.LastUpdated,
 	)
 	var i Tariff
