@@ -28,8 +28,8 @@ SELECT * FROM tokens
 -- name: ListTokens :many
 SELECT * FROM tokens
   WHERE 
-    (@filter_date_from::text == '' or last_updated > @filter_date_from::text) and 
-    (@filter_date_to::text == '' or last_updated < @filter_date_to::text)
+    (@filter_date_from::text = '' or last_updated > @filter_date_from::text) and 
+    (@filter_date_to::text = '' or last_updated < @filter_date_to::text)
   ORDER BY id
   LIMIT @filter_limit::bigint
   OFFSET @filter_offset::bigint;

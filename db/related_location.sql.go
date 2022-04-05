@@ -10,7 +10,7 @@ import (
 const deleteRelatedLocations = `-- name: DeleteRelatedLocations :exec
 DELETE FROM geo_locations gl
   USING related_locations rl
-  WHERE rl.geo_location_id == gl.id AND rl.location_id == $1
+  WHERE rl.geo_location_id = gl.id AND rl.location_id = $1
 `
 
 func (q *Queries) DeleteRelatedLocations(ctx context.Context, locationID int64) error {
@@ -20,8 +20,8 @@ func (q *Queries) DeleteRelatedLocations(ctx context.Context, locationID int64) 
 
 const listRelatedLocations = `-- name: ListRelatedLocations :many
 SELECT gl.id, gl.latitude, gl.longitude, gl.name FROM geo_locations gl
-  INNER JOIN related_locations rl ON rl.geo_location_id == gl.id
-  WHERE rl.location_id == $1
+  INNER JOIN related_locations rl ON rl.geo_location_id = gl.id
+  WHERE rl.location_id = $1
   ORDER BY gl.id
 `
 

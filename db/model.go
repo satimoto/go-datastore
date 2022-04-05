@@ -842,20 +842,34 @@ type StatusSchedule struct {
 }
 
 type Tariff struct {
-	ID           int64          `db:"id" json:"id"`
-	Uid          string         `db:"uid" json:"uid"`
-	CountryCode  sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID      sql.NullString `db:"party_id" json:"partyID"`
-	Currency     string         `db:"currency" json:"currency"`
-	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated  time.Time      `db:"last_updated" json:"lastUpdated"`
-	CdrID        sql.NullInt64  `db:"cdr_id" json:"cdrID"`
+	ID                  int64          `db:"id" json:"id"`
+	Uid                 string         `db:"uid" json:"uid"`
+	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID             sql.NullString `db:"party_id" json:"partyID"`
+	Currency            string         `db:"currency" json:"currency"`
+	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
+	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
 }
 
 type TariffAltText struct {
 	TariffID      int64 `db:"tariff_id" json:"tariffID"`
 	DisplayTextID int64 `db:"display_text_id" json:"displayTextID"`
+}
+
+type TariffRestriction struct {
+	ID         int64          `db:"id" json:"id"`
+	StartTime  string         `db:"start_time" json:"startTime"`
+	EndTime    string         `db:"end_time" json:"endTime"`
+	StartTime2 sql.NullString `db:"start_time_2" json:"startTime2"`
+	EndTime2   sql.NullString `db:"end_time_2" json:"endTime2"`
+}
+
+type TariffRestrictionWeekday struct {
+	TariffRestrictionID int64 `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	WeekdayID           int64 `db:"weekday_id" json:"weekdayID"`
 }
 
 type Token struct {

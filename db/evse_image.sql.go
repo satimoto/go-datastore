@@ -10,7 +10,7 @@ import (
 const deleteEvseImages = `-- name: DeleteEvseImages :exec
 DELETE FROM images im
   USING evse_images ei
-  WHERE ei.image_id == im.id AND ei.evse_id == $1
+  WHERE ei.image_id = im.id AND ei.evse_id = $1
 `
 
 func (q *Queries) DeleteEvseImages(ctx context.Context, evseID int64) error {
@@ -20,8 +20,8 @@ func (q *Queries) DeleteEvseImages(ctx context.Context, evseID int64) error {
 
 const listEvseImages = `-- name: ListEvseImages :many
 SELECT im.id, im.url, im.thumbnail, im.category, im.type, im.width, im.height FROM images im
-  INNER JOIN evse_images ei ON ei.image_id == im.id
-  WHERE ei.evse_id == $1
+  INNER JOIN evse_images ei ON ei.image_id = im.id
+  WHERE ei.evse_id = $1
   ORDER BY im.id
 `
 

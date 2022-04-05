@@ -10,7 +10,7 @@ import (
 const deleteEvseDirections = `-- name: DeleteEvseDirections :exec
 DELETE FROM display_texts dt
   USING evse_directions ed
-  WHERE ed.display_text_id == dt.id AND ed.evse_id == $1
+  WHERE ed.display_text_id = dt.id AND ed.evse_id = $1
 `
 
 func (q *Queries) DeleteEvseDirections(ctx context.Context, evseID int64) error {
@@ -20,8 +20,8 @@ func (q *Queries) DeleteEvseDirections(ctx context.Context, evseID int64) error 
 
 const listEvseDirections = `-- name: ListEvseDirections :many
 SELECT dt.id, dt.language, dt.text FROM display_texts dt
-  INNER JOIN evse_directions ed ON ed.display_text_id == dt.id
-  WHERE ed.evse_id == $1
+  INNER JOIN evse_directions ed ON ed.display_text_id = dt.id
+  WHERE ed.evse_id = $1
   ORDER BY dt.id
 `
 

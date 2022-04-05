@@ -8,27 +8,24 @@ DROP TYPE IF EXISTS location_type;
 
 -- Tariff Elements
 ALTER TABLE IF EXISTS elements 
-    DROP CONSTRAINT IF EXISTS fk_elements_restriction_id;
+    DROP CONSTRAINT IF EXISTS fk_elements_element_restriction_id;
 
 ALTER TABLE IF EXISTS elements 
     DROP CONSTRAINT IF EXISTS fk_elements_tariff_id;
 
 DROP TABLE IF EXISTS elements;
 
--- Tariff Restriction Weekdays
-ALTER TABLE IF EXISTS restriction_weekdays 
-    DROP CONSTRAINT IF EXISTS fk_restriction_weekdays_weekday_id;
+-- Element Restriction Weekdays
+ALTER TABLE IF EXISTS element_restriction_weekdays 
+    DROP CONSTRAINT IF EXISTS fk_element_restriction_weekdays_weekday_id;
 
-ALTER TABLE IF EXISTS restriction_weekdays 
-    DROP CONSTRAINT IF EXISTS fk_restriction_weekdays_restriction_id;
+ALTER TABLE IF EXISTS element_restriction_weekdays 
+    DROP CONSTRAINT IF EXISTS fk_element_restriction_weekdays_element_restriction_id;
 
-DROP TABLE IF EXISTS restriction_weekdays;
+DROP TABLE IF EXISTS element_restriction_weekdays;
 
--- Day Of Week
-DROP TABLE IF EXISTS weekdays;
-
--- Tariff Restrictions
-DROP TABLE IF EXISTS restrictions;
+-- Element Restrictions
+DROP TABLE IF EXISTS element_restrictions;
 
 -- Tariff Alt Texts
 ALTER TABLE IF EXISTS tariff_alt_texts 
@@ -46,3 +43,18 @@ ALTER TABLE IF EXISTS tariffs
 DROP INDEX IF EXISTS idx_tariffs_uid;
 
 DROP TABLE IF EXISTS tariffs;
+
+-- Tariff Restriction Weekdays
+ALTER TABLE IF EXISTS tariff_restriction_weekdays 
+    DROP CONSTRAINT IF EXISTS fk_tariff_restriction_weekdays_weekday_id;
+
+ALTER TABLE IF EXISTS tariff_restriction_weekdays 
+    DROP CONSTRAINT IF EXISTS fk_tariff_restriction_weekdays_tariff_restriction_id;
+
+DROP TABLE IF EXISTS tariff_restriction_weekdays;
+
+-- Tariff Restrictions
+DROP TABLE IF EXISTS tariff_restrictions;
+
+-- Day Of Week
+DROP TABLE IF EXISTS weekdays;

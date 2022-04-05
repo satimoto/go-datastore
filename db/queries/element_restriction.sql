@@ -15,8 +15,8 @@ INSERT INTO element_restrictions (
 
 -- name: DeleteElementRestrictions :exec
 DELETE FROM element_restrictions r
-  USING elements e
-  WHERE r.id == e.restriction_id AND e.tariff_id == $1;
+  USING elements t
+  WHERE r.id = t.element_restriction_id AND t.tariff_id = $1;
 
 -- name: GetElementRestriction :one
 SELECT * FROM element_restrictions

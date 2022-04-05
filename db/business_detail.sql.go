@@ -45,7 +45,7 @@ func (q *Queries) DeleteBusinessDetail(ctx context.Context, id int64) error {
 const deleteBusinessDetailLogo = `-- name: DeleteBusinessDetailLogo :exec
 DELETE FROM images im
   USING business_details bd
-  WHERE bd.logo_id == im.id AND bd.id == $1
+  WHERE bd.logo_id = im.id AND bd.id = $1
 `
 
 func (q *Queries) DeleteBusinessDetailLogo(ctx context.Context, id int64) error {

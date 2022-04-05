@@ -20,7 +20,7 @@ INSERT INTO tariffs (
     energy_mix_id, 
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
+  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
@@ -54,6 +54,7 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 		&i.Currency,
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
+		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
 	)
@@ -71,7 +72,7 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
-SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL
 `
 
@@ -86,6 +87,7 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 		&i.Currency,
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
+		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
 	)
@@ -93,7 +95,7 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 }
 
 const listTariffsByCdr = `-- name: ListTariffsByCdr :many
-SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE cdr_id = $1
   ORDER BY id
 `
@@ -115,6 +117,7 @@ func (q *Queries) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]
 			&i.Currency,
 			&i.TariffAltUrl,
 			&i.EnergyMixID,
+			&i.TariffRestrictionID,
 			&i.LastUpdated,
 			&i.CdrID,
 		); err != nil {
@@ -141,7 +144,7 @@ UPDATE tariffs SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7)
   WHERE uid = $1 AND cdr_id IS NULL
-  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, last_updated, cdr_id
+  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type UpdateTariffByUidParams struct {
@@ -173,6 +176,7 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 		&i.Currency,
 		&i.TariffAltUrl,
 		&i.EnergyMixID,
+		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
 	)

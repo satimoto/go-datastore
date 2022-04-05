@@ -7,10 +7,10 @@ INSERT INTO cdr_charging_periods (
 -- name: DeleteCdrChargingPeriods :exec
 DELETE FROM charging_periods cp
   USING cdr_charging_periods scp
-  WHERE scp.charging_period_id == cp.id AND scp.cdr_id == $1;
+  WHERE scp.charging_period_id = cp.id AND scp.cdr_id = $1;
 
 -- name: ListCdrChargingPeriods :many
 SELECT cp.* FROM charging_periods cp
-  INNER JOIN cdr_charging_periods scp ON scp.charging_period_id == cp.id
-  WHERE scp.cdr_id == $1
+  INNER JOIN cdr_charging_periods scp ON scp.charging_period_id = cp.id
+  WHERE scp.cdr_id = $1
   ORDER BY cp.id;

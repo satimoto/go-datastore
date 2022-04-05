@@ -10,7 +10,7 @@ import (
 const deleteLocationImages = `-- name: DeleteLocationImages :exec
 DELETE FROM images im
   USING location_images li
-  WHERE li.image_id == im.id AND li.location_id == $1
+  WHERE li.image_id = im.id AND li.location_id = $1
 `
 
 func (q *Queries) DeleteLocationImages(ctx context.Context, locationID int64) error {
@@ -20,8 +20,8 @@ func (q *Queries) DeleteLocationImages(ctx context.Context, locationID int64) er
 
 const listLocationImages = `-- name: ListLocationImages :many
 SELECT im.id, im.url, im.thumbnail, im.category, im.type, im.width, im.height FROM images im
-  INNER JOIN location_images li ON li.image_id == im.id
-  WHERE li.location_id == $1
+  INNER JOIN location_images li ON li.image_id = im.id
+  WHERE li.location_id = $1
   ORDER BY im.id
 `
 

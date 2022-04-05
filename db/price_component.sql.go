@@ -45,7 +45,7 @@ func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceCompo
 const deletePriceComponents = `-- name: DeletePriceComponents :exec
 DELETE FROM price_components pc
   USING elements e
-  WHERE pc.element_id == e.id AND e.tariff_id == $1
+  WHERE pc.element_id = e.id AND e.tariff_id = $1
 `
 
 func (q *Queries) DeletePriceComponents(ctx context.Context, tariffID int64) error {
