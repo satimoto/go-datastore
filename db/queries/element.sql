@@ -1,7 +1,7 @@
 -- name: CreateElement :one
 INSERT INTO elements (
     tariff_id,
-    restriction_id
+    element_restriction_id
   ) VALUES ($1, $2)
   RETURNING *;
 

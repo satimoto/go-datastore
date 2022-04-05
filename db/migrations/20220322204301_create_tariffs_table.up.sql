@@ -38,8 +38,8 @@ ALTER TABLE tariff_alt_texts
     REFERENCES display_texts(id) 
     ON DELETE CASCADE;
 
--- Tariff Restrictions
-CREATE TABLE IF NOT EXISTS restrictions (
+-- Element Restrictions
+CREATE TABLE IF NOT EXISTS element_restrictions (
     id             BIGSERIAL PRIMARY KEY,
     start_time     TEXT,
     end_time       TEXT,
@@ -70,30 +70,30 @@ INSERT INTO weekdays (text, description) VALUES
     ('SATURDAY', 'Saturday'),
     ('SUNDAY', 'Sunday');
 
--- Tariff Restriction Weekdays
-CREATE TABLE IF NOT EXISTS restriction_weekdays (
-    restriction_id BIGINT NOT NULL,
-    weekday_id     BIGINT NOT NULL
+-- Element Restriction Weekdays
+CREATE TABLE IF NOT EXISTS element_restriction_weekdays (
+    element_restriction_id BIGINT NOT NULL,
+    weekday_id             BIGINT NOT NULL
 );
 
-ALTER TABLE restriction_weekdays 
-    ADD CONSTRAINT fk_restriction_weekdays_restriction_id
-    FOREIGN KEY (restriction_id) 
-    REFERENCES restrictions(id) 
+ALTER TABLE element_restriction_weekdays 
+    ADD CONSTRAINT fk_element_restriction_weekdays_restriction_id
+    FOREIGN KEY (element_restriction_id) 
+    REFERENCES element_restrictions(id) 
     ON DELETE CASCADE;
 
-ALTER TABLE restriction_weekdays 
-    ADD CONSTRAINT fk_restriction_weekdays_weekday_id
+ALTER TABLE element_restriction_weekdays 
+    ADD CONSTRAINT fk_element_restriction_weekdays_weekday_id
     FOREIGN KEY (weekday_id) 
     REFERENCES weekdays(id) 
     ON DELETE CASCADE;
 
 -- Tariff Elements
 CREATE TABLE IF NOT EXISTS elements (
-    id                  BIGSERIAL PRIMARY KEY,
-    tariff_id           BIGINT NOT NULL,
-    -- price_components []display_texts
-    restriction_id      BIGINT
+    id                     BIGSERIAL PRIMARY KEY,
+    tariff_id              BIGINT NOT NULL,
+    -- price_components    []display_texts
+    element_restriction_id BIGINT
 );
 
 ALTER TABLE elements 
@@ -103,9 +103,9 @@ ALTER TABLE elements
     ON DELETE CASCADE;
 
 ALTER TABLE elements 
-    ADD CONSTRAINT fk_elements_restriction_id
-    FOREIGN KEY (restriction_id) 
-    REFERENCES restrictions(id) 
+    ADD CONSTRAINT fk_elements_element_restriction_id
+    FOREIGN KEY (element_restriction_id) 
+    REFERENCES element_restrictions(id) 
     ON DELETE SET NULL;
 
 -- Tariff Price Components
