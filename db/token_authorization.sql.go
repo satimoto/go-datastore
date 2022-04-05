@@ -46,3 +46,22 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 	)
 	return i, err
 }
+
+const getTokenAuthorizationByAuthorizationID = `-- name: GetTokenAuthorizationByAuthorizationID :one
+SELECT id, token_id, authorization_id, country_code, party_id, location_id FROM token_authorizations
+  WHERE authorization_id = $1
+`
+
+func (q *Queries) GetTokenAuthorizationByAuthorizationID(ctx context.Context, authorizationID string) (TokenAuthorization, error) {
+	row := q.db.QueryRowContext(ctx, getTokenAuthorizationByAuthorizationID, authorizationID)
+	var i TokenAuthorization
+	err := row.Scan(
+		&i.ID,
+		&i.TokenID,
+		&i.AuthorizationID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.LocationID,
+	)
+	return i, err
+}
