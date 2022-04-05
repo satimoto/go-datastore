@@ -12,7 +12,7 @@ INSERT INTO token_authorizations (
 SELECT * FROM token_authorizations
   WHERE authorization_id = $1;
 
--- name: UpdateTariffByAuthorizationID :one
+-- name: UpdateTokenAuthorizationByAuthorizationID :one
 UPDATE token_authorizations SET (
     country_code,
     party_id
