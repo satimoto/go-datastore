@@ -3,8 +3,11 @@ INSERT INTO price_components (
     element_id,
     type,
     price,
-    step_size
-  ) VALUES ($1, $2, $3, $4)
+    step_size,
+    price_rounding_id,
+    step_rounding_id,
+    exact_price_component
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
   RETURNING *;
 
 -- name: DeletePriceComponents :exec

@@ -5,6 +5,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createPriceComponent = `-- name: CreatePriceComponent :one
@@ -12,16 +13,22 @@ INSERT INTO price_components (
     element_id,
     type,
     price,
-    step_size
-  ) VALUES ($1, $2, $3, $4)
-  RETURNING id, element_id, type, price, step_size
+    step_size,
+    price_rounding_id,
+    step_rounding_id,
+    exact_price_component
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  RETURNING id, element_id, type, price, step_size, price_rounding_id, step_rounding_id, exact_price_component
 `
 
 type CreatePriceComponentParams struct {
-	ElementID int64           `db:"element_id" json:"elementID"`
-	Type      TariffDimension `db:"type" json:"type"`
-	Price     float64         `db:"price" json:"price"`
-	StepSize  int32           `db:"step_size" json:"stepSize"`
+	ElementID           int64           `db:"element_id" json:"elementID"`
+	Type                TariffDimension `db:"type" json:"type"`
+	Price               float64         `db:"price" json:"price"`
+	StepSize            int32           `db:"step_size" json:"stepSize"`
+	PriceRoundingID     sql.NullInt64   `db:"price_rounding_id" json:"priceRoundingID"`
+	StepRoundingID      sql.NullInt64   `db:"step_rounding_id" json:"stepRoundingID"`
+	ExactPriceComponent sql.NullBool    `db:"exact_price_component" json:"exactPriceComponent"`
 }
 
 func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceComponentParams) (PriceComponent, error) {
@@ -30,6 +37,9 @@ func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceCompo
 		arg.Type,
 		arg.Price,
 		arg.StepSize,
+		arg.PriceRoundingID,
+		arg.StepRoundingID,
+		arg.ExactPriceComponent,
 	)
 	var i PriceComponent
 	err := row.Scan(
@@ -38,6 +48,9 @@ func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceCompo
 		&i.Type,
 		&i.Price,
 		&i.StepSize,
+		&i.PriceRoundingID,
+		&i.StepRoundingID,
+		&i.ExactPriceComponent,
 	)
 	return i, err
 }
@@ -54,7 +67,7 @@ func (q *Queries) DeletePriceComponents(ctx context.Context, tariffID int64) err
 }
 
 const listPriceComponents = `-- name: ListPriceComponents :many
-SELECT id, element_id, type, price, step_size FROM price_components
+SELECT id, element_id, type, price, step_size, price_rounding_id, step_rounding_id, exact_price_component FROM price_components
   WHERE element_id = $1
   ORDER BY id
 `
@@ -74,6 +87,9 @@ func (q *Queries) ListPriceComponents(ctx context.Context, elementID int64) ([]P
 			&i.Type,
 			&i.Price,
 			&i.StepSize,
+			&i.PriceRoundingID,
+			&i.StepRoundingID,
+			&i.ExactPriceComponent,
 		); err != nil {
 			return nil, err
 		}
