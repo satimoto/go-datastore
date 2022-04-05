@@ -337,6 +337,47 @@ func (e *PowerType) Scan(src interface{}) error {
 	return nil
 }
 
+type RoundingGranularity string
+
+const (
+	RoundingGranularityUNIT       RoundingGranularity = "UNIT"
+	RoundingGranularityTENTH      RoundingGranularity = "TENTH"
+	RoundingGranularityHUNDRETH   RoundingGranularity = "HUNDRETH"
+	RoundingGranularityTHOUSANDTH RoundingGranularity = "THOUSANDTH"
+)
+
+func (e *RoundingGranularity) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = RoundingGranularity(s)
+	case string:
+		*e = RoundingGranularity(s)
+	default:
+		return fmt.Errorf("unsupported scan type for RoundingGranularity: %T", src)
+	}
+	return nil
+}
+
+type RoundingRule string
+
+const (
+	RoundingRuleROUNDUP   RoundingRule = "ROUND_UP"
+	RoundingRuleROUNDDOWN RoundingRule = "ROUND_DOWN"
+	RoundingRuleROUNDNEAR RoundingRule = "ROUND_NEAR"
+)
+
+func (e *RoundingRule) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = RoundingRule(s)
+	case string:
+		*e = RoundingRule(s)
+	default:
+		return fmt.Errorf("unsupported scan type for RoundingRule: %T", src)
+	}
+	return nil
+}
+
 type SessionStatusType string
 
 const (
@@ -789,11 +830,20 @@ type ParkingRestriction struct {
 }
 
 type PriceComponent struct {
-	ID        int64           `db:"id" json:"id"`
-	ElementID int64           `db:"element_id" json:"elementID"`
-	Type      TariffDimension `db:"type" json:"type"`
-	Price     float64         `db:"price" json:"price"`
-	StepSize  int32           `db:"step_size" json:"stepSize"`
+	ID                  int64           `db:"id" json:"id"`
+	ElementID           int64           `db:"element_id" json:"elementID"`
+	Type                TariffDimension `db:"type" json:"type"`
+	Price               float64         `db:"price" json:"price"`
+	StepSize            int32           `db:"step_size" json:"stepSize"`
+	PriceRoundingID     sql.NullInt64   `db:"price_rounding_id" json:"priceRoundingID"`
+	StepRoundingID      sql.NullInt64   `db:"step_rounding_id" json:"stepRoundingID"`
+	ExactPriceComponent sql.NullBool    `db:"exact_price_component" json:"exactPriceComponent"`
+}
+
+type PriceComponentRounding struct {
+	ID          int64               `db:"id" json:"id"`
+	Granularity RoundingGranularity `db:"granularity" json:"granularity"`
+	Rule        RoundingRule        `db:"rule" json:"rule"`
 }
 
 type RegularHour struct {

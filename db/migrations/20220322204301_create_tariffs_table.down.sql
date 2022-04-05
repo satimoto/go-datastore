@@ -1,10 +1,23 @@
 -- Tariff Price Components
 ALTER TABLE IF EXISTS price_components 
+    DROP CONSTRAINT IF EXISTS fk_tariff_price_components_step_rounding_id;
+
+ALTER TABLE IF EXISTS price_components 
+    DROP CONSTRAINT IF EXISTS fk_tariff_price_components_price_rounding_id;
+
+ALTER TABLE IF EXISTS price_components 
     DROP CONSTRAINT IF EXISTS fk_tariff_price_components_element_id;
 
 DROP TABLE IF EXISTS price_components;
 
 DROP TYPE IF EXISTS location_type;
+
+-- Price Component Rounding
+DROP TABLE IF EXISTS price_component_roundings;
+
+DROP TYPE IF EXISTS rounding_rule;
+
+DROP TYPE IF EXISTS rounding_granularity;
 
 -- Tariff Elements
 ALTER TABLE IF EXISTS elements 

@@ -138,6 +138,26 @@ ALTER TABLE elements
     REFERENCES element_restrictions(id) 
     ON DELETE SET NULL;
 
+-- Price Component Rounding
+CREATE TYPE rounding_granularity AS ENUM (
+    'UNIT', 
+    'TENTH',
+    'HUNDRETH',
+    'THOUSANDTH'
+);
+
+CREATE TYPE rounding_rule AS ENUM (
+    'ROUND_UP', 
+    'ROUND_DOWN',
+    'ROUND_NEAR'
+);
+
+CREATE TABLE IF NOT EXISTS price_component_roundings (
+    id          BIGSERIAL PRIMARY KEY,
+    granularity rounding_granularity NOT NULL,
+    rule        rounding_rule NOT NULL
+);
+
 -- Tariff Price Components
 CREATE TYPE tariff_dimension AS ENUM (
     'ENERGY', 
@@ -148,11 +168,14 @@ CREATE TYPE tariff_dimension AS ENUM (
 );
 
 CREATE TABLE IF NOT EXISTS price_components (
-    id         BIGSERIAL PRIMARY KEY,
-    element_id BIGINT NOT NULL,
-    type       tariff_dimension NOT NULL,
-    price      FLOAT NOT NULL,
-    step_size  INTEGER NOT NULL
+    id                    BIGSERIAL PRIMARY KEY,
+    element_id            BIGINT NOT NULL,
+    type                  tariff_dimension NOT NULL,
+    price                 FLOAT NOT NULL,
+    step_size             INTEGER NOT NULL,
+    price_rounding_id     BIGINT,
+    step_rounding_id      BIGINT,
+    exact_price_component BOOLEAN
 );
 
 ALTER TABLE price_components 
@@ -160,3 +183,15 @@ ALTER TABLE price_components
     FOREIGN KEY (element_id) 
     REFERENCES elements(id) 
     ON DELETE CASCADE;
+
+ALTER TABLE price_components 
+    ADD CONSTRAINT fk_tariff_price_components_price_rounding_id
+    FOREIGN KEY (price_rounding_id) 
+    REFERENCES price_component_roundings(id) 
+    ON DELETE SET NULL;
+
+ALTER TABLE price_components 
+    ADD CONSTRAINT fk_tariff_price_components_step_rounding_id
+    FOREIGN KEY (step_rounding_id) 
+    REFERENCES price_component_roundings(id) 
+    ON DELETE SET NULL;
