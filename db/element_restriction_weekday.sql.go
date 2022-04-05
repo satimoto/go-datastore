@@ -7,15 +7,15 @@ import (
 	"context"
 )
 
-const listRestrictionWeekdays = `-- name: ListRestrictionWeekdays :many
+const listElementRestrictionWeekdays = `-- name: ListElementRestrictionWeekdays :many
 SELECT w.id, w.text, w.description FROM weekdays w
   INNER JOIN element_restriction_weekdays rw ON rw.weekday_id == w.id
   WHERE rw.element_restriction_id == $1
   ORDER BY w.id
 `
 
-func (q *Queries) ListRestrictionWeekdays(ctx context.Context, elementRestrictionID int64) ([]Weekday, error) {
-	rows, err := q.db.QueryContext(ctx, listRestrictionWeekdays, elementRestrictionID)
+func (q *Queries) ListElementRestrictionWeekdays(ctx context.Context, elementRestrictionID int64) ([]Weekday, error) {
+	rows, err := q.db.QueryContext(ctx, listElementRestrictionWeekdays, elementRestrictionID)
 	if err != nil {
 		return nil, err
 	}
@@ -37,28 +37,28 @@ func (q *Queries) ListRestrictionWeekdays(ctx context.Context, elementRestrictio
 	return items, nil
 }
 
-const setRestrictionWeekday = `-- name: SetRestrictionWeekday :exec
+const setElementRestrictionWeekday = `-- name: SetElementRestrictionWeekday :exec
 INSERT INTO element_restriction_weekdays 
     (element_restriction_id, weekday_id)
   VALUES ($1, $2)
 `
 
-type SetRestrictionWeekdayParams struct {
+type SetElementRestrictionWeekdayParams struct {
 	ElementRestrictionID int64 `db:"element_restriction_id" json:"elementRestrictionID"`
 	WeekdayID            int64 `db:"weekday_id" json:"weekdayID"`
 }
 
-func (q *Queries) SetRestrictionWeekday(ctx context.Context, arg SetRestrictionWeekdayParams) error {
-	_, err := q.db.ExecContext(ctx, setRestrictionWeekday, arg.ElementRestrictionID, arg.WeekdayID)
+func (q *Queries) SetElementRestrictionWeekday(ctx context.Context, arg SetElementRestrictionWeekdayParams) error {
+	_, err := q.db.ExecContext(ctx, setElementRestrictionWeekday, arg.ElementRestrictionID, arg.WeekdayID)
 	return err
 }
 
-const unsetRestrictionWeekdays = `-- name: UnsetRestrictionWeekdays :exec
+const unsetElementRestrictionWeekdays = `-- name: UnsetElementRestrictionWeekdays :exec
 DELETE FROM element_restriction_weekdays rw
   WHERE rw.element_restriction_id == $1
 `
 
-func (q *Queries) UnsetRestrictionWeekdays(ctx context.Context, elementRestrictionID int64) error {
-	_, err := q.db.ExecContext(ctx, unsetRestrictionWeekdays, elementRestrictionID)
+func (q *Queries) UnsetElementRestrictionWeekdays(ctx context.Context, elementRestrictionID int64) error {
+	_, err := q.db.ExecContext(ctx, unsetElementRestrictionWeekdays, elementRestrictionID)
 	return err
 }
