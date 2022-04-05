@@ -66,7 +66,7 @@ func (q *Queries) GetTokenAuthorizationByAuthorizationID(ctx context.Context, au
 	return i, err
 }
 
-const updateTariffByAuthorizationID = `-- name: UpdateTariffByAuthorizationID :one
+const updateTokenAuthorizationByAuthorizationID = `-- name: UpdateTokenAuthorizationByAuthorizationID :one
 UPDATE token_authorizations SET (
     country_code,
     party_id
@@ -75,14 +75,14 @@ UPDATE token_authorizations SET (
   RETURNING id, token_id, authorization_id, country_code, party_id, location_id
 `
 
-type UpdateTariffByAuthorizationIDParams struct {
+type UpdateTokenAuthorizationByAuthorizationIDParams struct {
 	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
 	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 }
 
-func (q *Queries) UpdateTariffByAuthorizationID(ctx context.Context, arg UpdateTariffByAuthorizationIDParams) (TokenAuthorization, error) {
-	row := q.db.QueryRowContext(ctx, updateTariffByAuthorizationID, arg.AuthorizationID, arg.CountryCode, arg.PartyID)
+func (q *Queries) UpdateTokenAuthorizationByAuthorizationID(ctx context.Context, arg UpdateTokenAuthorizationByAuthorizationIDParams) (TokenAuthorization, error) {
+	row := q.db.QueryRowContext(ctx, updateTokenAuthorizationByAuthorizationID, arg.AuthorizationID, arg.CountryCode, arg.PartyID)
 	var i TokenAuthorization
 	err := row.Scan(
 		&i.ID,
