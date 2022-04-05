@@ -1,5 +1,5 @@
--- name: CreateRestriction :one
-INSERT INTO restrictions (
+-- name: CreateElementRestriction :one
+INSERT INTO element_restrictions (
     start_time,
     end_time,
     start_date,
@@ -13,17 +13,17 @@ INSERT INTO restrictions (
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING *;
 
--- name: DeleteRestrictions :exec
-DELETE FROM restrictions r
+-- name: DeleteElementRestrictions :exec
+DELETE FROM element_restrictions r
   USING elements e
   WHERE r.id == e.restriction_id AND e.tariff_id == $1;
 
--- name: GetRestriction :one
-SELECT * FROM restrictions
+-- name: GetElementRestriction :one
+SELECT * FROM element_restrictions
   WHERE id = $1;
 
--- name: UpdateRestriction :one
-UPDATE restrictions SET (
+-- name: UpdateElementRestriction :one
+UPDATE element_restrictions SET (
     start_time,
     end_time,
     start_date,

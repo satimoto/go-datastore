@@ -11,20 +11,20 @@ import (
 const createElement = `-- name: CreateElement :one
 INSERT INTO elements (
     tariff_id,
-    restriction_id
+    element_restriction_id
   ) VALUES ($1, $2)
-  RETURNING id, tariff_id, restriction_id
+  RETURNING id, tariff_id, element_restriction_id
 `
 
 type CreateElementParams struct {
-	TariffID      int64         `db:"tariff_id" json:"tariffID"`
-	RestrictionID sql.NullInt64 `db:"restriction_id" json:"restrictionID"`
+	TariffID             int64         `db:"tariff_id" json:"tariffID"`
+	ElementRestrictionID sql.NullInt64 `db:"element_restriction_id" json:"elementRestrictionID"`
 }
 
 func (q *Queries) CreateElement(ctx context.Context, arg CreateElementParams) (Element, error) {
-	row := q.db.QueryRowContext(ctx, createElement, arg.TariffID, arg.RestrictionID)
+	row := q.db.QueryRowContext(ctx, createElement, arg.TariffID, arg.ElementRestrictionID)
 	var i Element
-	err := row.Scan(&i.ID, &i.TariffID, &i.RestrictionID)
+	err := row.Scan(&i.ID, &i.TariffID, &i.ElementRestrictionID)
 	return i, err
 }
 
@@ -39,7 +39,7 @@ func (q *Queries) DeleteElements(ctx context.Context, tariffID int64) error {
 }
 
 const listElements = `-- name: ListElements :many
-SELECT id, tariff_id, restriction_id FROM elements
+SELECT id, tariff_id, element_restriction_id FROM elements
   WHERE tariff_id = $1
   ORDER BY id
 `
@@ -53,7 +53,7 @@ func (q *Queries) ListElements(ctx context.Context, tariffID int64) ([]Element, 
 	var items []Element
 	for rows.Next() {
 		var i Element
-		if err := rows.Scan(&i.ID, &i.TariffID, &i.RestrictionID); err != nil {
+		if err := rows.Scan(&i.ID, &i.TariffID, &i.ElementRestrictionID); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

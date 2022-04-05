@@ -608,9 +608,28 @@ type DisplayText struct {
 }
 
 type Element struct {
-	ID            int64         `db:"id" json:"id"`
-	TariffID      int64         `db:"tariff_id" json:"tariffID"`
-	RestrictionID sql.NullInt64 `db:"restriction_id" json:"restrictionID"`
+	ID                   int64         `db:"id" json:"id"`
+	TariffID             int64         `db:"tariff_id" json:"tariffID"`
+	ElementRestrictionID sql.NullInt64 `db:"element_restriction_id" json:"elementRestrictionID"`
+}
+
+type ElementRestriction struct {
+	ID          int64           `db:"id" json:"id"`
+	StartTime   sql.NullString  `db:"start_time" json:"startTime"`
+	EndTime     sql.NullString  `db:"end_time" json:"endTime"`
+	StartDate   sql.NullString  `db:"start_date" json:"startDate"`
+	EndDate     sql.NullString  `db:"end_date" json:"endDate"`
+	MinKwh      sql.NullFloat64 `db:"min_kwh" json:"minKwh"`
+	MaxKwh      sql.NullFloat64 `db:"max_kwh" json:"maxKwh"`
+	MinPower    sql.NullFloat64 `db:"min_power" json:"minPower"`
+	MaxPower    sql.NullFloat64 `db:"max_power" json:"maxPower"`
+	MinDuration sql.NullInt32   `db:"min_duration" json:"minDuration"`
+	MaxDuration sql.NullInt32   `db:"max_duration" json:"maxDuration"`
+}
+
+type ElementRestrictionWeekday struct {
+	ElementRestrictionID int64 `db:"element_restriction_id" json:"elementRestrictionID"`
+	WeekdayID            int64 `db:"weekday_id" json:"weekdayID"`
 }
 
 type EmailSubscription struct {
@@ -788,25 +807,6 @@ type RegularHour struct {
 type RelatedLocation struct {
 	LocationID    int64 `db:"location_id" json:"locationID"`
 	GeoLocationID int64 `db:"geo_location_id" json:"geoLocationID"`
-}
-
-type Restriction struct {
-	ID          int64           `db:"id" json:"id"`
-	StartTime   sql.NullString  `db:"start_time" json:"startTime"`
-	EndTime     sql.NullString  `db:"end_time" json:"endTime"`
-	StartDate   sql.NullString  `db:"start_date" json:"startDate"`
-	EndDate     sql.NullString  `db:"end_date" json:"endDate"`
-	MinKwh      sql.NullFloat64 `db:"min_kwh" json:"minKwh"`
-	MaxKwh      sql.NullFloat64 `db:"max_kwh" json:"maxKwh"`
-	MinPower    sql.NullFloat64 `db:"min_power" json:"minPower"`
-	MaxPower    sql.NullFloat64 `db:"max_power" json:"maxPower"`
-	MinDuration sql.NullInt32   `db:"min_duration" json:"minDuration"`
-	MaxDuration sql.NullInt32   `db:"max_duration" json:"maxDuration"`
-}
-
-type RestrictionWeekday struct {
-	RestrictionID int64 `db:"restriction_id" json:"restrictionID"`
-	WeekdayID     int64 `db:"weekday_id" json:"weekdayID"`
 }
 
 type Session struct {
