@@ -27,8 +27,8 @@ ALTER TABLE calibration_values
 CREATE TABLE IF NOT EXISTS cdrs (
     id                  BIGSERIAL PRIMARY KEY,
     uid                 TEXT NOT NULL,
-    country_code        TEXT NOT NULL,
-    party_id            TEXT NOT NULL,
+    country_code        TEXT,
+    party_id            TEXT,
     authorization_id    TEXT,
     start_date_time     TIMESTAMP NOT NULL,
     stop_date_time      TIMESTAMP,

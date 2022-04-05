@@ -35,8 +35,8 @@ INSERT INTO cdrs (
 
 type CreateCdrParams struct {
 	Uid              string          `db:"uid" json:"uid"`
-	CountryCode      string          `db:"country_code" json:"countryCode"`
-	PartyID          string          `db:"party_id" json:"partyID"`
+	CountryCode      sql.NullString  `db:"country_code" json:"countryCode"`
+	PartyID          sql.NullString  `db:"party_id" json:"partyID"`
 	AuthorizationID  sql.NullString  `db:"authorization_id" json:"authorizationID"`
 	StartDateTime    time.Time       `db:"start_date_time" json:"startDateTime"`
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
