@@ -25,8 +25,8 @@ INSERT INTO tariffs (
 
 type CreateTariffParams struct {
 	Uid          string         `db:"uid" json:"uid"`
-	CountryCode  string         `db:"country_code" json:"countryCode"`
-	PartyID      string         `db:"party_id" json:"partyID"`
+	CountryCode  sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID      sql.NullString `db:"party_id" json:"partyID"`
 	CdrID        sql.NullInt64  `db:"cdr_id" json:"cdrID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
@@ -146,8 +146,8 @@ UPDATE tariffs SET (
 
 type UpdateTariffByUidParams struct {
 	Uid          string         `db:"uid" json:"uid"`
-	CountryCode  string         `db:"country_code" json:"countryCode"`
-	PartyID      string         `db:"party_id" json:"partyID"`
+	CountryCode  sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID      sql.NullString `db:"party_id" json:"partyID"`
 	Currency     string         `db:"currency" json:"currency"`
 	TariffAltUrl sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID  sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
