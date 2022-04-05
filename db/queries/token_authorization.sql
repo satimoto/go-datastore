@@ -11,3 +11,11 @@ INSERT INTO token_authorizations (
 -- name: GetTokenAuthorizationByAuthorizationID :one
 SELECT * FROM token_authorizations
   WHERE authorization_id = $1;
+
+-- name: UpdateTariffByAuthorizationID :one
+UPDATE token_authorizations SET (
+    country_code,
+    party_id
+  ) = ($2, $3)
+  WHERE authorization_id = $1
+  RETURNING *;
