@@ -180,8 +180,8 @@ CREATE TYPE location_type AS ENUM (
 CREATE TABLE IF NOT EXISTS locations (
     id                   BIGSERIAL PRIMARY KEY,
     uid                  TEXT NOT NULL,
-    country_code         TEXT NOT NULL,
-    party_id             TEXT NOT NULL,
+    country_code         TEXT,
+    party_id             TEXT,
     type                 location_type NOT NULL,
     name                 TEXT,
     address              TEXT NOT NULL,
