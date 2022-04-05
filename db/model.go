@@ -711,8 +711,8 @@ type Image struct {
 type Location struct {
 	ID                 int64          `db:"id" json:"id"`
 	Uid                string         `db:"uid" json:"uid"`
-	CountryCode        string         `db:"country_code" json:"countryCode"`
-	PartyID            string         `db:"party_id" json:"partyID"`
+	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -812,8 +812,8 @@ type RestrictionWeekday struct {
 type Session struct {
 	ID              int64             `db:"id" json:"id"`
 	Uid             string            `db:"uid" json:"uid"`
-	CountryCode     string            `db:"country_code" json:"countryCode"`
-	PartyID         string            `db:"party_id" json:"partyID"`
+	CountryCode     sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID         sql.NullString    `db:"party_id" json:"partyID"`
 	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
 	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
 	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`

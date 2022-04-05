@@ -38,8 +38,8 @@ INSERT INTO locations (
 
 type CreateLocationParams struct {
 	Uid                string         `db:"uid" json:"uid"`
-	CountryCode        string         `db:"country_code" json:"countryCode"`
-	PartyID            string         `db:"party_id" json:"partyID"`
+	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -292,8 +292,8 @@ UPDATE locations SET (
 
 type UpdateLocationParams struct {
 	ID                 int64          `db:"id" json:"id"`
-	CountryCode        string         `db:"country_code" json:"countryCode"`
-	PartyID            string         `db:"party_id" json:"partyID"`
+	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
@@ -387,8 +387,8 @@ UPDATE locations SET (
 
 type UpdateLocationByUidParams struct {
 	Uid                string         `db:"uid" json:"uid"`
-	CountryCode        string         `db:"country_code" json:"countryCode"`
-	PartyID            string         `db:"party_id" json:"partyID"`
+	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString `db:"party_id" json:"partyID"`
 	Type               LocationType   `db:"type" json:"type"`
 	Name               sql.NullString `db:"name" json:"name"`
 	Address            string         `db:"address" json:"address"`
