@@ -10,7 +10,7 @@ DELETE FROM business_details
 -- name: DeleteBusinessDetailLogo :exec
 DELETE FROM images im
   USING business_details bd
-  WHERE bd.logo_id == im.id AND bd.id == $1;
+  WHERE bd.logo_id = im.id AND bd.id = $1;
 
 -- name: GetBusinessDetail :one
 SELECT * FROM business_details

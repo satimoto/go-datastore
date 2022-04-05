@@ -9,8 +9,8 @@ import (
 
 const listTokenAuthorizationConnectors = `-- name: ListTokenAuthorizationConnectors :many
 SELECT e.id, e.evse_id, e.uid, e.standard, e.format, e.power_type, e.voltage, e.amperage, e.tariff_id, e.terms_and_conditions, e.last_updated FROM connectors e
-  INNER JOIN token_authorization_connectors tac ON tac.connector_uid == e.uid
-  WHERE tac.token_authorization_id == $1
+  INNER JOIN token_authorization_connectors tac ON tac.connector_uid = e.uid
+  WHERE tac.token_authorization_id = $1
   ORDER BY e.id
 `
 

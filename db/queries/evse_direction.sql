@@ -5,10 +5,10 @@ INSERT INTO evse_directions (evse_id, display_text_id)
 -- name: DeleteEvseDirections :exec
 DELETE FROM display_texts dt
   USING evse_directions ed
-  WHERE ed.display_text_id == dt.id AND ed.evse_id == $1;
+  WHERE ed.display_text_id = dt.id AND ed.evse_id = $1;
 
 -- name: ListEvseDirections :many
 SELECT dt.* FROM display_texts dt
-  INNER JOIN evse_directions ed ON ed.display_text_id == dt.id
-  WHERE ed.evse_id == $1
+  INNER JOIN evse_directions ed ON ed.display_text_id = dt.id
+  WHERE ed.evse_id = $1
   ORDER BY dt.id;

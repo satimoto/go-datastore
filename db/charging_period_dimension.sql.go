@@ -36,7 +36,7 @@ func (q *Queries) CreateChargingPeriodDimension(ctx context.Context, arg CreateC
 
 const deleteChargingPeriodDimensions = `-- name: DeleteChargingPeriodDimensions :exec
 DELETE FROM charging_period_dimensions cpd
-  WHERE cpd.charging_period_id == $1
+  WHERE cpd.charging_period_id = $1
 `
 
 func (q *Queries) DeleteChargingPeriodDimensions(ctx context.Context, chargingPeriodID int64) error {
@@ -46,7 +46,7 @@ func (q *Queries) DeleteChargingPeriodDimensions(ctx context.Context, chargingPe
 
 const listChargingPeriodDimensions = `-- name: ListChargingPeriodDimensions :many
 SELECT cpd.id, cpd.charging_period_id, cpd.type, cpd.volume FROM charging_period_dimensions cpd
-  WHERE cpd.charging_period_id == $1
+  WHERE cpd.charging_period_id = $1
   ORDER BY cpd.id
 `
 

@@ -9,8 +9,8 @@ import (
 
 const listLocationFacilities = `-- name: ListLocationFacilities :many
 SELECT fa.id, fa.text, fa.description FROM facilities fa
-  INNER JOIN location_facilities lf ON lf.facility_id == fa.id
-  WHERE lf.location_id == $1
+  INNER JOIN location_facilities lf ON lf.facility_id = fa.id
+  WHERE lf.location_id = $1
   ORDER BY fa.id
 `
 
@@ -54,7 +54,7 @@ func (q *Queries) SetLocationFacility(ctx context.Context, arg SetLocationFacili
 
 const unsetLocationFacilities = `-- name: UnsetLocationFacilities :exec
 DELETE FROM location_facilities lf
-  WHERE lf.location_id == $1
+  WHERE lf.location_id = $1
 `
 
 func (q *Queries) UnsetLocationFacilities(ctx context.Context, locationID int64) error {

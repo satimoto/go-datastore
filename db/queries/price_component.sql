@@ -10,7 +10,7 @@ INSERT INTO price_components (
 -- name: DeletePriceComponents :exec
 DELETE FROM price_components pc
   USING elements e
-  WHERE pc.element_id == e.id AND e.tariff_id == $1;
+  WHERE pc.element_id = e.id AND e.tariff_id = $1;
 
 -- name: ListPriceComponents :many
 SELECT * FROM price_components

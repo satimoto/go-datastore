@@ -1,15 +1,61 @@
+
+-- Day Of Week
+CREATE TABLE IF NOT EXISTS weekdays (
+    id          BIGSERIAL PRIMARY KEY,
+    text        TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+
+INSERT INTO weekdays (text, description) VALUES 
+    ('MONDAY', 'Monday'),
+    ('TUESDAY', 'Tuesday'),
+    ('WEDNESDAY', 'Wednesday'),
+    ('THURSDAY', 'Thursday'),
+    ('FRIDAY', 'Friday'),
+    ('SATURDAY', 'Saturday'),
+    ('SUNDAY', 'Sunday');
+
+-- Tariff Restrictions
+CREATE TABLE IF NOT EXISTS tariff_restrictions (
+    id           BIGSERIAL PRIMARY KEY,
+    start_time   TEXT NOT NULL,
+    end_time     TEXT NOT NULL,
+    start_time_2 TEXT,
+    end_time_2   TEXT
+    -- day_of_week []weekdays
+);
+
+-- Tariff Restriction Weekdays
+CREATE TABLE IF NOT EXISTS tariff_restriction_weekdays (
+    tariff_restriction_id BIGINT NOT NULL,
+    weekday_id            BIGINT NOT NULL
+);
+
+ALTER TABLE tariff_restriction_weekdays 
+    ADD CONSTRAINT fk_tariff_restriction_weekdays_tariff_restriction_id
+    FOREIGN KEY (tariff_restriction_id) 
+    REFERENCES tariff_restrictions(id) 
+    ON DELETE CASCADE;
+
+ALTER TABLE tariff_restriction_weekdays 
+    ADD CONSTRAINT fk_tariff_restriction_weekdays_weekday_id
+    FOREIGN KEY (weekday_id) 
+    REFERENCES weekdays(id) 
+    ON DELETE CASCADE;
+
 -- Tariffs
 CREATE TABLE IF NOT EXISTS tariffs (
-    id                 BIGSERIAL PRIMARY KEY,
-    uid                TEXT NOT NULL,
-    country_code       TEXT,
-    party_id           TEXT,
-    currency           TEXT NOT NULL,
-    -- tariff_alt_text []display_texts
-    tariff_alt_url     TEXT,
-    -- elements        []tariff_elements
-    energy_mix_id      BIGINT,
-    last_updated       TIMESTAMP NOT NULL
+    id                    BIGSERIAL PRIMARY KEY,
+    uid                   TEXT NOT NULL,
+    country_code          TEXT,
+    party_id              TEXT,
+    currency              TEXT NOT NULL,
+    -- tariff_alt_text    []display_texts
+    tariff_alt_url        TEXT,
+    -- elements           []tariff_elements
+    energy_mix_id         BIGINT,
+    tariff_restriction_id BIGINT,
+    last_updated          TIMESTAMP NOT NULL
 );
 
 CREATE INDEX idx_tariffs_uid ON tariffs (uid);
@@ -54,22 +100,6 @@ CREATE TABLE IF NOT EXISTS element_restrictions (
     -- day_of_week []weekdays
 );
 
--- Day Of Week
-CREATE TABLE IF NOT EXISTS weekdays (
-    id          BIGSERIAL PRIMARY KEY,
-    text        TEXT NOT NULL,
-    description TEXT NOT NULL
-);
-
-INSERT INTO weekdays (text, description) VALUES 
-    ('MONDAY', 'Monday'),
-    ('TUESDAY', 'Tuesday'),
-    ('WEDNESDAY', 'Wednesday'),
-    ('THURSDAY', 'Thursday'),
-    ('FRIDAY', 'Friday'),
-    ('SATURDAY', 'Saturday'),
-    ('SUNDAY', 'Sunday');
-
 -- Element Restriction Weekdays
 CREATE TABLE IF NOT EXISTS element_restriction_weekdays (
     element_restriction_id BIGINT NOT NULL,
@@ -77,7 +107,7 @@ CREATE TABLE IF NOT EXISTS element_restriction_weekdays (
 );
 
 ALTER TABLE element_restriction_weekdays 
-    ADD CONSTRAINT fk_element_restriction_weekdays_restriction_id
+    ADD CONSTRAINT fk_element_restriction_weekdays_element_restriction_id
     FOREIGN KEY (element_restriction_id) 
     REFERENCES element_restrictions(id) 
     ON DELETE CASCADE;

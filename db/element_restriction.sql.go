@@ -69,8 +69,8 @@ func (q *Queries) CreateElementRestriction(ctx context.Context, arg CreateElemen
 
 const deleteElementRestrictions = `-- name: DeleteElementRestrictions :exec
 DELETE FROM element_restrictions r
-  USING elements e
-  WHERE r.id == e.restriction_id AND e.tariff_id == $1
+  USING elements t
+  WHERE r.id = t.element_restriction_id AND t.tariff_id = $1
 `
 
 func (q *Queries) DeleteElementRestrictions(ctx context.Context, tariffID int64) error {

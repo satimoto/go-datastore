@@ -5,10 +5,10 @@ INSERT INTO element_restriction_weekdays
 
 -- name: UnsetElementRestrictionWeekdays :exec
 DELETE FROM element_restriction_weekdays rw
-  WHERE rw.element_restriction_id == $1;
+  WHERE rw.element_restriction_id = $1;
 
 -- name: ListElementRestrictionWeekdays :many
 SELECT w.* FROM weekdays w
-  INNER JOIN element_restriction_weekdays rw ON rw.weekday_id == w.id
-  WHERE rw.element_restriction_id == $1
+  INNER JOIN element_restriction_weekdays rw ON rw.weekday_id = w.id
+  WHERE rw.element_restriction_id = $1
   ORDER BY w.id;

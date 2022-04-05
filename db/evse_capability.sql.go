@@ -9,8 +9,8 @@ import (
 
 const listEvseCapabilities = `-- name: ListEvseCapabilities :many
 SELECT ca.id, ca.text, ca.description FROM capabilities ca
-  INNER JOIN evse_capabilities ec ON ec.capability_id == ca.id
-  WHERE ec.evse_id == $1
+  INNER JOIN evse_capabilities ec ON ec.capability_id = ca.id
+  WHERE ec.evse_id = $1
   ORDER BY ca.id
 `
 
@@ -54,7 +54,7 @@ func (q *Queries) SetEvseCapability(ctx context.Context, arg SetEvseCapabilityPa
 
 const unsetEvseCapabilities = `-- name: UnsetEvseCapabilities :exec
 DELETE FROM evse_capabilities ec
-  WHERE ec.evse_id == $1
+  WHERE ec.evse_id = $1
 `
 
 func (q *Queries) UnsetEvseCapabilities(ctx context.Context, evseID int64) error {

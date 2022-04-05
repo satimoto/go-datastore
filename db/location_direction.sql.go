@@ -10,7 +10,7 @@ import (
 const deleteLocationDirections = `-- name: DeleteLocationDirections :exec
 DELETE FROM display_texts dt
   USING location_directions ld
-  WHERE ld.display_text_id == dt.id AND ld.location_id == $1
+  WHERE ld.display_text_id = dt.id AND ld.location_id = $1
 `
 
 func (q *Queries) DeleteLocationDirections(ctx context.Context, locationID int64) error {
@@ -20,8 +20,8 @@ func (q *Queries) DeleteLocationDirections(ctx context.Context, locationID int64
 
 const listLocationDirections = `-- name: ListLocationDirections :many
 SELECT dt.id, dt.language, dt.text FROM display_texts dt
-  INNER JOIN location_directions ld ON ld.display_text_id == dt.id
-  WHERE ld.location_id == $1
+  INNER JOIN location_directions ld ON ld.display_text_id = dt.id
+  WHERE ld.location_id = $1
   ORDER BY dt.id
 `
 

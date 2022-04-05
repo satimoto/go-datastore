@@ -9,8 +9,8 @@ import (
 
 const listEvseParkingRestrictions = `-- name: ListEvseParkingRestrictions :many
 SELECT pr.id, pr.text, pr.description FROM parking_restrictions pr
-  INNER JOIN evse_parking_restrictions ep ON ep.parking_restriction_id == pr.id
-  WHERE ep.evse_id == $1
+  INNER JOIN evse_parking_restrictions ep ON ep.parking_restriction_id = pr.id
+  WHERE ep.evse_id = $1
   ORDER BY pr.id
 `
 
@@ -54,7 +54,7 @@ func (q *Queries) SetEvseParkingRestriction(ctx context.Context, arg SetEvsePark
 
 const unsetEvseParkingRestrictions = `-- name: UnsetEvseParkingRestrictions :exec
 DELETE FROM evse_parking_restrictions ep
-  WHERE ep.evse_id == $1
+  WHERE ep.evse_id = $1
 `
 
 func (q *Queries) UnsetEvseParkingRestrictions(ctx context.Context, evseID int64) error {

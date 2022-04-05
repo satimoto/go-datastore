@@ -9,8 +9,8 @@ import (
 
 const listElementRestrictionWeekdays = `-- name: ListElementRestrictionWeekdays :many
 SELECT w.id, w.text, w.description FROM weekdays w
-  INNER JOIN element_restriction_weekdays rw ON rw.weekday_id == w.id
-  WHERE rw.element_restriction_id == $1
+  INNER JOIN element_restriction_weekdays rw ON rw.weekday_id = w.id
+  WHERE rw.element_restriction_id = $1
   ORDER BY w.id
 `
 
@@ -55,7 +55,7 @@ func (q *Queries) SetElementRestrictionWeekday(ctx context.Context, arg SetEleme
 
 const unsetElementRestrictionWeekdays = `-- name: UnsetElementRestrictionWeekdays :exec
 DELETE FROM element_restriction_weekdays rw
-  WHERE rw.element_restriction_id == $1
+  WHERE rw.element_restriction_id = $1
 `
 
 func (q *Queries) UnsetElementRestrictionWeekdays(ctx context.Context, elementRestrictionID int64) error {
