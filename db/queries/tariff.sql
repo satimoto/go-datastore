@@ -16,6 +16,12 @@ INSERT INTO tariffs (
 DELETE FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL;
 
+-- name: GetTariffByIdentityOrderByLastUpdated :one
+SELECT * FROM tariffs
+  WHERE country_code = $1 AND party_id = $2
+  ORDER BY last_updated DESC
+  LIMIT 1;
+
 -- name: GetTariffByUid :one
 SELECT * FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL;

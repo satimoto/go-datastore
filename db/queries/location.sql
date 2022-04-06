@@ -35,6 +35,12 @@ DELETE FROM locations
 SELECT * FROM locations
   WHERE id = $1;
 
+-- name: GetLocationByIdentityOrderByLastUpdated :one
+SELECT * FROM locations
+  WHERE country_code = $1 AND party_id = $2
+  ORDER BY last_updated DESC
+  LIMIT 1;
+
 -- name: GetLocationByUid :one
 SELECT * FROM locations
   WHERE uid = $1;

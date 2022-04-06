@@ -74,6 +74,36 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 	return err
 }
 
+const getTariffByIdentityOrderByLastUpdated = `-- name: GetTariffByIdentityOrderByLastUpdated :one
+SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
+  WHERE country_code = $1 AND party_id = $2
+  ORDER BY last_updated DESC
+  LIMIT 1
+`
+
+type GetTariffByIdentityOrderByLastUpdatedParams struct {
+	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) GetTariffByIdentityOrderByLastUpdated(ctx context.Context, arg GetTariffByIdentityOrderByLastUpdatedParams) (Tariff, error) {
+	row := q.db.QueryRowContext(ctx, getTariffByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+	var i Tariff
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.Currency,
+		&i.TariffAltUrl,
+		&i.EnergyMixID,
+		&i.TariffRestrictionID,
+		&i.LastUpdated,
+		&i.CdrID,
+	)
+	return i, err
+}
+
 const getTariffByUid = `-- name: GetTariffByUid :one
 SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL

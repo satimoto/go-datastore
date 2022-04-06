@@ -183,6 +183,46 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 	return i, err
 }
 
+const getLocationByIdentityOrderByLastUpdated = `-- name: GetLocationByIdentityOrderByLastUpdated :one
+SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+  WHERE country_code = $1 AND party_id = $2
+  ORDER BY last_updated DESC
+  LIMIT 1
+`
+
+type GetLocationByIdentityOrderByLastUpdatedParams struct {
+	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) GetLocationByIdentityOrderByLastUpdated(ctx context.Context, arg GetLocationByIdentityOrderByLastUpdatedParams) (Location, error) {
+	row := q.db.QueryRowContext(ctx, getLocationByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+	var i Location
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.Type,
+		&i.Name,
+		&i.Address,
+		&i.City,
+		&i.PostalCode,
+		&i.Country,
+		&i.Geom,
+		&i.GeoLocationID,
+		&i.OperatorID,
+		&i.SuboperatorID,
+		&i.OwnerID,
+		&i.TimeZone,
+		&i.OpeningTimeID,
+		&i.ChargingWhenClosed,
+		&i.EnergyMixID,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getLocationByUid = `-- name: GetLocationByUid :one
 SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE uid = $1
