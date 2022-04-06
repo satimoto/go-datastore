@@ -100,6 +100,45 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 	return i, err
 }
 
+const getCdrByIdentityOrderByLastUpdated = `-- name: GetCdrByIdentityOrderByLastUpdated :one
+SELECT id, uid, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+  WHERE country_code = $1 AND party_id = $2
+  ORDER BY last_updated DESC
+  LIMIT 1
+`
+
+type GetCdrByIdentityOrderByLastUpdatedParams struct {
+	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) GetCdrByIdentityOrderByLastUpdated(ctx context.Context, arg GetCdrByIdentityOrderByLastUpdatedParams) (Cdr, error) {
+	row := q.db.QueryRowContext(ctx, getCdrByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+	var i Cdr
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.AuthorizationID,
+		&i.StartDateTime,
+		&i.StopDateTime,
+		&i.AuthID,
+		&i.AuthMethod,
+		&i.LocationID,
+		&i.MeterID,
+		&i.Currency,
+		&i.CalibrationID,
+		&i.TotalCost,
+		&i.TotalEnergy,
+		&i.TotalTime,
+		&i.TotalParkingTime,
+		&i.Remark,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getCdrByUid = `-- name: GetCdrByUid :one
 SELECT id, uid, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE uid = $1

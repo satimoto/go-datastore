@@ -88,6 +88,42 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	return i, err
 }
 
+const getSessionByIdentityOrderByLastUpdated = `-- name: GetSessionByIdentityOrderByLastUpdated :one
+SELECT id, uid, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
+  WHERE country_code = $1 AND party_id = $2
+  ORDER BY last_updated DESC
+  LIMIT 1
+`
+
+type GetSessionByIdentityOrderByLastUpdatedParams struct {
+	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) GetSessionByIdentityOrderByLastUpdated(ctx context.Context, arg GetSessionByIdentityOrderByLastUpdatedParams) (Session, error) {
+	row := q.db.QueryRowContext(ctx, getSessionByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+	var i Session
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.AuthorizationID,
+		&i.StartDatetime,
+		&i.EndDatetime,
+		&i.Kwh,
+		&i.AuthID,
+		&i.AuthMethod,
+		&i.LocationID,
+		&i.MeterID,
+		&i.Currency,
+		&i.TotalCost,
+		&i.Status,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getSessionByUid = `-- name: GetSessionByUid :one
 SELECT id, uid, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
   WHERE uid = $1
