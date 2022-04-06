@@ -633,13 +633,13 @@ type Credential struct {
 	ID               int64          `db:"id" json:"id"`
 	ClientToken      sql.NullString `db:"client_token" json:"clientToken"`
 	ServerToken      sql.NullString `db:"server_token" json:"serverToken"`
-	Version          sql.NullString `db:"version" json:"version"`
 	Url              string         `db:"url" json:"url"`
 	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
 	CountryCode      string         `db:"country_code" json:"countryCode"`
 	PartyID          string         `db:"party_id" json:"partyID"`
 	IsHub            bool           `db:"is_hub" json:"isHub"`
 	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
+	VersionID        sql.NullInt64  `db:"version_id" json:"versionID"`
 }
 
 type DisplayText struct {

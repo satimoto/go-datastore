@@ -61,6 +61,29 @@ func (q *Queries) GetVersionEndpoint(ctx context.Context, id int64) (VersionEndp
 	return i, err
 }
 
+const getVersionEndpointByIdentity = `-- name: GetVersionEndpointByIdentity :one
+SELECT ve.id, ve.version_id, ve.identifier, ve.url FROM version_endpoints ve
+  INNER JOIN credentials c ON vc.version_id = c.version_id
+  WHERE c.country_code = $1 AND c.party_id = $2
+`
+
+type GetVersionEndpointByIdentityParams struct {
+	CountryCode string `db:"country_code" json:"countryCode"`
+	PartyID     string `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) GetVersionEndpointByIdentity(ctx context.Context, arg GetVersionEndpointByIdentityParams) (VersionEndpoint, error) {
+	row := q.db.QueryRowContext(ctx, getVersionEndpointByIdentity, arg.CountryCode, arg.PartyID)
+	var i VersionEndpoint
+	err := row.Scan(
+		&i.ID,
+		&i.VersionID,
+		&i.Identifier,
+		&i.Url,
+	)
+	return i, err
+}
+
 const listVersionEndpoints = `-- name: ListVersionEndpoints :many
 SELECT id, version_id, identifier, url FROM version_endpoints
   WHERE version_id = $1

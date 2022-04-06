@@ -1,3 +1,10 @@
+-- Credentials
+ALTER TABLE IF EXISTS credentials
+    DROP CONSTRAINT IF EXISTS fk_credentials_version_id;
+
+ALTER TABLE credentials
+    DROP IF EXISTS version_id;
+
 -- Version Endpoints
 ALTER TABLE IF EXISTS version_endpoints
     DROP CONSTRAINT IF EXISTS fk_version_endpoints_version_id;
