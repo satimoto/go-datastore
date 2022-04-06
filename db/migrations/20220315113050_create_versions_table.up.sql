@@ -25,3 +25,13 @@ ALTER TABLE version_endpoints
     FOREIGN KEY (version_id) 
     REFERENCES versions(id) 
     ON DELETE CASCADE;
+
+-- Credentials
+ALTER TABLE credentials
+    ADD version_id BIGINT;
+
+ALTER TABLE credentials 
+    ADD CONSTRAINT fk_credentials_version_id
+    FOREIGN KEY (version_id) 
+    REFERENCES versions(id)
+    ON DELETE SET NULL;
