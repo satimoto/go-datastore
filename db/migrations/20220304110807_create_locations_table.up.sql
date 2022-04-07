@@ -192,6 +192,10 @@ CREATE TABLE IF NOT EXISTS locations (
     geo_location_id      BIGINT NOT NULL,
     -- related_locations []related_locations
     -- evses             []evses
+    available_evses      INTEGER NOT NULL,
+    total_evses          INTEGER NOT NULL,
+    is_remote_capable    BOOLEAN NOT NULL,
+    is_rfid_capable      BOOLEAN NOT NULL,
     -- directions        []location_directions
     operator_id          BIGINT,
     suboperator_id       BIGINT,

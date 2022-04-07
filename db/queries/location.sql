@@ -97,6 +97,15 @@ UPDATE locations SET (
   WHERE uid = $1
   RETURNING *;
 
+-- name: UpdateLocationAvailability :exec
+UPDATE locations SET (
+    available_evses, 
+    total_evses, 
+    is_remote_capable, 
+    is_rfid_capable
+  ) = ($2, $3, $4, $5)
+  WHERE id = $1;
+
 -- name: UpdateLocationLastUpdated :exec
 UPDATE locations SET last_updated = $2
   WHERE id = $1;
