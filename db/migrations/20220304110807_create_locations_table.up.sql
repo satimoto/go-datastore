@@ -211,6 +211,8 @@ CREATE TABLE IF NOT EXISTS locations (
 
 CREATE INDEX idx_locations_uid ON locations (uid);
 
+CREATE INDEX idx_locations_geom ON locations USING GIST(geom);
+
 ALTER TABLE locations
     ADD CONSTRAINT fk_locations_operator_id
     FOREIGN KEY (operator_id) 
