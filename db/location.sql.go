@@ -341,6 +341,72 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 	return items, nil
 }
 
+const listLocationsByGeom = `-- name: ListLocationsByGeom :many
+SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+  WHERE ST_Intersects(geom, ST_MakeEnvelope($1::FLOAT, $2::FLOAT, $3::FLOAT, $4::FLOAT, 4326))
+  ORDER BY name
+`
+
+type ListLocationsByGeomParams struct {
+	XMin float64 `db:"x_min" json:"xMin"`
+	YMin float64 `db:"y_min" json:"yMin"`
+	XMax float64 `db:"x_max" json:"xMax"`
+	YMax float64 `db:"y_max" json:"yMax"`
+}
+
+func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGeomParams) ([]Location, error) {
+	rows, err := q.db.QueryContext(ctx, listLocationsByGeom,
+		arg.XMin,
+		arg.YMin,
+		arg.XMax,
+		arg.YMax,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Location
+	for rows.Next() {
+		var i Location
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.CountryCode,
+			&i.PartyID,
+			&i.Type,
+			&i.Name,
+			&i.Address,
+			&i.City,
+			&i.PostalCode,
+			&i.Country,
+			&i.Geom,
+			&i.GeoLocationID,
+			&i.AvailableEvses,
+			&i.TotalEvses,
+			&i.IsRemoteCapable,
+			&i.IsRfidCapable,
+			&i.OperatorID,
+			&i.SuboperatorID,
+			&i.OwnerID,
+			&i.TimeZone,
+			&i.OpeningTimeID,
+			&i.ChargingWhenClosed,
+			&i.EnergyMixID,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateLocation = `-- name: UpdateLocation :one
 UPDATE locations SET (
     country_code,

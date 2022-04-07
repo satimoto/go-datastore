@@ -50,6 +50,8 @@ ALTER TABLE IF EXISTS locations
 ALTER TABLE IF EXISTS locations 
     DROP CONSTRAINT IF EXISTS fk_locations_operator_id;
 
+DROP INDEX IF EXISTS idx_locations_geom;
+
 DROP INDEX IF EXISTS idx_locations_uid;
 
 DROP TABLE IF EXISTS locations;

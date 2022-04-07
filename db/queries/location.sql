@@ -53,6 +53,11 @@ SELECT * FROM locations
 SELECT * FROM locations
   ORDER BY name;
 
+-- name: ListLocationsByGeom :many
+SELECT * FROM locations
+  WHERE ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326))
+  ORDER BY name;
+
 -- name: UpdateLocation :one
 UPDATE locations SET (
     country_code,
