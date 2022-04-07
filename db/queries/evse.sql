@@ -7,9 +7,11 @@ INSERT INTO evses (
     floor_level, 
     geom, 
     geo_location_id, 
+    is_remote_capable,
+    is_rfid_capable,
     physical_reference, 
     last_updated)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   RETURNING *;
 
 -- name: DeleteEvse :exec
@@ -40,9 +42,11 @@ UPDATE evses SET (
     floor_level, 
     geom, 
     geo_location_id, 
+    is_remote_capable,
+    is_rfid_capable,
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
   RETURNING *;
 
@@ -53,9 +57,11 @@ UPDATE evses SET (
     floor_level, 
     geom, 
     geo_location_id, 
+    is_remote_capable,
+    is_rfid_capable,
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE uid = $1
   RETURNING *;
 

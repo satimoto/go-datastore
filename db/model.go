@@ -713,6 +713,8 @@ type Evse struct {
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
 	Geom              interface{}    `db:"geom" json:"geom"`
 	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }

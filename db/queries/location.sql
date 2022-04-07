@@ -11,6 +11,10 @@ INSERT INTO locations (
     country, 
     geom, 
     geo_location_id, 
+    available_evses,
+    total_evses,
+    is_remote_capable,
+    is_rfid_capable,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -19,7 +23,7 @@ INSERT INTO locations (
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   RETURNING *;
 
 -- name: DeleteLocation :exec
@@ -61,6 +65,10 @@ UPDATE locations SET (
     country, 
     geom, 
     geo_location_id, 
+    available_evses,
+    total_evses,
+    is_remote_capable,
+    is_rfid_capable,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -69,7 +77,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   WHERE id = $1
   RETURNING *;
 
@@ -85,6 +93,10 @@ UPDATE locations SET (
     country, 
     geom, 
     geo_location_id, 
+    available_evses,
+    total_evses,
+    is_remote_capable,
+    is_rfid_capable,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -93,7 +105,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   WHERE uid = $1
   RETURNING *;
 
