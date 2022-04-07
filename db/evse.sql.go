@@ -18,10 +18,12 @@ INSERT INTO evses (
     floor_level, 
     geom, 
     geo_location_id, 
+    is_remote_capable,
+    is_rfid_capable,
     physical_reference, 
     last_updated)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-  RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated
 `
 
 type CreateEvseParams struct {
@@ -32,6 +34,8 @@ type CreateEvseParams struct {
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
 	Geom              interface{}    `db:"geom" json:"geom"`
 	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -45,6 +49,8 @@ func (q *Queries) CreateEvse(ctx context.Context, arg CreateEvseParams) (Evse, e
 		arg.FloorLevel,
 		arg.Geom,
 		arg.GeoLocationID,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
 		arg.PhysicalReference,
 		arg.LastUpdated,
 	)
@@ -58,6 +64,8 @@ func (q *Queries) CreateEvse(ctx context.Context, arg CreateEvseParams) (Evse, e
 		&i.FloorLevel,
 		&i.Geom,
 		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
 		&i.PhysicalReference,
 		&i.LastUpdated,
 	)
@@ -85,7 +93,7 @@ func (q *Queries) DeleteEvseByUid(ctx context.Context, uid string) error {
 }
 
 const getEvse = `-- name: GetEvse :one
-SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated FROM evses
+SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
   WHERE id = $1
 `
 
@@ -101,6 +109,8 @@ func (q *Queries) GetEvse(ctx context.Context, id int64) (Evse, error) {
 		&i.FloorLevel,
 		&i.Geom,
 		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
 		&i.PhysicalReference,
 		&i.LastUpdated,
 	)
@@ -108,7 +118,7 @@ func (q *Queries) GetEvse(ctx context.Context, id int64) (Evse, error) {
 }
 
 const getEvseByUid = `-- name: GetEvseByUid :one
-SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated FROM evses
+SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
   WHERE uid = $1
 `
 
@@ -124,6 +134,8 @@ func (q *Queries) GetEvseByUid(ctx context.Context, uid string) (Evse, error) {
 		&i.FloorLevel,
 		&i.Geom,
 		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
 		&i.PhysicalReference,
 		&i.LastUpdated,
 	)
@@ -131,7 +143,7 @@ func (q *Queries) GetEvseByUid(ctx context.Context, uid string) (Evse, error) {
 }
 
 const listEvses = `-- name: ListEvses :many
-SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated FROM evses
+SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
   WHERE location_id = $1
   ORDER BY id
 `
@@ -154,6 +166,8 @@ func (q *Queries) ListEvses(ctx context.Context, locationID int64) ([]Evse, erro
 			&i.FloorLevel,
 			&i.Geom,
 			&i.GeoLocationID,
+			&i.IsRemoteCapable,
+			&i.IsRfidCapable,
 			&i.PhysicalReference,
 			&i.LastUpdated,
 		); err != nil {
@@ -177,11 +191,13 @@ UPDATE evses SET (
     floor_level, 
     geom, 
     geo_location_id, 
+    is_remote_capable,
+    is_rfid_capable,
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
-  RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated
+  RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated
 `
 
 type UpdateEvseParams struct {
@@ -191,6 +207,8 @@ type UpdateEvseParams struct {
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
 	Geom              interface{}    `db:"geom" json:"geom"`
 	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -203,6 +221,8 @@ func (q *Queries) UpdateEvse(ctx context.Context, arg UpdateEvseParams) (Evse, e
 		arg.FloorLevel,
 		arg.Geom,
 		arg.GeoLocationID,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
 		arg.PhysicalReference,
 		arg.LastUpdated,
 	)
@@ -216,6 +236,8 @@ func (q *Queries) UpdateEvse(ctx context.Context, arg UpdateEvseParams) (Evse, e
 		&i.FloorLevel,
 		&i.Geom,
 		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
 		&i.PhysicalReference,
 		&i.LastUpdated,
 	)
@@ -229,11 +251,13 @@ UPDATE evses SET (
     floor_level, 
     geom, 
     geo_location_id, 
+    is_remote_capable,
+    is_rfid_capable,
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE uid = $1
-  RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, physical_reference, last_updated
+  RETURNING id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated
 `
 
 type UpdateEvseByUidParams struct {
@@ -243,6 +267,8 @@ type UpdateEvseByUidParams struct {
 	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
 	Geom              interface{}    `db:"geom" json:"geom"`
 	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
 	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
 }
@@ -255,6 +281,8 @@ func (q *Queries) UpdateEvseByUid(ctx context.Context, arg UpdateEvseByUidParams
 		arg.FloorLevel,
 		arg.Geom,
 		arg.GeoLocationID,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
 		arg.PhysicalReference,
 		arg.LastUpdated,
 	)
@@ -268,6 +296,8 @@ func (q *Queries) UpdateEvseByUid(ctx context.Context, arg UpdateEvseByUidParams
 		&i.FloorLevel,
 		&i.Geom,
 		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
 		&i.PhysicalReference,
 		&i.LastUpdated,
 	)

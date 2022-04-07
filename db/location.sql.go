@@ -24,6 +24,10 @@ INSERT INTO locations (
     country, 
     geom, 
     geo_location_id, 
+    available_evses,
+    total_evses,
+    is_remote_capable,
+    is_rfid_capable,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -32,7 +36,7 @@ INSERT INTO locations (
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
@@ -48,6 +52,10 @@ type CreateLocationParams struct {
 	Country            string         `db:"country" json:"country"`
 	Geom               geom.Point     `db:"geom" json:"geom"`
 	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
@@ -71,6 +79,10 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 		arg.Country,
 		arg.Geom,
 		arg.GeoLocationID,
+		arg.AvailableEvses,
+		arg.TotalEvses,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
 		arg.OperatorID,
 		arg.SuboperatorID,
 		arg.OwnerID,
@@ -341,6 +353,10 @@ UPDATE locations SET (
     country, 
     geom, 
     geo_location_id, 
+    available_evses,
+    total_evses,
+    is_remote_capable,
+    is_rfid_capable,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -349,7 +365,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   WHERE id = $1
   RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
@@ -366,6 +382,10 @@ type UpdateLocationParams struct {
 	Country            string         `db:"country" json:"country"`
 	Geom               geom.Point     `db:"geom" json:"geom"`
 	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
@@ -389,6 +409,10 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 		arg.Country,
 		arg.Geom,
 		arg.GeoLocationID,
+		arg.AvailableEvses,
+		arg.TotalEvses,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
 		arg.OperatorID,
 		arg.SuboperatorID,
 		arg.OwnerID,
@@ -469,6 +493,10 @@ UPDATE locations SET (
     country, 
     geom, 
     geo_location_id, 
+    available_evses,
+    total_evses,
+    is_remote_capable,
+    is_rfid_capable,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -477,7 +505,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   WHERE uid = $1
   RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
@@ -494,6 +522,10 @@ type UpdateLocationByUidParams struct {
 	Country            string         `db:"country" json:"country"`
 	Geom               geom.Point     `db:"geom" json:"geom"`
 	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
@@ -517,6 +549,10 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 		arg.Country,
 		arg.Geom,
 		arg.GeoLocationID,
+		arg.AvailableEvses,
+		arg.TotalEvses,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
 		arg.OperatorID,
 		arg.SuboperatorID,
 		arg.OwnerID,

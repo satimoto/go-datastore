@@ -51,6 +51,8 @@ CREATE TABLE IF NOT EXISTS evses (
     floor_level             TEXT,
     geom                    GEOMETRY(POINT, 4326),
     geo_location_id         BIGINT,
+    is_remote_capable       BOOLEAN NOT NULL,
+    is_rfid_capable         BOOLEAN NOT NULL,
     physical_reference      TEXT,
     -- directions           []display_texts
     -- parking_restrictions []evse_parking_restrictions
