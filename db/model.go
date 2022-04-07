@@ -781,6 +781,10 @@ type Location struct {
 	Country            string         `db:"country" json:"country"`
 	Geom               geom.Point     `db:"geom" json:"geom"`
 	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
 	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
 	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
