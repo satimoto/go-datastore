@@ -3,6 +3,7 @@ module github.com/satimoto/go-datastore
 go 1.17
 
 require (
+	github.com/99designs/gqlgen v0.17.2
 	github.com/golang-migrate/migrate/v4 v4.15.0
 	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.3
@@ -25,9 +26,10 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/vektah/gqlparser/v2 v2.4.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
-	golang.org/x/sys v0.0.0-20210823070655-63515b42dcdf // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
+	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
