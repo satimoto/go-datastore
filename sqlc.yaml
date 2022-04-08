@@ -9,5 +9,8 @@ packages:
     output_models_file_name: "model.go"
 overrides:
   - db_type: "geometry"
-    go_type: "github.com/twpayne/go-geom.Point"
-    nullable: false
+    go_type: "github.com/satimoto/go-datastore/postgis.Geometry4326"
+    nullable: false  
+  - db_type: "geometry"
+    go_type: "github.com/satimoto/go-datastore/postgis.NullGeometry4326"
+    nullable: true

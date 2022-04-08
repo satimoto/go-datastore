@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/twpayne/go-geom"
+	"github.com/satimoto/go-datastore/postgis"
 )
 
 type AuthMethodType string
@@ -705,18 +705,18 @@ type EnvironmentalImpact struct {
 }
 
 type Evse struct {
-	ID                int64          `db:"id" json:"id"`
-	LocationID        int64          `db:"location_id" json:"locationID"`
-	Uid               string         `db:"uid" json:"uid"`
-	EvseID            sql.NullString `db:"evse_id" json:"evseID"`
-	Status            EvseStatus     `db:"status" json:"status"`
-	FloorLevel        sql.NullString `db:"floor_level" json:"floorLevel"`
-	Geom              interface{}    `db:"geom" json:"geom"`
-	GeoLocationID     sql.NullInt64  `db:"geo_location_id" json:"geoLocationID"`
-	IsRemoteCapable   bool           `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable     bool           `db:"is_rfid_capable" json:"isRfidCapable"`
-	PhysicalReference sql.NullString `db:"physical_reference" json:"physicalReference"`
-	LastUpdated       time.Time      `db:"last_updated" json:"lastUpdated"`
+	ID                int64                    `db:"id" json:"id"`
+	LocationID        int64                    `db:"location_id" json:"locationID"`
+	Uid               string                   `db:"uid" json:"uid"`
+	EvseID            sql.NullString           `db:"evse_id" json:"evseID"`
+	Status            EvseStatus               `db:"status" json:"status"`
+	FloorLevel        sql.NullString           `db:"floor_level" json:"floorLevel"`
+	Geom              postgis.NullGeometry4326 `db:"geom" json:"geom"`
+	GeoLocationID     sql.NullInt64            `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool                     `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool                     `db:"is_rfid_capable" json:"isRfidCapable"`
+	PhysicalReference sql.NullString           `db:"physical_reference" json:"physicalReference"`
+	LastUpdated       time.Time                `db:"last_updated" json:"lastUpdated"`
 }
 
 type EvseCapability struct {
@@ -771,30 +771,30 @@ type Image struct {
 }
 
 type Location struct {
-	ID                 int64          `db:"id" json:"id"`
-	Uid                string         `db:"uid" json:"uid"`
-	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString `db:"party_id" json:"partyID"`
-	Type               LocationType   `db:"type" json:"type"`
-	Name               sql.NullString `db:"name" json:"name"`
-	Address            string         `db:"address" json:"address"`
-	City               string         `db:"city" json:"city"`
-	PostalCode         string         `db:"postal_code" json:"postalCode"`
-	Country            string         `db:"country" json:"country"`
-	Geom               geom.Point     `db:"geom" json:"geom"`
-	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
+	ID                 int64                `db:"id" json:"id"`
+	Uid                string               `db:"uid" json:"uid"`
+	CountryCode        sql.NullString       `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString       `db:"party_id" json:"partyID"`
+	Type               LocationType         `db:"type" json:"type"`
+	Name               sql.NullString       `db:"name" json:"name"`
+	Address            string               `db:"address" json:"address"`
+	City               string               `db:"city" json:"city"`
+	PostalCode         string               `db:"postal_code" json:"postalCode"`
+	Country            string               `db:"country" json:"country"`
+	Geom               postgis.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID      int64                `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32                `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32                `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool                 `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool                 `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID         sql.NullInt64        `db:"operator_id" json:"operatorID"`
+	SuboperatorID      sql.NullInt64        `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID            sql.NullInt64        `db:"owner_id" json:"ownerID"`
+	TimeZone           sql.NullString       `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64        `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed bool                 `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID        sql.NullInt64        `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated        time.Time            `db:"last_updated" json:"lastUpdated"`
 }
 
 type LocationDirection struct {
