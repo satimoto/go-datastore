@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/twpayne/go-geom"
+	"github.com/satimoto/go-datastore/postgis"
 )
 
 const createLocation = `-- name: CreateLocation :one
@@ -41,29 +41,29 @@ INSERT INTO locations (
 `
 
 type CreateLocationParams struct {
-	Uid                string         `db:"uid" json:"uid"`
-	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString `db:"party_id" json:"partyID"`
-	Type               LocationType   `db:"type" json:"type"`
-	Name               sql.NullString `db:"name" json:"name"`
-	Address            string         `db:"address" json:"address"`
-	City               string         `db:"city" json:"city"`
-	PostalCode         string         `db:"postal_code" json:"postalCode"`
-	Country            string         `db:"country" json:"country"`
-	Geom               geom.Point     `db:"geom" json:"geom"`
-	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                string               `db:"uid" json:"uid"`
+	CountryCode        sql.NullString       `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString       `db:"party_id" json:"partyID"`
+	Type               LocationType         `db:"type" json:"type"`
+	Name               sql.NullString       `db:"name" json:"name"`
+	Address            string               `db:"address" json:"address"`
+	City               string               `db:"city" json:"city"`
+	PostalCode         string               `db:"postal_code" json:"postalCode"`
+	Country            string               `db:"country" json:"country"`
+	Geom               postgis.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID      int64                `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32                `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32                `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool                 `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool                 `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID         sql.NullInt64        `db:"operator_id" json:"operatorID"`
+	SuboperatorID      sql.NullInt64        `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID            sql.NullInt64        `db:"owner_id" json:"ownerID"`
+	TimeZone           sql.NullString       `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64        `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed bool                 `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID        sql.NullInt64        `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated        time.Time            `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) (Location, error) {
@@ -437,29 +437,29 @@ UPDATE locations SET (
 `
 
 type UpdateLocationParams struct {
-	ID                 int64          `db:"id" json:"id"`
-	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString `db:"party_id" json:"partyID"`
-	Type               LocationType   `db:"type" json:"type"`
-	Name               sql.NullString `db:"name" json:"name"`
-	Address            string         `db:"address" json:"address"`
-	City               string         `db:"city" json:"city"`
-	PostalCode         string         `db:"postal_code" json:"postalCode"`
-	Country            string         `db:"country" json:"country"`
-	Geom               geom.Point     `db:"geom" json:"geom"`
-	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
+	ID                 int64                `db:"id" json:"id"`
+	CountryCode        sql.NullString       `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString       `db:"party_id" json:"partyID"`
+	Type               LocationType         `db:"type" json:"type"`
+	Name               sql.NullString       `db:"name" json:"name"`
+	Address            string               `db:"address" json:"address"`
+	City               string               `db:"city" json:"city"`
+	PostalCode         string               `db:"postal_code" json:"postalCode"`
+	Country            string               `db:"country" json:"country"`
+	Geom               postgis.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID      int64                `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32                `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32                `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool                 `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool                 `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID         sql.NullInt64        `db:"operator_id" json:"operatorID"`
+	SuboperatorID      sql.NullInt64        `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID            sql.NullInt64        `db:"owner_id" json:"ownerID"`
+	TimeZone           sql.NullString       `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64        `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed bool                 `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID        sql.NullInt64        `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated        time.Time            `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) (Location, error) {
@@ -577,29 +577,29 @@ UPDATE locations SET (
 `
 
 type UpdateLocationByUidParams struct {
-	Uid                string         `db:"uid" json:"uid"`
-	CountryCode        sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString `db:"party_id" json:"partyID"`
-	Type               LocationType   `db:"type" json:"type"`
-	Name               sql.NullString `db:"name" json:"name"`
-	Address            string         `db:"address" json:"address"`
-	City               string         `db:"city" json:"city"`
-	PostalCode         string         `db:"postal_code" json:"postalCode"`
-	Country            string         `db:"country" json:"country"`
-	Geom               geom.Point     `db:"geom" json:"geom"`
-	GeoLocationID      int64          `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32          `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32          `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool           `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool           `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64  `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64  `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64  `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64  `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool           `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                string               `db:"uid" json:"uid"`
+	CountryCode        sql.NullString       `db:"country_code" json:"countryCode"`
+	PartyID            sql.NullString       `db:"party_id" json:"partyID"`
+	Type               LocationType         `db:"type" json:"type"`
+	Name               sql.NullString       `db:"name" json:"name"`
+	Address            string               `db:"address" json:"address"`
+	City               string               `db:"city" json:"city"`
+	PostalCode         string               `db:"postal_code" json:"postalCode"`
+	Country            string               `db:"country" json:"country"`
+	Geom               postgis.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID      int64                `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses     int32                `db:"available_evses" json:"availableEvses"`
+	TotalEvses         int32                `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable    bool                 `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable      bool                 `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID         sql.NullInt64        `db:"operator_id" json:"operatorID"`
+	SuboperatorID      sql.NullInt64        `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID            sql.NullInt64        `db:"owner_id" json:"ownerID"`
+	TimeZone           sql.NullString       `db:"time_zone" json:"timeZone"`
+	OpeningTimeID      sql.NullInt64        `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed bool                 `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID        sql.NullInt64        `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated        time.Time            `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByUidParams) (Location, error) {
