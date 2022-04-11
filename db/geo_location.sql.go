@@ -9,24 +9,39 @@ import (
 )
 
 const createGeoLocation = `-- name: CreateGeoLocation :one
-INSERT INTO geo_locations (latitude, longitude, name)
-  VALUES ($1, $2, $3)
-  RETURNING id, latitude, longitude, name
+INSERT INTO geo_locations (
+     latitude, 
+     latitude_float, 
+     longitude, 
+     longitude_float, 
+     name
+  ) VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, latitude, latitude_float, longitude, longitude_float, name
 `
 
 type CreateGeoLocationParams struct {
-	Latitude  string         `db:"latitude" json:"latitude"`
-	Longitude string         `db:"longitude" json:"longitude"`
-	Name      sql.NullString `db:"name" json:"name"`
+	Latitude       string         `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64        `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string         `db:"longitude" json:"longitude"`
+	LongitudeFloat float64        `db:"longitude_float" json:"longitudeFloat"`
+	Name           sql.NullString `db:"name" json:"name"`
 }
 
 func (q *Queries) CreateGeoLocation(ctx context.Context, arg CreateGeoLocationParams) (GeoLocation, error) {
-	row := q.db.QueryRowContext(ctx, createGeoLocation, arg.Latitude, arg.Longitude, arg.Name)
+	row := q.db.QueryRowContext(ctx, createGeoLocation,
+		arg.Latitude,
+		arg.LatitudeFloat,
+		arg.Longitude,
+		arg.LongitudeFloat,
+		arg.Name,
+	)
 	var i GeoLocation
 	err := row.Scan(
 		&i.ID,
 		&i.Latitude,
+		&i.LatitudeFloat,
 		&i.Longitude,
+		&i.LongitudeFloat,
 		&i.Name,
 	)
 	return i, err
@@ -43,7 +58,7 @@ func (q *Queries) DeleteGeoLocation(ctx context.Context, id int64) error {
 }
 
 const getGeoLocation = `-- name: GetGeoLocation :one
-SELECT id, latitude, longitude, name FROM geo_locations
+SELECT id, latitude, latitude_float, longitude, longitude_float, name FROM geo_locations
   WHERE id = $1
 `
 
@@ -53,14 +68,16 @@ func (q *Queries) GetGeoLocation(ctx context.Context, id int64) (GeoLocation, er
 	err := row.Scan(
 		&i.ID,
 		&i.Latitude,
+		&i.LatitudeFloat,
 		&i.Longitude,
+		&i.LongitudeFloat,
 		&i.Name,
 	)
 	return i, err
 }
 
 const listGeoLocations = `-- name: ListGeoLocations :many
-SELECT id, latitude, longitude, name FROM geo_locations
+SELECT id, latitude, latitude_float, longitude, longitude_float, name FROM geo_locations
   ORDER BY name
 `
 
@@ -76,7 +93,9 @@ func (q *Queries) ListGeoLocations(ctx context.Context) ([]GeoLocation, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Latitude,
+			&i.LatitudeFloat,
 			&i.Longitude,
+			&i.LongitudeFloat,
 			&i.Name,
 		); err != nil {
 			return nil, err
@@ -95,32 +114,40 @@ func (q *Queries) ListGeoLocations(ctx context.Context) ([]GeoLocation, error) {
 const updateGeoLocation = `-- name: UpdateGeoLocation :one
 UPDATE geo_locations SET (
     latitude, 
+    latitude_float, 
     longitude, 
+    longitude_float, 
     name
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
-  RETURNING id, latitude, longitude, name
+  RETURNING id, latitude, latitude_float, longitude, longitude_float, name
 `
 
 type UpdateGeoLocationParams struct {
-	ID        int64          `db:"id" json:"id"`
-	Latitude  string         `db:"latitude" json:"latitude"`
-	Longitude string         `db:"longitude" json:"longitude"`
-	Name      sql.NullString `db:"name" json:"name"`
+	ID             int64          `db:"id" json:"id"`
+	Latitude       string         `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64        `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string         `db:"longitude" json:"longitude"`
+	LongitudeFloat float64        `db:"longitude_float" json:"longitudeFloat"`
+	Name           sql.NullString `db:"name" json:"name"`
 }
 
 func (q *Queries) UpdateGeoLocation(ctx context.Context, arg UpdateGeoLocationParams) (GeoLocation, error) {
 	row := q.db.QueryRowContext(ctx, updateGeoLocation,
 		arg.ID,
 		arg.Latitude,
+		arg.LatitudeFloat,
 		arg.Longitude,
+		arg.LongitudeFloat,
 		arg.Name,
 	)
 	var i GeoLocation
 	err := row.Scan(
 		&i.ID,
 		&i.Latitude,
+		&i.LatitudeFloat,
 		&i.Longitude,
+		&i.LongitudeFloat,
 		&i.Name,
 	)
 	return i, err

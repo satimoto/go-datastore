@@ -754,10 +754,12 @@ type Facility struct {
 }
 
 type GeoLocation struct {
-	ID        int64          `db:"id" json:"id"`
-	Latitude  string         `db:"latitude" json:"latitude"`
-	Longitude string         `db:"longitude" json:"longitude"`
-	Name      sql.NullString `db:"name" json:"name"`
+	ID             int64          `db:"id" json:"id"`
+	Latitude       string         `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64        `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string         `db:"longitude" json:"longitude"`
+	LongitudeFloat float64        `db:"longitude_float" json:"longitudeFloat"`
+	Name           sql.NullString `db:"name" json:"name"`
 }
 
 type Image struct {

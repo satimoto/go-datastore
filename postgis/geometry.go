@@ -4,11 +4,19 @@ import (
 	"database/sql/driver"
 	"fmt"
 
+	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/encoding/ewkb"
 	"github.com/paulmach/orb/geojson"
 )
 
 type Geometry4326 geojson.Geometry
+
+func NewGeometry4326(coordinates orb.Geometry) Geometry4326 {
+	return Geometry4326{
+		Coordinates: coordinates,
+		Type: coordinates.GeoJSONType(),
+	}
+}
 
 func (g *Geometry4326) Scan(value interface{}) error {
 	s := ewkb.Scanner(nil)

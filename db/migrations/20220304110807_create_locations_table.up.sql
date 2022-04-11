@@ -7,10 +7,12 @@ CREATE TABLE IF NOT EXISTS display_texts (
 
 -- Geo Locations
 CREATE TABLE IF NOT EXISTS geo_locations (
-    id        BIGSERIAL PRIMARY KEY,
-    latitude  TEXT NOT NULL,
-    longitude TEXT NOT NULL,
-    name      TEXT
+    id              BIGSERIAL PRIMARY KEY,
+    latitude        TEXT NOT NULL,
+    latitude_float  FLOAT NOT NULL,
+    longitude       TEXT NOT NULL,
+    longitude_float FLOAT NOT NULL,
+    name            TEXT
 );
 
 -- Images
