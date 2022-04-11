@@ -19,7 +19,7 @@ func (q *Queries) DeleteRelatedLocations(ctx context.Context, locationID int64) 
 }
 
 const listRelatedLocations = `-- name: ListRelatedLocations :many
-SELECT gl.id, gl.latitude, gl.longitude, gl.name FROM geo_locations gl
+SELECT gl.id, gl.latitude, gl.latitude_float, gl.longitude, gl.longitude_float, gl.name FROM geo_locations gl
   INNER JOIN related_locations rl ON rl.geo_location_id = gl.id
   WHERE rl.location_id = $1
   ORDER BY gl.id
@@ -37,7 +37,9 @@ func (q *Queries) ListRelatedLocations(ctx context.Context, locationID int64) ([
 		if err := rows.Scan(
 			&i.ID,
 			&i.Latitude,
+			&i.LatitudeFloat,
 			&i.Longitude,
+			&i.LongitudeFloat,
 			&i.Name,
 		); err != nil {
 			return nil, err
