@@ -1,4 +1,4 @@
-package postgis
+package geom
 
 import (
 	"database/sql/driver"

@@ -1,10 +1,10 @@
-package postgis_test
+package geom_test
 
 import (
 	"testing"
 
 	"github.com/paulmach/orb/geojson"
-	"github.com/satimoto/go-datastore/postgis"
+	"github.com/satimoto/go-datastore/geom"
 )
 
 func TestNullGeometry(t *testing.T) {
