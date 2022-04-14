@@ -129,7 +129,8 @@ func (q *Queries) GetConnector(ctx context.Context, id int64) (Connector, error)
 
 const getConnectorByUid = `-- name: GetConnectorByUid :one
 SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated FROM connectors
-  WHERE evse_id = $1 AND uid = $2
+  WHERE ($1::bigint IS NULL or evse_id = $1::bigint) AND uid = $2::string
+  LIMIT 1
 `
 
 type GetConnectorByUidParams struct {
