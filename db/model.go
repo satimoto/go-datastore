@@ -954,13 +954,13 @@ type TokenAuthorization struct {
 }
 
 type TokenAuthorizationConnector struct {
-	TokenAuthorizationID int64  `db:"token_authorization_id" json:"tokenAuthorizationID"`
-	ConnectorUid         string `db:"connector_uid" json:"connectorUid"`
+	TokenAuthorizationID int64 `db:"token_authorization_id" json:"tokenAuthorizationID"`
+	ConnectorID          int64 `db:"connector_id" json:"connectorID"`
 }
 
 type TokenAuthorizationEvse struct {
-	TokenAuthorizationID int64  `db:"token_authorization_id" json:"tokenAuthorizationID"`
-	EvseUid              string `db:"evse_uid" json:"evseUid"`
+	TokenAuthorizationID int64 `db:"token_authorization_id" json:"tokenAuthorizationID"`
+	EvseID               int64 `db:"evse_id" json:"evseID"`
 }
 
 type User struct {
