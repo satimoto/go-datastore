@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/satimoto/go-datastore/postgis"
+	"github.com/satimoto/go-datastore/geom"
 )
 
 const createEvse = `-- name: CreateEvse :one
@@ -29,17 +29,17 @@ INSERT INTO evses (
 `
 
 type CreateEvseParams struct {
-	LocationID        int64                    `db:"location_id" json:"locationID"`
-	Uid               string                   `db:"uid" json:"uid"`
-	EvseID            sql.NullString           `db:"evse_id" json:"evseID"`
-	Status            EvseStatus               `db:"status" json:"status"`
-	FloorLevel        sql.NullString           `db:"floor_level" json:"floorLevel"`
-	Geom              postgis.NullGeometry4326 `db:"geom" json:"geom"`
-	GeoLocationID     sql.NullInt64            `db:"geo_location_id" json:"geoLocationID"`
-	IsRemoteCapable   bool                     `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable     bool                     `db:"is_rfid_capable" json:"isRfidCapable"`
-	PhysicalReference sql.NullString           `db:"physical_reference" json:"physicalReference"`
-	LastUpdated       time.Time                `db:"last_updated" json:"lastUpdated"`
+	LocationID        int64                 `db:"location_id" json:"locationID"`
+	Uid               string                `db:"uid" json:"uid"`
+	EvseID            sql.NullString        `db:"evse_id" json:"evseID"`
+	Status            EvseStatus            `db:"status" json:"status"`
+	FloorLevel        sql.NullString        `db:"floor_level" json:"floorLevel"`
+	Geom              geom.NullGeometry4326 `db:"geom" json:"geom"`
+	GeoLocationID     sql.NullInt64         `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool                  `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool                  `db:"is_rfid_capable" json:"isRfidCapable"`
+	PhysicalReference sql.NullString        `db:"physical_reference" json:"physicalReference"`
+	LastUpdated       time.Time             `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateEvse(ctx context.Context, arg CreateEvseParams) (Evse, error) {
@@ -203,16 +203,16 @@ UPDATE evses SET (
 `
 
 type UpdateEvseParams struct {
-	ID                int64                    `db:"id" json:"id"`
-	EvseID            sql.NullString           `db:"evse_id" json:"evseID"`
-	Status            EvseStatus               `db:"status" json:"status"`
-	FloorLevel        sql.NullString           `db:"floor_level" json:"floorLevel"`
-	Geom              postgis.NullGeometry4326 `db:"geom" json:"geom"`
-	GeoLocationID     sql.NullInt64            `db:"geo_location_id" json:"geoLocationID"`
-	IsRemoteCapable   bool                     `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable     bool                     `db:"is_rfid_capable" json:"isRfidCapable"`
-	PhysicalReference sql.NullString           `db:"physical_reference" json:"physicalReference"`
-	LastUpdated       time.Time                `db:"last_updated" json:"lastUpdated"`
+	ID                int64                 `db:"id" json:"id"`
+	EvseID            sql.NullString        `db:"evse_id" json:"evseID"`
+	Status            EvseStatus            `db:"status" json:"status"`
+	FloorLevel        sql.NullString        `db:"floor_level" json:"floorLevel"`
+	Geom              geom.NullGeometry4326 `db:"geom" json:"geom"`
+	GeoLocationID     sql.NullInt64         `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool                  `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool                  `db:"is_rfid_capable" json:"isRfidCapable"`
+	PhysicalReference sql.NullString        `db:"physical_reference" json:"physicalReference"`
+	LastUpdated       time.Time             `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateEvse(ctx context.Context, arg UpdateEvseParams) (Evse, error) {
@@ -263,16 +263,16 @@ UPDATE evses SET (
 `
 
 type UpdateEvseByUidParams struct {
-	Uid               string                   `db:"uid" json:"uid"`
-	EvseID            sql.NullString           `db:"evse_id" json:"evseID"`
-	Status            EvseStatus               `db:"status" json:"status"`
-	FloorLevel        sql.NullString           `db:"floor_level" json:"floorLevel"`
-	Geom              postgis.NullGeometry4326 `db:"geom" json:"geom"`
-	GeoLocationID     sql.NullInt64            `db:"geo_location_id" json:"geoLocationID"`
-	IsRemoteCapable   bool                     `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable     bool                     `db:"is_rfid_capable" json:"isRfidCapable"`
-	PhysicalReference sql.NullString           `db:"physical_reference" json:"physicalReference"`
-	LastUpdated       time.Time                `db:"last_updated" json:"lastUpdated"`
+	Uid               string                `db:"uid" json:"uid"`
+	EvseID            sql.NullString        `db:"evse_id" json:"evseID"`
+	Status            EvseStatus            `db:"status" json:"status"`
+	FloorLevel        sql.NullString        `db:"floor_level" json:"floorLevel"`
+	Geom              geom.NullGeometry4326 `db:"geom" json:"geom"`
+	GeoLocationID     sql.NullInt64         `db:"geo_location_id" json:"geoLocationID"`
+	IsRemoteCapable   bool                  `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable     bool                  `db:"is_rfid_capable" json:"isRfidCapable"`
+	PhysicalReference sql.NullString        `db:"physical_reference" json:"physicalReference"`
+	LastUpdated       time.Time             `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateEvseByUid(ctx context.Context, arg UpdateEvseByUidParams) (Evse, error) {
