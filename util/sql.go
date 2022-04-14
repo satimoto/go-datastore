@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/satimoto/go-datastore/postgis"
+	"github.com/satimoto/go-datastore/geom"
 )
 
 func SqlNullBool(i interface{}) sql.NullBool {
@@ -41,11 +41,11 @@ func SqlNullFloat64(i interface{}) sql.NullFloat64 {
 	return n
 }
 
-func SqlNullGeometry4326(i interface{}) postgis.NullGeometry4326 {
-	n := postgis.NullGeometry4326{}
+func SqlNullGeometry4326(i interface{}) geom.NullGeometry4326 {
+	n := geom.NullGeometry4326{}
 
 	switch t := i.(type) {
-	case *postgis.Geometry4326:
+	case *geom.Geometry4326:
 		if t == nil {
 			n.Scan(nil)
 		} else {
