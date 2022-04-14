@@ -31,7 +31,8 @@ SELECT * FROM connectors
 
 -- name: GetConnectorByUid :one
 SELECT * FROM connectors
-  WHERE evse_id = $1 AND uid = $2;
+  WHERE (@evse_id::bigint IS NULL or evse_id = @evse_id::bigint) AND uid = @uid::string
+  LIMIT 1;
 
 -- name: ListConnectors :many
 SELECT * FROM connectors
