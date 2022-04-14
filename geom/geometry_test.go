@@ -9,7 +9,7 @@ import (
 
 func TestNullGeometry(t *testing.T) {
 	t.Run("Null", func(t *testing.T) {
-		g := postgis.NullGeometry4326{}
+		g := geom.NullGeometry4326{}
 		err := g.Scan(nil)
 
 		if err != nil {
@@ -26,7 +26,7 @@ func TestNullGeometry(t *testing.T) {
 	})
 
 	t.Run("Point", func(t *testing.T) {
-		g := postgis.NullGeometry4326{}
+		g := geom.NullGeometry4326{}
 		err := g.Scan([]byte(`\x0101000020e6100000e0d57267266e4840b22ac24d46b50240`))
 
 		if err != nil {
@@ -54,7 +54,7 @@ func TestNullGeometry(t *testing.T) {
 
 func TestGeometry(t *testing.T) {
 	t.Run("Null", func(t *testing.T) {
-		g := postgis.Geometry4326{}
+		g := geom.Geometry4326{}
 		err := g.Scan(nil)
 
 		if err == nil {
@@ -63,7 +63,7 @@ func TestGeometry(t *testing.T) {
 	})
 
 	t.Run("Point", func(t *testing.T) {
-		g := postgis.Geometry4326{}
+		g := geom.Geometry4326{}
 		err := g.Scan([]byte(`\x0101000020e6100000e0d57267266e4840b22ac24d46b50240`))
 
 		if err != nil {
