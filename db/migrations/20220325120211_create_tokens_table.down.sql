@@ -7,7 +7,7 @@ ALTER TABLE users
 
 -- Token authorization connectors
 ALTER TABLE IF EXISTS token_authorization_connectors 
-    DROP CONSTRAINT IF EXISTS fk_token_authorization_connectors_connector_uid;
+    DROP CONSTRAINT IF EXISTS fk_token_authorization_connectors_connector_id;
 
 ALTER TABLE IF EXISTS token_authorization_connectors 
     DROP CONSTRAINT IF EXISTS fk_token_authorization_connectors_token_authorization_id;
@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS token_authorization_connectors;
 
 -- Token authorization evses
 ALTER TABLE IF EXISTS token_authorization_evses 
-    DROP CONSTRAINT IF EXISTS fk_token_authorization_evses_evse_uid;
+    DROP CONSTRAINT IF EXISTS fk_token_authorization_evses_evse_id;
 
 ALTER TABLE IF EXISTS token_authorization_evses 
     DROP CONSTRAINT IF EXISTS fk_token_authorization_evses_token_authorization_id;
