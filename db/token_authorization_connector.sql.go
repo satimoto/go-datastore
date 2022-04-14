@@ -8,10 +8,10 @@ import (
 )
 
 const listTokenAuthorizationConnectors = `-- name: ListTokenAuthorizationConnectors :many
-SELECT e.id, e.evse_id, e.uid, e.standard, e.format, e.power_type, e.voltage, e.amperage, e.tariff_id, e.terms_and_conditions, e.last_updated FROM connectors e
-  INNER JOIN token_authorization_connectors tac ON tac.connector_uid = e.uid
+SELECT c.id, c.evse_id, c.uid, c.standard, c.format, c.power_type, c.voltage, c.amperage, c.tariff_id, c.terms_and_conditions, c.last_updated FROM connectors c
+  INNER JOIN token_authorization_connectors tac ON tac.connector_id = c.id
   WHERE tac.token_authorization_id = $1
-  ORDER BY e.id
+  ORDER BY c.id
 `
 
 func (q *Queries) ListTokenAuthorizationConnectors(ctx context.Context, tokenAuthorizationID int64) ([]Connector, error) {
@@ -50,16 +50,16 @@ func (q *Queries) ListTokenAuthorizationConnectors(ctx context.Context, tokenAut
 }
 
 const setTokenAuthorizationConnector = `-- name: SetTokenAuthorizationConnector :exec
-INSERT INTO token_authorization_connectors (token_authorization_id, connector_uid)
+INSERT INTO token_authorization_connectors (token_authorization_id, connector_id)
   VALUES ($1, $2)
 `
 
 type SetTokenAuthorizationConnectorParams struct {
-	TokenAuthorizationID int64  `db:"token_authorization_id" json:"tokenAuthorizationID"`
-	ConnectorUid         string `db:"connector_uid" json:"connectorUid"`
+	TokenAuthorizationID int64 `db:"token_authorization_id" json:"tokenAuthorizationID"`
+	ConnectorID          int64 `db:"connector_id" json:"connectorID"`
 }
 
 func (q *Queries) SetTokenAuthorizationConnector(ctx context.Context, arg SetTokenAuthorizationConnectorParams) error {
-	_, err := q.db.ExecContext(ctx, setTokenAuthorizationConnector, arg.TokenAuthorizationID, arg.ConnectorUid)
+	_, err := q.db.ExecContext(ctx, setTokenAuthorizationConnector, arg.TokenAuthorizationID, arg.ConnectorID)
 	return err
 }
