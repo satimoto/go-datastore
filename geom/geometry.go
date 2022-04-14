@@ -18,19 +18,29 @@ func NewGeometry4326(coordinates orb.Geometry) Geometry4326 {
 	}
 }
 
-func (g *Geometry4326) Scan(value interface{}) error {
-	s := ewkb.Scanner(nil)
+func (g *Geometry4326) Scan(i interface{}) error {
+	switch t := i.(type) {
+	case Geometry4326:
+		ig := i.(Geometry4326)
+		g.Coordinates = ig.Coordinates
+		g.Geometries = ig.Geometries
+		g.Type = ig.Type
+	case []byte:
+		s := ewkb.Scanner(nil)
 
-	if err := s.Scan(value); err != nil {
-		return err
+		if err := s.Scan(i); err != nil {
+			return err
+		}
+	
+		if s.Geometry == nil {
+			return fmt.Errorf("Geometry is nil")
+		}
+	
+		g.Coordinates = s.Geometry
+		g.Type = s.Geometry.GeoJSONType()
+	default:
+		return fmt.Errorf("Connot convert from %s", t)
 	}
-
-	if s.Geometry == nil {
-		return fmt.Errorf("Geometry is nil")
-	}
-
-	g.Coordinates = s.Geometry
-	g.Type = s.Geometry.GeoJSONType()
 
 	return nil
 }
