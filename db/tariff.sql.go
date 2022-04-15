@@ -12,6 +12,7 @@ import (
 const createTariff = `-- name: CreateTariff :one
 INSERT INTO tariffs (
     uid, 
+    credential_id,
     country_code,
     party_id,
     cdr_id,
@@ -20,12 +21,13 @@ INSERT INTO tariffs (
     energy_mix_id, 
     tariff_restriction_id,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
 	Uid                 string         `db:"uid" json:"uid"`
+	CredentialID        int64          `db:"credential_id" json:"credentialID"`
 	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID             sql.NullString `db:"party_id" json:"partyID"`
 	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
@@ -39,6 +41,7 @@ type CreateTariffParams struct {
 func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tariff, error) {
 	row := q.db.QueryRowContext(ctx, createTariff,
 		arg.Uid,
+		arg.CredentialID,
 		arg.CountryCode,
 		arg.PartyID,
 		arg.CdrID,
