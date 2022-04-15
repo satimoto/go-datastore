@@ -14,6 +14,7 @@ import (
 const createLocation = `-- name: CreateLocation :one
 INSERT INTO locations (
     uid, 
+    credential_id,
     country_code,
     party_id,
     type, 
@@ -36,12 +37,13 @@ INSERT INTO locations (
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
   RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type CreateLocationParams struct {
 	Uid                string            `db:"uid" json:"uid"`
+	CredentialID       int64             `db:"credential_id" json:"credentialID"`
 	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
 	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
 	Type               LocationType      `db:"type" json:"type"`
@@ -69,6 +71,7 @@ type CreateLocationParams struct {
 func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) (Location, error) {
 	row := q.db.QueryRowContext(ctx, createLocation,
 		arg.Uid,
+		arg.CredentialID,
 		arg.CountryCode,
 		arg.PartyID,
 		arg.Type,

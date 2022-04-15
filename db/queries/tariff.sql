@@ -1,6 +1,7 @@
 -- name: CreateTariff :one
 INSERT INTO tariffs (
     uid, 
+    credential_id,
     country_code,
     party_id,
     cdr_id,
@@ -9,7 +10,7 @@ INSERT INTO tariffs (
     energy_mix_id, 
     tariff_restriction_id,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING *;
 
 -- name: DeleteTariffByUid :exec

@@ -12,6 +12,7 @@ import (
 const createSession = `-- name: CreateSession :one
 INSERT INTO sessions (
     uid,
+    credential_id,
     country_code,
     party_id,
     authorization_id,
@@ -26,12 +27,13 @@ INSERT INTO sessions (
     total_cost,
     status,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
   RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type CreateSessionParams struct {
 	Uid             string            `db:"uid" json:"uid"`
+	CredentialID    int64             `db:"credential_id" json:"credentialID"`
 	CountryCode     sql.NullString    `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString    `db:"party_id" json:"partyID"`
 	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
@@ -51,6 +53,7 @@ type CreateSessionParams struct {
 func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
 	row := q.db.QueryRowContext(ctx, createSession,
 		arg.Uid,
+		arg.CredentialID,
 		arg.CountryCode,
 		arg.PartyID,
 		arg.AuthorizationID,
