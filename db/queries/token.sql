@@ -25,6 +25,11 @@ SELECT * FROM tokens
 SELECT * FROM tokens
   WHERE uid = $1;
 
+-- name: GetTokenByUserId :one
+SELECT t.* FROM tokens t
+  INNER JOIN users u ON u.token_id = t.id
+  WHERE u.id = $1;
+
 -- name: ListTokens :many
 SELECT * FROM tokens
   WHERE 

@@ -126,6 +126,31 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 	return i, err
 }
 
+const getTokenByUserId = `-- name: GetTokenByUserId :one
+SELECT t.id, t.uid, t.type, t.auth_id, t.visual_number, t.issuer, t.allowed, t.valid, t.whitelist, t.language, t.last_updated FROM tokens t
+  INNER JOIN users u ON u.token_id = t.id
+  WHERE u.id = $1
+`
+
+func (q *Queries) GetTokenByUserId(ctx context.Context, id int64) (Token, error) {
+	row := q.db.QueryRowContext(ctx, getTokenByUserId, id)
+	var i Token
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.Type,
+		&i.AuthID,
+		&i.VisualNumber,
+		&i.Issuer,
+		&i.Allowed,
+		&i.Valid,
+		&i.Whitelist,
+		&i.Language,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const listTokens = `-- name: ListTokens :many
 SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE 
