@@ -47,6 +47,7 @@ ALTER TABLE tariff_restriction_weekdays
 CREATE TABLE IF NOT EXISTS tariffs (
     id                    BIGSERIAL PRIMARY KEY,
     uid                   TEXT NOT NULL,
+    credential_id         BIGINT NOT NULL,
     country_code          TEXT,
     party_id              TEXT,
     currency              TEXT NOT NULL,
@@ -59,6 +60,12 @@ CREATE TABLE IF NOT EXISTS tariffs (
 );
 
 CREATE INDEX idx_tariffs_uid ON tariffs (uid);
+
+ALTER TABLE tariffs
+    ADD CONSTRAINT fk_tariffs_credential_id
+    FOREIGN KEY (credential_id) 
+    REFERENCES credentials(id) 
+    ON DELETE SET NULL;
 
 ALTER TABLE tariffs
     ADD CONSTRAINT fk_tariffs_energy_mix_id

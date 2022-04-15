@@ -27,7 +27,7 @@ INSERT INTO sessions (
     status,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
-  RETURNING id, uid, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type CreateSessionParams struct {
@@ -70,6 +70,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,
@@ -89,7 +90,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 }
 
 const getSessionByIdentityOrderByLastUpdated = `-- name: GetSessionByIdentityOrderByLastUpdated :one
-SELECT id, uid, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
   WHERE country_code = $1 AND party_id = $2
   ORDER BY last_updated DESC
   LIMIT 1
@@ -106,6 +107,7 @@ func (q *Queries) GetSessionByIdentityOrderByLastUpdated(ctx context.Context, ar
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,
@@ -125,7 +127,7 @@ func (q *Queries) GetSessionByIdentityOrderByLastUpdated(ctx context.Context, ar
 }
 
 const getSessionByUid = `-- name: GetSessionByUid :one
-SELECT id, uid, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
   WHERE uid = $1
 `
 
@@ -135,6 +137,7 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,
@@ -171,7 +174,7 @@ UPDATE sessions SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
   WHERE uid = $1
-  RETURNING id, uid, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type UpdateSessionByUidParams struct {
@@ -214,6 +217,7 @@ func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUid
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,

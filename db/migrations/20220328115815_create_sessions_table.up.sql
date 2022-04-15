@@ -14,6 +14,7 @@ CREATE TYPE session_status_type AS ENUM (
 CREATE TABLE IF NOT EXISTS sessions (
     id                  BIGSERIAL PRIMARY KEY,
     uid                 TEXT NOT NULL,
+    credential_id       BIGINT NOT NULL,
     country_code        TEXT,
     party_id            TEXT,
     authorization_id    TEXT,
@@ -32,6 +33,12 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 
 CREATE INDEX idx_sessions_uid ON sessions (uid);
+
+ALTER TABLE sessions
+    ADD CONSTRAINT fk_sessions_credential_id
+    FOREIGN KEY (credential_id) 
+    REFERENCES credentials(id) 
+    ON DELETE SET NULL;
 
 ALTER TABLE sessions
     ADD CONSTRAINT fk_sessions_location_id

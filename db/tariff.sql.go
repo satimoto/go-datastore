@@ -21,7 +21,7 @@ INSERT INTO tariffs (
     tariff_restriction_id,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
+  RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
@@ -52,6 +52,7 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Currency,
@@ -75,7 +76,7 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 }
 
 const getTariffByIdentityOrderByLastUpdated = `-- name: GetTariffByIdentityOrderByLastUpdated :one
-SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE country_code = $1 AND party_id = $2
   ORDER BY last_updated DESC
   LIMIT 1
@@ -92,6 +93,7 @@ func (q *Queries) GetTariffByIdentityOrderByLastUpdated(ctx context.Context, arg
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Currency,
@@ -105,7 +107,7 @@ func (q *Queries) GetTariffByIdentityOrderByLastUpdated(ctx context.Context, arg
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
-SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL
 `
 
@@ -115,6 +117,7 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Currency,
@@ -128,7 +131,7 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 }
 
 const listTariffsByCdr = `-- name: ListTariffsByCdr :many
-SELECT id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE cdr_id = $1
   ORDER BY id
 `
@@ -145,6 +148,7 @@ func (q *Queries) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]
 		if err := rows.Scan(
 			&i.ID,
 			&i.Uid,
+			&i.CredentialID,
 			&i.CountryCode,
 			&i.PartyID,
 			&i.Currency,
@@ -178,7 +182,7 @@ UPDATE tariffs SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE uid = $1 AND cdr_id IS NULL
-  RETURNING id, uid, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
+  RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type UpdateTariffByUidParams struct {
@@ -207,6 +211,7 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Currency,

@@ -182,6 +182,7 @@ CREATE TYPE location_type AS ENUM (
 CREATE TABLE IF NOT EXISTS locations (
     id                   BIGSERIAL PRIMARY KEY,
     uid                  TEXT NOT NULL,
+    credential_id        BIGINT NOT NULL,
     country_code         TEXT,
     party_id             TEXT,
     type                 location_type NOT NULL,
@@ -214,6 +215,12 @@ CREATE TABLE IF NOT EXISTS locations (
 CREATE INDEX idx_locations_uid ON locations (uid);
 
 CREATE INDEX idx_locations_geom ON locations USING GIST(geom);
+
+ALTER TABLE locations
+    ADD CONSTRAINT fk_locations_credential_id
+    FOREIGN KEY (credential_id) 
+    REFERENCES credentials(id) 
+    ON DELETE SET NULL;
 
 ALTER TABLE locations
     ADD CONSTRAINT fk_locations_operator_id

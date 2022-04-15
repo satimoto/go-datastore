@@ -30,7 +30,7 @@ INSERT INTO cdrs (
     remark,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-  RETURNING id, uid, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
 `
 
 type CreateCdrParams struct {
@@ -79,6 +79,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,
@@ -101,7 +102,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 }
 
 const getCdrByIdentityOrderByLastUpdated = `-- name: GetCdrByIdentityOrderByLastUpdated :one
-SELECT id, uid, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE country_code = $1 AND party_id = $2
   ORDER BY last_updated DESC
   LIMIT 1
@@ -118,6 +119,7 @@ func (q *Queries) GetCdrByIdentityOrderByLastUpdated(ctx context.Context, arg Ge
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,
@@ -140,7 +142,7 @@ func (q *Queries) GetCdrByIdentityOrderByLastUpdated(ctx context.Context, arg Ge
 }
 
 const getCdrByUid = `-- name: GetCdrByUid :one
-SELECT id, uid, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, location_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE uid = $1
 `
 
@@ -150,6 +152,7 @@ func (q *Queries) GetCdrByUid(ctx context.Context, uid string) (Cdr, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.AuthorizationID,
