@@ -37,7 +37,7 @@ INSERT INTO locations (
     energy_mix_id, 
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
-  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type CreateLocationParams struct {
@@ -96,6 +96,7 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,
@@ -135,7 +136,7 @@ func (q *Queries) DeleteLocation(ctx context.Context, id int64) error {
 const deleteLocationByUid = `-- name: DeleteLocationByUid :one
 DELETE FROM locations
   WHERE uid = $1
-  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location, error) {
@@ -144,6 +145,7 @@ func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,
@@ -171,7 +173,7 @@ func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location
 }
 
 const getLocation = `-- name: GetLocation :one
-SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE id = $1
 `
 
@@ -181,6 +183,7 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,
@@ -208,7 +211,7 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 }
 
 const getLocationByIdentityOrderByLastUpdated = `-- name: GetLocationByIdentityOrderByLastUpdated :one
-SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE country_code = $1 AND party_id = $2
   ORDER BY last_updated DESC
   LIMIT 1
@@ -225,6 +228,7 @@ func (q *Queries) GetLocationByIdentityOrderByLastUpdated(ctx context.Context, a
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,
@@ -252,7 +256,7 @@ func (q *Queries) GetLocationByIdentityOrderByLastUpdated(ctx context.Context, a
 }
 
 const getLocationByUid = `-- name: GetLocationByUid :one
-SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE uid = $1
 `
 
@@ -262,6 +266,7 @@ func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, e
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,
@@ -289,7 +294,7 @@ func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, e
 }
 
 const listLocations = `-- name: ListLocations :many
-SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   ORDER BY name
 `
 
@@ -305,6 +310,7 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Uid,
+			&i.CredentialID,
 			&i.CountryCode,
 			&i.PartyID,
 			&i.Type,
@@ -342,7 +348,7 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 }
 
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
-SELECT id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE ST_Intersects(geom, ST_MakeEnvelope($1::FLOAT, $2::FLOAT, $3::FLOAT, $4::FLOAT, 4326))
   LIMIT 500
 `
@@ -371,6 +377,7 @@ func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGe
 		if err := rows.Scan(
 			&i.ID,
 			&i.Uid,
+			&i.CredentialID,
 			&i.CountryCode,
 			&i.PartyID,
 			&i.Type,
@@ -433,7 +440,7 @@ UPDATE locations SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   WHERE id = $1
-  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type UpdateLocationParams struct {
@@ -492,6 +499,7 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,
@@ -573,7 +581,7 @@ UPDATE locations SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   WHERE uid = $1
-  RETURNING id, uid, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated
 `
 
 type UpdateLocationByUidParams struct {
@@ -632,6 +640,7 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.CredentialID,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.Type,

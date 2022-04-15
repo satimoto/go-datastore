@@ -21,6 +21,9 @@ DROP TABLE IF EXISTS charging_periods;
 -- Sessions
 ALTER TABLE IF EXISTS sessions 
     DROP CONSTRAINT IF EXISTS fk_sessions_location_id;
+    
+ALTER TABLE IF EXISTS sessions 
+    DROP CONSTRAINT IF EXISTS fk_sessions_credential_id;
 
 DROP INDEX IF EXISTS idx_sessions_uid;
 

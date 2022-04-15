@@ -524,6 +524,7 @@ type Capability struct {
 type Cdr struct {
 	ID               int64           `db:"id" json:"id"`
 	Uid              string          `db:"uid" json:"uid"`
+	CredentialID     int64           `db:"credential_id" json:"credentialID"`
 	CountryCode      sql.NullString  `db:"country_code" json:"countryCode"`
 	PartyID          sql.NullString  `db:"party_id" json:"partyID"`
 	AuthorizationID  sql.NullString  `db:"authorization_id" json:"authorizationID"`
@@ -634,11 +635,11 @@ type Credential struct {
 	ClientToken      sql.NullString `db:"client_token" json:"clientToken"`
 	ServerToken      sql.NullString `db:"server_token" json:"serverToken"`
 	Url              string         `db:"url" json:"url"`
-	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
 	CountryCode      string         `db:"country_code" json:"countryCode"`
 	PartyID          string         `db:"party_id" json:"partyID"`
 	IsHub            bool           `db:"is_hub" json:"isHub"`
 	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
+	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
 	VersionID        sql.NullInt64  `db:"version_id" json:"versionID"`
 }
 
@@ -775,6 +776,7 @@ type Image struct {
 type Location struct {
 	ID                 int64             `db:"id" json:"id"`
 	Uid                string            `db:"uid" json:"uid"`
+	CredentialID       int64             `db:"credential_id" json:"credentialID"`
 	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
 	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
 	Type               LocationType      `db:"type" json:"type"`
@@ -870,6 +872,7 @@ type RelatedLocation struct {
 type Session struct {
 	ID              int64             `db:"id" json:"id"`
 	Uid             string            `db:"uid" json:"uid"`
+	CredentialID    int64             `db:"credential_id" json:"credentialID"`
 	CountryCode     sql.NullString    `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString    `db:"party_id" json:"partyID"`
 	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
@@ -902,6 +905,7 @@ type StatusSchedule struct {
 type Tariff struct {
 	ID                  int64          `db:"id" json:"id"`
 	Uid                 string         `db:"uid" json:"uid"`
+	CredentialID        int64          `db:"credential_id" json:"credentialID"`
 	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID             sql.NullString `db:"party_id" json:"partyID"`
 	Currency            string         `db:"currency" json:"currency"`

@@ -10,7 +10,7 @@ ALTER TABLE IF EXISTS price_components
 
 DROP TABLE IF EXISTS price_components;
 
-DROP TYPE IF EXISTS location_type;
+DROP TYPE IF EXISTS tariff_dimension;
 
 -- Price Component Rounding
 DROP TABLE IF EXISTS price_component_roundings;
@@ -52,6 +52,9 @@ DROP TABLE IF EXISTS tariff_alt_texts;
 -- Tariffs
 ALTER TABLE IF EXISTS tariffs 
     DROP CONSTRAINT IF EXISTS fk_tariffs_energy_mix_id;
+    
+ALTER TABLE IF EXISTS tariffs 
+    DROP CONSTRAINT IF EXISTS fk_tariffs_credential_id;
 
 DROP INDEX IF EXISTS idx_tariffs_uid;
 
