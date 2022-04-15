@@ -78,20 +78,23 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 	return err
 }
 
-const getTariffByIdentityOrderByLastUpdated = `-- name: GetTariffByIdentityOrderByLastUpdated :one
+const getTariffByLastUpdated = `-- name: GetTariffByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
-  WHERE country_code = $1 AND party_id = $2
+  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
+    ($2::TEXT = '' OR $2::TEXT = country_code) AND
+    ($3::TEXT = '' OR $3::TEXT = party_id)
   ORDER BY last_updated DESC
   LIMIT 1
 `
 
-type GetTariffByIdentityOrderByLastUpdatedParams struct {
-	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+type GetTariffByLastUpdatedParams struct {
+	CredentalID int64  `db:"credental_id" json:"credentalID"`
+	CountryCode string `db:"country_code" json:"countryCode"`
+	PartyID     string `db:"party_id" json:"partyID"`
 }
 
-func (q *Queries) GetTariffByIdentityOrderByLastUpdated(ctx context.Context, arg GetTariffByIdentityOrderByLastUpdatedParams) (Tariff, error) {
-	row := q.db.QueryRowContext(ctx, getTariffByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+func (q *Queries) GetTariffByLastUpdated(ctx context.Context, arg GetTariffByLastUpdatedParams) (Tariff, error) {
+	row := q.db.QueryRowContext(ctx, getTariffByLastUpdated, arg.CredentalID, arg.CountryCode, arg.PartyID)
 	var i Tariff
 	err := row.Scan(
 		&i.ID,

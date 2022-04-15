@@ -92,20 +92,23 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	return i, err
 }
 
-const getSessionByIdentityOrderByLastUpdated = `-- name: GetSessionByIdentityOrderByLastUpdated :one
+const getSessionByLastUpdated = `-- name: GetSessionByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
-  WHERE country_code = $1 AND party_id = $2
+  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
+    ($2::TEXT = '' OR $2::TEXT = country_code) AND
+    ($3::TEXT = '' OR $3::TEXT = party_id)
   ORDER BY last_updated DESC
   LIMIT 1
 `
 
-type GetSessionByIdentityOrderByLastUpdatedParams struct {
-	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+type GetSessionByLastUpdatedParams struct {
+	CredentalID int64  `db:"credental_id" json:"credentalID"`
+	CountryCode string `db:"country_code" json:"countryCode"`
+	PartyID     string `db:"party_id" json:"partyID"`
 }
 
-func (q *Queries) GetSessionByIdentityOrderByLastUpdated(ctx context.Context, arg GetSessionByIdentityOrderByLastUpdatedParams) (Session, error) {
-	row := q.db.QueryRowContext(ctx, getSessionByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+func (q *Queries) GetSessionByLastUpdated(ctx context.Context, arg GetSessionByLastUpdatedParams) (Session, error) {
+	row := q.db.QueryRowContext(ctx, getSessionByLastUpdated, arg.CredentalID, arg.CountryCode, arg.PartyID)
 	var i Session
 	err := row.Scan(
 		&i.ID,

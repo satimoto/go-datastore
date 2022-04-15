@@ -22,9 +22,11 @@ INSERT INTO cdrs (
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
   RETURNING *;
 
--- name: GetCdrByIdentityOrderByLastUpdated :one
+-- name: GetCdrByLastUpdated :one
 SELECT * FROM cdrs
-  WHERE country_code = $1 AND party_id = $2
+  WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
+    (@country_code::TEXT = '' OR @country_code::TEXT = country_code) AND
+    (@party_id::TEXT = '' OR @party_id::TEXT = party_id)
   ORDER BY last_updated DESC
   LIMIT 1;
 
