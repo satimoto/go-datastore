@@ -40,9 +40,11 @@ DELETE FROM locations
 SELECT * FROM locations
   WHERE id = $1;
 
--- name: GetLocationByIdentityOrderByLastUpdated :one
+-- name: GetLocationLastUpdated :one
 SELECT * FROM locations
-  WHERE country_code = $1 AND party_id = $2
+  WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
+    (@country_code::BIGINT = '' OR @country_code::BIGINT = country_code) AND
+    (@party_id::BIGINT = '' OR @party_id::BIGINT = party_id)
   ORDER BY last_updated DESC
   LIMIT 1;
 

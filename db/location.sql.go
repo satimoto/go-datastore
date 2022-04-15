@@ -213,20 +213,13 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 	return i, err
 }
 
-const getLocationByIdentityOrderByLastUpdated = `-- name: GetLocationByIdentityOrderByLastUpdated :one
+const getLocationByUid = `-- name: GetLocationByUid :one
 SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
-  WHERE country_code = $1 AND party_id = $2
-  ORDER BY last_updated DESC
-  LIMIT 1
+  WHERE uid = $1
 `
 
-type GetLocationByIdentityOrderByLastUpdatedParams struct {
-	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID     sql.NullString `db:"party_id" json:"partyID"`
-}
-
-func (q *Queries) GetLocationByIdentityOrderByLastUpdated(ctx context.Context, arg GetLocationByIdentityOrderByLastUpdatedParams) (Location, error) {
-	row := q.db.QueryRowContext(ctx, getLocationByIdentityOrderByLastUpdated, arg.CountryCode, arg.PartyID)
+func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, error) {
+	row := q.db.QueryRowContext(ctx, getLocationByUid, uid)
 	var i Location
 	err := row.Scan(
 		&i.ID,
@@ -258,13 +251,23 @@ func (q *Queries) GetLocationByIdentityOrderByLastUpdated(ctx context.Context, a
 	return i, err
 }
 
-const getLocationByUid = `-- name: GetLocationByUid :one
+const getLocationLastUpdated = `-- name: GetLocationLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
-  WHERE uid = $1
+  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
+    ($2::BIGINT = '' OR $2::BIGINT = country_code) AND
+    ($3::BIGINT = '' OR $3::BIGINT = party_id)
+  ORDER BY last_updated DESC
+  LIMIT 1
 `
 
-func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, error) {
-	row := q.db.QueryRowContext(ctx, getLocationByUid, uid)
+type GetLocationLastUpdatedParams struct {
+	CredentalID int64 `db:"credental_id" json:"credentalID"`
+	CountryCode int64 `db:"country_code" json:"countryCode"`
+	PartyID     int64 `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) GetLocationLastUpdated(ctx context.Context, arg GetLocationLastUpdatedParams) (Location, error) {
+	row := q.db.QueryRowContext(ctx, getLocationLastUpdated, arg.CredentalID, arg.CountryCode, arg.PartyID)
 	var i Location
 	err := row.Scan(
 		&i.ID,
