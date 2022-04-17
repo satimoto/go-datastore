@@ -75,7 +75,9 @@ func NilString(i interface{}) *string {
 			return &t.String
 		}
 	case string:
-		return &t
+		if len(t) > 0 {
+			return &t
+		}
 	case *string:
 		return t
 	}
