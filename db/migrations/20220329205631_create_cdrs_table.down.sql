@@ -19,7 +19,16 @@ ALTER TABLE IF EXISTS cdrs
     DROP CONSTRAINT IF EXISTS fk_cdrs_calibration_id;
 
 ALTER TABLE IF EXISTS cdrs 
+    DROP CONSTRAINT IF EXISTS fk_cdrs_connector_id;
+
+ALTER TABLE IF EXISTS cdrs 
+    DROP CONSTRAINT IF EXISTS fk_cdrs_evse_id;
+
+ALTER TABLE IF EXISTS cdrs 
     DROP CONSTRAINT IF EXISTS fk_cdrs_location_id;
+
+ALTER TABLE IF EXISTS cdrs 
+    DROP CONSTRAINT IF EXISTS fk_cdrs_token_id;
 
 ALTER TABLE IF EXISTS cdrs 
     DROP CONSTRAINT IF EXISTS fk_cdrs_credential_id;
