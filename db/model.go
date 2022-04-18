@@ -532,7 +532,10 @@ type Cdr struct {
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
 	AuthID           string          `db:"auth_id" json:"authID"`
 	AuthMethod       AuthMethodType  `db:"auth_method" json:"authMethod"`
+	TokenID          int64           `db:"token_id" json:"tokenID"`
 	LocationID       int64           `db:"location_id" json:"locationID"`
+	EvseID           int64           `db:"evse_id" json:"evseID"`
+	ConnectorID      int64           `db:"connector_id" json:"connectorID"`
 	MeterID          sql.NullString  `db:"meter_id" json:"meterID"`
 	Currency         string          `db:"currency" json:"currency"`
 	CalibrationID    sql.NullInt64   `db:"calibration_id" json:"calibrationID"`
@@ -881,7 +884,10 @@ type Session struct {
 	Kwh             float64           `db:"kwh" json:"kwh"`
 	AuthID          string            `db:"auth_id" json:"authID"`
 	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
+	TokenID         int64             `db:"token_id" json:"tokenID"`
 	LocationID      int64             `db:"location_id" json:"locationID"`
+	EvseID          int64             `db:"evse_id" json:"evseID"`
+	ConnectorID     int64             `db:"connector_id" json:"connectorID"`
 	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
 	Currency        string            `db:"currency" json:"currency"`
 	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`

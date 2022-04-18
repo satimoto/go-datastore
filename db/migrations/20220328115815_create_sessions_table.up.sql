@@ -23,7 +23,10 @@ CREATE TABLE IF NOT EXISTS sessions (
     kwh                 FLOAT NOT NULL,
     auth_id             TEXT NOT NULL,
     auth_method         auth_method_type NOT NULL,
+    token_id            BIGINT NOT NULL,
     location_id         BIGINT NOT NULL,
+    evse_id             BIGINT NOT NULL,
+    connector_id        BIGINT NOT NULL,
     meter_id            TEXT,
     currency            TEXT NOT NULL,
     -- charging_periods []session_charging_periods
@@ -41,9 +44,27 @@ ALTER TABLE sessions
     ON DELETE SET NULL;
 
 ALTER TABLE sessions
+    ADD CONSTRAINT fk_sessions_token_id
+    FOREIGN KEY (token_id) 
+    REFERENCES tokens(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE sessions
     ADD CONSTRAINT fk_sessions_location_id
     FOREIGN KEY (location_id) 
     REFERENCES locations(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE sessions
+    ADD CONSTRAINT fk_sessions_evse_id
+    FOREIGN KEY (evse_id) 
+    REFERENCES evses(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE sessions
+    ADD CONSTRAINT fk_sessions_connector_id
+    FOREIGN KEY (connector_id) 
+    REFERENCES connectors(id) 
     ON DELETE RESTRICT;
 
 -- Charging periods

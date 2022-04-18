@@ -35,7 +35,10 @@ CREATE TABLE IF NOT EXISTS cdrs (
     stop_date_time      TIMESTAMP,
     auth_id             TEXT NOT NULL,
     auth_method         auth_method_type NOT NULL,
+    token_id            BIGINT NOT NULL,
     location_id         BIGINT NOT NULL,
+    evse_id             BIGINT NOT NULL,
+    connector_id        BIGINT NOT NULL,
     meter_id            TEXT,
     currency            TEXT NOT NULL,
     -- tariffs          []tariffs
@@ -58,9 +61,27 @@ ALTER TABLE cdrs
     ON DELETE SET NULL;
 
 ALTER TABLE cdrs
+    ADD CONSTRAINT fk_cdrs_token_id
+    FOREIGN KEY (token_id) 
+    REFERENCES tokens(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE cdrs
     ADD CONSTRAINT fk_cdrs_location_id
     FOREIGN KEY (location_id) 
     REFERENCES locations(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE cdrs
+    ADD CONSTRAINT fk_cdrs_evse_id
+    FOREIGN KEY (evse_id) 
+    REFERENCES evses(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE cdrs
+    ADD CONSTRAINT fk_cdrs_connector_id
+    FOREIGN KEY (connector_id) 
+    REFERENCES connectors(id) 
     ON DELETE RESTRICT;
 
 ALTER TABLE cdrs

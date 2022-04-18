@@ -21,14 +21,17 @@ INSERT INTO sessions (
     kwh,
     auth_id,
     auth_method,
+    token_id,
     location_id,
+    evse_id,
+    connector_id,
     meter_id,
     currency,
     total_cost,
     status,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type CreateSessionParams struct {
@@ -42,7 +45,10 @@ type CreateSessionParams struct {
 	Kwh             float64           `db:"kwh" json:"kwh"`
 	AuthID          string            `db:"auth_id" json:"authID"`
 	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
+	TokenID         int64             `db:"token_id" json:"tokenID"`
 	LocationID      int64             `db:"location_id" json:"locationID"`
+	EvseID          int64             `db:"evse_id" json:"evseID"`
+	ConnectorID     int64             `db:"connector_id" json:"connectorID"`
 	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
 	Currency        string            `db:"currency" json:"currency"`
 	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
@@ -62,7 +68,10 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 		arg.Kwh,
 		arg.AuthID,
 		arg.AuthMethod,
+		arg.TokenID,
 		arg.LocationID,
+		arg.EvseID,
+		arg.ConnectorID,
 		arg.MeterID,
 		arg.Currency,
 		arg.TotalCost,
@@ -82,7 +91,10 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 		&i.Kwh,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.TokenID,
 		&i.LocationID,
+		&i.EvseID,
+		&i.ConnectorID,
 		&i.MeterID,
 		&i.Currency,
 		&i.TotalCost,
@@ -93,7 +105,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 }
 
 const getSessionByLastUpdated = `-- name: GetSessionByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated FROM sessions
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -122,7 +134,10 @@ func (q *Queries) GetSessionByLastUpdated(ctx context.Context, arg GetSessionByL
 		&i.Kwh,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.TokenID,
 		&i.LocationID,
+		&i.EvseID,
+		&i.ConnectorID,
 		&i.MeterID,
 		&i.Currency,
 		&i.TotalCost,
@@ -133,7 +148,7 @@ func (q *Queries) GetSessionByLastUpdated(ctx context.Context, arg GetSessionByL
 }
 
 const getSessionByUid = `-- name: GetSessionByUid :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated FROM sessions
   WHERE uid = $1
 `
 
@@ -152,7 +167,10 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 		&i.Kwh,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.TokenID,
 		&i.LocationID,
+		&i.EvseID,
+		&i.ConnectorID,
 		&i.MeterID,
 		&i.Currency,
 		&i.TotalCost,
@@ -164,36 +182,28 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 
 const updateSessionByUid = `-- name: UpdateSessionByUid :one
 UPDATE sessions SET (
-    country_code,
-    party_id,
     authorization_id,
     start_datetime,
     end_datetime,
     kwh,
-    auth_id,
     auth_method,
-    location_id,
     meter_id,
     currency,
     total_cost,
     status,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE uid = $1
-  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, location_id, meter_id, currency, total_cost, status, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated
 `
 
 type UpdateSessionByUidParams struct {
 	Uid             string            `db:"uid" json:"uid"`
-	CountryCode     sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID         sql.NullString    `db:"party_id" json:"partyID"`
 	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
 	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
 	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
 	Kwh             float64           `db:"kwh" json:"kwh"`
-	AuthID          string            `db:"auth_id" json:"authID"`
 	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
-	LocationID      int64             `db:"location_id" json:"locationID"`
 	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
 	Currency        string            `db:"currency" json:"currency"`
 	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
@@ -204,15 +214,11 @@ type UpdateSessionByUidParams struct {
 func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUidParams) (Session, error) {
 	row := q.db.QueryRowContext(ctx, updateSessionByUid,
 		arg.Uid,
-		arg.CountryCode,
-		arg.PartyID,
 		arg.AuthorizationID,
 		arg.StartDatetime,
 		arg.EndDatetime,
 		arg.Kwh,
-		arg.AuthID,
 		arg.AuthMethod,
-		arg.LocationID,
 		arg.MeterID,
 		arg.Currency,
 		arg.TotalCost,
@@ -232,7 +238,10 @@ func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUid
 		&i.Kwh,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.TokenID,
 		&i.LocationID,
+		&i.EvseID,
+		&i.ConnectorID,
 		&i.MeterID,
 		&i.Currency,
 		&i.TotalCost,
