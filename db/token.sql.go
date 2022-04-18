@@ -102,6 +102,30 @@ func (q *Queries) GetToken(ctx context.Context, id int64) (Token, error) {
 	return i, err
 }
 
+const getTokenByAuthId = `-- name: GetTokenByAuthId :one
+SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+  WHERE auth_id = $1
+`
+
+func (q *Queries) GetTokenByAuthId(ctx context.Context, authID string) (Token, error) {
+	row := q.db.QueryRowContext(ctx, getTokenByAuthId, authID)
+	var i Token
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.Type,
+		&i.AuthID,
+		&i.VisualNumber,
+		&i.Issuer,
+		&i.Allowed,
+		&i.Valid,
+		&i.Whitelist,
+		&i.Language,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getTokenByUid = `-- name: GetTokenByUid :one
 SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE uid = $1
