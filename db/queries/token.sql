@@ -21,6 +21,10 @@ DELETE FROM tokens
 SELECT * FROM tokens
   WHERE id = $1;
 
+-- name: GetTokenByAuthId :one
+SELECT * FROM tokens
+  WHERE auth_id = $1;
+
 -- name: GetTokenByUid :one
 SELECT * FROM tokens
   WHERE uid = $1;
