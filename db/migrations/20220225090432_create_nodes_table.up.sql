@@ -2,7 +2,8 @@
 CREATE TABLE IF NOT EXISTS nodes (
     id          BIGSERIAL PRIMARY KEY,
     pubkey      TEXT NOT NULL,
-    addr        TEXT NOT NULL,
+    node_addr   TEXT NOT NULL,
+    lsp_addr    TEXT NOT NULL,
     alias       TEXT NOT NULL,
     color       TEXT NOT NULL,
     commit_hash TEXT NOT NULL,
@@ -23,7 +24,8 @@ ALTER TABLE channel_requests
 ALTER TABLE channel_requests 
     ADD CONSTRAINT fk_channel_requests_node_id
     FOREIGN KEY (node_id) 
-    REFERENCES nodes(id);
+    REFERENCES nodes(id)
+    ON DELETE CASCADE;
 
 -- Users
 ALTER TABLE users

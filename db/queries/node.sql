@@ -1,14 +1,15 @@
 -- name: CreateNode :one
 INSERT INTO nodes (
     pubkey,
-    addr,
+    node_addr,
+    lsp_addr,
     alias,
     color,
     commit_hash,
     version,
     channels,
     peers
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
   RETURNING *;
 
 -- name: GetNode :one
@@ -25,13 +26,14 @@ SELECT * FROM nodes
 
 -- name: UpdateNode :one
 UPDATE nodes SET (
-    addr,
+    node_addr,
+    lsp_addr,
     alias,
     color,
     commit_hash,
     version,
     channels,
     peers
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
   WHERE id = $1
   RETURNING *;

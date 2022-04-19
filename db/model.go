@@ -822,7 +822,8 @@ type LocationImage struct {
 type Node struct {
 	ID         int64  `db:"id" json:"id"`
 	Pubkey     string `db:"pubkey" json:"pubkey"`
-	Addr       string `db:"addr" json:"addr"`
+	NodeAddr   string `db:"node_addr" json:"nodeAddr"`
+	LspAddr    string `db:"lsp_addr" json:"lspAddr"`
 	Alias      string `db:"alias" json:"alias"`
 	Color      string `db:"color" json:"color"`
 	CommitHash string `db:"commit_hash" json:"commitHash"`
