@@ -26,7 +26,9 @@ SELECT * FROM users
 -- name: UpdateUser :one
 UPDATE users SET (
     device_token,
-    node_id
-  ) = ($2, $3)
+    linking_pubkey,
+    node_id,
+    pubkey
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
   RETURNING *;
