@@ -11,6 +11,10 @@ INSERT INTO users (
 SELECT * FROM users
   WHERE id = $1;
 
+-- name: GetUserByDeviceToken :one
+SELECT * FROM users
+  WHERE device_token = $1;
+
 -- name: GetUserByLinkingPubkey :one
 SELECT * FROM users
   WHERE linking_pubkey = $1;
