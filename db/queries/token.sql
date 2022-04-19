@@ -1,6 +1,7 @@
 -- name: CreateToken :one
 INSERT INTO tokens (
     uid, 
+    user_id,
     type,
     auth_id,
     visual_number,
@@ -10,7 +11,7 @@ INSERT INTO tokens (
     whitelist,
     language,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   RETURNING *;
 
 -- name: DeleteTokenByUid :exec
@@ -30,9 +31,9 @@ SELECT * FROM tokens
   WHERE uid = $1;
 
 -- name: GetTokenByUserId :one
-SELECT t.* FROM tokens t
-  INNER JOIN users u ON u.token_id = t.id
-  WHERE u.id = $1;
+SELECT * FROM tokens
+  WHERE user_id = $1 AND type = $2
+  LIMIT 1;
 
 -- name: ListTokens :many
 SELECT * FROM tokens

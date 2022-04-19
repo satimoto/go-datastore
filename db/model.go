@@ -944,6 +944,7 @@ type TariffRestrictionWeekday struct {
 type Token struct {
 	ID           int64              `db:"id" json:"id"`
 	Uid          string             `db:"uid" json:"uid"`
+	UserID       int64              `db:"user_id" json:"userID"`
 	Type         TokenType          `db:"type" json:"type"`
 	AuthID       string             `db:"auth_id" json:"authID"`
 	VisualNumber sql.NullString     `db:"visual_number" json:"visualNumber"`
@@ -980,7 +981,6 @@ type User struct {
 	Pubkey        string        `db:"pubkey" json:"pubkey"`
 	DeviceToken   string        `db:"device_token" json:"deviceToken"`
 	NodeID        sql.NullInt64 `db:"node_id" json:"nodeID"`
-	TokenID       sql.NullInt64 `db:"token_id" json:"tokenID"`
 }
 
 type Version struct {

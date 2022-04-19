@@ -1,10 +1,3 @@
--- Users
-ALTER TABLE IF EXISTS users 
-    DROP CONSTRAINT IF EXISTS fk_users_token_id;
-
-ALTER TABLE users
-    DROP IF EXISTS token_id;
-
 -- Token authorization connectors
 ALTER TABLE IF EXISTS token_authorization_connectors 
     DROP CONSTRAINT IF EXISTS fk_token_authorization_connectors_connector_id;
@@ -30,6 +23,9 @@ ALTER TABLE IF EXISTS token_authorizations
 DROP TABLE IF EXISTS token_authorizations;
 
 -- Tokens
+ALTER TABLE IF EXISTS tokens 
+    DROP CONSTRAINT IF EXISTS fk_tokens_user_id;
+
 DROP INDEX IF EXISTS idx_tokens_uid;
 
 DROP TABLE IF EXISTS tokens;
