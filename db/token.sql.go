@@ -12,6 +12,7 @@ import (
 const createToken = `-- name: CreateToken :one
 INSERT INTO tokens (
     uid, 
+    user_id,
     type,
     auth_id,
     visual_number,
@@ -21,12 +22,13 @@ INSERT INTO tokens (
     whitelist,
     language,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-  RETURNING id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  RETURNING id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated
 `
 
 type CreateTokenParams struct {
 	Uid          string             `db:"uid" json:"uid"`
+	UserID       int64              `db:"user_id" json:"userID"`
 	Type         TokenType          `db:"type" json:"type"`
 	AuthID       string             `db:"auth_id" json:"authID"`
 	VisualNumber sql.NullString     `db:"visual_number" json:"visualNumber"`
@@ -41,6 +43,7 @@ type CreateTokenParams struct {
 func (q *Queries) CreateToken(ctx context.Context, arg CreateTokenParams) (Token, error) {
 	row := q.db.QueryRowContext(ctx, createToken,
 		arg.Uid,
+		arg.UserID,
 		arg.Type,
 		arg.AuthID,
 		arg.VisualNumber,
@@ -55,6 +58,7 @@ func (q *Queries) CreateToken(ctx context.Context, arg CreateTokenParams) (Token
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.UserID,
 		&i.Type,
 		&i.AuthID,
 		&i.VisualNumber,
@@ -79,7 +83,7 @@ func (q *Queries) DeleteTokenByUid(ctx context.Context, uid string) error {
 }
 
 const getToken = `-- name: GetToken :one
-SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE id = $1
 `
 
@@ -89,6 +93,7 @@ func (q *Queries) GetToken(ctx context.Context, id int64) (Token, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.UserID,
 		&i.Type,
 		&i.AuthID,
 		&i.VisualNumber,
@@ -103,7 +108,7 @@ func (q *Queries) GetToken(ctx context.Context, id int64) (Token, error) {
 }
 
 const getTokenByAuthId = `-- name: GetTokenByAuthId :one
-SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE auth_id = $1
 `
 
@@ -113,6 +118,7 @@ func (q *Queries) GetTokenByAuthId(ctx context.Context, authID string) (Token, e
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.UserID,
 		&i.Type,
 		&i.AuthID,
 		&i.VisualNumber,
@@ -127,7 +133,7 @@ func (q *Queries) GetTokenByAuthId(ctx context.Context, authID string) (Token, e
 }
 
 const getTokenByUid = `-- name: GetTokenByUid :one
-SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE uid = $1
 `
 
@@ -137,6 +143,7 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.UserID,
 		&i.Type,
 		&i.AuthID,
 		&i.VisualNumber,
@@ -151,17 +158,23 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 }
 
 const getTokenByUserId = `-- name: GetTokenByUserId :one
-SELECT t.id, t.uid, t.type, t.auth_id, t.visual_number, t.issuer, t.allowed, t.valid, t.whitelist, t.language, t.last_updated FROM tokens t
-  INNER JOIN users u ON u.token_id = t.id
-  WHERE u.id = $1
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+  WHERE user_id = $1 AND type = $2
+  LIMIT 1
 `
 
-func (q *Queries) GetTokenByUserId(ctx context.Context, id int64) (Token, error) {
-	row := q.db.QueryRowContext(ctx, getTokenByUserId, id)
+type GetTokenByUserIdParams struct {
+	UserID int64     `db:"user_id" json:"userID"`
+	Type   TokenType `db:"type" json:"type"`
+}
+
+func (q *Queries) GetTokenByUserId(ctx context.Context, arg GetTokenByUserIdParams) (Token, error) {
+	row := q.db.QueryRowContext(ctx, getTokenByUserId, arg.UserID, arg.Type)
 	var i Token
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.UserID,
 		&i.Type,
 		&i.AuthID,
 		&i.VisualNumber,
@@ -176,7 +189,7 @@ func (q *Queries) GetTokenByUserId(ctx context.Context, id int64) (Token, error)
 }
 
 const listTokens = `-- name: ListTokens :many
-SELECT id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE 
     ($1::text = '' or last_updated > $1::text) and 
     ($2::text = '' or last_updated < $2::text)
@@ -209,6 +222,7 @@ func (q *Queries) ListTokens(ctx context.Context, arg ListTokensParams) ([]Token
 		if err := rows.Scan(
 			&i.ID,
 			&i.Uid,
+			&i.UserID,
 			&i.Type,
 			&i.AuthID,
 			&i.VisualNumber,
@@ -245,7 +259,7 @@ UPDATE tokens SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE uid = $1
-  RETURNING id, uid, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated
+  RETURNING id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated
 `
 
 type UpdateTokenByUidParams struct {
@@ -278,6 +292,7 @@ func (q *Queries) UpdateTokenByUid(ctx context.Context, arg UpdateTokenByUidPara
 	err := row.Scan(
 		&i.ID,
 		&i.Uid,
+		&i.UserID,
 		&i.Type,
 		&i.AuthID,
 		&i.VisualNumber,

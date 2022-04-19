@@ -22,6 +22,7 @@ CREATE TYPE token_whitelist_type AS ENUM (
 CREATE TABLE IF NOT EXISTS tokens (
     id              BIGSERIAL PRIMARY KEY,
     uid             TEXT NOT NULL,
+    user_id         BIGINT NOT NULL,
     type            token_type NOT NULL,
     auth_id         TEXT NOT NULL,
     visual_number   TEXT,
@@ -34,6 +35,12 @@ CREATE TABLE IF NOT EXISTS tokens (
 );
 
 CREATE INDEX idx_tokens_uid ON tokens (uid);
+
+ALTER TABLE tokens 
+    ADD CONSTRAINT fk_tokens_user_id
+    FOREIGN KEY (user_id) 
+    REFERENCES users(id)
+    ON DELETE RESTRICT;
 
 -- Token authorizations
 CREATE TABLE IF NOT EXISTS token_authorizations (
@@ -88,13 +95,3 @@ ALTER TABLE token_authorization_connectors
     FOREIGN KEY (connector_id) 
     REFERENCES connectors(id)
     ON DELETE CASCADE;
-
--- Users
-ALTER TABLE users
-    ADD token_id BIGINT;
-
-ALTER TABLE users 
-    ADD CONSTRAINT fk_users_token_id
-    FOREIGN KEY (token_id) 
-    REFERENCES tokens(id)
-    ON DELETE SET NULL;
