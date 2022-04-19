@@ -61,6 +61,24 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 	return i, err
 }
 
+const getUserByDeviceToken = `-- name: GetUserByDeviceToken :one
+SELECT id, linking_pubkey, pubkey, device_token, node_id FROM users
+  WHERE device_token = $1
+`
+
+func (q *Queries) GetUserByDeviceToken(ctx context.Context, deviceToken string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByDeviceToken, deviceToken)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingPubkey,
+		&i.Pubkey,
+		&i.DeviceToken,
+		&i.NodeID,
+	)
+	return i, err
+}
+
 const getUserByLinkingPubkey = `-- name: GetUserByLinkingPubkey :one
 SELECT id, linking_pubkey, pubkey, device_token, node_id FROM users
   WHERE linking_pubkey = $1
