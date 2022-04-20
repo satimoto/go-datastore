@@ -7,10 +7,11 @@ INSERT INTO connectors (
     power_type, 
     voltage, 
     amperage, 
+    wattage, 
     tariff_id, 
     terms_and_conditions, 
     last_updated)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   RETURNING *;
 
 -- name: DeleteConnector :exec
@@ -46,10 +47,11 @@ UPDATE connectors SET (
     power_type, 
     voltage, 
     amperage, 
+    wattage, 
     tariff_id, 
     terms_and_conditions, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
   RETURNING *;
 
@@ -60,9 +62,10 @@ UPDATE connectors SET (
     power_type, 
     voltage, 
     amperage, 
+    wattage, 
     tariff_id, 
     terms_and_conditions, 
     last_updated
-  ) = ($3, $4, $5, $6, $7, $8, $9, $10)
+  ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE evse_id = $1 AND uid = $2
   RETURNING *;
