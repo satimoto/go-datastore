@@ -18,11 +18,12 @@ INSERT INTO connectors (
     power_type, 
     voltage, 
     amperage, 
+    wattage, 
     tariff_id, 
     terms_and_conditions, 
     last_updated)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
 type CreateConnectorParams struct {
@@ -33,6 +34,7 @@ type CreateConnectorParams struct {
 	PowerType          PowerType       `db:"power_type" json:"powerType"`
 	Voltage            int32           `db:"voltage" json:"voltage"`
 	Amperage           int32           `db:"amperage" json:"amperage"`
+	Wattage            int32           `db:"wattage" json:"wattage"`
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
@@ -47,6 +49,7 @@ func (q *Queries) CreateConnector(ctx context.Context, arg CreateConnectorParams
 		arg.PowerType,
 		arg.Voltage,
 		arg.Amperage,
+		arg.Wattage,
 		arg.TariffID,
 		arg.TermsAndConditions,
 		arg.LastUpdated,
@@ -61,6 +64,7 @@ func (q *Queries) CreateConnector(ctx context.Context, arg CreateConnectorParams
 		&i.PowerType,
 		&i.Voltage,
 		&i.Amperage,
+		&i.Wattage,
 		&i.TariffID,
 		&i.TermsAndConditions,
 		&i.LastUpdated,
@@ -104,7 +108,7 @@ func (q *Queries) DeleteConnectors(ctx context.Context, evseID int64) error {
 }
 
 const getConnector = `-- name: GetConnector :one
-SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated FROM connectors
+SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE id = $1
 `
 
@@ -120,6 +124,7 @@ func (q *Queries) GetConnector(ctx context.Context, id int64) (Connector, error)
 		&i.PowerType,
 		&i.Voltage,
 		&i.Amperage,
+		&i.Wattage,
 		&i.TariffID,
 		&i.TermsAndConditions,
 		&i.LastUpdated,
@@ -128,7 +133,7 @@ func (q *Queries) GetConnector(ctx context.Context, id int64) (Connector, error)
 }
 
 const getConnectorByUid = `-- name: GetConnectorByUid :one
-SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated FROM connectors
+SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE ($1::bigint IS NULL or evse_id = $1::bigint) AND uid = $2::string
   LIMIT 1
 `
@@ -150,6 +155,7 @@ func (q *Queries) GetConnectorByUid(ctx context.Context, arg GetConnectorByUidPa
 		&i.PowerType,
 		&i.Voltage,
 		&i.Amperage,
+		&i.Wattage,
 		&i.TariffID,
 		&i.TermsAndConditions,
 		&i.LastUpdated,
@@ -158,7 +164,7 @@ func (q *Queries) GetConnectorByUid(ctx context.Context, arg GetConnectorByUidPa
 }
 
 const listConnectors = `-- name: ListConnectors :many
-SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated FROM connectors
+SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE evse_id = $1
   ORDER BY id
 `
@@ -181,6 +187,7 @@ func (q *Queries) ListConnectors(ctx context.Context, evseID int64) ([]Connector
 			&i.PowerType,
 			&i.Voltage,
 			&i.Amperage,
+			&i.Wattage,
 			&i.TariffID,
 			&i.TermsAndConditions,
 			&i.LastUpdated,
@@ -205,12 +212,13 @@ UPDATE connectors SET (
     power_type, 
     voltage, 
     amperage, 
+    wattage, 
     tariff_id, 
     terms_and_conditions, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
-  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated
+  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
 type UpdateConnectorParams struct {
@@ -220,6 +228,7 @@ type UpdateConnectorParams struct {
 	PowerType          PowerType       `db:"power_type" json:"powerType"`
 	Voltage            int32           `db:"voltage" json:"voltage"`
 	Amperage           int32           `db:"amperage" json:"amperage"`
+	Wattage            int32           `db:"wattage" json:"wattage"`
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
@@ -233,6 +242,7 @@ func (q *Queries) UpdateConnector(ctx context.Context, arg UpdateConnectorParams
 		arg.PowerType,
 		arg.Voltage,
 		arg.Amperage,
+		arg.Wattage,
 		arg.TariffID,
 		arg.TermsAndConditions,
 		arg.LastUpdated,
@@ -247,6 +257,7 @@ func (q *Queries) UpdateConnector(ctx context.Context, arg UpdateConnectorParams
 		&i.PowerType,
 		&i.Voltage,
 		&i.Amperage,
+		&i.Wattage,
 		&i.TariffID,
 		&i.TermsAndConditions,
 		&i.LastUpdated,
@@ -261,12 +272,13 @@ UPDATE connectors SET (
     power_type, 
     voltage, 
     amperage, 
+    wattage, 
     tariff_id, 
     terms_and_conditions, 
     last_updated
-  ) = ($3, $4, $5, $6, $7, $8, $9, $10)
+  ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE evse_id = $1 AND uid = $2
-  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, tariff_id, terms_and_conditions, last_updated
+  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
 type UpdateConnectorByUidParams struct {
@@ -277,6 +289,7 @@ type UpdateConnectorByUidParams struct {
 	PowerType          PowerType       `db:"power_type" json:"powerType"`
 	Voltage            int32           `db:"voltage" json:"voltage"`
 	Amperage           int32           `db:"amperage" json:"amperage"`
+	Wattage            int32           `db:"wattage" json:"wattage"`
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
@@ -291,6 +304,7 @@ func (q *Queries) UpdateConnectorByUid(ctx context.Context, arg UpdateConnectorB
 		arg.PowerType,
 		arg.Voltage,
 		arg.Amperage,
+		arg.Wattage,
 		arg.TariffID,
 		arg.TermsAndConditions,
 		arg.LastUpdated,
@@ -305,6 +319,7 @@ func (q *Queries) UpdateConnectorByUid(ctx context.Context, arg UpdateConnectorB
 		&i.PowerType,
 		&i.Voltage,
 		&i.Amperage,
+		&i.Wattage,
 		&i.TariffID,
 		&i.TermsAndConditions,
 		&i.LastUpdated,

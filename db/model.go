@@ -628,6 +628,7 @@ type Connector struct {
 	PowerType          PowerType       `db:"power_type" json:"powerType"`
 	Voltage            int32           `db:"voltage" json:"voltage"`
 	Amperage           int32           `db:"amperage" json:"amperage"`
+	Wattage            int32           `db:"wattage" json:"wattage"`
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`

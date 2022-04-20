@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS connectors (
     power_type           power_type NOT NULL,
     voltage              INTEGER NOT NULL,
     amperage             INTEGER NOT NULL,
+    wattage              INTEGER NOT NULL,
     tariff_id            TEXT,
     terms_and_conditions TEXT,
     last_updated         TIMESTAMP NOT NULL
