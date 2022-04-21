@@ -902,6 +902,17 @@ type SessionChargingPeriod struct {
 	ChargingPeriodID int64 `db:"charging_period_id" json:"chargingPeriodID"`
 }
 
+type SessionInvoice struct {
+	ID             int64     `db:"id" json:"id"`
+	SessionID      int64     `db:"session_id" json:"sessionID"`
+	AmountFiat     float64   `db:"amount_fiat" json:"amountFiat"`
+	AmountMsat     int64     `db:"amount_msat" json:"amountMsat"`
+	Currency       string    `db:"currency" json:"currency"`
+	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
+	Settled        bool      `db:"settled" json:"settled"`
+	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
+}
+
 type StatusSchedule struct {
 	ID          int64        `db:"id" json:"id"`
 	EvseID      int64        `db:"evse_id" json:"evseID"`
