@@ -19,6 +19,11 @@ SELECT * FROM users
 SELECT * FROM users
   WHERE linking_pubkey = $1;
 
+-- name: GetUserByTokenID :one
+SELECT u.* FROM users u
+  INNER JOIN tokens t ON t.user_id = u.id
+  WHERE t.id = $1;
+
 -- name: GetUserByPubkey :one
 SELECT * FROM users
   WHERE pubkey = $1;
