@@ -115,6 +115,25 @@ func (q *Queries) GetUserByPubkey(ctx context.Context, pubkey string) (User, err
 	return i, err
 }
 
+const getUserByTokenID = `-- name: GetUserByTokenID :one
+SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id FROM users u
+  INNER JOIN tokens t ON t.user_id = u.id
+  WHERE t.id = $1
+`
+
+func (q *Queries) GetUserByTokenID(ctx context.Context, id int64) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByTokenID, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingPubkey,
+		&i.Pubkey,
+		&i.DeviceToken,
+		&i.NodeID,
+	)
+	return i, err
+}
+
 const updateUser = `-- name: UpdateUser :one
 UPDATE users SET (
     device_token,
