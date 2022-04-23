@@ -145,6 +145,45 @@ func (q *Queries) GetCredentialByServerToken(ctx context.Context, serverToken sq
 	return i, err
 }
 
+const listCredentials = `-- name: ListCredentials :many
+SELECT id, client_token, server_token, url, country_code, party_id, is_hub, last_updated, business_detail_id, version_id FROM credentials
+  ORDER BY id
+`
+
+func (q *Queries) ListCredentials(ctx context.Context) ([]Credential, error) {
+	rows, err := q.db.QueryContext(ctx, listCredentials)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Credential
+	for rows.Next() {
+		var i Credential
+		if err := rows.Scan(
+			&i.ID,
+			&i.ClientToken,
+			&i.ServerToken,
+			&i.Url,
+			&i.CountryCode,
+			&i.PartyID,
+			&i.IsHub,
+			&i.LastUpdated,
+			&i.BusinessDetailID,
+			&i.VersionID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateCredential = `-- name: UpdateCredential :one
 UPDATE credentials SET (
     client_token, 

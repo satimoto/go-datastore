@@ -27,6 +27,10 @@ SELECT * FROM credentials
 SELECT * FROM credentials
   WHERE server_token = $1;
 
+-- name: ListCredentials :many
+SELECT * FROM credentials
+  ORDER BY id;
+
 -- name: UpdateCredential :one
 UPDATE credentials SET (
     client_token, 
