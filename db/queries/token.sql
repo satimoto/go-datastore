@@ -22,7 +22,7 @@ DELETE FROM tokens
 SELECT * FROM tokens
   WHERE id = $1;
 
--- name: GetTokenByAuthId :one
+-- name: GetTokenByAuthID :one
 SELECT * FROM tokens
   WHERE auth_id = $1;
 
@@ -30,7 +30,7 @@ SELECT * FROM tokens
 SELECT * FROM tokens
   WHERE uid = $1;
 
--- name: GetTokenByUserId :one
+-- name: GetTokenByUserID :one
 SELECT * FROM tokens
   WHERE user_id = $1 AND type = $2
   LIMIT 1;
@@ -43,6 +43,10 @@ SELECT * FROM tokens
   ORDER BY id
   LIMIT @filter_limit::bigint
   OFFSET @filter_offset::bigint;
+
+-- name: ListTokensByUserID :many
+SELECT * FROM tokens
+  WHERE user_id = $1;
 
 -- name: UpdateTokenByUid :one
 UPDATE tokens SET (

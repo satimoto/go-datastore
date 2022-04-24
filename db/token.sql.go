@@ -107,13 +107,13 @@ func (q *Queries) GetToken(ctx context.Context, id int64) (Token, error) {
 	return i, err
 }
 
-const getTokenByAuthId = `-- name: GetTokenByAuthId :one
+const getTokenByAuthID = `-- name: GetTokenByAuthID :one
 SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE auth_id = $1
 `
 
-func (q *Queries) GetTokenByAuthId(ctx context.Context, authID string) (Token, error) {
-	row := q.db.QueryRowContext(ctx, getTokenByAuthId, authID)
+func (q *Queries) GetTokenByAuthID(ctx context.Context, authID string) (Token, error) {
+	row := q.db.QueryRowContext(ctx, getTokenByAuthID, authID)
 	var i Token
 	err := row.Scan(
 		&i.ID,
@@ -157,19 +157,19 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 	return i, err
 }
 
-const getTokenByUserId = `-- name: GetTokenByUserId :one
+const getTokenByUserID = `-- name: GetTokenByUserID :one
 SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE user_id = $1 AND type = $2
   LIMIT 1
 `
 
-type GetTokenByUserIdParams struct {
+type GetTokenByUserIDParams struct {
 	UserID int64     `db:"user_id" json:"userID"`
 	Type   TokenType `db:"type" json:"type"`
 }
 
-func (q *Queries) GetTokenByUserId(ctx context.Context, arg GetTokenByUserIdParams) (Token, error) {
-	row := q.db.QueryRowContext(ctx, getTokenByUserId, arg.UserID, arg.Type)
+func (q *Queries) GetTokenByUserID(ctx context.Context, arg GetTokenByUserIDParams) (Token, error) {
+	row := q.db.QueryRowContext(ctx, getTokenByUserID, arg.UserID, arg.Type)
 	var i Token
 	err := row.Scan(
 		&i.ID,
@@ -212,6 +212,47 @@ func (q *Queries) ListTokens(ctx context.Context, arg ListTokensParams) ([]Token
 		arg.FilterOffset,
 		arg.FilterLimit,
 	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Token
+	for rows.Next() {
+		var i Token
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.UserID,
+			&i.Type,
+			&i.AuthID,
+			&i.VisualNumber,
+			&i.Issuer,
+			&i.Allowed,
+			&i.Valid,
+			&i.Whitelist,
+			&i.Language,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listTokensByUserID = `-- name: ListTokensByUserID :many
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+  WHERE user_id = $1
+`
+
+func (q *Queries) ListTokensByUserID(ctx context.Context, userID int64) ([]Token, error) {
+	rows, err := q.db.QueryContext(ctx, listTokensByUserID, userID)
 	if err != nil {
 		return nil, err
 	}
