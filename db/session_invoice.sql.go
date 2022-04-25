@@ -18,7 +18,7 @@ INSERT INTO session_invoices (
     settled,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-  RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, last_updated
+  RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated
 `
 
 type CreateSessionInvoiceParams struct {
@@ -50,13 +50,14 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		&i.Currency,
 		&i.PaymentRequest,
 		&i.Settled,
+		&i.Expired,
 		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const getSessionInvoiceByPaymentRequest = `-- name: GetSessionInvoiceByPaymentRequest :one
-SELECT id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, last_updated FROM session_invoices
+SELECT id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
   WHERE payment_request = $1
 `
 
@@ -71,13 +72,14 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 		&i.Currency,
 		&i.PaymentRequest,
 		&i.Settled,
+		&i.Expired,
 		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
-SELECT id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, last_updated FROM session_invoices
+SELECT id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
@@ -99,6 +101,7 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 			&i.Currency,
 			&i.PaymentRequest,
 			&i.Settled,
+			&i.Expired,
 			&i.LastUpdated,
 		); err != nil {
 			return nil, err
@@ -120,7 +123,7 @@ UPDATE session_invoices SET (
     last_updated
   ) = ($2, $3)
   WHERE id = $1
-  RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, last_updated
+  RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated
 `
 
 type UpdateSessionInvoiceParams struct {
@@ -140,6 +143,7 @@ func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInv
 		&i.Currency,
 		&i.PaymentRequest,
 		&i.Settled,
+		&i.Expired,
 		&i.LastUpdated,
 	)
 	return i, err

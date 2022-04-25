@@ -910,6 +910,7 @@ type SessionInvoice struct {
 	Currency       string    `db:"currency" json:"currency"`
 	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
 	Settled        bool      `db:"settled" json:"settled"`
+	Expired        bool      `db:"expired" json:"expired"`
 	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
