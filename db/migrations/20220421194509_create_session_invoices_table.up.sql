@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS session_invoices (
     currency        TEXT NOT NULL,
     payment_request TEXT NOT NULL,
     settled         BOOLEAN NOT NULL,
+    expired         BOOLEAN NOT NULL,
     last_updated    TIMESTAMP NOT NULL
 );
 
