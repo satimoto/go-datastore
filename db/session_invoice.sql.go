@@ -16,8 +16,9 @@ INSERT INTO session_invoices (
     currency,
     payment_request,
     settled,
+    expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated
 `
 
@@ -28,6 +29,7 @@ type CreateSessionInvoiceParams struct {
 	Currency       string    `db:"currency" json:"currency"`
 	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
 	Settled        bool      `db:"settled" json:"settled"`
+	Expired        bool      `db:"expired" json:"expired"`
 	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -39,6 +41,7 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		arg.Currency,
 		arg.PaymentRequest,
 		arg.Settled,
+		arg.Expired,
 		arg.LastUpdated,
 	)
 	var i SessionInvoice
@@ -120,8 +123,9 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 const updateSessionInvoice = `-- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (
     settled,
+    expired,
     last_updated
-  ) = ($2, $3)
+  ) = ($2, $3, $4)
   WHERE id = $1
   RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated
 `
@@ -129,11 +133,17 @@ UPDATE session_invoices SET (
 type UpdateSessionInvoiceParams struct {
 	ID          int64     `db:"id" json:"id"`
 	Settled     bool      `db:"settled" json:"settled"`
+	Expired     bool      `db:"expired" json:"expired"`
 	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInvoiceParams) (SessionInvoice, error) {
-	row := q.db.QueryRowContext(ctx, updateSessionInvoice, arg.ID, arg.Settled, arg.LastUpdated)
+	row := q.db.QueryRowContext(ctx, updateSessionInvoice,
+		arg.ID,
+		arg.Settled,
+		arg.Expired,
+		arg.LastUpdated,
+	)
 	var i SessionInvoice
 	err := row.Scan(
 		&i.ID,
