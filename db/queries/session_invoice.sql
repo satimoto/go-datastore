@@ -6,8 +6,9 @@ INSERT INTO session_invoices (
     currency,
     payment_request,
     settled,
+    expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING *;
 
 -- name: GetSessionInvoiceByPaymentRequest :one
@@ -22,7 +23,8 @@ SELECT * FROM session_invoices
 -- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (
     settled,
+    expired,
     last_updated
-  ) = ($2, $3)
+  ) = ($2, $3, $4)
   WHERE id = $1
   RETURNING *;
