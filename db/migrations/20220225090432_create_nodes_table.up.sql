@@ -17,7 +17,7 @@ ALTER TABLE nodes
 
 -- Channel Requests
 ALTER TABLE channel_requests
-    ADD node_id BIGINT;
+    ADD COLUMN node_id BIGINT;
 ALTER TABLE channel_requests
     ALTER node_id SET NOT NULL;
 
@@ -29,7 +29,7 @@ ALTER TABLE channel_requests
 
 -- Users
 ALTER TABLE users
-    ADD node_id BIGINT;
+    ADD COLUMN node_id BIGINT;
 
 ALTER TABLE users 
     ADD CONSTRAINT fk_users_node_id

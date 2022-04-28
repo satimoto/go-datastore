@@ -634,6 +634,12 @@ type Connector struct {
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
 }
 
+type CountryAccount struct {
+	ID         int64   `db:"id" json:"id"`
+	Country    string  `db:"country" json:"country"`
+	TaxPercent float64 `db:"tax_percent" json:"taxPercent"`
+}
+
 type Credential struct {
 	ID               int64          `db:"id" json:"id"`
 	ClientToken      sql.NullString `db:"client_token" json:"clientToken"`
@@ -989,11 +995,14 @@ type TokenAuthorizationEvse struct {
 }
 
 type User struct {
-	ID            int64         `db:"id" json:"id"`
-	LinkingPubkey string        `db:"linking_pubkey" json:"linkingPubkey"`
-	Pubkey        string        `db:"pubkey" json:"pubkey"`
-	DeviceToken   string        `db:"device_token" json:"deviceToken"`
-	NodeID        sql.NullInt64 `db:"node_id" json:"nodeID"`
+	ID                int64         `db:"id" json:"id"`
+	LinkingPubkey     string        `db:"linking_pubkey" json:"linkingPubkey"`
+	Pubkey            string        `db:"pubkey" json:"pubkey"`
+	DeviceToken       string        `db:"device_token" json:"deviceToken"`
+	NodeID            sql.NullInt64 `db:"node_id" json:"nodeID"`
+	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
+	IsAdmin           bool          `db:"is_admin" json:"isAdmin"`
+	ReferrerID        sql.NullInt64 `db:"referrer_id" json:"referrerID"`
 }
 
 type Version struct {
