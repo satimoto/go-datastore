@@ -1,10 +1,12 @@
 -- name: CreateUser :one
 INSERT INTO users (
+    commission_percent,
     device_token,
     linking_pubkey,
     node_id,
-    pubkey
-  ) VALUES ($1, $2, $3, $4)
+    pubkey,
+    referrer_id
+  ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
 -- name: GetUser :one
@@ -30,10 +32,12 @@ SELECT * FROM users
 
 -- name: UpdateUser :one
 UPDATE users SET (
+    commission_percent,
     device_token,
     linking_pubkey,
     node_id,
-    pubkey
-  ) = ($2, $3, $4, $5)
+    pubkey,
+    referrer_id
+  ) = ($2, $3, $4, $5, $6, $7)
   WHERE id = $1
   RETURNING *;

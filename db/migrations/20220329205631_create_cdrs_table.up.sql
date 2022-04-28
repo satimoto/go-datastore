@@ -92,7 +92,7 @@ ALTER TABLE cdrs
 
 -- Tariffs
 ALTER TABLE tariffs
-    ADD cdr_id BIGINT;
+    ADD COLUMN cdr_id BIGINT;
 
 ALTER TABLE tariffs
     ADD CONSTRAINT fk_tariffs_cdr_id

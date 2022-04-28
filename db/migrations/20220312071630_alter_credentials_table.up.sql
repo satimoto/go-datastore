@@ -1,6 +1,6 @@
 -- Credentials
 ALTER TABLE credentials
-    ADD business_detail_id BIGINT NOT NULL;
+    ADD COLUMN business_detail_id BIGINT NOT NULL;
 
 ALTER TABLE credentials 
     ADD CONSTRAINT fk_credentials_business_details_id

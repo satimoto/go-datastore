@@ -3,7 +3,7 @@ ALTER TABLE IF EXISTS users
     DROP CONSTRAINT IF EXISTS uq_users_pubkey;
 
 ALTER TABLE IF EXISTS users 
-    ADD node_address TEXT;
+    ADD COLUMN node_address TEXT;
 
 ALTER TABLE IF EXISTS users 
     RENAME COLUMN linking_pubkey TO linking_key;
