@@ -913,6 +913,10 @@ type SessionInvoice struct {
 	SessionID      int64     `db:"session_id" json:"sessionID"`
 	AmountFiat     float64   `db:"amount_fiat" json:"amountFiat"`
 	AmountMsat     int64     `db:"amount_msat" json:"amountMsat"`
+	CommissionFiat float64   `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat int64     `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat        float64   `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat        int64     `db:"tax_msat" json:"taxMsat"`
 	Currency       string    `db:"currency" json:"currency"`
 	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
 	Settled        bool      `db:"settled" json:"settled"`

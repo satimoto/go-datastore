@@ -13,19 +13,27 @@ INSERT INTO session_invoices (
     session_id,
     amount_fiat,
     amount_msat,
+    commission_fiat,
+    commission_msat,
+    tax_fiat,
+    tax_msat,
     currency,
     payment_request,
     settled,
     expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-  RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated
 `
 
 type CreateSessionInvoiceParams struct {
 	SessionID      int64     `db:"session_id" json:"sessionID"`
 	AmountFiat     float64   `db:"amount_fiat" json:"amountFiat"`
 	AmountMsat     int64     `db:"amount_msat" json:"amountMsat"`
+	CommissionFiat float64   `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat int64     `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat        float64   `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat        int64     `db:"tax_msat" json:"taxMsat"`
 	Currency       string    `db:"currency" json:"currency"`
 	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
 	Settled        bool      `db:"settled" json:"settled"`
@@ -38,6 +46,10 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		arg.SessionID,
 		arg.AmountFiat,
 		arg.AmountMsat,
+		arg.CommissionFiat,
+		arg.CommissionMsat,
+		arg.TaxFiat,
+		arg.TaxMsat,
 		arg.Currency,
 		arg.PaymentRequest,
 		arg.Settled,
@@ -50,6 +62,10 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		&i.SessionID,
 		&i.AmountFiat,
 		&i.AmountMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
 		&i.Currency,
 		&i.PaymentRequest,
 		&i.Settled,
@@ -60,7 +76,7 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 }
 
 const getSessionInvoiceByPaymentRequest = `-- name: GetSessionInvoiceByPaymentRequest :one
-SELECT id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
+SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
   WHERE payment_request = $1
 `
 
@@ -72,6 +88,10 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 		&i.SessionID,
 		&i.AmountFiat,
 		&i.AmountMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
 		&i.Currency,
 		&i.PaymentRequest,
 		&i.Settled,
@@ -82,7 +102,7 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 }
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
-SELECT id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
+SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
@@ -101,6 +121,10 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 			&i.SessionID,
 			&i.AmountFiat,
 			&i.AmountMsat,
+			&i.CommissionFiat,
+			&i.CommissionMsat,
+			&i.TaxFiat,
+			&i.TaxMsat,
 			&i.Currency,
 			&i.PaymentRequest,
 			&i.Settled,
@@ -127,7 +151,7 @@ UPDATE session_invoices SET (
     last_updated
   ) = ($2, $3, $4)
   WHERE id = $1
-  RETURNING id, session_id, amount_fiat, amount_msat, currency, payment_request, settled, expired, last_updated
+  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated
 `
 
 type UpdateSessionInvoiceParams struct {
@@ -150,6 +174,10 @@ func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInv
 		&i.SessionID,
 		&i.AmountFiat,
 		&i.AmountMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
 		&i.Currency,
 		&i.PaymentRequest,
 		&i.Settled,
