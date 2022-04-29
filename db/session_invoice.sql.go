@@ -19,11 +19,11 @@ INSERT INTO session_invoices (
     tax_msat,
     currency,
     payment_request,
-    settled,
-    expired,
+    is_settled,
+    is_expired,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated
+  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated
 `
 
 type CreateSessionInvoiceParams struct {
@@ -36,8 +36,8 @@ type CreateSessionInvoiceParams struct {
 	TaxMsat        int64     `db:"tax_msat" json:"taxMsat"`
 	Currency       string    `db:"currency" json:"currency"`
 	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
-	Settled        bool      `db:"settled" json:"settled"`
-	Expired        bool      `db:"expired" json:"expired"`
+	IsSettled      bool      `db:"is_settled" json:"isSettled"`
+	IsExpired      bool      `db:"is_expired" json:"isExpired"`
 	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -52,8 +52,8 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		arg.TaxMsat,
 		arg.Currency,
 		arg.PaymentRequest,
-		arg.Settled,
-		arg.Expired,
+		arg.IsSettled,
+		arg.IsExpired,
 		arg.LastUpdated,
 	)
 	var i SessionInvoice
@@ -68,15 +68,15 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		&i.TaxMsat,
 		&i.Currency,
 		&i.PaymentRequest,
-		&i.Settled,
-		&i.Expired,
+		&i.IsSettled,
+		&i.IsExpired,
 		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const getSessionInvoiceByPaymentRequest = `-- name: GetSessionInvoiceByPaymentRequest :one
-SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
+SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated FROM session_invoices
   WHERE payment_request = $1
 `
 
@@ -94,15 +94,15 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 		&i.TaxMsat,
 		&i.Currency,
 		&i.PaymentRequest,
-		&i.Settled,
-		&i.Expired,
+		&i.IsSettled,
+		&i.IsExpired,
 		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
-SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated FROM session_invoices
+SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
@@ -127,8 +127,51 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 			&i.TaxMsat,
 			&i.Currency,
 			&i.PaymentRequest,
-			&i.Settled,
-			&i.Expired,
+			&i.IsSettled,
+			&i.IsExpired,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listUnsettledSessionInvoices = `-- name: ListUnsettledSessionInvoices :many
+SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated FROM session_invoices
+  WHERE session_id = $1 AND is_settled != true
+  ORDER BY id
+`
+
+func (q *Queries) ListUnsettledSessionInvoices(ctx context.Context, sessionID int64) ([]SessionInvoice, error) {
+	rows, err := q.db.QueryContext(ctx, listUnsettledSessionInvoices, sessionID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SessionInvoice
+	for rows.Next() {
+		var i SessionInvoice
+		if err := rows.Scan(
+			&i.ID,
+			&i.SessionID,
+			&i.AmountFiat,
+			&i.AmountMsat,
+			&i.CommissionFiat,
+			&i.CommissionMsat,
+			&i.TaxFiat,
+			&i.TaxMsat,
+			&i.Currency,
+			&i.PaymentRequest,
+			&i.IsSettled,
+			&i.IsExpired,
 			&i.LastUpdated,
 		); err != nil {
 			return nil, err
@@ -146,26 +189,26 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 
 const updateSessionInvoice = `-- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (
-    settled,
-    expired,
+    is_settled,
+    is_expired,
     last_updated
   ) = ($2, $3, $4)
   WHERE id = $1
-  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, settled, expired, last_updated
+  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated
 `
 
 type UpdateSessionInvoiceParams struct {
 	ID          int64     `db:"id" json:"id"`
-	Settled     bool      `db:"settled" json:"settled"`
-	Expired     bool      `db:"expired" json:"expired"`
+	IsSettled   bool      `db:"is_settled" json:"isSettled"`
+	IsExpired   bool      `db:"is_expired" json:"isExpired"`
 	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInvoiceParams) (SessionInvoice, error) {
 	row := q.db.QueryRowContext(ctx, updateSessionInvoice,
 		arg.ID,
-		arg.Settled,
-		arg.Expired,
+		arg.IsSettled,
+		arg.IsExpired,
 		arg.LastUpdated,
 	)
 	var i SessionInvoice
@@ -180,8 +223,8 @@ func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInv
 		&i.TaxMsat,
 		&i.Currency,
 		&i.PaymentRequest,
-		&i.Settled,
-		&i.Expired,
+		&i.IsSettled,
+		&i.IsExpired,
 		&i.LastUpdated,
 	)
 	return i, err

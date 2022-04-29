@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS session_invoices (
     tax_msat        BIGINT NOT NULL,
     currency        TEXT NOT NULL,
     payment_request TEXT NOT NULL,
-    settled         BOOLEAN NOT NULL,
-    expired         BOOLEAN NOT NULL,
+    is_settled      BOOLEAN NOT NULL,
+    is_expired      BOOLEAN NOT NULL,
     last_updated    TIMESTAMP NOT NULL
 );
 
