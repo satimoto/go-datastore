@@ -30,6 +30,9 @@ ALTER TABLE IF EXISTS sessions
 
 ALTER TABLE IF EXISTS sessions 
     DROP CONSTRAINT IF EXISTS fk_sessions_token_id;
+
+ALTER TABLE IF EXISTS sessions 
+    DROP CONSTRAINT IF EXISTS fk_sessions_user_id;
     
 ALTER TABLE IF EXISTS sessions 
     DROP CONSTRAINT IF EXISTS fk_sessions_credential_id;
