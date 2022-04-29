@@ -919,8 +919,8 @@ type SessionInvoice struct {
 	TaxMsat        int64     `db:"tax_msat" json:"taxMsat"`
 	Currency       string    `db:"currency" json:"currency"`
 	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
-	Settled        bool      `db:"settled" json:"settled"`
-	Expired        bool      `db:"expired" json:"expired"`
+	IsSettled      bool      `db:"is_settled" json:"isSettled"`
+	IsExpired      bool      `db:"is_expired" json:"isExpired"`
 	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
