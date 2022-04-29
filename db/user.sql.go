@@ -136,6 +136,28 @@ func (q *Queries) GetUserByPubkey(ctx context.Context, pubkey string) (User, err
 	return i, err
 }
 
+const getUserBySessionID = `-- name: GetUserBySessionID :one
+SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id, u.commission_percent, u.is_admin, u.referrer_id FROM users u
+  INNER JOIN sessions s ON s.user_id = u.id
+  WHERE s.id = $1
+`
+
+func (q *Queries) GetUserBySessionID(ctx context.Context, id int64) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserBySessionID, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingPubkey,
+		&i.Pubkey,
+		&i.DeviceToken,
+		&i.NodeID,
+		&i.CommissionPercent,
+		&i.IsAdmin,
+		&i.ReferrerID,
+	)
+	return i, err
+}
+
 const getUserByTokenID = `-- name: GetUserByTokenID :one
 SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id, u.commission_percent, u.is_admin, u.referrer_id FROM users u
   INNER JOIN tokens t ON t.user_id = u.id

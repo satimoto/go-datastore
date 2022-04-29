@@ -144,14 +144,16 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 	return items, nil
 }
 
-const listUnsettledSessionInvoices = `-- name: ListUnsettledSessionInvoices :many
-SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated FROM session_invoices
-  WHERE session_id = $1 AND is_settled != true
-  ORDER BY id
+const listUnsettledSessionInvoicesByUserID = `-- name: ListUnsettledSessionInvoicesByUserID :many
+SELECT si.id, si.session_id, si.amount_fiat, si.amount_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.currency, si.payment_request, si.is_settled, si.is_expired, si.last_updated FROM session_invoices si
+  INNER JOIN sessions s ON s.id = si.session_id
+  INNER JOIN users u ON u.id = s.user_id
+  WHERE u.id = $1 AND si.is_settled != true
+  ORDER BY si.id
 `
 
-func (q *Queries) ListUnsettledSessionInvoices(ctx context.Context, sessionID int64) ([]SessionInvoice, error) {
-	rows, err := q.db.QueryContext(ctx, listUnsettledSessionInvoices, sessionID)
+func (q *Queries) ListUnsettledSessionInvoicesByUserID(ctx context.Context, id int64) ([]SessionInvoice, error) {
+	rows, err := q.db.QueryContext(ctx, listUnsettledSessionInvoicesByUserID, id)
 	if err != nil {
 		return nil, err
 	}

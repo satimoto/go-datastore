@@ -24,10 +24,12 @@ SELECT * FROM session_invoices
   WHERE session_id = $1
   ORDER BY id;
 
--- name: ListUnsettledSessionInvoices :many
-SELECT * FROM session_invoices
-  WHERE session_id = $1 AND is_settled != true
-  ORDER BY id;
+-- name: ListUnsettledSessionInvoicesByUserID :many
+SELECT si.* FROM session_invoices si
+  INNER JOIN sessions s ON s.id = si.session_id
+  INNER JOIN users u ON u.id = s.user_id
+  WHERE u.id = $1 AND si.is_settled != true
+  ORDER BY si.id;
 
 -- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (

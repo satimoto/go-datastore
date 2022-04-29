@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS sessions (
     kwh                 FLOAT NOT NULL,
     auth_id             TEXT NOT NULL,
     auth_method         auth_method_type NOT NULL,
+    user_id             BIGINT NOT NULL,
     token_id            BIGINT NOT NULL,
     location_id         BIGINT NOT NULL,
     evse_id             BIGINT NOT NULL,
@@ -47,6 +48,12 @@ ALTER TABLE sessions
     ADD CONSTRAINT fk_sessions_token_id
     FOREIGN KEY (token_id) 
     REFERENCES tokens(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE sessions
+    ADD CONSTRAINT fk_sessions_user_id
+    FOREIGN KEY (user_id) 
+    REFERENCES users(id) 
     ON DELETE RESTRICT;
 
 ALTER TABLE sessions
