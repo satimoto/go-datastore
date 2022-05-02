@@ -23,6 +23,11 @@ INSERT INTO sessions (
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
   RETURNING *;
 
+-- name: GetSessionByAuthorizationID :one
+SELECT * FROM sessions
+  WHERE authorization_id = $1
+  LIMIT 1;
+
 -- name: GetSessionByLastUpdated :one
 SELECT * FROM sessions
   WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
