@@ -25,7 +25,7 @@ INSERT INTO sessions (
 
 -- name: GetSessionByAuthorizationID :one
 SELECT * FROM sessions
-  WHERE authorization_id = $1
+  WHERE authorization_id = @authorization_id::string
   LIMIT 1;
 
 -- name: GetSessionByLastUpdated :one
