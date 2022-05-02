@@ -110,11 +110,11 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 
 const getSessionByAuthorizationID = `-- name: GetSessionByAuthorizationID :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated FROM sessions
-  WHERE authorization_id = $1
+  WHERE authorization_id = $1::string
   LIMIT 1
 `
 
-func (q *Queries) GetSessionByAuthorizationID(ctx context.Context, authorizationID sql.NullString) (Session, error) {
+func (q *Queries) GetSessionByAuthorizationID(ctx context.Context, authorizationID string) (Session, error) {
 	row := q.db.QueryRowContext(ctx, getSessionByAuthorizationID, authorizationID)
 	var i Session
 	err := row.Scan(
