@@ -1008,6 +1008,7 @@ type User struct {
 	NodeID            sql.NullInt64 `db:"node_id" json:"nodeID"`
 	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
 	IsAdmin           bool          `db:"is_admin" json:"isAdmin"`
+	IsRestricted      bool          `db:"is_restricted" json:"isRestricted"`
 	ReferrerID        sql.NullInt64 `db:"referrer_id" json:"referrerID"`
 }
 

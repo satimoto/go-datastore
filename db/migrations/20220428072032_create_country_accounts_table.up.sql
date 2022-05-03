@@ -16,6 +16,8 @@ ALTER TABLE users
 ALTER TABLE users
     ADD COLUMN is_admin BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE users
+    ADD COLUMN is_restricted BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE users
     ADD COLUMN referrer_id BIGINT;
 
 ALTER TABLE users
