@@ -532,6 +532,7 @@ type Cdr struct {
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
 	AuthID           string          `db:"auth_id" json:"authID"`
 	AuthMethod       AuthMethodType  `db:"auth_method" json:"authMethod"`
+	UserID           int64           `db:"user_id" json:"userID"`
 	TokenID          int64           `db:"token_id" json:"tokenID"`
 	LocationID       int64           `db:"location_id" json:"locationID"`
 	EvseID           int64           `db:"evse_id" json:"evseID"`
