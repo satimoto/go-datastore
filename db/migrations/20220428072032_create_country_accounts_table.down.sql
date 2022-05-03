@@ -3,6 +3,9 @@ ALTER TABLE IF EXISTS users
     DROP CONSTRAINT IF EXISTS fk_users_referrer_id;
 
 ALTER TABLE IF EXISTS users 
+    DROP IF EXISTS is_restricted;
+
+ALTER TABLE IF EXISTS users 
     DROP IF EXISTS is_admin;
 
 ALTER TABLE IF EXISTS users 
