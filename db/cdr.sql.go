@@ -20,6 +20,7 @@ INSERT INTO cdrs (
     stop_date_time,
     auth_id,
     auth_method,
+    user_id,
     token_id,
     location_id,
     evse_id,
@@ -33,8 +34,8 @@ INSERT INTO cdrs (
     total_parking_time,
     remark,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
-  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
 `
 
 type CreateCdrParams struct {
@@ -47,6 +48,7 @@ type CreateCdrParams struct {
 	StopDateTime     sql.NullTime    `db:"stop_date_time" json:"stopDateTime"`
 	AuthID           string          `db:"auth_id" json:"authID"`
 	AuthMethod       AuthMethodType  `db:"auth_method" json:"authMethod"`
+	UserID           int64           `db:"user_id" json:"userID"`
 	TokenID          int64           `db:"token_id" json:"tokenID"`
 	LocationID       int64           `db:"location_id" json:"locationID"`
 	EvseID           int64           `db:"evse_id" json:"evseID"`
@@ -73,6 +75,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 		arg.StopDateTime,
 		arg.AuthID,
 		arg.AuthMethod,
+		arg.UserID,
 		arg.TokenID,
 		arg.LocationID,
 		arg.EvseID,
@@ -99,6 +102,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 		&i.StopDateTime,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.UserID,
 		&i.TokenID,
 		&i.LocationID,
 		&i.EvseID,
@@ -117,7 +121,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 }
 
 const getCdrByLastUpdated = `-- name: GetCdrByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -145,6 +149,7 @@ func (q *Queries) GetCdrByLastUpdated(ctx context.Context, arg GetCdrByLastUpdat
 		&i.StopDateTime,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.UserID,
 		&i.TokenID,
 		&i.LocationID,
 		&i.EvseID,
@@ -163,7 +168,7 @@ func (q *Queries) GetCdrByLastUpdated(ctx context.Context, arg GetCdrByLastUpdat
 }
 
 const getCdrByUid = `-- name: GetCdrByUid :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
   WHERE uid = $1
 `
 
@@ -181,6 +186,7 @@ func (q *Queries) GetCdrByUid(ctx context.Context, uid string) (Cdr, error) {
 		&i.StopDateTime,
 		&i.AuthID,
 		&i.AuthMethod,
+		&i.UserID,
 		&i.TokenID,
 		&i.LocationID,
 		&i.EvseID,

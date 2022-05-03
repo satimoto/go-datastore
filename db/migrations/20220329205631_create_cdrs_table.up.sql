@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS cdrs (
     stop_date_time      TIMESTAMP,
     auth_id             TEXT NOT NULL,
     auth_method         auth_method_type NOT NULL,
+    user_id             BIGINT NOT NULL,
     token_id            BIGINT NOT NULL,
     location_id         BIGINT NOT NULL,
     evse_id             BIGINT NOT NULL,
@@ -59,6 +60,12 @@ ALTER TABLE cdrs
     FOREIGN KEY (credential_id) 
     REFERENCES credentials(id) 
     ON DELETE SET NULL;
+
+ALTER TABLE cdrs
+    ADD CONSTRAINT fk_cdrs_user_id
+    FOREIGN KEY (user_id) 
+    REFERENCES users(id) 
+    ON DELETE RESTRICT;
 
 ALTER TABLE cdrs
     ADD CONSTRAINT fk_cdrs_token_id

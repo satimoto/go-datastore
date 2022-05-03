@@ -45,15 +45,15 @@ ALTER TABLE sessions
     ON DELETE SET NULL;
 
 ALTER TABLE sessions
-    ADD CONSTRAINT fk_sessions_token_id
-    FOREIGN KEY (token_id) 
-    REFERENCES tokens(id) 
-    ON DELETE RESTRICT;
-
-ALTER TABLE sessions
     ADD CONSTRAINT fk_sessions_user_id
     FOREIGN KEY (user_id) 
     REFERENCES users(id) 
+    ON DELETE RESTRICT;
+
+ALTER TABLE sessions
+    ADD CONSTRAINT fk_sessions_token_id
+    FOREIGN KEY (token_id) 
+    REFERENCES tokens(id) 
     ON DELETE RESTRICT;
 
 ALTER TABLE sessions

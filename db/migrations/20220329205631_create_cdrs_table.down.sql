@@ -31,6 +31,9 @@ ALTER TABLE IF EXISTS cdrs
     DROP CONSTRAINT IF EXISTS fk_cdrs_token_id;
 
 ALTER TABLE IF EXISTS cdrs 
+    DROP CONSTRAINT IF EXISTS fk_cdrs_user_id;
+
+ALTER TABLE IF EXISTS cdrs 
     DROP CONSTRAINT IF EXISTS fk_cdrs_credential_id;
 
 DROP INDEX IF EXISTS idx_cdrs_uid;

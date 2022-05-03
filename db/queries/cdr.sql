@@ -9,6 +9,7 @@ INSERT INTO cdrs (
     stop_date_time,
     auth_id,
     auth_method,
+    user_id,
     token_id,
     location_id,
     evse_id,
@@ -22,7 +23,7 @@ INSERT INTO cdrs (
     total_parking_time,
     remark,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
   RETURNING *;
 
 -- name: GetCdrByLastUpdated :one
