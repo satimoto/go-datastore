@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS cdr_charging_periods;
 ALTER TABLE IF EXISTS tariffs
     DROP CONSTRAINT IF EXISTS fk_tariffs_cdr_id;
 
-ALTER TABLE tariffs
+ALTER TABLE IF EXISTS tariffs
     DROP IF EXISTS cdr_id;
 
 -- CDRs
