@@ -2,7 +2,7 @@
 ALTER TABLE IF EXISTS credentials
     DROP CONSTRAINT IF EXISTS fk_credentials_version_id;
 
-ALTER TABLE credentials
+ALTER TABLE IF EXISTS credentials
     DROP IF EXISTS version_id;
 
 -- Version Endpoints
