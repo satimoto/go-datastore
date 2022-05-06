@@ -2,6 +2,8 @@ package util
 
 import (
 	"log"
+	"net/http"
+	"net/http/httputil"
 )
 
 func LogOnError(code string, message string, err error) {
@@ -15,5 +17,16 @@ func PanicOnError(code string, message string, err error) {
 	if err != nil {
 		log.Fatalf("%s: %s", code, message)
 		log.Fatalf("%s: %v", code, err)
+	}
+}
+
+func LogHttpResponse(code, url string, response *http.Response, body bool) {
+	bytes, err := httputil.DumpResponse(response, body)
+
+	if err != nil {
+		log.Printf("%s: %s", code, err)
+	} else {
+		log.Printf("%s: %s", code, url)
+		log.Println(string(bytes))
 	}
 }
