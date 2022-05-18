@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/satimoto/go-datastore/geom"
+	"github.com/satimoto/go-datastore/pkg/geom"
 )
 
 func SqlNullBool(i interface{}) sql.NullBool {
