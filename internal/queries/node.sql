@@ -20,6 +20,11 @@ SELECT * FROM nodes
 SELECT * FROM nodes
   WHERE pubkey = $1;
 
+-- name: GetNodeByUserID :one
+SELECT n.* FROM nodes n
+  INNER JOIN users u ON u.node_id = n.id
+  WHERE u.id = $1;
+
 -- name: ListNodes :many
 SELECT * FROM nodes
   ORDER BY peers ASC;

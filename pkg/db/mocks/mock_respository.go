@@ -1,0 +1,457 @@
+package mocks
+
+import (
+	"time"
+
+	"github.com/satimoto/go-datastore/pkg/db"
+)
+
+type MockRepository interface {
+	GetCreateAuthenticationMockData() (db.CreateAuthenticationParams, error)
+	GetCreateBusinessDetailMockData() (db.CreateBusinessDetailParams, error)
+	GetCreateCalibrationMockData() (db.CreateCalibrationParams, error)
+	GetCreateCalibrationValueMockData() (db.CreateCalibrationValueParams, error)
+	GetCreateCdrMockData() (db.CreateCdrParams, error)
+	GetCreateChannelRequestMockData() (db.CreateChannelRequestParams, error)
+	GetCreateChannelRequestHtlcMockData() (db.CreateChannelRequestHtlcParams, error)
+	GetCreateChargingPeriodMockData() (time.Time, error)
+	GetCreateChargingPeriodDimensionMockData() (db.CreateChargingPeriodDimensionParams, error)
+	GetCreateConnectorMockData() (db.CreateConnectorParams, error)
+	GetCreateCommandReservationMockData() (db.CreateCommandReservationParams, error)
+	GetCreateCommandStartMockData() (db.CreateCommandStartParams, error)
+	GetCreateCommandStopMockData() (db.CreateCommandStopParams, error)
+	GetCreateCommandUnlockMockData() (db.CreateCommandUnlockParams, error)
+	GetCreateCountryAccountMockData() (db.CreateCountryAccountParams, error)
+	GetCreateCredentialMockData() (db.CreateCredentialParams, error)
+	GetCreateDisplayTextMockData() (db.CreateDisplayTextParams, error)
+	GetCreateElementMockData() (db.CreateElementParams, error)
+	GetCreateElementRestrictionMockData() (db.CreateElementRestrictionParams, error)
+	GetCreateEnergyMixMockData() (db.CreateEnergyMixParams, error)
+	GetCreateEnergySourceMockData() (db.CreateEnergySourceParams, error)
+	GetCreateEnvironmentalImpactMockData() (db.CreateEnvironmentalImpactParams, error)
+	GetCreateEvseMockData() (db.CreateEvseParams, error)
+	GetCreateExceptionalPeriodMockData() (db.CreateExceptionalPeriodParams, error)
+	GetCreateGeoLocationMockData() (db.CreateGeoLocationParams, error)
+	GetCreateImageMockData() (db.CreateImageParams, error)
+	GetCreateLocationMockData() (db.CreateLocationParams, error)
+	GetCreateNodeMockData() (db.CreateNodeParams, error)
+	GetCreateOpeningTimeMockData() (bool, error)
+	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
+	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
+	GetCreateRegularHourMockData() (db.CreateRegularHourParams, error)
+	GetCreateSessionMockData() (db.CreateSessionParams, error)
+	GetCreateSessionInvoiceMockData() (db.CreateSessionInvoiceParams, error)
+	GetCreateStatusScheduleMockData() (db.CreateStatusScheduleParams, error)
+	GetCreateTariffMockData() (db.CreateTariffParams, error)
+	GetCreateTariffRestrictionMockData() (db.CreateTariffRestrictionParams, error)
+	GetCreateTokenMockData() (db.CreateTokenParams, error)
+	GetCreateTokenAuthorizationMockData() (db.CreateTokenAuthorizationParams, error)
+	GetCreateUserMockData() (db.CreateUserParams, error)
+	GetCreateVersionMockData() (db.CreateVersionParams, error)
+	GetCreateVersionEndpointMockData() (db.CreateVersionEndpointParams, error)
+	GetDeleteAuthenticationMockData() (int64, error)
+	GetDeleteBusinessDetailMockData() (int64, error)
+	GetDeleteBusinessDetailLogoMockData() (int64, error)
+	GetDeleteCdrChargingPeriodsMockData() (int64, error)
+	GetDeleteChannelRequestMockData() (int64, error)
+	GetDeleteChargingPeriodDimensionsMockData() (int64, error)
+	GetDeleteConnectorsMockData() (int64, error)
+	GetDeleteElementsMockData() (int64, error)
+	GetDeleteElementRestrictionsMockData() (int64, error)
+	GetDeleteEnergySourcesMockData() (int64, error)
+	GetDeleteEnvironmentalImpactsMockData() (int64, error)
+	GetDeleteEvseDirectionsMockData() (int64, error)
+	GetDeleteEvseImagesMockData() (int64, error)
+	GetDeleteExceptionalClosingPeriodsMockData() (int64, error)
+	GetDeleteExceptionalOpeningPeriodsMockData() (int64, error)
+	GetDeleteGeoLocationMockData() (int64, error)
+	GetDeleteLocationDirectionsMockData() (int64, error)
+	GetDeleteLocationImagesMockData() (int64, error)
+	GetDeleteOpeningTimeMockData() (int64, error)
+	GetDeletePriceComponentsMockData() (int64, error)
+	GetDeletePriceComponentRoundingsMockData() (int64, error)
+	GetDeleteRegularHoursMockData() (int64, error)
+	GetDeleteRelatedLocationsMockData() (int64, error)
+	GetDeleteSessionChargingPeriodsMockData() (int64, error)
+	GetDeleteStatusScheduleMockData() (int64, error)
+	GetDeleteTariffAltTextsMockData() (int64, error)
+	GetDeleteTariffByUidMockData() (string, error)
+	GetDeleteTariffRestrictionMockData() (int64, error)
+	GetDeleteTokenByUidMockData() (string, error)
+	GetDeleteVersionsMockData() (int64, error)
+	GetDeleteVersionEndpointsMockData() (int64, error)
+	GetSetCdrChargingPeriodMockData() (db.SetCdrChargingPeriodParams, error)
+	GetSetElementRestrictionWeekdayMockData() (db.SetElementRestrictionWeekdayParams, error)
+	GetSetEvseCapabilityMockData() (db.SetEvseCapabilityParams, error)
+	GetSetEvseDirectionMockData() (db.SetEvseDirectionParams, error)
+	GetSetEvseImageMockData() (db.SetEvseImageParams, error)
+	GetSetEvseParkingRestrictionMockData() (db.SetEvseParkingRestrictionParams, error)
+	GetSetLocationDirectionMockData() (db.SetLocationDirectionParams, error)
+	GetSetLocationFacilityMockData() (db.SetLocationFacilityParams, error)
+	GetSetLocationImageMockData() (db.SetLocationImageParams, error)
+	GetSetRelatedLocationMockData() (db.SetRelatedLocationParams, error)
+	GetSetSessionChargingPeriodMockData() (db.SetSessionChargingPeriodParams, error)
+	GetSetTariffAltTextMockData() (db.SetTariffAltTextParams, error)
+	GetSetTariffRestrictionWeekdayMockData() (db.SetTariffRestrictionWeekdayParams, error)
+	GetSetTokenAuthorizationConnectorMockData() (db.SetTokenAuthorizationConnectorParams, error)
+	GetSetTokenAuthorizationEvseMockData() (db.SetTokenAuthorizationEvseParams, error)
+	GetUnsetElementRestrictionWeekdaysMockData() (int64, error)
+	GetUnsetEvseCapabilitiesMockData() (int64, error)
+	GetUnsetEvseParkingRestrictionsMockData() (int64, error)
+	GetUnsetLocationFacilitiesMockData() (int64, error)
+	GetUnsetTariffRestrictionWeekdaysMockData() (int64, error)
+	GetUpdateAuthenticationMockData() (db.UpdateAuthenticationParams, error)
+	GetUpdateBusinessDetailMockData() (db.UpdateBusinessDetailParams, error)
+	GetUpdateConnectorByUidMockData() (db.UpdateConnectorByUidParams, error)
+	GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error)
+	GetUpdateChannelRequestByChannelPointMockData() (db.UpdateChannelRequestByChannelPointParams, error)
+	GetUpdateChannelRequestStatusMockData() (db.UpdateChannelRequestStatusParams, error)
+	GetUpdateChannelRequestHtlcsMockData() (db.UpdateChannelRequestHtlcParams, error)
+	GetUpdateCommandReservationMockData() (db.UpdateCommandReservationParams, error)
+	GetUpdateCommandStartMockData() (db.UpdateCommandStartParams, error)
+	GetUpdateCommandStopMockData() (db.UpdateCommandStopParams, error)
+	GetUpdateCommandUnlockMockData() (db.UpdateCommandUnlockParams, error)
+	GetUpdateCredentialMockData() (db.UpdateCredentialParams, error)
+	GetUpdateElementRestrictionMockData() (db.UpdateElementRestrictionParams, error)
+	GetUpdateEnergyMixMockData() (db.UpdateEnergyMixParams, error)
+	GetUpdateEvseByUidMockData() (db.UpdateEvseByUidParams, error)
+	GetUpdateEvseLastUpdatedMockData() (db.UpdateEvseLastUpdatedParams, error)
+	GetUpdateGeoLocationMockData() (db.UpdateGeoLocationParams, error)
+	GetUpdateLocationAvailabilityMockData() (db.UpdateLocationAvailabilityParams, error)
+	GetUpdateLocationByUidMockData() (db.UpdateLocationByUidParams, error)
+	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
+	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
+	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
+	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
+	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
+	GetUpdateTariffByUidMockData() (db.UpdateTariffByUidParams, error)
+	GetUpdateTariffRestrictionMockData() (db.UpdateTariffRestrictionParams, error)
+	GetUpdateTokenAuthorizationByAuthorizationIDMockData() (db.UpdateTokenAuthorizationByAuthorizationIDParams, error)
+	GetUpdateTokenByUidMockData() (db.UpdateTokenByUidParams, error)
+	GetUpdateUserMockData() (db.UpdateUserParams, error)
+	SetGetAuthenticationByCodeMockData(response AuthenticationMockData)
+	SetGetAuthenticationByChallengeMockData(response AuthenticationMockData)
+	SetGetBusinessDetailMockData(response BusinessDetailMockData)
+	SetGetCalibrationMockData(response CalibrationMockData)
+	SetGetCdrByLastUpdatedMockData(response CdrMockData)
+	SetGetCdrByUidMockData(response CdrMockData)
+	SetGetChannelRequestMockData(response ChannelRequestMockData)
+	SetGetChannelRequestHtlcMockData(response ChannelRequestHtlcMockData)
+	SetGetChannelRequestHtlcByCircuitKeyMockData(response ChannelRequestHtlcMockData)
+	SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData)
+	SetGetConnectorMockData(response ConnectorMockData)
+	SetGetConnectorByUidMockData(response ConnectorMockData)
+	SetGetCommandReservationMockData(response CommandReservationMockData)
+	SetGetCommandStartMockData(response CommandStartMockData)
+	SetGetCommandStopMockData(response CommandStopMockData)
+	SetGetCommandUnlockMockData(response CommandUnlockMockData)
+	SetGetCountryAccountByCountryMockData(response CountryAccountMockData)
+	SetGetCredentialMockData(response CredentialMockData)
+	SetGetCredentialByPartyAndCountryCodeMockData(response CredentialMockData)
+	SetGetCredentialByServerTokenMockData(response CredentialMockData)
+	SetGetElementRestrictionMockData(response ElementRestrictionMockData)
+	SetGetEnergyMixMockData(response EnergyMixMockData)
+	SetGetEvseMockData(response EvseMockData)
+	SetGetEvseByUidMockData(response EvseMockData)
+	SetGetGeoLocationMockData(response GeoLocationMockData)
+	SetGetImageMockData(response ImageMockData)
+	SetGetLocationMockData(response LocationMockData)
+	SetGetLocationByLastUpdatedMockData(response LocationMockData)
+	SetGetLocationByUidMockData(response LocationMockData)
+	SetGetNodeMockData(response NodeMockData)
+	SetGetNodeByPubkeyMockData(response NodeMockData)
+	SetGetNodeByUserIDMockData(response NodeMockData)
+	SetGetOpeningTimeMockData(response OpeningTimeMockData)
+	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
+	SetGetSessionByAuthorizationIDMockData(response SessionMockData)
+	SetGetSessionByLastUpdatedMockData(response SessionMockData)
+	SetGetSessionByUidMockData(response SessionMockData)
+	SetGetSessionInvoiceByPaymentRequestMockData(response SessionInvoiceMockData)
+	SetGetTariffByLastUpdatedMockData(response TariffMockData)
+	SetGetTariffByUidMockData(response TariffMockData)
+	SetGetTariffRestrictionMockData(response TariffRestrictionMockData)
+	SetGetTokenAuthorizationByAuthorizationIDMockData(response TokenAuthorizationMockData)
+	SetGetTokenMockData(response TokenMockData)
+	SetGetTokenByAuthIDMockData(response TokenMockData)
+	SetGetTokenByUidMockData(response TokenMockData)
+	SetGetTokenByUserIDMockData(response TokenMockData)
+	SetGetUserMockData(response UserMockData)
+	SetGetUserByDeviceTokenMockData(response UserMockData)
+	SetGetUserByLinkingPubkeyMockData(response UserMockData)
+	SetGetUserByPubkeyMockData(response UserMockData)
+	SetGetUserBySessionIDMockData(response UserMockData)
+	SetGetUserByTokenIDMockData(response UserMockData)
+	SetGetVersionMockData(response VersionMockData)
+	SetGetVersionEndpointMockData(response VersionEndpointMockData)
+	SetGetVersionEndpointByIdentityMockData(response VersionEndpointMockData)
+	SetListCalibrationValuesMockData(response CalibrationValuesMockData)
+	SetListCapabilitiesMockData(response CapabilitiesMockData)
+	SetListCdrChargingPeriodsMockData(response ChargingPeriodsMockData)
+	SetListChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
+	SetListChargingPeriodDimensionsMockData(response ChargingPeriodDimensionsMockData)
+	SetListCredentialsMockData(response CredentialsMockData)
+	SetListUnsettledChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
+	SetListConnectorsMockData(response ConnectorsMockData)
+	SetListElementsMockData(response ElementsMockData)
+	SetListElementRestrictionWeekdaysMockData(response WeekdaysMockData)
+	SetListEnergySourcesMockData(response EnergySourcesMockData)
+	SetListEnvironmentalImpactsMockData(response EnvironmentalImpactsMockData)
+	SetListEvsesMockData(response EvsesMockData)
+	SetListEvseCapabilitiesMockData(response CapabilitiesMockData)
+	SetListEvseDirectionsMockData(response DisplayTextsMockData)
+	SetListEvseImagesMockData(response ImagesMockData)
+	SetListEvseParkingRestrictionsMockData(response ParkingRestrictionsMockData)
+	SetListExceptionalOpeningPeriodsMockData(response ExceptionalPeriodsMockData)
+	SetListExceptionalClosingPeriodsMockData(response ExceptionalPeriodsMockData)
+	SetListFacilitiesMockData(response FacilitiesMockData)
+	SetListLocationDirectionsMockData(response DisplayTextsMockData)
+	SetListLocationFacilitiesMockData(response FacilitiesMockData)
+	SetListLocationImagesMockData(response ImagesMockData)
+	SetListLocationsMockData(response LocationsMockData)
+	SetListLocationsByGeomMockData(response LocationsMockData)
+	SetListParkingRestrictionsMockData(response ParkingRestrictionsMockData)
+	SetListPriceComponentsMockData(response PriceComponentsMockData)
+	SetListRegularHoursMockData(response RegularHoursMockData)
+	SetListRelatedLocationsMockData(response GeoLocationsMockData)
+	SetListSessionChargingPeriodsMockData(response ChargingPeriodsMockData)
+	SetListSessionInvoicesMockData(response SessionInvoicesMockData)
+	SetListUnsettledSessionInvoicesByUserIDMockData(response SessionInvoicesMockData)
+	SetListStatusSchedulesMockData(response StatusSchedulesMockData)
+	SetListTariffAltTextsMockData(response DisplayTextsMockData)
+	SetListTariffRestrictionWeekdaysMockData(response WeekdaysMockData)
+	SetListTariffsByCdrMockData(response TariffsMockData)
+	SetListTokensMockData(response TokensMockData)
+	SetListTokensByUserIDMockData(response TokensMockData)
+	SetListTokenAuthorizationConnectorsMockData(response ConnectorsMockData)
+	SetListTokenAuthorizationEvsesMockData(response EvsesMockData)
+	SetListVersionsMockData(response VersionsMockData)
+	SetListVersionEndpointsMockData(response VersionEndpointsMockData)
+	SetListWeekdaysMockData(response WeekdaysMockData)
+}
+
+type MockRepositoryService struct {
+	createAuthenticationMockData                      []db.CreateAuthenticationParams
+	createBusinessDetailMockData                      []db.CreateBusinessDetailParams
+	createCalibrationMockData                         []db.CreateCalibrationParams
+	createCalibrationValueMockData                    []db.CreateCalibrationValueParams
+	createCdrMockData                                 []db.CreateCdrParams
+	createChannelRequestMockData                      []db.CreateChannelRequestParams
+	createChannelRequestHtlcMockData                  []db.CreateChannelRequestHtlcParams
+	createChargingPeriodMockData                      []time.Time
+	createChargingPeriodDimensionMockData             []db.CreateChargingPeriodDimensionParams
+	createConnectorMockData                           []db.CreateConnectorParams
+	createCommandReservationMockData                  []db.CreateCommandReservationParams
+	createCommandStartMockData                        []db.CreateCommandStartParams
+	createCommandStopMockData                         []db.CreateCommandStopParams
+	createCommandUnlockMockData                       []db.CreateCommandUnlockParams
+	createCountryAccountMockData                      []db.CreateCountryAccountParams
+	createCredentialMockData                          []db.CreateCredentialParams
+	createDisplayTextMockData                         []db.CreateDisplayTextParams
+	createElementMockData                             []db.CreateElementParams
+	createElementRestrictionMockData                  []db.CreateElementRestrictionParams
+	createEnergyMixMockData                           []db.CreateEnergyMixParams
+	createEnergySourceMockData                        []db.CreateEnergySourceParams
+	createEnvironmentalImpactMockData                 []db.CreateEnvironmentalImpactParams
+	createEvseMockData                                []db.CreateEvseParams
+	createExceptionalPeriodMockData                   []db.CreateExceptionalPeriodParams
+	createGeoLocationMockData                         []db.CreateGeoLocationParams
+	createImageMockData                               []db.CreateImageParams
+	createLocationMockData                            []db.CreateLocationParams
+	createOpeningTimeMockData                         []bool
+	createNodeMockData                                []db.CreateNodeParams
+	createPriceComponentMockData                      []db.CreatePriceComponentParams
+	createPriceComponentRoundingMockData              []db.CreatePriceComponentRoundingParams
+	createRegularHourMockData                         []db.CreateRegularHourParams
+	createSessionMockData                             []db.CreateSessionParams
+	createSessionInvoiceMockData                      []db.CreateSessionInvoiceParams
+	createStatusScheduleMockData                      []db.CreateStatusScheduleParams
+	createTariffMockData                              []db.CreateTariffParams
+	createTariffRestrictionMockData                   []db.CreateTariffRestrictionParams
+	createTokenMockData                               []db.CreateTokenParams
+	createTokenAuthorizationMockData                  []db.CreateTokenAuthorizationParams
+	createUserMockData                                []db.CreateUserParams
+	createVersionMockData                             []db.CreateVersionParams
+	createVersionEndpointMockData                     []db.CreateVersionEndpointParams
+	deleteAuthenticationMockData                      []int64
+	deleteBusinessDetailMockData                      []int64
+	deleteBusinessDetailLogoMockData                  []int64
+	deleteCdrChargingPeriodsMockData                  []int64
+	deleteChannelRequestMockData                      []int64
+	deleteChargingPeriodDimensionsMockData            []int64
+	deleteConnectorsMockData                          []int64
+	deleteElementsMockData                            []int64
+	deleteElementRestrictionsMockData                 []int64
+	deleteEnergySourcesMockData                       []int64
+	deleteEnvironmentalImpactsMockData                []int64
+	deleteEvseDirectionsMockData                      []int64
+	deleteEvseImagesMockData                          []int64
+	deleteExceptionalClosingPeriodsMockData           []int64
+	deleteExceptionalOpeningPeriodsMockData           []int64
+	deleteGeoLocationMockData                         []int64
+	deleteLocationDirectionsMockData                  []int64
+	deleteLocationImagesMockData                      []int64
+	deleteOpeningTimeMockData                         []int64
+	deletePriceComponentsMockData                     []int64
+	deletePriceComponentRoundingsMockData             []int64
+	deleteRegularHoursMockData                        []int64
+	deleteRelatedLocationsMockData                    []int64
+	deleteSessionChargingPeriodsMockData              []int64
+	deleteStatusScheduleMockData                      []int64
+	deleteTariffByUidMockData                         []string
+	deleteTariffAltTextsMockData                      []int64
+	deleteTariffRestrictionMockData                   []int64
+	deleteTokenByUidMockData                          []string
+	deleteVersionsMockData                            []int64
+	deleteVersionEndpointsMockData                    []int64
+	getAuthenticationByCodeMockData                   []AuthenticationMockData
+	getAuthenticationByChallengeMockData              []AuthenticationMockData
+	getBusinessDetailMockData                         []BusinessDetailMockData
+	getCalibrationMockData                            []CalibrationMockData
+	getGetCdrByLastUpdatedMockData                    []CdrMockData
+	getCdrByUidMockData                               []CdrMockData
+	getChannelRequestMockData                         []ChannelRequestMockData
+	getChannelRequestHtlcMockData                     []ChannelRequestHtlcMockData
+	getChannelRequestHtlcByCircuitKeyMockData         []ChannelRequestHtlcMockData
+	getChannelRequestByPaymentHashMockData            []ChannelRequestMockData
+	getConnectorMockData                              []ConnectorMockData
+	getConnectorByUidMockData                         []ConnectorMockData
+	getCommandReservationMockData                     []CommandReservationMockData
+	getCommandStartMockData                           []CommandStartMockData
+	getCommandStopMockData                            []CommandStopMockData
+	getCommandUnlockMockData                          []CommandUnlockMockData
+	getCountryAccountByCountryMockData                []CountryAccountMockData
+	getCredentialMockData                             []CredentialMockData
+	getCredentialByPartyAndCountryCodeMockData        []CredentialMockData
+	getCredentialByServerTokenMockData                []CredentialMockData
+	getElementRestrictionMockData                     []ElementRestrictionMockData
+	getEnergyMixMockData                              []EnergyMixMockData
+	getEvseMockData                                   []EvseMockData
+	getEvseByUidMockData                              []EvseMockData
+	getGeoLocationMockData                            []GeoLocationMockData
+	getImageMockData                                  []ImageMockData
+	getLocationMockData                               []LocationMockData
+	GetLocationByLastUpdatedMockData                  []LocationMockData
+	getLocationByUidMockData                          []LocationMockData
+	getNodeMockData                                   []NodeMockData
+	getNodeByPubkeyMockData                           []NodeMockData
+	getNodeByUserIDMockData                           []NodeMockData
+	getOpeningTimeMockData                            []OpeningTimeMockData
+	getPriceComponentRoundingMockData                 []PriceComponentRoundingMockData
+	getSessionByAuthorizationIDMockData               []SessionMockData
+	getSessionByLastUpdatedMockData                   []SessionMockData
+	getSessionByUidMockData                           []SessionMockData
+	getSessionInvoiceByPaymentRequestMockData         []SessionInvoiceMockData
+	getGetTariffByLastUpdatedMockData                 []TariffMockData
+	getTariffByUidMockData                            []TariffMockData
+	getTariffRestrictionMockData                      []TariffRestrictionMockData
+	getTokenAuthorizationByAuthorizationIDMockData    []TokenAuthorizationMockData
+	getTokenMockData                                  []TokenMockData
+	getTokenByAuthIDMockData                          []TokenMockData
+	getTokenByUidMockData                             []TokenMockData
+	getTokenByUserIDMockData                          []TokenMockData
+	getUserMockData                                   []UserMockData
+	getUserByDeviceTokenMockData                      []UserMockData
+	getUserByLinkingPubkeyMockData                    []UserMockData
+	getUserByPubkeyMockData                           []UserMockData
+	getUserBySessionIDMockData                        []UserMockData
+	getUserByTokenIDMockData                          []UserMockData
+	getVersionMockData                                []VersionMockData
+	getVersionEndpointMockData                        []VersionEndpointMockData
+	getVersionEndpointByIdentityMockData              []VersionEndpointMockData
+	listCalibrationValuesMockData                     []CalibrationValuesMockData
+	listCapabilitiesMockData                          []CapabilitiesMockData
+	listCdrChargingPeriodsMockData                    []ChargingPeriodsMockData
+	listChannelRequestHtlcsMockData                   []ChannelRequestHtlcsMockData
+	listChargingPeriodDimensionsMockData              []ChargingPeriodDimensionsMockData
+	listCredentialsMockData                           []CredentialsMockData
+	listUnsettledChannelRequestHtlcsMockData          []ChannelRequestHtlcsMockData
+	listConnectorsMockData                            []ConnectorsMockData
+	listElementsMockData                              []ElementsMockData
+	listElementRestrictionWeekdaysMockData            []WeekdaysMockData
+	listEnergySourcesMockData                         []EnergySourcesMockData
+	listEnvironmentalImpactsMockData                  []EnvironmentalImpactsMockData
+	listEvsesMockData                                 []EvsesMockData
+	listEvseCapabilitiesMockData                      []CapabilitiesMockData
+	listEvseDirectionsMockData                        []DisplayTextsMockData
+	listEvseImagesMockData                            []ImagesMockData
+	listEvseParkingRestrictionsMockData               []ParkingRestrictionsMockData
+	listExceptionalOpeningPeriodsMockData             []ExceptionalPeriodsMockData
+	listExceptionalClosingPeriodsMockData             []ExceptionalPeriodsMockData
+	listFacilitiesMockData                            []FacilitiesMockData
+	listLocationDirectionsMockData                    []DisplayTextsMockData
+	listLocationFacilitiesMockData                    []FacilitiesMockData
+	listLocationImagesMockData                        []ImagesMockData
+	listLocationsMockData                             []LocationsMockData
+	listLocationsByGeomMockData                       []LocationsMockData
+	listParkingRestrictionsMockData                   []ParkingRestrictionsMockData
+	listPriceComponentsMockData                       []PriceComponentsMockData
+	listRegularHoursMockData                          []RegularHoursMockData
+	listRelatedLocationsMockData                      []GeoLocationsMockData
+	listSessionChargingPeriodsMockData                []ChargingPeriodsMockData
+	listSessionInvoicesMockData                       []SessionInvoicesMockData
+	listUnsettledSessionInvoicesByUserIDMockData      []SessionInvoicesMockData
+	listStatusSchedulesMockData                       []StatusSchedulesMockData
+	listTariffAltTextsMockData                        []DisplayTextsMockData
+	listTariffRestrictionWeekdaysMockData             []WeekdaysMockData
+	listTariffsByCdrMockData                          []TariffsMockData
+	listTokensMockData                                []TokensMockData
+	listTokensByUserIDMockData                        []TokensMockData
+	listTokenAuthorizationConnectorsMockData          []ConnectorsMockData
+	listTokenAuthorizationEvsesMockData               []EvsesMockData
+	listVersionsMockData                              []VersionsMockData
+	listVersionEndpointsMockData                      []VersionEndpointsMockData
+	listWeekdaysMockData                              []WeekdaysMockData
+	setCdrChargingPeriodMockData                      []db.SetCdrChargingPeriodParams
+	setElementRestrictionWeekdayMockData              []db.SetElementRestrictionWeekdayParams
+	setEvseCapabilityMockData                         []db.SetEvseCapabilityParams
+	setEvseDirectionMockData                          []db.SetEvseDirectionParams
+	setEvseImageMockData                              []db.SetEvseImageParams
+	setEvseParkingRestrictionMockData                 []db.SetEvseParkingRestrictionParams
+	setLocationDirectionMockData                      []db.SetLocationDirectionParams
+	setLocationFacilityMockData                       []db.SetLocationFacilityParams
+	setLocationImageMockData                          []db.SetLocationImageParams
+	setRelatedLocationMockData                        []db.SetRelatedLocationParams
+	setSessionChargingPeriodMockData                  []db.SetSessionChargingPeriodParams
+	setTariffAltTextMockData                          []db.SetTariffAltTextParams
+	setTariffRestrictionWeekdayMockData               []db.SetTariffRestrictionWeekdayParams
+	setTokenAuthorizationConnectorMockData            []db.SetTokenAuthorizationConnectorParams
+	setTokenAuthorizationEvseMockData                 []db.SetTokenAuthorizationEvseParams
+	unsetElementRestrictionWeekdaysMockData           []int64
+	unsetEvseCapabilitiesMockData                     []int64
+	unsetEvseParkingRestrictionsMockData              []int64
+	unsetLocationFacilitiesMockData                   []int64
+	unsetTariffRestrictionWeekdaysMockData            []int64
+	updateAuthenticationMockData                      []db.UpdateAuthenticationParams
+	updateBusinessDetailMockData                      []db.UpdateBusinessDetailParams
+	updateChannelRequestMockData                      []db.UpdateChannelRequestParams
+	updateChannelRequestByChannelPointMockData        []db.UpdateChannelRequestByChannelPointParams
+	updateChannelRequestStatusMockData                []db.UpdateChannelRequestStatusParams
+	updateChannelRequestHtlcMockData                  []db.UpdateChannelRequestHtlcParams
+	updateConnectorByUidMockData                      []db.UpdateConnectorByUidParams
+	updateCommandReservationMockData                  []db.UpdateCommandReservationParams
+	updateCommandStartMockData                        []db.UpdateCommandStartParams
+	updateCommandStopMockData                         []db.UpdateCommandStopParams
+	updateCommandUnlockMockData                       []db.UpdateCommandUnlockParams
+	updateCredentialMockData                          []db.UpdateCredentialParams
+	updateElementRestrictionMockData                  []db.UpdateElementRestrictionParams
+	updateEnergyMixMockData                           []db.UpdateEnergyMixParams
+	updateEvseByUidMockData                           []db.UpdateEvseByUidParams
+	updateEvseLastUpdatedMockData                     []db.UpdateEvseLastUpdatedParams
+	updateGeoLocationMockData                         []db.UpdateGeoLocationParams
+	updateLocationAvailabilityMockData                []db.UpdateLocationAvailabilityParams
+	updateLocationByUidMockData                       []db.UpdateLocationByUidParams
+	updateLocationLastUpdatedMockData                 []db.UpdateLocationLastUpdatedParams
+	updateNodeMockData                                []db.UpdateNodeParams
+	updateOpeningTimeMockData                         []db.UpdateOpeningTimeParams
+	updateUserMockData                                []db.UpdateUserParams
+	updateSessionByUidMockData                        []db.UpdateSessionByUidParams
+	updateSessionInvoiceMockData                      []db.UpdateSessionInvoiceParams
+	updateTariffByUidMockData                         []db.UpdateTariffByUidParams
+	updateTariffRestrictionMockData                   []db.UpdateTariffRestrictionParams
+	updateTokenByUidMockData                          []db.UpdateTokenByUidParams
+	updateTokenAuthorizationByAuthorizationIDMockData []db.UpdateTokenAuthorizationByAuthorizationIDParams
+}
+
+func NewMockRepositoryService() *MockRepositoryService {
+	return &MockRepositoryService{}
+}

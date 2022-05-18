@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/paulmach/orb/geojson"
-	"github.com/satimoto/go-datastore/geom"
+	"github.com/satimoto/go-datastore/pkg/geom"
 )
 
 func TestNullGeometry(t *testing.T) {

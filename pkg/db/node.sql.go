@@ -108,6 +108,30 @@ func (q *Queries) GetNodeByPubkey(ctx context.Context, pubkey string) (Node, err
 	return i, err
 }
 
+const getNodeByUserID = `-- name: GetNodeByUserID :one
+SELECT n.id, n.pubkey, n.node_addr, n.lsp_addr, n.alias, n.color, n.commit_hash, n.version, n.channels, n.peers FROM nodes n
+  INNER JOIN users u ON u.node_id = n.id
+  WHERE u.id = $1
+`
+
+func (q *Queries) GetNodeByUserID(ctx context.Context, id int64) (Node, error) {
+	row := q.db.QueryRowContext(ctx, getNodeByUserID, id)
+	var i Node
+	err := row.Scan(
+		&i.ID,
+		&i.Pubkey,
+		&i.NodeAddr,
+		&i.LspAddr,
+		&i.Alias,
+		&i.Color,
+		&i.CommitHash,
+		&i.Version,
+		&i.Channels,
+		&i.Peers,
+	)
+	return i, err
+}
+
 const listNodes = `-- name: ListNodes :many
 SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers FROM nodes
   ORDER BY peers ASC
