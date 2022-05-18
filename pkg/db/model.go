@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/satimoto/go-datastore/geom"
+	"github.com/satimoto/go-datastore/pkg/geom"
 )
 
 type AuthMethodType string

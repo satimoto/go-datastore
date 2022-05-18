@@ -8,7 +8,7 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/satimoto/go-datastore/geom"
+	"github.com/satimoto/go-datastore/pkg/geom"
 )
 
 const createLocation = `-- name: CreateLocation :one
