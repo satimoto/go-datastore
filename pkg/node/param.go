@@ -1,6 +1,6 @@
 package node
 
-import "github.com/satimoto/go-datastore/db"
+import "github.com/satimoto/go-datastore/pkg/db"
 
 func NewUpdateNodeParams(node db.Node) db.UpdateNodeParams {
 	return db.UpdateNodeParams{
