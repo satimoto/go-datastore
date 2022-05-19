@@ -65,6 +65,7 @@ type MockRepository interface {
 	GetDeleteExceptionalClosingPeriodsMockData() (int64, error)
 	GetDeleteExceptionalOpeningPeriodsMockData() (int64, error)
 	GetDeleteGeoLocationMockData() (int64, error)
+	GetDeleteImageMockData() (int64, error)
 	GetDeleteLocationDirectionsMockData() (int64, error)
 	GetDeleteLocationImagesMockData() (int64, error)
 	GetDeleteOpeningTimeMockData() (int64, error)
@@ -117,6 +118,7 @@ type MockRepository interface {
 	GetUpdateEvseByUidMockData() (db.UpdateEvseByUidParams, error)
 	GetUpdateEvseLastUpdatedMockData() (db.UpdateEvseLastUpdatedParams, error)
 	GetUpdateGeoLocationMockData() (db.UpdateGeoLocationParams, error)
+	GetUpdateImageMockData() (db.UpdateImageParams, error)
 	GetUpdateLocationAvailabilityMockData() (db.UpdateLocationAvailabilityParams, error)
 	GetUpdateLocationByUidMockData() (db.UpdateLocationByUidParams, error)
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
@@ -289,6 +291,7 @@ type MockRepositoryService struct {
 	deleteExceptionalClosingPeriodsMockData           []int64
 	deleteExceptionalOpeningPeriodsMockData           []int64
 	deleteGeoLocationMockData                         []int64
+	deleteImageMockData                               []int64
 	deleteLocationDirectionsMockData                  []int64
 	deleteLocationImagesMockData                      []int64
 	deleteOpeningTimeMockData                         []int64
@@ -384,7 +387,7 @@ type MockRepositoryService struct {
 	listLocationImagesMockData                        []ImagesMockData
 	listLocationsMockData                             []LocationsMockData
 	listLocationsByGeomMockData                       []LocationsMockData
-	listNodesMockData                             []NodesMockData
+	listNodesMockData                                 []NodesMockData
 	listParkingRestrictionsMockData                   []ParkingRestrictionsMockData
 	listPriceComponentsMockData                       []PriceComponentsMockData
 	listRegularHoursMockData                          []RegularHoursMockData
@@ -440,6 +443,7 @@ type MockRepositoryService struct {
 	updateEvseByUidMockData                           []db.UpdateEvseByUidParams
 	updateEvseLastUpdatedMockData                     []db.UpdateEvseLastUpdatedParams
 	updateGeoLocationMockData                         []db.UpdateGeoLocationParams
+	updateImageMockData                               []db.UpdateImageParams
 	updateLocationAvailabilityMockData                []db.UpdateLocationAvailabilityParams
 	updateLocationByUidMockData                       []db.UpdateLocationByUidParams
 	updateLocationLastUpdatedMockData                 []db.UpdateLocationLastUpdatedParams
