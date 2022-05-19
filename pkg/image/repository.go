@@ -13,11 +13,6 @@ type ImageRepository interface {
 	UpdateImage(ctx context.Context, arg db.UpdateImageParams) (db.Image, error)
 }
 
-type ImageResolver struct {
-	Repository ImageRepository
-}
-
-func NewResolver(repositoryService *db.RepositoryService) *ImageResolver {
-	repo := ImageRepository(repositoryService)
-	return &ImageResolver{repo}
+func NewRepository(repositoryService *db.RepositoryService) ImageRepository {
+	return ImageRepository(repositoryService)
 }

@@ -15,14 +15,6 @@ type NodeRepository interface {
 	UpdateNode(ctx context.Context, arg db.UpdateNodeParams) (db.Node, error)
 }
 
-type NodeResolver struct {
-	Repository NodeRepository
-}
-
-func NewResolver(repositoryService *db.RepositoryService) *NodeResolver {
-	repo := NodeRepository(repositoryService)
-
-	return &NodeResolver{
-		Repository: repo,
-	}
+func NewRepository(repositoryService *db.RepositoryService) NodeRepository {
+	return NodeRepository(repositoryService)
 }
