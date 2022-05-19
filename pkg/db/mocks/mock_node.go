@@ -11,6 +11,11 @@ type NodeMockData struct {
 	Error error
 }
 
+type NodesMockData struct {
+	Nodes []db.Node
+	Error error
+}
+
 func (r *MockRepositoryService) CreateNode(ctx context.Context, arg db.CreateNodeParams) (db.Node, error) {
 	r.createNodeMockData = append(r.createNodeMockData, arg)
 	return db.Node{}, nil
@@ -26,7 +31,7 @@ func (r *MockRepositoryService) GetNode(ctx context.Context, id int64) (db.Node,
 	return response.Node, response.Error
 }
 
-func (r *MockRepositoryService) GetNodeByPubkey(ctx context.Context, nodeKey string) (db.Node, error) {
+func (r *MockRepositoryService) GetNodeByPubkey(ctx context.Context, pubkey string) (db.Node, error) {
 	if len(r.getNodeByPubkeyMockData) == 0 {
 		return db.Node{}, ErrorNotFound()
 	}
@@ -36,7 +41,7 @@ func (r *MockRepositoryService) GetNodeByPubkey(ctx context.Context, nodeKey str
 	return response.Node, response.Error
 }
 
-func (r *MockRepositoryService) GetNodeByUserID(ctx context.Context, id string) (db.Node, error) {
+func (r *MockRepositoryService) GetNodeByUserID(ctx context.Context, id int64) (db.Node, error) {
 	if len(r.getNodeByUserIDMockData) == 0 {
 		return db.Node{}, ErrorNotFound()
 	}
@@ -44,6 +49,16 @@ func (r *MockRepositoryService) GetNodeByUserID(ctx context.Context, id string) 
 	response := r.getNodeByUserIDMockData[0]
 	r.getNodeByUserIDMockData = r.getNodeByUserIDMockData[1:]
 	return response.Node, response.Error
+}
+
+func (r *MockRepositoryService) ListNodes(ctx context.Context) ([]db.Node, error) {
+	if len(r.listNodesMockData) == 0 {
+		return []db.Node{}, nil
+	}
+
+	response := r.listNodesMockData[0]
+	r.listNodesMockData = r.listNodesMockData[1:]
+	return response.Nodes, response.Error
 }
 
 func (r *MockRepositoryService) UpdateNode(ctx context.Context, arg db.UpdateNodeParams) (db.Node, error) {
@@ -71,6 +86,10 @@ func (r *MockRepositoryService) SetGetNodeByPubkeyMockData(response NodeMockData
 
 func (r *MockRepositoryService) SetGetNodeByUserIDMockData(response NodeMockData) {
 	r.getNodeMockData = append(r.getNodeByUserIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetListNodesMockData(response NodesMockData) {
+	r.listNodesMockData = append(r.listNodesMockData, response)
 }
 
 func (r *MockRepositoryService) GetUpdateNodeMockData() (db.UpdateNodeParams, error) {
