@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/energymix"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) energymix.EnergyMixRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) energymix.EnergyMixRepository {
 	return energymix.EnergyMixRepository(repositoryService)
 }

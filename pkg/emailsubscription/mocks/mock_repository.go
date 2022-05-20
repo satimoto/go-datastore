@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/emailsubscription"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) emailsubscription.EmailSubscriptionRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) emailsubscription.EmailSubscriptionRepository {
 	return emailsubscription.EmailSubscriptionRepository(repositoryService)
 }

@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/tariff"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) tariff.TariffRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) tariff.TariffRepository {
 	return tariff.TariffRepository(repositoryService)
 }

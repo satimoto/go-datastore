@@ -5,6 +5,6 @@ import (
 	mocks "github.com/satimoto/go-datastore/pkg/db/mocks"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) channelrequest.ChannelRequestRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) channelrequest.ChannelRequestRepository {
 	return channelrequest.ChannelRequestRepository(repositoryService)
 }

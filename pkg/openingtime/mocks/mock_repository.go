@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/openingtime"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) openingtime.OpeningTimeRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) openingtime.OpeningTimeRepository {
 	return openingtime.OpeningTimeRepository(repositoryService)
 }

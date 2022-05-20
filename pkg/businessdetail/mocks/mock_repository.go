@@ -5,6 +5,6 @@ import (
 	mocks "github.com/satimoto/go-datastore/pkg/db/mocks"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) businessdetail.BusinessDetailRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) businessdetail.BusinessDetailRepository {
 	return businessdetail.BusinessDetailRepository(repositoryService)
 }
