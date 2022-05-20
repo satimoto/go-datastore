@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/token"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) token.TokenRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) token.TokenRepository {
 	return token.TokenRepository(repositoryService)
 }

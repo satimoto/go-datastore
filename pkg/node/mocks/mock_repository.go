@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/node"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) node.NodeRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) node.NodeRepository {
 	return node.NodeRepository(repositoryService)
 }

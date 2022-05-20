@@ -5,6 +5,6 @@ import (
 	"github.com/satimoto/go-datastore/pkg/evse"
 )
 
-func NewResolver(repositoryService *mocks.MockRepositoryService) evse.EvseRepository {
+func NewRepository(repositoryService *mocks.MockRepositoryService) evse.EvseRepository {
 	return evse.EvseRepository(repositoryService)
 }
