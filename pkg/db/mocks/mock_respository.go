@@ -26,6 +26,7 @@ type MockRepository interface {
 	GetCreateDisplayTextMockData() (db.CreateDisplayTextParams, error)
 	GetCreateElementMockData() (db.CreateElementParams, error)
 	GetCreateElementRestrictionMockData() (db.CreateElementRestrictionParams, error)
+	GetCreateEmailSubscriptionMockData() (db.CreateEmailSubscriptionParams, error)
 	GetCreateEnergyMixMockData() (db.CreateEnergyMixParams, error)
 	GetCreateEnergySourceMockData() (db.CreateEnergySourceParams, error)
 	GetCreateEnvironmentalImpactMockData() (db.CreateEnvironmentalImpactParams, error)
@@ -114,6 +115,7 @@ type MockRepository interface {
 	GetUpdateCommandUnlockMockData() (db.UpdateCommandUnlockParams, error)
 	GetUpdateCredentialMockData() (db.UpdateCredentialParams, error)
 	GetUpdateElementRestrictionMockData() (db.UpdateElementRestrictionParams, error)
+	GetUpdateEmailSubscriptionMockData() (db.UpdateEmailSubscriptionParams, error)
 	GetUpdateEnergyMixMockData() (db.UpdateEnergyMixParams, error)
 	GetUpdateEvseByUidMockData() (db.UpdateEvseByUidParams, error)
 	GetUpdateEvseLastUpdatedMockData() (db.UpdateEvseLastUpdatedParams, error)
@@ -152,6 +154,7 @@ type MockRepository interface {
 	SetGetCredentialByPartyAndCountryCodeMockData(response CredentialMockData)
 	SetGetCredentialByServerTokenMockData(response CredentialMockData)
 	SetGetElementRestrictionMockData(response ElementRestrictionMockData)
+	SetGetEmailSubscriptionByEmailMockData(response EmailSubscriptionMockData)
 	SetGetEnergyMixMockData(response EnergyMixMockData)
 	SetGetEvseMockData(response EvseMockData)
 	SetGetEvseByUidMockData(response EvseMockData)
@@ -252,6 +255,7 @@ type MockRepositoryService struct {
 	createDisplayTextMockData                         []db.CreateDisplayTextParams
 	createElementMockData                             []db.CreateElementParams
 	createElementRestrictionMockData                  []db.CreateElementRestrictionParams
+	createEmailSubscriptionMockData                   []db.CreateEmailSubscriptionParams
 	createEnergyMixMockData                           []db.CreateEnergyMixParams
 	createEnergySourceMockData                        []db.CreateEnergySourceParams
 	createEnvironmentalImpactMockData                 []db.CreateEnvironmentalImpactParams
@@ -328,6 +332,7 @@ type MockRepositoryService struct {
 	getCredentialByPartyAndCountryCodeMockData        []CredentialMockData
 	getCredentialByServerTokenMockData                []CredentialMockData
 	getElementRestrictionMockData                     []ElementRestrictionMockData
+	getEmailSubscriptionByEmailMockData               []EmailSubscriptionMockData
 	getEnergyMixMockData                              []EnergyMixMockData
 	getEvseMockData                                   []EvseMockData
 	getEvseByUidMockData                              []EvseMockData
@@ -439,6 +444,7 @@ type MockRepositoryService struct {
 	updateCommandUnlockMockData                       []db.UpdateCommandUnlockParams
 	updateCredentialMockData                          []db.UpdateCredentialParams
 	updateElementRestrictionMockData                  []db.UpdateElementRestrictionParams
+	updateEmailSubscriptionMockData                   []db.UpdateEmailSubscriptionParams
 	updateEnergyMixMockData                           []db.UpdateEnergyMixParams
 	updateEvseByUidMockData                           []db.UpdateEvseByUidParams
 	updateEvseLastUpdatedMockData                     []db.UpdateEvseLastUpdatedParams

@@ -1,0 +1,38 @@
+package location
+
+import (
+	"context"
+
+	"github.com/satimoto/go-datastore/pkg/db"
+)
+
+type LocationRepository interface {
+	CreateLocation(ctx context.Context, arg db.CreateLocationParams) (db.Location, error)
+	DeleteLocationDirections(ctx context.Context, locationID int64) error
+	DeleteLocationImages(ctx context.Context, locationID int64) error
+	DeleteRelatedLocations(ctx context.Context, locationID int64) error
+	GetConnector(ctx context.Context, id int64) (db.Connector, error)
+	GetEvse(ctx context.Context, id int64) (db.Evse, error)
+	GetLocation(ctx context.Context, id int64) (db.Location, error)
+	GetLocationByLastUpdated(ctx context.Context, arg db.GetLocationByLastUpdatedParams) (db.Location, error)
+	GetLocationByUid(ctx context.Context, uid string) (db.Location, error)
+	ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
+	ListFacilities(ctx context.Context) ([]db.Facility, error)
+	ListLocationsByGeom(ctx context.Context, arg db.ListLocationsByGeomParams) ([]db.Location, error)
+	ListLocationDirections(ctx context.Context, locationID int64) ([]db.DisplayText, error)
+	ListLocationFacilities(ctx context.Context, locationID int64) ([]db.Facility, error)
+	ListLocationImages(ctx context.Context, locationID int64) ([]db.Image, error)
+	ListLocations(ctx context.Context) ([]db.Location, error)
+	ListRelatedLocations(ctx context.Context, locationID int64) ([]db.GeoLocation, error)
+	SetLocationDirection(ctx context.Context, arg db.SetLocationDirectionParams) error
+	SetLocationFacility(ctx context.Context, arg db.SetLocationFacilityParams) error
+	SetLocationImage(ctx context.Context, arg db.SetLocationImageParams) error
+	SetRelatedLocation(ctx context.Context, arg db.SetRelatedLocationParams) error
+	UnsetLocationFacilities(ctx context.Context, locationID int64) error
+	UpdateLocationByUid(ctx context.Context, arg db.UpdateLocationByUidParams) (db.Location, error)
+	UpdateLocationLastUpdated(ctx context.Context, arg db.UpdateLocationLastUpdatedParams) error
+}
+
+func NewRepository(repositoryService *db.RepositoryService) LocationRepository {
+	return LocationRepository(repositoryService)
+}
