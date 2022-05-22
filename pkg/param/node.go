@@ -1,4 +1,4 @@
-package node
+package param
 
 import "github.com/satimoto/go-datastore/pkg/db"
 
