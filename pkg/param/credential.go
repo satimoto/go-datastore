@@ -11,6 +11,7 @@ func NewUpdateCredentialParams(credential db.Credential) db.UpdateCredentialPara
 		CountryCode: credential.CountryCode,
 		PartyID:     credential.PartyID,
 		IsHub:       credential.IsHub,
+		VersionID:   credential.VersionID,
 		LastUpdated: credential.LastUpdated,
 	}
 }
