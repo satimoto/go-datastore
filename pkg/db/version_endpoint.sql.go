@@ -63,7 +63,7 @@ func (q *Queries) GetVersionEndpoint(ctx context.Context, id int64) (VersionEndp
 
 const getVersionEndpointByIdentity = `-- name: GetVersionEndpointByIdentity :one
 SELECT ve.id, ve.version_id, ve.identifier, ve.url FROM version_endpoints ve
-  INNER JOIN credentials c ON vc.version_id = c.version_id
+  INNER JOIN credentials c ON ve.version_id = c.version_id
   WHERE ve.identifier = $1 AND c.country_code = $2 AND c.party_id = $3
 `
 
