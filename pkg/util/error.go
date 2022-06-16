@@ -21,22 +21,27 @@ func PanicOnError(code string, message string, err error) {
 }
 
 func LogHttpRequest(code, url string, request *http.Request, body bool) {
-	bytes, err := httputil.DumpRequest(request, body)
+	if request != nil {
+		bytes, err := httputil.DumpRequest(request, body)
 
-	if err != nil {
-		log.Printf("%s: %s", code, err)
-	} else {
-		log.Printf("%s: %s", code, url)
-		log.Println(string(bytes))
+		if err != nil {
+			log.Printf("%s: %s", code, err)
+		} else {
+			log.Printf("%s: %s", code, url)
+			log.Println(string(bytes))
+		}
 	}
 }
-func LogHttpResponse(code, url string, response *http.Response, body bool) {
-	bytes, err := httputil.DumpResponse(response, body)
 
-	if err != nil {
-		log.Printf("%s: %s", code, err)
-	} else {
-		log.Printf("%s: %s", code, url)
-		log.Println(string(bytes))
+func LogHttpResponse(code, url string, response *http.Response, body bool) {
+	if response != nil {
+		bytes, err := httputil.DumpResponse(response, body)
+
+		if err != nil {
+			log.Printf("%s: %s", code, err)
+		} else {
+			log.Printf("%s: %s", code, url)
+			log.Println(string(bytes))
+		}
 	}
 }
