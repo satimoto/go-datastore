@@ -2,6 +2,7 @@ package geom
 
 import (
 	"database/sql/driver"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/paulmach/orb"
@@ -27,8 +28,13 @@ func (g *Geometry4326) Scan(i interface{}) error {
 		g.Type = ig.Type
 	case []byte:
 		s := ewkb.Scanner(nil)
+		n, err := hex.Decode(t, t)
 
-		if err := s.Scan(i); err != nil {
+		if err != nil {
+			return err
+		}
+	
+		if err := s.Scan(t[:n]); err != nil {
 			return err
 		}
 	
