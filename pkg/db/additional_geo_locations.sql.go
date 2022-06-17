@@ -63,7 +63,6 @@ func (q *Queries) DeleteAdditionalGeoLocations(ctx context.Context, locationID i
 const listAdditionalGeoLocations = `-- name: ListAdditionalGeoLocations :many
 SELECT location_id, display_text_id, latitude, latitude_float, longitude, longitude_float FROM additional_geo_locations
   WHERE location_id = $1
-  ORDER BY id
 `
 
 func (q *Queries) ListAdditionalGeoLocations(ctx context.Context, locationID int64) ([]AdditionalGeoLocation, error) {

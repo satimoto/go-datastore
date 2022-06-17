@@ -15,5 +15,4 @@ DELETE FROM additional_geo_locations
 
 -- name: ListAdditionalGeoLocations :many
 SELECT * FROM additional_geo_locations
-  WHERE location_id = $1
-  ORDER BY id;
+  WHERE location_id = $1;
