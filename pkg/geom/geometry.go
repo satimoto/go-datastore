@@ -46,7 +46,7 @@ func (g *Geometry4326) Scan(i interface{}) error {
 }
 
 func (g Geometry4326) Value() (driver.Value, error) {
-	return ewkb.Value(g.Coordinates, 4326), nil
+	return ewkb.Value(g.Coordinates, 4326).Value()
 }
 
 type NullGeometry4326 struct {
