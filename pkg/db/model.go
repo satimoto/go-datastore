@@ -483,6 +483,15 @@ func (e *TokenWhitelistType) Scan(src interface{}) error {
 	return nil
 }
 
+type AdditionalGeoLocation struct {
+	LocationID     int64         `db:"location_id" json:"locationID"`
+	DisplayTextID  sql.NullInt64 `db:"display_text_id" json:"displayTextID"`
+	Latitude       string        `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64       `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string        `db:"longitude" json:"longitude"`
+	LongitudeFloat float64       `db:"longitude_float" json:"longitudeFloat"`
+}
+
 type Authentication struct {
 	ID            int64                 `db:"id" json:"id"`
 	Code          string                `db:"code" json:"code"`
@@ -766,12 +775,11 @@ type Facility struct {
 }
 
 type GeoLocation struct {
-	ID             int64          `db:"id" json:"id"`
-	Latitude       string         `db:"latitude" json:"latitude"`
-	LatitudeFloat  float64        `db:"latitude_float" json:"latitudeFloat"`
-	Longitude      string         `db:"longitude" json:"longitude"`
-	LongitudeFloat float64        `db:"longitude_float" json:"longitudeFloat"`
-	Name           sql.NullString `db:"name" json:"name"`
+	ID             int64   `db:"id" json:"id"`
+	Latitude       string  `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64 `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string  `db:"longitude" json:"longitude"`
+	LongitudeFloat float64 `db:"longitude_float" json:"longitudeFloat"`
 }
 
 type Image struct {
@@ -874,11 +882,6 @@ type RegularHour struct {
 	Weekday       int16  `db:"weekday" json:"weekday"`
 	PeriodBegin   string `db:"period_begin" json:"periodBegin"`
 	PeriodEnd     string `db:"period_end" json:"periodEnd"`
-}
-
-type RelatedLocation struct {
-	LocationID    int64 `db:"location_id" json:"locationID"`
-	GeoLocationID int64 `db:"geo_location_id" json:"geoLocationID"`
 }
 
 type Session struct {

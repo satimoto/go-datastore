@@ -3,9 +3,8 @@ INSERT INTO geo_locations (
      latitude, 
      latitude_float, 
      longitude, 
-     longitude_float, 
-     name
-  ) VALUES ($1, $2, $3, $4, $5)
+     longitude_float 
+  ) VALUES ($1, $2, $3, $4)
   RETURNING *;
 
 -- name: DeleteGeoLocation :exec
@@ -25,8 +24,7 @@ UPDATE geo_locations SET (
     latitude, 
     latitude_float, 
     longitude, 
-    longitude_float, 
-    name
-  ) = ($2, $3, $4, $5, $6)
+    longitude_float 
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
   RETURNING *;
