@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createGeoLocation = `-- name: CreateGeoLocation :one
@@ -13,18 +12,16 @@ INSERT INTO geo_locations (
      latitude, 
      latitude_float, 
      longitude, 
-     longitude_float, 
-     name
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, latitude, latitude_float, longitude, longitude_float, name
+     longitude_float 
+  ) VALUES ($1, $2, $3, $4)
+  RETURNING id, latitude, latitude_float, longitude, longitude_float
 `
 
 type CreateGeoLocationParams struct {
-	Latitude       string         `db:"latitude" json:"latitude"`
-	LatitudeFloat  float64        `db:"latitude_float" json:"latitudeFloat"`
-	Longitude      string         `db:"longitude" json:"longitude"`
-	LongitudeFloat float64        `db:"longitude_float" json:"longitudeFloat"`
-	Name           sql.NullString `db:"name" json:"name"`
+	Latitude       string  `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64 `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string  `db:"longitude" json:"longitude"`
+	LongitudeFloat float64 `db:"longitude_float" json:"longitudeFloat"`
 }
 
 func (q *Queries) CreateGeoLocation(ctx context.Context, arg CreateGeoLocationParams) (GeoLocation, error) {
@@ -33,7 +30,6 @@ func (q *Queries) CreateGeoLocation(ctx context.Context, arg CreateGeoLocationPa
 		arg.LatitudeFloat,
 		arg.Longitude,
 		arg.LongitudeFloat,
-		arg.Name,
 	)
 	var i GeoLocation
 	err := row.Scan(
@@ -42,7 +38,6 @@ func (q *Queries) CreateGeoLocation(ctx context.Context, arg CreateGeoLocationPa
 		&i.LatitudeFloat,
 		&i.Longitude,
 		&i.LongitudeFloat,
-		&i.Name,
 	)
 	return i, err
 }
@@ -58,7 +53,7 @@ func (q *Queries) DeleteGeoLocation(ctx context.Context, id int64) error {
 }
 
 const getGeoLocation = `-- name: GetGeoLocation :one
-SELECT id, latitude, latitude_float, longitude, longitude_float, name FROM geo_locations
+SELECT id, latitude, latitude_float, longitude, longitude_float FROM geo_locations
   WHERE id = $1
 `
 
@@ -71,13 +66,12 @@ func (q *Queries) GetGeoLocation(ctx context.Context, id int64) (GeoLocation, er
 		&i.LatitudeFloat,
 		&i.Longitude,
 		&i.LongitudeFloat,
-		&i.Name,
 	)
 	return i, err
 }
 
 const listGeoLocations = `-- name: ListGeoLocations :many
-SELECT id, latitude, latitude_float, longitude, longitude_float, name FROM geo_locations
+SELECT id, latitude, latitude_float, longitude, longitude_float FROM geo_locations
   ORDER BY name
 `
 
@@ -96,7 +90,6 @@ func (q *Queries) ListGeoLocations(ctx context.Context) ([]GeoLocation, error) {
 			&i.LatitudeFloat,
 			&i.Longitude,
 			&i.LongitudeFloat,
-			&i.Name,
 		); err != nil {
 			return nil, err
 		}
@@ -116,20 +109,18 @@ UPDATE geo_locations SET (
     latitude, 
     latitude_float, 
     longitude, 
-    longitude_float, 
-    name
-  ) = ($2, $3, $4, $5, $6)
+    longitude_float 
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
-  RETURNING id, latitude, latitude_float, longitude, longitude_float, name
+  RETURNING id, latitude, latitude_float, longitude, longitude_float
 `
 
 type UpdateGeoLocationParams struct {
-	ID             int64          `db:"id" json:"id"`
-	Latitude       string         `db:"latitude" json:"latitude"`
-	LatitudeFloat  float64        `db:"latitude_float" json:"latitudeFloat"`
-	Longitude      string         `db:"longitude" json:"longitude"`
-	LongitudeFloat float64        `db:"longitude_float" json:"longitudeFloat"`
-	Name           sql.NullString `db:"name" json:"name"`
+	ID             int64   `db:"id" json:"id"`
+	Latitude       string  `db:"latitude" json:"latitude"`
+	LatitudeFloat  float64 `db:"latitude_float" json:"latitudeFloat"`
+	Longitude      string  `db:"longitude" json:"longitude"`
+	LongitudeFloat float64 `db:"longitude_float" json:"longitudeFloat"`
 }
 
 func (q *Queries) UpdateGeoLocation(ctx context.Context, arg UpdateGeoLocationParams) (GeoLocation, error) {
@@ -139,7 +130,6 @@ func (q *Queries) UpdateGeoLocation(ctx context.Context, arg UpdateGeoLocationPa
 		arg.LatitudeFloat,
 		arg.Longitude,
 		arg.LongitudeFloat,
-		arg.Name,
 	)
 	var i GeoLocation
 	err := row.Scan(
@@ -148,7 +138,6 @@ func (q *Queries) UpdateGeoLocation(ctx context.Context, arg UpdateGeoLocationPa
 		&i.LatitudeFloat,
 		&i.Longitude,
 		&i.LongitudeFloat,
-		&i.Name,
 	)
 	return i, err
 }

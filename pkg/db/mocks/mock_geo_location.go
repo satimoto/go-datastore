@@ -22,7 +22,6 @@ func (r *MockRepositoryService) CreateGeoLocation(ctx context.Context, arg db.Cr
 		ID:        1,
 		Latitude:  arg.Latitude,
 		Longitude: arg.Longitude,
-		Name:      arg.Name,
 	}, nil
 }
 
@@ -47,7 +46,6 @@ func (r *MockRepositoryService) UpdateGeoLocation(ctx context.Context, arg db.Up
 		ID:        arg.ID,
 		Latitude:  arg.Latitude,
 		Longitude: arg.Longitude,
-		Name:      arg.Name,
 	}, nil
 }
 

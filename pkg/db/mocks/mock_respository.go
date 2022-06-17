@@ -7,6 +7,7 @@ import (
 )
 
 type MockRepository interface {
+	GetCreateAdditionalGeoLocationMockData() (db.CreateAdditionalGeoLocationParams, error)
 	GetCreateAuthenticationMockData() (db.CreateAuthenticationParams, error)
 	GetCreateBusinessDetailMockData() (db.CreateBusinessDetailParams, error)
 	GetCreateCalibrationMockData() (db.CreateCalibrationParams, error)
@@ -50,6 +51,7 @@ type MockRepository interface {
 	GetCreateUserMockData() (db.CreateUserParams, error)
 	GetCreateVersionMockData() (db.CreateVersionParams, error)
 	GetCreateVersionEndpointMockData() (db.CreateVersionEndpointParams, error)
+	GetDeleteAdditionalGeoLocationsMockData() (int64, error)
 	GetDeleteAuthenticationMockData() (int64, error)
 	GetDeleteBusinessDetailMockData() (int64, error)
 	GetDeleteBusinessDetailLogoMockData() (int64, error)
@@ -91,7 +93,6 @@ type MockRepository interface {
 	GetSetLocationDirectionMockData() (db.SetLocationDirectionParams, error)
 	GetSetLocationFacilityMockData() (db.SetLocationFacilityParams, error)
 	GetSetLocationImageMockData() (db.SetLocationImageParams, error)
-	GetSetRelatedLocationMockData() (db.SetRelatedLocationParams, error)
 	GetSetSessionChargingPeriodMockData() (db.SetSessionChargingPeriodParams, error)
 	GetSetTariffAltTextMockData() (db.SetTariffAltTextParams, error)
 	GetSetTariffRestrictionWeekdayMockData() (db.SetTariffRestrictionWeekdayParams, error)
@@ -189,6 +190,7 @@ type MockRepository interface {
 	SetGetVersionMockData(response VersionMockData)
 	SetGetVersionEndpointMockData(response VersionEndpointMockData)
 	SetGetVersionEndpointByIdentityMockData(response VersionEndpointMockData)
+	SetListAdditionalGeoLocationsMockData(response AdditionalGeoLocationsMockData)
 	SetListCalibrationValuesMockData(response CalibrationValuesMockData)
 	SetListCapabilitiesMockData(response CapabilitiesMockData)
 	SetListCdrChargingPeriodsMockData(response ChargingPeriodsMockData)
@@ -236,6 +238,7 @@ type MockRepository interface {
 }
 
 type MockRepositoryService struct {
+	createAdditionalGeoLocationMockData               []db.CreateAdditionalGeoLocationParams
 	createAuthenticationMockData                      []db.CreateAuthenticationParams
 	createBusinessDetailMockData                      []db.CreateBusinessDetailParams
 	createCalibrationMockData                         []db.CreateCalibrationParams
@@ -279,6 +282,7 @@ type MockRepositoryService struct {
 	createUserMockData                                []db.CreateUserParams
 	createVersionMockData                             []db.CreateVersionParams
 	createVersionEndpointMockData                     []db.CreateVersionEndpointParams
+	deleteAdditionalGeoLocationsMockData              []int64
 	deleteAuthenticationMockData                      []int64
 	deleteBusinessDetailMockData                      []int64
 	deleteBusinessDetailLogoMockData                  []int64
@@ -367,6 +371,7 @@ type MockRepositoryService struct {
 	getVersionMockData                                []VersionMockData
 	getVersionEndpointMockData                        []VersionEndpointMockData
 	getVersionEndpointByIdentityMockData              []VersionEndpointMockData
+	listAdditionalGeoLocationsMockData                []AdditionalGeoLocationsMockData
 	listCalibrationValuesMockData                     []CalibrationValuesMockData
 	listCapabilitiesMockData                          []CapabilitiesMockData
 	listCdrChargingPeriodsMockData                    []ChargingPeriodsMockData
@@ -420,7 +425,6 @@ type MockRepositoryService struct {
 	setLocationDirectionMockData                      []db.SetLocationDirectionParams
 	setLocationFacilityMockData                       []db.SetLocationFacilityParams
 	setLocationImageMockData                          []db.SetLocationImageParams
-	setRelatedLocationMockData                        []db.SetRelatedLocationParams
 	setSessionChargingPeriodMockData                  []db.SetSessionChargingPeriodParams
 	setTariffAltTextMockData                          []db.SetTariffAltTextParams
 	setTariffRestrictionWeekdayMockData               []db.SetTariffRestrictionWeekdayParams
