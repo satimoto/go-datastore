@@ -59,6 +59,7 @@ type MockRepository interface {
 	GetDeleteChannelRequestMockData() (int64, error)
 	GetDeleteChargingPeriodDimensionsMockData() (int64, error)
 	GetDeleteConnectorsMockData() (int64, error)
+	GetDeleteDisplayTextMockData() (int64, error)
 	GetDeleteElementsMockData() (int64, error)
 	GetDeleteElementRestrictionsMockData() (int64, error)
 	GetDeleteEnergySourcesMockData() (int64, error)
@@ -154,6 +155,7 @@ type MockRepository interface {
 	SetGetCredentialMockData(response CredentialMockData)
 	SetGetCredentialByPartyAndCountryCodeMockData(response CredentialMockData)
 	SetGetCredentialByServerTokenMockData(response CredentialMockData)
+	SetGetDisplayTextMockData(response DisplayTextMockData)
 	SetGetElementRestrictionMockData(response ElementRestrictionMockData)
 	SetGetEmailSubscriptionByEmailMockData(response EmailSubscriptionMockData)
 	SetGetEnergyMixMockData(response EnergyMixMockData)
@@ -290,6 +292,7 @@ type MockRepositoryService struct {
 	deleteChannelRequestMockData                      []int64
 	deleteChargingPeriodDimensionsMockData            []int64
 	deleteConnectorsMockData                          []int64
+	deleteDisplayTextMockData                         []int64
 	deleteElementsMockData                            []int64
 	deleteElementRestrictionsMockData                 []int64
 	deleteEnergySourcesMockData                       []int64
@@ -335,6 +338,7 @@ type MockRepositoryService struct {
 	getCredentialMockData                             []CredentialMockData
 	getCredentialByPartyAndCountryCodeMockData        []CredentialMockData
 	getCredentialByServerTokenMockData                []CredentialMockData
+	getDisplayTextMockData                            []DisplayTextMockData
 	getElementRestrictionMockData                     []ElementRestrictionMockData
 	getEmailSubscriptionByEmailMockData               []EmailSubscriptionMockData
 	getEnergyMixMockData                              []EnergyMixMockData
