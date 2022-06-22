@@ -37,18 +37,66 @@ func NilFloat64(i interface{}) *float64 {
 	return nil
 }
 
-func NilInt16(i int16) *int16 {
-	if i == 0 {
-		return nil
+func NilInt(i interface{}) *int {
+	switch t := i.(type) {
+	case sql.NullInt64:
+		if t.Valid {
+			val := int(t.Int64)
+			return &val
+		}
+	case sql.NullInt32:
+		if t.Valid {
+			val := int(t.Int32)
+			return &val
+		}
+	case sql.NullInt16:
+		if t.Valid {
+			val := int(t.Int16)
+			return &val
+		}
+	case int:
+		if t != 0 {
+			return &t
+		}
+	case *int:
+		return t
 	}
-	return &i
+
+	return nil
 }
 
-func NilInt32(i int32) *int32 {
-	if i == 0 {
-		return nil
+func NilInt16(i interface{}) *int16 {
+	switch t := i.(type) {
+	case sql.NullInt16:
+		if t.Valid {
+			return &t.Int16
+		}
+	case int16:
+		if t != 0 {
+			return &t
+		}
+	case *int16:
+		return t
 	}
-	return &i
+
+	return nil
+}
+
+func NilInt32(i interface{}) *int32 {
+	switch t := i.(type) {
+	case sql.NullInt32:
+		if t.Valid {
+			return &t.Int32
+		}
+	case int32:
+		if t != 0 {
+			return &t
+		}
+	case *int32:
+		return t
+	}
+
+	return nil
 }
 
 func NilInt64(i interface{}) *int64 {
