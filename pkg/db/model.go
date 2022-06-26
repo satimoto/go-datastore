@@ -884,6 +884,21 @@ type RegularHour struct {
 	PeriodEnd     string `db:"period_end" json:"periodEnd"`
 }
 
+type RoutingEvent struct {
+	ID             int64     `db:"id" json:"id"`
+	IncomingChanID int64     `db:"incoming_chan_id" json:"incomingChanID"`
+	IncomingHtlcID int64     `db:"incoming_htlc_id" json:"incomingHtlcID"`
+	IncomingFiat   float64   `db:"incoming_fiat" json:"incomingFiat"`
+	IncomingMsat   int64     `db:"incoming_msat" json:"incomingMsat"`
+	OutgoingChanID int64     `db:"outgoing_chan_id" json:"outgoingChanID"`
+	OutgoingHtlcID int64     `db:"outgoing_htlc_id" json:"outgoingHtlcID"`
+	OutgoingFiat   float64   `db:"outgoing_fiat" json:"outgoingFiat"`
+	OutgoingMsat   int64     `db:"outgoing_msat" json:"outgoingMsat"`
+	FeeFiat        float64   `db:"fee_fiat" json:"feeFiat"`
+	FeeMsat        int64     `db:"fee_msat" json:"feeMsat"`
+	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
+}
+
 type Session struct {
 	ID              int64             `db:"id" json:"id"`
 	Uid             string            `db:"uid" json:"uid"`
