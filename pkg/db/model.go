@@ -886,6 +886,8 @@ type RegularHour struct {
 
 type RoutingEvent struct {
 	ID             int64     `db:"id" json:"id"`
+	Currency       string    `db:"currency" json:"currency"`
+	CurrencyRate   int64     `db:"currency_rate" json:"currencyRate"`
 	IncomingChanID int64     `db:"incoming_chan_id" json:"incomingChanID"`
 	IncomingHtlcID int64     `db:"incoming_htlc_id" json:"incomingHtlcID"`
 	IncomingFiat   float64   `db:"incoming_fiat" json:"incomingFiat"`
