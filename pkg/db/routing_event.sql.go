@@ -10,6 +10,8 @@ import (
 
 const createRoutingEvent = `-- name: CreateRoutingEvent :one
 INSERT INTO routing_events (
+    currency,
+    currency_rate,
     incoming_chan_id,
     incoming_htlc_id,
     incoming_fiat,
@@ -21,11 +23,13 @@ INSERT INTO routing_events (
     fee_fiat,
     fee_msat,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-  RETURNING id, incoming_chan_id, incoming_htlc_id, incoming_fiat, incoming_msat, outgoing_chan_id, outgoing_htlc_id, outgoing_fiat, outgoing_msat, fee_fiat, fee_msat, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+  RETURNING id, currency, currency_rate, incoming_chan_id, incoming_htlc_id, incoming_fiat, incoming_msat, outgoing_chan_id, outgoing_htlc_id, outgoing_fiat, outgoing_msat, fee_fiat, fee_msat, last_updated
 `
 
 type CreateRoutingEventParams struct {
+	Currency       string    `db:"currency" json:"currency"`
+	CurrencyRate   int64     `db:"currency_rate" json:"currencyRate"`
 	IncomingChanID int64     `db:"incoming_chan_id" json:"incomingChanID"`
 	IncomingHtlcID int64     `db:"incoming_htlc_id" json:"incomingHtlcID"`
 	IncomingFiat   float64   `db:"incoming_fiat" json:"incomingFiat"`
@@ -41,6 +45,8 @@ type CreateRoutingEventParams struct {
 
 func (q *Queries) CreateRoutingEvent(ctx context.Context, arg CreateRoutingEventParams) (RoutingEvent, error) {
 	row := q.db.QueryRowContext(ctx, createRoutingEvent,
+		arg.Currency,
+		arg.CurrencyRate,
 		arg.IncomingChanID,
 		arg.IncomingHtlcID,
 		arg.IncomingFiat,
@@ -56,6 +62,8 @@ func (q *Queries) CreateRoutingEvent(ctx context.Context, arg CreateRoutingEvent
 	var i RoutingEvent
 	err := row.Scan(
 		&i.ID,
+		&i.Currency,
+		&i.CurrencyRate,
 		&i.IncomingChanID,
 		&i.IncomingHtlcID,
 		&i.IncomingFiat,

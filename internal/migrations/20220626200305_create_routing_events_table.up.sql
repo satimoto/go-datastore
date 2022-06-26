@@ -1,6 +1,8 @@
 -- Routing events
 CREATE TABLE IF NOT EXISTS routing_events (
     id               BIGSERIAL PRIMARY KEY,
+    currency         TEXT NOT NULL,
+    currency_rate    BIGINT NOT NULL,
     incoming_chan_id BIGINT NOT NULL,
     incoming_htlc_id BIGINT NOT NULL,
     incoming_fiat    FLOAT NOT NULL,
