@@ -41,6 +41,7 @@ type MockRepository interface {
 	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
 	GetCreateRegularHourMockData() (db.CreateRegularHourParams, error)
+	GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error)
 	GetCreateSessionMockData() (db.CreateSessionParams, error)
 	GetCreateSessionInvoiceMockData() (db.CreateSessionInvoiceParams, error)
 	GetCreateStatusScheduleMockData() (db.CreateStatusScheduleParams, error)
@@ -274,6 +275,7 @@ type MockRepositoryService struct {
 	createPriceComponentMockData                      []db.CreatePriceComponentParams
 	createPriceComponentRoundingMockData              []db.CreatePriceComponentRoundingParams
 	createRegularHourMockData                         []db.CreateRegularHourParams
+	createRoutingEventMockData                        []db.CreateRoutingEventParams
 	createSessionMockData                             []db.CreateSessionParams
 	createSessionInvoiceMockData                      []db.CreateSessionInvoiceParams
 	createStatusScheduleMockData                      []db.CreateStatusScheduleParams
