@@ -27,4 +27,4 @@ DROP TABLE IF EXISTS additional_geo_locations;
 
 -- Geo Locations
 ALTER TABLE geo_locations 
-    ADD COLUMN name;
+    ADD COLUMN IF NOT EXISTS name TEXT;

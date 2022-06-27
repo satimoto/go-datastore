@@ -1,18 +1,20 @@
 -- name: CreateSessionInvoice :one
 INSERT INTO session_invoices (
     session_id,
+    currency,
+    currency_rate,
+    currency_rate_msat,
     amount_fiat,
     amount_msat,
     commission_fiat,
     commission_msat,
     tax_fiat,
     tax_msat,
-    currency,
     payment_request,
     is_settled,
     is_expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
   RETURNING *;
 
 -- name: GetSessionInvoiceByPaymentRequest :one

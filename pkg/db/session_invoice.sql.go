@@ -11,46 +11,52 @@ import (
 const createSessionInvoice = `-- name: CreateSessionInvoice :one
 INSERT INTO session_invoices (
     session_id,
+    currency,
+    currency_rate,
+    currency_rate_msat,
     amount_fiat,
     amount_msat,
     commission_fiat,
     commission_msat,
     tax_fiat,
     tax_msat,
-    currency,
     payment_request,
     is_settled,
     is_expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  RETURNING id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated
 `
 
 type CreateSessionInvoiceParams struct {
-	SessionID      int64     `db:"session_id" json:"sessionID"`
-	AmountFiat     float64   `db:"amount_fiat" json:"amountFiat"`
-	AmountMsat     int64     `db:"amount_msat" json:"amountMsat"`
-	CommissionFiat float64   `db:"commission_fiat" json:"commissionFiat"`
-	CommissionMsat int64     `db:"commission_msat" json:"commissionMsat"`
-	TaxFiat        float64   `db:"tax_fiat" json:"taxFiat"`
-	TaxMsat        int64     `db:"tax_msat" json:"taxMsat"`
-	Currency       string    `db:"currency" json:"currency"`
-	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
-	IsSettled      bool      `db:"is_settled" json:"isSettled"`
-	IsExpired      bool      `db:"is_expired" json:"isExpired"`
-	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
+	SessionID        int64     `db:"session_id" json:"sessionID"`
+	Currency         string    `db:"currency" json:"currency"`
+	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
+	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`
+	AmountFiat       float64   `db:"amount_fiat" json:"amountFiat"`
+	AmountMsat       int64     `db:"amount_msat" json:"amountMsat"`
+	CommissionFiat   float64   `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat   int64     `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat          float64   `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat          int64     `db:"tax_msat" json:"taxMsat"`
+	PaymentRequest   string    `db:"payment_request" json:"paymentRequest"`
+	IsSettled        bool      `db:"is_settled" json:"isSettled"`
+	IsExpired        bool      `db:"is_expired" json:"isExpired"`
+	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInvoiceParams) (SessionInvoice, error) {
 	row := q.db.QueryRowContext(ctx, createSessionInvoice,
 		arg.SessionID,
+		arg.Currency,
+		arg.CurrencyRate,
+		arg.CurrencyRateMsat,
 		arg.AmountFiat,
 		arg.AmountMsat,
 		arg.CommissionFiat,
 		arg.CommissionMsat,
 		arg.TaxFiat,
 		arg.TaxMsat,
-		arg.Currency,
 		arg.PaymentRequest,
 		arg.IsSettled,
 		arg.IsExpired,
@@ -60,13 +66,15 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 	err := row.Scan(
 		&i.ID,
 		&i.SessionID,
+		&i.Currency,
+		&i.CurrencyRate,
+		&i.CurrencyRateMsat,
 		&i.AmountFiat,
 		&i.AmountMsat,
 		&i.CommissionFiat,
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
-		&i.Currency,
 		&i.PaymentRequest,
 		&i.IsSettled,
 		&i.IsExpired,
@@ -76,7 +84,7 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 }
 
 const getSessionInvoiceByPaymentRequest = `-- name: GetSessionInvoiceByPaymentRequest :one
-SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated FROM session_invoices
+SELECT id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
   WHERE payment_request = $1
 `
 
@@ -86,13 +94,15 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 	err := row.Scan(
 		&i.ID,
 		&i.SessionID,
+		&i.Currency,
+		&i.CurrencyRate,
+		&i.CurrencyRateMsat,
 		&i.AmountFiat,
 		&i.AmountMsat,
 		&i.CommissionFiat,
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
-		&i.Currency,
 		&i.PaymentRequest,
 		&i.IsSettled,
 		&i.IsExpired,
@@ -102,7 +112,7 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 }
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
-SELECT id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated FROM session_invoices
+SELECT id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
@@ -119,13 +129,15 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 		if err := rows.Scan(
 			&i.ID,
 			&i.SessionID,
+			&i.Currency,
+			&i.CurrencyRate,
+			&i.CurrencyRateMsat,
 			&i.AmountFiat,
 			&i.AmountMsat,
 			&i.CommissionFiat,
 			&i.CommissionMsat,
 			&i.TaxFiat,
 			&i.TaxMsat,
-			&i.Currency,
 			&i.PaymentRequest,
 			&i.IsSettled,
 			&i.IsExpired,
@@ -145,7 +157,7 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 }
 
 const listUnsettledSessionInvoicesByUserID = `-- name: ListUnsettledSessionInvoicesByUserID :many
-SELECT si.id, si.session_id, si.amount_fiat, si.amount_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.currency, si.payment_request, si.is_settled, si.is_expired, si.last_updated FROM session_invoices si
+SELECT si.id, si.session_id, si.currency, si.currency_rate, si.currency_rate_msat, si.amount_fiat, si.amount_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated FROM session_invoices si
   INNER JOIN sessions s ON s.id = si.session_id
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.id = $1 AND si.is_settled != true
@@ -164,13 +176,15 @@ func (q *Queries) ListUnsettledSessionInvoicesByUserID(ctx context.Context, id i
 		if err := rows.Scan(
 			&i.ID,
 			&i.SessionID,
+			&i.Currency,
+			&i.CurrencyRate,
+			&i.CurrencyRateMsat,
 			&i.AmountFiat,
 			&i.AmountMsat,
 			&i.CommissionFiat,
 			&i.CommissionMsat,
 			&i.TaxFiat,
 			&i.TaxMsat,
-			&i.Currency,
 			&i.PaymentRequest,
 			&i.IsSettled,
 			&i.IsExpired,
@@ -196,7 +210,7 @@ UPDATE session_invoices SET (
     last_updated
   ) = ($2, $3, $4)
   WHERE id = $1
-  RETURNING id, session_id, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, currency, payment_request, is_settled, is_expired, last_updated
+  RETURNING id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated
 `
 
 type UpdateSessionInvoiceParams struct {
@@ -217,13 +231,15 @@ func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInv
 	err := row.Scan(
 		&i.ID,
 		&i.SessionID,
+		&i.Currency,
+		&i.CurrencyRate,
+		&i.CurrencyRateMsat,
 		&i.AmountFiat,
 		&i.AmountMsat,
 		&i.CommissionFiat,
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
-		&i.Currency,
 		&i.PaymentRequest,
 		&i.IsSettled,
 		&i.IsExpired,
