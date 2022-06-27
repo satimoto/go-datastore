@@ -932,19 +932,21 @@ type SessionChargingPeriod struct {
 }
 
 type SessionInvoice struct {
-	ID             int64     `db:"id" json:"id"`
-	SessionID      int64     `db:"session_id" json:"sessionID"`
-	AmountFiat     float64   `db:"amount_fiat" json:"amountFiat"`
-	AmountMsat     int64     `db:"amount_msat" json:"amountMsat"`
-	CommissionFiat float64   `db:"commission_fiat" json:"commissionFiat"`
-	CommissionMsat int64     `db:"commission_msat" json:"commissionMsat"`
-	TaxFiat        float64   `db:"tax_fiat" json:"taxFiat"`
-	TaxMsat        int64     `db:"tax_msat" json:"taxMsat"`
-	Currency       string    `db:"currency" json:"currency"`
-	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
-	IsSettled      bool      `db:"is_settled" json:"isSettled"`
-	IsExpired      bool      `db:"is_expired" json:"isExpired"`
-	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
+	ID               int64     `db:"id" json:"id"`
+	SessionID        int64     `db:"session_id" json:"sessionID"`
+	Currency         string    `db:"currency" json:"currency"`
+	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
+	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`
+	AmountFiat       float64   `db:"amount_fiat" json:"amountFiat"`
+	AmountMsat       int64     `db:"amount_msat" json:"amountMsat"`
+	CommissionFiat   float64   `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat   int64     `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat          float64   `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat          int64     `db:"tax_msat" json:"taxMsat"`
+	PaymentRequest   string    `db:"payment_request" json:"paymentRequest"`
+	IsSettled        bool      `db:"is_settled" json:"isSettled"`
+	IsExpired        bool      `db:"is_expired" json:"isExpired"`
+	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 type StatusSchedule struct {
