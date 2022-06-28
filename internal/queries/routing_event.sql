@@ -1,5 +1,7 @@
 -- name: CreateRoutingEvent :one
 INSERT INTO routing_events (
+    node_id,
+    event_type,
     currency,
     currency_rate,
     currency_rate_msat,
@@ -14,5 +16,5 @@ INSERT INTO routing_events (
     fee_fiat,
     fee_msat,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
   RETURNING *;

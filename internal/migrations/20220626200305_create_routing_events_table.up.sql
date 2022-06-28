@@ -1,6 +1,14 @@
 -- Routing events
+CREATE TYPE routing_event_type AS ENUM (
+    'FORWARD', 
+    'RECEIVE',
+    'SEND'
+);
+
 CREATE TABLE IF NOT EXISTS routing_events (
     id                 BIGSERIAL PRIMARY KEY,
+    node_id            BIGINT NOT NULL,
+    event_type         routing_event_type NOT NULL,
     currency           TEXT NOT NULL,
     currency_rate      BIGINT NOT NULL,
     currency_rate_msat BIGINT NOT NULL,
