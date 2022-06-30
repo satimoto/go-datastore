@@ -1,6 +1,7 @@
 -- name: CreateSessionInvoice :one
 INSERT INTO session_invoices (
     session_id,
+    user_id,
     currency,
     currency_rate,
     currency_rate_msat,
@@ -14,8 +15,12 @@ INSERT INTO session_invoices (
     is_settled,
     is_expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
   RETURNING *;
+
+-- name: GetSessionInvoice :one
+SELECT * FROM session_invoices
+  WHERE id = $1;
 
 -- name: GetSessionInvoiceByPaymentRequest :one
 SELECT * FROM session_invoices

@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS session_invoices (
     id                 BIGSERIAL PRIMARY KEY,
     session_id         BIGINT NOT NULL,
+    user_id            BIGINT NOT NULL,
     currency           TEXT NOT NULL,
     currency_rate      BIGINT NOT NULL,
     currency_rate_msat BIGINT NOT NULL,

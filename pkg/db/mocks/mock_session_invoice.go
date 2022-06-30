@@ -21,6 +21,16 @@ func (r *MockRepositoryService) CreateSessionInvoice(ctx context.Context, arg db
 	return db.SessionInvoice{}, nil
 }
 
+func (r *MockRepositoryService) GetSessionInvoice(ctx context.Context, id int64) (db.SessionInvoice, error) {
+	if len(r.getSessionInvoiceMockData) == 0 {
+		return db.SessionInvoice{}, ErrorNotFound()
+	}
+
+	response := r.getSessionInvoiceMockData[0]
+	r.getSessionInvoiceMockData = r.getSessionInvoiceMockData[1:]
+	return response.SessionInvoice, response.Error
+}
+
 func (r *MockRepositoryService) GetSessionInvoiceByPaymentRequest(ctx context.Context, paymentRequest string) (db.SessionInvoice, error) {
 	if len(r.getSessionInvoiceByPaymentRequestMockData) == 0 {
 		return db.SessionInvoice{}, ErrorNotFound()
@@ -74,6 +84,10 @@ func (r *MockRepositoryService) GetUpdateSessionInvoiceMockData() (db.UpdateSess
 	response := r.updateSessionInvoiceMockData[0]
 	r.updateSessionInvoiceMockData = r.updateSessionInvoiceMockData[1:]
 	return response, nil
+}
+
+func (r *MockRepositoryService) SetGetSessionInvoiceMockData(response SessionInvoiceMockData) {
+	r.getSessionInvoiceMockData = append(r.getSessionInvoiceMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetSessionInvoiceByPaymentRequestMockData(response SessionInvoiceMockData) {

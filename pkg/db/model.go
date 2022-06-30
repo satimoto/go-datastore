@@ -956,6 +956,7 @@ type SessionChargingPeriod struct {
 type SessionInvoice struct {
 	ID               int64     `db:"id" json:"id"`
 	SessionID        int64     `db:"session_id" json:"sessionID"`
+	UserID           int64     `db:"user_id" json:"userID"`
 	Currency         string    `db:"currency" json:"currency"`
 	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
 	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`

@@ -13,6 +13,7 @@ type SessionRepository interface {
 	GetSessionByAuthorizationID(ctx context.Context, authorizationID string) (db.Session, error)
 	GetSessionByLastUpdated(ctx context.Context, arg db.GetSessionByLastUpdatedParams) (db.Session, error)
 	GetSessionByUid(ctx context.Context, uid string) (db.Session, error)
+	GetSessionInvoice(ctx context.Context, id int64) (db.SessionInvoice, error)
 	GetSessionInvoiceByPaymentRequest(ctx context.Context, paymentRequest string) (db.SessionInvoice, error)
 	GetUserBySessionID(ctx context.Context, id int64) (db.User, error)
 	ListChargingPeriodDimensions(ctx context.Context, chargingPeriodID int64) ([]db.ChargingPeriodDimension, error)
