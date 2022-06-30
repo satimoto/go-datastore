@@ -11,6 +11,7 @@ import (
 const createSessionInvoice = `-- name: CreateSessionInvoice :one
 INSERT INTO session_invoices (
     session_id,
+    user_id,
     currency,
     currency_rate,
     currency_rate_msat,
@@ -24,12 +25,13 @@ INSERT INTO session_invoices (
     is_settled,
     is_expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-  RETURNING id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated
 `
 
 type CreateSessionInvoiceParams struct {
 	SessionID        int64     `db:"session_id" json:"sessionID"`
+	UserID           int64     `db:"user_id" json:"userID"`
 	Currency         string    `db:"currency" json:"currency"`
 	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
 	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`
@@ -48,6 +50,7 @@ type CreateSessionInvoiceParams struct {
 func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInvoiceParams) (SessionInvoice, error) {
 	row := q.db.QueryRowContext(ctx, createSessionInvoice,
 		arg.SessionID,
+		arg.UserID,
 		arg.Currency,
 		arg.CurrencyRate,
 		arg.CurrencyRateMsat,
@@ -66,6 +69,36 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 	err := row.Scan(
 		&i.ID,
 		&i.SessionID,
+		&i.UserID,
+		&i.Currency,
+		&i.CurrencyRate,
+		&i.CurrencyRateMsat,
+		&i.AmountFiat,
+		&i.AmountMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
+		&i.PaymentRequest,
+		&i.IsSettled,
+		&i.IsExpired,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
+const getSessionInvoice = `-- name: GetSessionInvoice :one
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
+  WHERE id = $1
+`
+
+func (q *Queries) GetSessionInvoice(ctx context.Context, id int64) (SessionInvoice, error) {
+	row := q.db.QueryRowContext(ctx, getSessionInvoice, id)
+	var i SessionInvoice
+	err := row.Scan(
+		&i.ID,
+		&i.SessionID,
+		&i.UserID,
 		&i.Currency,
 		&i.CurrencyRate,
 		&i.CurrencyRateMsat,
@@ -84,7 +117,7 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 }
 
 const getSessionInvoiceByPaymentRequest = `-- name: GetSessionInvoiceByPaymentRequest :one
-SELECT id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
   WHERE payment_request = $1
 `
 
@@ -94,6 +127,7 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 	err := row.Scan(
 		&i.ID,
 		&i.SessionID,
+		&i.UserID,
 		&i.Currency,
 		&i.CurrencyRate,
 		&i.CurrencyRateMsat,
@@ -112,7 +146,7 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 }
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
-SELECT id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
@@ -129,6 +163,7 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 		if err := rows.Scan(
 			&i.ID,
 			&i.SessionID,
+			&i.UserID,
 			&i.Currency,
 			&i.CurrencyRate,
 			&i.CurrencyRateMsat,
@@ -157,7 +192,7 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 }
 
 const listUnsettledSessionInvoicesByUserID = `-- name: ListUnsettledSessionInvoicesByUserID :many
-SELECT si.id, si.session_id, si.currency, si.currency_rate, si.currency_rate_msat, si.amount_fiat, si.amount_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated FROM session_invoices si
+SELECT si.id, si.session_id, si.user_id, si.currency, si.currency_rate, si.currency_rate_msat, si.amount_fiat, si.amount_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated FROM session_invoices si
   INNER JOIN sessions s ON s.id = si.session_id
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.id = $1 AND si.is_settled != true
@@ -176,6 +211,7 @@ func (q *Queries) ListUnsettledSessionInvoicesByUserID(ctx context.Context, id i
 		if err := rows.Scan(
 			&i.ID,
 			&i.SessionID,
+			&i.UserID,
 			&i.Currency,
 			&i.CurrencyRate,
 			&i.CurrencyRateMsat,
@@ -210,7 +246,7 @@ UPDATE session_invoices SET (
     last_updated
   ) = ($2, $3, $4)
   WHERE id = $1
-  RETURNING id, session_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated
+  RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, amount_fiat, amount_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated
 `
 
 type UpdateSessionInvoiceParams struct {
@@ -231,6 +267,7 @@ func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInv
 	err := row.Scan(
 		&i.ID,
 		&i.SessionID,
+		&i.UserID,
 		&i.Currency,
 		&i.CurrencyRate,
 		&i.CurrencyRateMsat,
