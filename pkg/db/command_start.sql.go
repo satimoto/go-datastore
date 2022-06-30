@@ -12,23 +12,26 @@ const createCommandStart = `-- name: CreateCommandStart :one
 INSERT INTO command_starts (
     status,
     token_id,
+    authorization_id,
     location_id,
     evse_uid
-  ) VALUES ($1, $2, $3, $4)
+  ) VALUES ($1, $2, $3, $4, $5)
   RETURNING id, status, token_id, authorization_id, location_id, evse_uid
 `
 
 type CreateCommandStartParams struct {
-	Status     CommandResponseType `db:"status" json:"status"`
-	TokenID    int64               `db:"token_id" json:"tokenID"`
-	LocationID string              `db:"location_id" json:"locationID"`
-	EvseUid    sql.NullString      `db:"evse_uid" json:"evseUid"`
+	Status          CommandResponseType `db:"status" json:"status"`
+	TokenID         int64               `db:"token_id" json:"tokenID"`
+	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
+	LocationID      string              `db:"location_id" json:"locationID"`
+	EvseUid         sql.NullString      `db:"evse_uid" json:"evseUid"`
 }
 
 func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStartParams) (CommandStart, error) {
 	row := q.db.QueryRowContext(ctx, createCommandStart,
 		arg.Status,
 		arg.TokenID,
+		arg.AuthorizationID,
 		arg.LocationID,
 		arg.EvseUid,
 	)
