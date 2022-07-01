@@ -21,6 +21,16 @@ func (r *MockRepositoryService) CreateSession(ctx context.Context, arg db.Create
 	return db.Session{}, nil
 }
 
+func (r *MockRepositoryService) GetSession(ctx context.Context, id int64) (db.Session, error) {
+	if len(r.getSessionMockData) == 0 {
+		return db.Session{}, ErrorNotFound()
+	}
+
+	response := r.getSessionMockData[0]
+	r.getSessionMockData = r.getSessionMockData[1:]
+	return response.Session, response.Error
+}
+
 func (r *MockRepositoryService) GetSessionByAuthorizationID(ctx context.Context, authorizationID string) (db.Session, error) {
 	if len(r.getSessionByAuthorizationIDMockData) == 0 {
 		return db.Session{}, ErrorNotFound()
@@ -74,6 +84,10 @@ func (r *MockRepositoryService) GetUpdateSessionByUidMockData() (db.UpdateSessio
 	response := r.updateSessionByUidMockData[0]
 	r.updateSessionByUidMockData = r.updateSessionByUidMockData[1:]
 	return response, nil
+}
+
+func (r *MockRepositoryService) SetGetSessionMockData(response SessionMockData) {
+	r.getSessionMockData = append(r.getSessionMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetSessionByAuthorizationIDMockData(response SessionMockData) {

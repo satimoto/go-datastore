@@ -23,6 +23,10 @@ INSERT INTO sessions (
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
   RETURNING *;
 
+-- name: GetSession :one
+SELECT * FROM sessions
+  WHERE id = $1;
+
 -- name: GetSessionByAuthorizationID :one
 SELECT * FROM sessions
   WHERE authorization_id = @authorization_id::string

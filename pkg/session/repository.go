@@ -12,6 +12,7 @@ type SessionRepository interface {
 	DeleteSessionChargingPeriods(ctx context.Context, sessionID int64) error
 	GetSessionByAuthorizationID(ctx context.Context, authorizationID string) (db.Session, error)
 	GetSessionByLastUpdated(ctx context.Context, arg db.GetSessionByLastUpdatedParams) (db.Session, error)
+	GetSession(ctx context.Context, id int64) (db.Session, error)
 	GetSessionByUid(ctx context.Context, uid string) (db.Session, error)
 	GetSessionInvoice(ctx context.Context, id int64) (db.SessionInvoice, error)
 	GetSessionInvoiceByPaymentRequest(ctx context.Context, paymentRequest string) (db.SessionInvoice, error)
