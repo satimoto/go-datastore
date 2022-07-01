@@ -108,6 +108,40 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	return i, err
 }
 
+const getSession = `-- name: GetSession :one
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated FROM sessions
+  WHERE id = $1
+`
+
+func (q *Queries) GetSession(ctx context.Context, id int64) (Session, error) {
+	row := q.db.QueryRowContext(ctx, getSession, id)
+	var i Session
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CredentialID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.AuthorizationID,
+		&i.StartDatetime,
+		&i.EndDatetime,
+		&i.Kwh,
+		&i.AuthID,
+		&i.AuthMethod,
+		&i.UserID,
+		&i.TokenID,
+		&i.LocationID,
+		&i.EvseID,
+		&i.ConnectorID,
+		&i.MeterID,
+		&i.Currency,
+		&i.TotalCost,
+		&i.Status,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getSessionByAuthorizationID = `-- name: GetSessionByAuthorizationID :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated FROM sessions
   WHERE authorization_id = $1::string
