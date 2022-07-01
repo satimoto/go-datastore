@@ -13,6 +13,7 @@ type TariffRepository interface {
 	DeleteTariffByUid(ctx context.Context, uid string) error
 	GetElementRestriction(ctx context.Context, id int64) (db.ElementRestriction, error)
 	GetPriceComponentRounding(ctx context.Context, id int64) (db.PriceComponentRounding, error)
+	GetTariff(ctx context.Context, id int64) (db.Tariff, error)
 	GetTariffByLastUpdated(ctx context.Context, arg db.GetTariffByLastUpdatedParams) (db.Tariff, error)
 	GetTariffByUid(ctx context.Context, uid string) (db.Tariff, error)
 	GetTariffRestriction(ctx context.Context, id int64) (db.TariffRestriction, error)

@@ -34,13 +34,23 @@ func (r *MockRepositoryService) DeleteTariffByUid(ctx context.Context, uid strin
 	return nil
 }
 
-func (r *MockRepositoryService) GetTariffByLastUpdated(ctx context.Context, arg db.GetTariffByLastUpdatedParams) (db.Tariff, error) {
-	if len(r.getGetTariffByLastUpdatedMockData) == 0 {
+func (r *MockRepositoryService) GetTariff(ctx context.Context, id int64) (db.Tariff, error) {
+	if len(r.getTariffMockData) == 0 {
 		return db.Tariff{}, ErrorNotFound()
 	}
 
-	response := r.getGetTariffByLastUpdatedMockData[0]
-	r.getGetTariffByLastUpdatedMockData = r.getGetTariffByLastUpdatedMockData[1:]
+	response := r.getTariffMockData[0]
+	r.getTariffMockData = r.getTariffMockData[1:]
+	return response.Tariff, response.Error
+}
+
+func (r *MockRepositoryService) GetTariffByLastUpdated(ctx context.Context, arg db.GetTariffByLastUpdatedParams) (db.Tariff, error) {
+	if len(r.getTariffByLastUpdatedMockData) == 0 {
+		return db.Tariff{}, ErrorNotFound()
+	}
+
+	response := r.getTariffByLastUpdatedMockData[0]
+	r.getTariffByLastUpdatedMockData = r.getTariffByLastUpdatedMockData[1:]
 	return response.Tariff, response.Error
 }
 
@@ -99,12 +109,16 @@ func (r *MockRepositoryService) GetUpdateTariffByUidMockData() (db.UpdateTariffB
 	return response, nil
 }
 
+func (r *MockRepositoryService) SetGetTariffMockData(response TariffMockData) {
+	r.getTariffMockData = append(r.getTariffMockData, response)
+}
+
 func (r *MockRepositoryService) SetGetTariffByUidMockData(response TariffMockData) {
 	r.getTariffByUidMockData = append(r.getTariffByUidMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetTariffByLastUpdatedMockData(response TariffMockData) {
-	r.getTariffByUidMockData = append(r.getGetTariffByLastUpdatedMockData, response)
+	r.getTariffByUidMockData = append(r.getTariffByLastUpdatedMockData, response)
 }
 
 func (r *MockRepositoryService) SetListTariffsByCdrMockData(response TariffsMockData) {

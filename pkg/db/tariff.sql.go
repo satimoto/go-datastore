@@ -78,6 +78,30 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 	return err
 }
 
+const getTariff = `-- name: GetTariff :one
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
+  WHERE id = $1
+`
+
+func (q *Queries) GetTariff(ctx context.Context, id int64) (Tariff, error) {
+	row := q.db.QueryRowContext(ctx, getTariff, id)
+	var i Tariff
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CredentialID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.Currency,
+		&i.TariffAltUrl,
+		&i.EnergyMixID,
+		&i.TariffRestrictionID,
+		&i.LastUpdated,
+		&i.CdrID,
+	)
+	return i, err
+}
+
 const getTariffByLastUpdated = `-- name: GetTariffByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND

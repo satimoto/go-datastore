@@ -36,12 +36,12 @@ func (r *MockRepositoryService) CreateCdr(ctx context.Context, arg db.CreateCdrP
 }
 
 func (r *MockRepositoryService) GetCdrByLastUpdated(ctx context.Context, arg db.GetCdrByLastUpdatedParams) (db.Cdr, error) {
-	if len(r.getGetCdrByLastUpdatedMockData) == 0 {
+	if len(r.getCdrByLastUpdatedMockData) == 0 {
 		return db.Cdr{}, ErrorNotFound()
 	}
 
-	response := r.getGetCdrByLastUpdatedMockData[0]
-	r.getGetCdrByLastUpdatedMockData = r.getGetCdrByLastUpdatedMockData[1:]
+	response := r.getCdrByLastUpdatedMockData[0]
+	r.getCdrByLastUpdatedMockData = r.getCdrByLastUpdatedMockData[1:]
 	return response.Cdr, response.Error
 }
 
@@ -66,7 +66,7 @@ func (r *MockRepositoryService) GetCreateCdrMockData() (db.CreateCdrParams, erro
 }
 
 func (r *MockRepositoryService) SetGetCdrByLastUpdatedMockData(response CdrMockData) {
-	r.getGetCdrByLastUpdatedMockData = append(r.getGetCdrByLastUpdatedMockData, response)
+	r.getCdrByLastUpdatedMockData = append(r.getCdrByLastUpdatedMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetCdrByUidMockData(response CdrMockData) {
