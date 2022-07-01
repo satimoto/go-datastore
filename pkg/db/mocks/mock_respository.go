@@ -178,6 +178,7 @@ type MockRepository interface {
 	SetGetSessionByUidMockData(response SessionMockData)
 	SetGetSessionInvoiceMockData(response SessionInvoiceMockData)
 	SetGetSessionInvoiceByPaymentRequestMockData(response SessionInvoiceMockData)
+	SetGetTariffMockData(response TariffMockData)
 	SetGetTariffByLastUpdatedMockData(response TariffMockData)
 	SetGetTariffByUidMockData(response TariffMockData)
 	SetGetTariffRestrictionMockData(response TariffRestrictionMockData)
@@ -326,7 +327,7 @@ type MockRepositoryService struct {
 	getAuthenticationByChallengeMockData              []AuthenticationMockData
 	getBusinessDetailMockData                         []BusinessDetailMockData
 	getCalibrationMockData                            []CalibrationMockData
-	getGetCdrByLastUpdatedMockData                    []CdrMockData
+	getCdrByLastUpdatedMockData                       []CdrMockData
 	getCdrByUidMockData                               []CdrMockData
 	getChannelRequestMockData                         []ChannelRequestMockData
 	getChannelRequestHtlcMockData                     []ChannelRequestHtlcMockData
@@ -364,7 +365,8 @@ type MockRepositoryService struct {
 	getSessionByUidMockData                           []SessionMockData
 	getSessionInvoiceMockData                         []SessionInvoiceMockData
 	getSessionInvoiceByPaymentRequestMockData         []SessionInvoiceMockData
-	getGetTariffByLastUpdatedMockData                 []TariffMockData
+	getTariffByLastUpdatedMockData                    []TariffMockData
+	getTariffMockData                                 []TariffMockData
 	getTariffByUidMockData                            []TariffMockData
 	getTariffRestrictionMockData                      []TariffRestrictionMockData
 	getTokenAuthorizationByAuthorizationIDMockData    []TokenAuthorizationMockData

@@ -17,6 +17,10 @@ INSERT INTO tariffs (
 DELETE FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL;
 
+-- name: GetTariff :one
+SELECT * FROM tariffs
+  WHERE id = $1;
+
 -- name: GetTariffByLastUpdated :one
 SELECT * FROM tariffs
   WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
