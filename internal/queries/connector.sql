@@ -2,6 +2,7 @@
 INSERT INTO connectors (
     evse_id, 
     uid, 
+    connector_id, 
     standard, 
     format, 
     power_type, 
@@ -11,7 +12,7 @@ INSERT INTO connectors (
     tariff_id, 
     terms_and_conditions, 
     last_updated)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
   RETURNING *;
 
 -- name: DeleteConnector :exec
@@ -46,6 +47,7 @@ SELECT * FROM connectors
 
 -- name: UpdateConnector :one
 UPDATE connectors SET (
+    connector_id,
     standard, 
     format, 
     power_type, 
@@ -55,12 +57,13 @@ UPDATE connectors SET (
     tariff_id, 
     terms_and_conditions, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE id = $1
   RETURNING *;
 
 -- name: UpdateConnectorByUid :one
 UPDATE connectors SET (
+    connector_id,
     standard, 
     format, 
     power_type, 
@@ -70,6 +73,6 @@ UPDATE connectors SET (
     tariff_id, 
     terms_and_conditions, 
     last_updated
-  ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
   WHERE evse_id = $1 AND uid = $2
   RETURNING *;
