@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -33,6 +34,16 @@ func (r *MockRepositoryService) GetConnector(ctx context.Context, id int64) (db.
 
 	response := r.getConnectorMockData[0]
 	r.getConnectorMockData = r.getConnectorMockData[1:]
+	return response.Connector, response.Error
+}
+
+func (r *MockRepositoryService) GetConnectorByConnectorId(ctx context.Context, connectorID sql.NullString) (db.Connector, error) {
+	if len(r.getConnectorByConnectorIdMockData) == 0 {
+		return db.Connector{}, ErrorNotFound()
+	}
+
+	response := r.getConnectorByConnectorIdMockData[0]
+	r.getConnectorByConnectorIdMockData = r.getConnectorByConnectorIdMockData[1:]
 	return response.Connector, response.Error
 }
 
@@ -95,6 +106,9 @@ func (r *MockRepositoryService) SetGetConnectorMockData(response ConnectorMockDa
 	r.getConnectorMockData = append(r.getConnectorMockData, response)
 }
 
+func (r *MockRepositoryService) SetGetConnectorByConnectorIdMockData(response ConnectorMockData) {
+	r.getConnectorByConnectorIdMockData = append(r.getConnectorByConnectorIdMockData, response)
+}
 func (r *MockRepositoryService) SetGetConnectorByUidMockData(response ConnectorMockData) {
 	r.getConnectorByUidMockData = append(r.getConnectorByUidMockData, response)
 }

@@ -147,6 +147,7 @@ type MockRepository interface {
 	SetGetChannelRequestHtlcByCircuitKeyMockData(response ChannelRequestHtlcMockData)
 	SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData)
 	SetGetConnectorMockData(response ConnectorMockData)
+	SetGetConnectorByConnectorIdMockData(response ConnectorMockData)
 	SetGetConnectorByUidMockData(response ConnectorMockData)
 	SetGetCommandReservationMockData(response CommandReservationMockData)
 	SetGetCommandStartMockData(response CommandStartMockData)
@@ -161,6 +162,7 @@ type MockRepository interface {
 	SetGetEmailSubscriptionByEmailMockData(response EmailSubscriptionMockData)
 	SetGetEnergyMixMockData(response EnergyMixMockData)
 	SetGetEvseMockData(response EvseMockData)
+	SetGetEvseByEvseIdMockData(response EvseMockData)
 	SetGetEvseByUidMockData(response EvseMockData)
 	SetGetGeoLocationMockData(response GeoLocationMockData)
 	SetGetImageMockData(response ImageMockData)
@@ -334,6 +336,7 @@ type MockRepositoryService struct {
 	getChannelRequestHtlcByCircuitKeyMockData         []ChannelRequestHtlcMockData
 	getChannelRequestByPaymentHashMockData            []ChannelRequestMockData
 	getConnectorMockData                              []ConnectorMockData
+	getConnectorByConnectorIdMockData                 []ConnectorMockData
 	getConnectorByUidMockData                         []ConnectorMockData
 	getCommandReservationMockData                     []CommandReservationMockData
 	getCommandStartMockData                           []CommandStartMockData
@@ -348,6 +351,7 @@ type MockRepositoryService struct {
 	getEmailSubscriptionByEmailMockData               []EmailSubscriptionMockData
 	getEnergyMixMockData                              []EnergyMixMockData
 	getEvseMockData                                   []EvseMockData
+	getEvseByEvseIdMockData                           []EvseMockData
 	getEvseByUidMockData                              []EvseMockData
 	getGeoLocationMockData                            []GeoLocationMockData
 	getImageMockData                                  []ImageMockData

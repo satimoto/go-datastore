@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS connectors (
     id                   BIGSERIAL PRIMARY KEY,
     evse_id              BIGINT NOT NULL,
     uid                  TEXT NOT NULL,
+    connector_id         TEXT,
     standard             connector_type NOT NULL,
     format               connector_format NOT NULL,
     power_type           power_type NOT NULL,

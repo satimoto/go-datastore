@@ -23,7 +23,7 @@ INSERT INTO connectors (
     terms_and_conditions, 
     last_updated)
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
+  RETURNING id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
 type CreateConnectorParams struct {
@@ -59,6 +59,7 @@ func (q *Queries) CreateConnector(ctx context.Context, arg CreateConnectorParams
 		&i.ID,
 		&i.EvseID,
 		&i.Uid,
+		&i.ConnectorID,
 		&i.Standard,
 		&i.Format,
 		&i.PowerType,
@@ -108,7 +109,7 @@ func (q *Queries) DeleteConnectors(ctx context.Context, evseID int64) error {
 }
 
 const getConnector = `-- name: GetConnector :one
-SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
+SELECT id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE id = $1
 `
 
@@ -119,6 +120,33 @@ func (q *Queries) GetConnector(ctx context.Context, id int64) (Connector, error)
 		&i.ID,
 		&i.EvseID,
 		&i.Uid,
+		&i.ConnectorID,
+		&i.Standard,
+		&i.Format,
+		&i.PowerType,
+		&i.Voltage,
+		&i.Amperage,
+		&i.Wattage,
+		&i.TariffID,
+		&i.TermsAndConditions,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
+const getConnectorByConnectorId = `-- name: GetConnectorByConnectorId :one
+SELECT id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
+  WHERE connector_id = $1
+`
+
+func (q *Queries) GetConnectorByConnectorId(ctx context.Context, connectorID sql.NullString) (Connector, error) {
+	row := q.db.QueryRowContext(ctx, getConnectorByConnectorId, connectorID)
+	var i Connector
+	err := row.Scan(
+		&i.ID,
+		&i.EvseID,
+		&i.Uid,
+		&i.ConnectorID,
 		&i.Standard,
 		&i.Format,
 		&i.PowerType,
@@ -133,7 +161,7 @@ func (q *Queries) GetConnector(ctx context.Context, id int64) (Connector, error)
 }
 
 const getConnectorByUid = `-- name: GetConnectorByUid :one
-SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
+SELECT id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE ($1::bigint IS NULL or evse_id = $1::bigint) AND uid = $2::string
   LIMIT 1
 `
@@ -150,6 +178,7 @@ func (q *Queries) GetConnectorByUid(ctx context.Context, arg GetConnectorByUidPa
 		&i.ID,
 		&i.EvseID,
 		&i.Uid,
+		&i.ConnectorID,
 		&i.Standard,
 		&i.Format,
 		&i.PowerType,
@@ -164,7 +193,7 @@ func (q *Queries) GetConnectorByUid(ctx context.Context, arg GetConnectorByUidPa
 }
 
 const listConnectors = `-- name: ListConnectors :many
-SELECT id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
+SELECT id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
   WHERE evse_id = $1
   ORDER BY id
 `
@@ -182,6 +211,7 @@ func (q *Queries) ListConnectors(ctx context.Context, evseID int64) ([]Connector
 			&i.ID,
 			&i.EvseID,
 			&i.Uid,
+			&i.ConnectorID,
 			&i.Standard,
 			&i.Format,
 			&i.PowerType,
@@ -218,7 +248,7 @@ UPDATE connectors SET (
     last_updated
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
-  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
+  RETURNING id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
 type UpdateConnectorParams struct {
@@ -252,6 +282,7 @@ func (q *Queries) UpdateConnector(ctx context.Context, arg UpdateConnectorParams
 		&i.ID,
 		&i.EvseID,
 		&i.Uid,
+		&i.ConnectorID,
 		&i.Standard,
 		&i.Format,
 		&i.PowerType,
@@ -278,7 +309,7 @@ UPDATE connectors SET (
     last_updated
   ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE evse_id = $1 AND uid = $2
-  RETURNING id, evse_id, uid, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
+  RETURNING id, evse_id, uid, connector_id, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
 type UpdateConnectorByUidParams struct {
@@ -314,6 +345,7 @@ func (q *Queries) UpdateConnectorByUid(ctx context.Context, arg UpdateConnectorB
 		&i.ID,
 		&i.EvseID,
 		&i.Uid,
+		&i.ConnectorID,
 		&i.Standard,
 		&i.Format,
 		&i.PowerType,

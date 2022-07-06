@@ -653,6 +653,7 @@ type Connector struct {
 	ID                 int64           `db:"id" json:"id"`
 	EvseID             int64           `db:"evse_id" json:"evseID"`
 	Uid                string          `db:"uid" json:"uid"`
+	ConnectorID        sql.NullString  `db:"connector_id" json:"connectorID"`
 	Standard           ConnectorType   `db:"standard" json:"standard"`
 	Format             ConnectorFormat `db:"format" json:"format"`
 	PowerType          PowerType       `db:"power_type" json:"powerType"`

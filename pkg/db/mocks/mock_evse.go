@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -28,6 +29,16 @@ func (r *MockRepositoryService) GetEvse(ctx context.Context, id int64) (db.Evse,
 
 	response := r.getEvseMockData[0]
 	r.getEvseMockData = r.getEvseMockData[1:]
+	return response.Evse, response.Error
+}
+
+func (r *MockRepositoryService) GetEvseByEvseId(ctx context.Context, evseID sql.NullString) (db.Evse, error) {
+	if len(r.getEvseByEvseIdMockData) == 0 {
+		return db.Evse{}, ErrorNotFound()
+	}
+
+	response := r.getEvseByEvseIdMockData[0]
+	r.getEvseByEvseIdMockData = r.getEvseByEvseIdMockData[1:]
 	return response.Evse, response.Error
 }
 
@@ -93,6 +104,10 @@ func (r *MockRepositoryService) SetUpdateEvseLastUpdatedMockData() (db.UpdateEvs
 
 func (r *MockRepositoryService) SetGetEvseMockData(response EvseMockData) {
 	r.getEvseMockData = append(r.getEvseMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetEvseByEvseIdMockData(response EvseMockData) {
+	r.getEvseByEvseIdMockData = append(r.getEvseByEvseIdMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetEvseByUidMockData(response EvseMockData) {
