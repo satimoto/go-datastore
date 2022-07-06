@@ -25,6 +25,7 @@ func NewUpdateLocationByUidParams(location db.Location) db.UpdateLocationByUidPa
 		SuboperatorID:      location.SuboperatorID,
 		OwnerID:            location.OwnerID,
 		TimeZone:           location.TimeZone,
+		OpeningTimeID:      location.OpeningTimeID,
 		ChargingWhenClosed: location.ChargingWhenClosed,
 		EnergyMixID:        location.EnergyMixID,
 		LastUpdated:        location.LastUpdated,
