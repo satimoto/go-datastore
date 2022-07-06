@@ -2,6 +2,7 @@ package evse
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -14,6 +15,7 @@ type EvseRepository interface {
 	DeleteEvseImages(ctx context.Context, evseID int64) error
 	DeleteStatusSchedules(ctx context.Context, evseID int64) error
 	GetEvse(ctx context.Context, id int64) (db.Evse, error)
+	GetEvseByEvseId(ctx context.Context, evseID sql.NullString) (db.Evse, error)
 	GetEvseByUid(ctx context.Context, uid string) (db.Evse, error)
 	GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error)
 	ListCapabilities(ctx context.Context) ([]db.Capability, error)

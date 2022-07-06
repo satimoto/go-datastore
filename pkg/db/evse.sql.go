@@ -119,6 +119,31 @@ func (q *Queries) GetEvse(ctx context.Context, id int64) (Evse, error) {
 	return i, err
 }
 
+const getEvseByEvseId = `-- name: GetEvseByEvseId :one
+SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
+  WHERE evse_id = $1
+`
+
+func (q *Queries) GetEvseByEvseId(ctx context.Context, evseID sql.NullString) (Evse, error) {
+	row := q.db.QueryRowContext(ctx, getEvseByEvseId, evseID)
+	var i Evse
+	err := row.Scan(
+		&i.ID,
+		&i.LocationID,
+		&i.Uid,
+		&i.EvseID,
+		&i.Status,
+		&i.FloorLevel,
+		&i.Geom,
+		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
+		&i.PhysicalReference,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getEvseByUid = `-- name: GetEvseByUid :one
 SELECT id, location_id, uid, evse_id, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
   WHERE uid = $1

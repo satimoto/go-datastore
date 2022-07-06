@@ -26,6 +26,10 @@ DELETE FROM evses
 SELECT * FROM evses
   WHERE id = $1;
 
+-- name: GetEvseByEvseId :one
+SELECT * FROM evses
+  WHERE evse_id = $1;
+
 -- name: GetEvseByUid :one
 SELECT * FROM evses
   WHERE uid = $1;

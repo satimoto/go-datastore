@@ -30,6 +30,10 @@ DELETE FROM connectors
 SELECT * FROM connectors
   WHERE id = $1;
 
+-- name: GetConnectorByConnectorId :one
+SELECT * FROM connectors
+  WHERE connector_id = $1;
+
 -- name: GetConnectorByUid :one
 SELECT * FROM connectors
   WHERE (@evse_id::bigint IS NULL or evse_id = @evse_id::bigint) AND uid = @uid::string
