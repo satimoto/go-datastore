@@ -32,13 +32,13 @@ func (r *MockRepositoryService) GetEvse(ctx context.Context, id int64) (db.Evse,
 	return response.Evse, response.Error
 }
 
-func (r *MockRepositoryService) GetEvseByEvseId(ctx context.Context, evseID sql.NullString) (db.Evse, error) {
-	if len(r.getEvseByEvseIdMockData) == 0 {
+func (r *MockRepositoryService) GetEvseByIdentifier(ctx context.Context, identifier sql.NullString) (db.Evse, error) {
+	if len(r.getEvseByIdentifierMockData) == 0 {
 		return db.Evse{}, ErrorNotFound()
 	}
 
-	response := r.getEvseByEvseIdMockData[0]
-	r.getEvseByEvseIdMockData = r.getEvseByEvseIdMockData[1:]
+	response := r.getEvseByIdentifierMockData[0]
+	r.getEvseByIdentifierMockData = r.getEvseByIdentifierMockData[1:]
 	return response.Evse, response.Error
 }
 
@@ -106,8 +106,8 @@ func (r *MockRepositoryService) SetGetEvseMockData(response EvseMockData) {
 	r.getEvseMockData = append(r.getEvseMockData, response)
 }
 
-func (r *MockRepositoryService) SetGetEvseByEvseIdMockData(response EvseMockData) {
-	r.getEvseByEvseIdMockData = append(r.getEvseByEvseIdMockData, response)
+func (r *MockRepositoryService) SetGetEvseByIdentifierMockData(response EvseMockData) {
+	r.getEvseByIdentifierMockData = append(r.getEvseByIdentifierMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetEvseByUidMockData(response EvseMockData) {

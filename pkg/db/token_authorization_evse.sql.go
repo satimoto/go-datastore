@@ -8,7 +8,7 @@ import (
 )
 
 const listTokenAuthorizationEvses = `-- name: ListTokenAuthorizationEvses :many
-SELECT e.id, e.location_id, e.uid, e.evse_id, e.status, e.floor_level, e.geom, e.geo_location_id, e.is_remote_capable, e.is_rfid_capable, e.physical_reference, e.last_updated FROM evses e
+SELECT e.id, e.location_id, e.uid, e.evse_id, e.identifier, e.status, e.floor_level, e.geom, e.geo_location_id, e.is_remote_capable, e.is_rfid_capable, e.physical_reference, e.last_updated FROM evses e
   INNER JOIN token_authorization_evses tae ON tae.evse_id = e.id
   WHERE tae.token_authorization_id = $1
   ORDER BY e.id
@@ -28,6 +28,7 @@ func (q *Queries) ListTokenAuthorizationEvses(ctx context.Context, tokenAuthoriz
 			&i.LocationID,
 			&i.Uid,
 			&i.EvseID,
+			&i.Identifier,
 			&i.Status,
 			&i.FloorLevel,
 			&i.Geom,

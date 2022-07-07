@@ -3,6 +3,7 @@ INSERT INTO evses (
     location_id, 
     uid, 
     evse_id, 
+    identifier,
     status, 
     floor_level, 
     geom, 
@@ -11,7 +12,7 @@ INSERT INTO evses (
     is_rfid_capable,
     physical_reference, 
     last_updated)
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
   RETURNING *;
 
 -- name: DeleteEvse :exec
@@ -26,9 +27,9 @@ DELETE FROM evses
 SELECT * FROM evses
   WHERE id = $1;
 
--- name: GetEvseByEvseId :one
+-- name: GetEvseByIdentifier :one
 SELECT * FROM evses
-  WHERE evse_id = $1;
+  WHERE identifier = $1;
 
 -- name: GetEvseByUid :one
 SELECT * FROM evses
@@ -42,6 +43,7 @@ SELECT * FROM evses
 -- name: UpdateEvse :one
 UPDATE evses SET (
     evse_id, 
+    identifier,
     status, 
     floor_level, 
     geom, 
@@ -50,13 +52,14 @@ UPDATE evses SET (
     is_rfid_capable,
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE id = $1
   RETURNING *;
 
 -- name: UpdateEvseByUid :one
 UPDATE evses SET (
     evse_id, 
+    identifier,
     status, 
     floor_level, 
     geom, 
@@ -65,7 +68,7 @@ UPDATE evses SET (
     is_rfid_capable,
     physical_reference, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE uid = $1
   RETURNING *;
 

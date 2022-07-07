@@ -653,7 +653,7 @@ type Connector struct {
 	ID                 int64           `db:"id" json:"id"`
 	EvseID             int64           `db:"evse_id" json:"evseID"`
 	Uid                string          `db:"uid" json:"uid"`
-	ConnectorID        sql.NullString  `db:"connector_id" json:"connectorID"`
+	Identifier         sql.NullString  `db:"identifier" json:"identifier"`
 	Standard           ConnectorType   `db:"standard" json:"standard"`
 	Format             ConnectorFormat `db:"format" json:"format"`
 	PowerType          PowerType       `db:"power_type" json:"powerType"`
@@ -751,6 +751,7 @@ type Evse struct {
 	LocationID        int64                 `db:"location_id" json:"locationID"`
 	Uid               string                `db:"uid" json:"uid"`
 	EvseID            sql.NullString        `db:"evse_id" json:"evseID"`
+	Identifier        sql.NullString        `db:"identifier" json:"identifier"`
 	Status            EvseStatus            `db:"status" json:"status"`
 	FloorLevel        sql.NullString        `db:"floor_level" json:"floorLevel"`
 	Geom              geom.NullGeometry4326 `db:"geom" json:"geom"`

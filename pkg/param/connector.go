@@ -6,7 +6,7 @@ func NewUpdateConnectorByUidParams(connector db.Connector) db.UpdateConnectorByU
 	return db.UpdateConnectorByUidParams{
 		EvseID:             connector.EvseID,
 		Uid:                connector.Uid,
-		ConnectorID:        connector.ConnectorID,
+		Identifier:        connector.Identifier,
 		Standard:           connector.Standard,
 		Format:             connector.Format,
 		PowerType:          connector.PowerType,
