@@ -37,13 +37,13 @@ func (r *MockRepositoryService) GetConnector(ctx context.Context, id int64) (db.
 	return response.Connector, response.Error
 }
 
-func (r *MockRepositoryService) GetConnectorByConnectorId(ctx context.Context, connectorID sql.NullString) (db.Connector, error) {
-	if len(r.getConnectorByConnectorIdMockData) == 0 {
+func (r *MockRepositoryService) GetConnectorByIdentifier(ctx context.Context, identifier sql.NullString) (db.Connector, error) {
+	if len(r.getConnectorByIdentifierMockData) == 0 {
 		return db.Connector{}, ErrorNotFound()
 	}
 
-	response := r.getConnectorByConnectorIdMockData[0]
-	r.getConnectorByConnectorIdMockData = r.getConnectorByConnectorIdMockData[1:]
+	response := r.getConnectorByIdentifierMockData[0]
+	r.getConnectorByIdentifierMockData = r.getConnectorByIdentifierMockData[1:]
 	return response.Connector, response.Error
 }
 
@@ -106,8 +106,8 @@ func (r *MockRepositoryService) SetGetConnectorMockData(response ConnectorMockDa
 	r.getConnectorMockData = append(r.getConnectorMockData, response)
 }
 
-func (r *MockRepositoryService) SetGetConnectorByConnectorIdMockData(response ConnectorMockData) {
-	r.getConnectorByConnectorIdMockData = append(r.getConnectorByConnectorIdMockData, response)
+func (r *MockRepositoryService) SetGetConnectorByIdentifierMockData(response ConnectorMockData) {
+	r.getConnectorByIdentifierMockData = append(r.getConnectorByIdentifierMockData, response)
 }
 func (r *MockRepositoryService) SetGetConnectorByUidMockData(response ConnectorMockData) {
 	r.getConnectorByUidMockData = append(r.getConnectorByUidMockData, response)

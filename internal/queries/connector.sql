@@ -2,7 +2,7 @@
 INSERT INTO connectors (
     evse_id, 
     uid, 
-    connector_id, 
+    identifier, 
     standard, 
     format, 
     power_type, 
@@ -31,9 +31,9 @@ DELETE FROM connectors
 SELECT * FROM connectors
   WHERE id = $1;
 
--- name: GetConnectorByConnectorId :one
+-- name: GetConnectorByIdentifier :one
 SELECT * FROM connectors
-  WHERE connector_id = $1;
+  WHERE identifier = $1;
 
 -- name: GetConnectorByUid :one
 SELECT * FROM connectors
@@ -47,7 +47,7 @@ SELECT * FROM connectors
 
 -- name: UpdateConnector :one
 UPDATE connectors SET (
-    connector_id,
+    identifier,
     standard, 
     format, 
     power_type, 
@@ -63,7 +63,7 @@ UPDATE connectors SET (
 
 -- name: UpdateConnectorByUid :one
 UPDATE connectors SET (
-    connector_id,
+    identifier,
     standard, 
     format, 
     power_type, 

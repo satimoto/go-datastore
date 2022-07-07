@@ -8,7 +8,7 @@ import (
 )
 
 const listTokenAuthorizationConnectors = `-- name: ListTokenAuthorizationConnectors :many
-SELECT c.id, c.evse_id, c.uid, c.connector_id, c.standard, c.format, c.power_type, c.voltage, c.amperage, c.wattage, c.tariff_id, c.terms_and_conditions, c.last_updated FROM connectors c
+SELECT c.id, c.evse_id, c.uid, c.identifier, c.standard, c.format, c.power_type, c.voltage, c.amperage, c.wattage, c.tariff_id, c.terms_and_conditions, c.last_updated FROM connectors c
   INNER JOIN token_authorization_connectors tac ON tac.connector_id = c.id
   WHERE tac.token_authorization_id = $1
   ORDER BY c.id
@@ -27,7 +27,7 @@ func (q *Queries) ListTokenAuthorizationConnectors(ctx context.Context, tokenAut
 			&i.ID,
 			&i.EvseID,
 			&i.Uid,
-			&i.ConnectorID,
+			&i.Identifier,
 			&i.Standard,
 			&i.Format,
 			&i.PowerType,

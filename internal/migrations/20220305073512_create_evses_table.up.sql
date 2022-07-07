@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS evses (
     location_id             BIGINT NOT NULL,
     uid                     TEXT NOT NULL,
     evse_id                 TEXT,
+    identifier              TEXT,
     status                  evse_status NOT NULL,
     -- status_schedule      []status_schedules
     -- capabilities         []evse_capabilities 
@@ -112,7 +113,7 @@ CREATE TABLE IF NOT EXISTS connectors (
     id                   BIGSERIAL PRIMARY KEY,
     evse_id              BIGINT NOT NULL,
     uid                  TEXT NOT NULL,
-    connector_id         TEXT,
+    identifier           TEXT,
     standard             connector_type NOT NULL,
     format               connector_format NOT NULL,
     power_type           power_type NOT NULL,
