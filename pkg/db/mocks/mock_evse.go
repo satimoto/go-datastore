@@ -64,7 +64,19 @@ func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64)
 
 func (r *MockRepositoryService) UpdateEvseByUid(ctx context.Context, arg db.UpdateEvseByUidParams) (db.Evse, error) {
 	r.updateEvseByUidMockData = append(r.updateEvseByUidMockData, arg)
-	return db.Evse{}, nil
+	return db.Evse{
+		Uid: arg.Uid,
+		EvseID: arg.EvseID,
+		Identifier: arg.Identifier,
+		Status: arg.Status,
+		FloorLevel: arg.FloorLevel,
+		Geom: arg.Geom,
+		GeoLocationID: arg.GeoLocationID,
+		IsRemoteCapable: arg.IsRemoteCapable,
+		IsRfidCapable: arg.IsRfidCapable,
+		PhysicalReference: arg.PhysicalReference,
+		LastUpdated: arg.LastUpdated,
+	}, nil
 }
 
 func (r *MockRepositoryService) UpdateEvseLastUpdated(ctx context.Context, arg db.UpdateEvseLastUpdatedParams) error {

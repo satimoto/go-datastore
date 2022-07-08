@@ -69,7 +69,20 @@ func (r *MockRepositoryService) ListConnectors(ctx context.Context, id int64) ([
 
 func (r *MockRepositoryService) UpdateConnectorByUid(ctx context.Context, arg db.UpdateConnectorByUidParams) (db.Connector, error) {
 	r.updateConnectorByUidMockData = append(r.updateConnectorByUidMockData, arg)
-	return db.Connector{}, nil
+	return db.Connector{
+		EvseID:             arg.EvseID,
+		Uid:                arg.Uid,
+		Identifier:         arg.Identifier,
+		Standard:           arg.Standard,
+		Format:             arg.Format,
+		PowerType:          arg.PowerType,
+		Voltage:            arg.Voltage,
+		Amperage:           arg.Amperage,
+		Wattage:            arg.Wattage,
+		TariffID:           arg.TariffID,
+		TermsAndConditions: arg.TermsAndConditions,
+		LastUpdated:        arg.LastUpdated,
+	}, nil
 }
 
 func (r *MockRepositoryService) GetCreateConnectorMockData() (db.CreateConnectorParams, error) {
