@@ -16,6 +16,11 @@ func (r *MockRepositoryService) CreateRoutingEvent(ctx context.Context, arg db.C
 	return db.RoutingEvent{}, nil
 }
 
+func (r *MockRepositoryService) UpdateRoutingEvent(ctx context.Context, arg db.UpdateRoutingEventParams) (db.Location, error) {
+	r.updateRoutingEventMockData = append(r.updateRoutingEventMockData, arg)
+	return db.Location{}, nil
+}
+
 func (r *MockRepositoryService) GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error) {
 	if len(r.createRoutingEventMockData) == 0 {
 		return db.CreateRoutingEventParams{}, ErrorNotFound()
@@ -23,5 +28,15 @@ func (r *MockRepositoryService) GetCreateRoutingEventMockData() (db.CreateRoutin
 
 	response := r.createRoutingEventMockData[0]
 	r.createRoutingEventMockData = r.createRoutingEventMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error) {
+	if len(r.updateRoutingEventMockData) == 0 {
+		return db.UpdateRoutingEventParams{}, ErrorNotFound()
+	}
+
+	response := r.updateRoutingEventMockData[0]
+	r.updateRoutingEventMockData = r.updateRoutingEventMockData[1:]
 	return response, nil
 }

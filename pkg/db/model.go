@@ -378,6 +378,27 @@ func (e *RoundingRule) Scan(src interface{}) error {
 	return nil
 }
 
+type RoutingEventStatus string
+
+const (
+	RoutingEventStatusINFLIGHT    RoutingEventStatus = "IN_FLIGHT"
+	RoutingEventStatusSETTLE      RoutingEventStatus = "SETTLE"
+	RoutingEventStatusFORWARDFAIL RoutingEventStatus = "FORWARD_FAIL"
+	RoutingEventStatusLINKFAIL    RoutingEventStatus = "LINK_FAIL"
+)
+
+func (e *RoutingEventStatus) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = RoutingEventStatus(s)
+	case string:
+		*e = RoutingEventStatus(s)
+	default:
+		return fmt.Errorf("unsupported scan type for RoutingEventStatus: %T", src)
+	}
+	return nil
+}
+
 type RoutingEventType string
 
 const (
@@ -907,23 +928,27 @@ type RegularHour struct {
 }
 
 type RoutingEvent struct {
-	ID               int64            `db:"id" json:"id"`
-	NodeID           int64            `db:"node_id" json:"nodeID"`
-	EventType        RoutingEventType `db:"event_type" json:"eventType"`
-	Currency         string           `db:"currency" json:"currency"`
-	CurrencyRate     int64            `db:"currency_rate" json:"currencyRate"`
-	CurrencyRateMsat int64            `db:"currency_rate_msat" json:"currencyRateMsat"`
-	IncomingChanID   int64            `db:"incoming_chan_id" json:"incomingChanID"`
-	IncomingHtlcID   int64            `db:"incoming_htlc_id" json:"incomingHtlcID"`
-	IncomingFiat     float64          `db:"incoming_fiat" json:"incomingFiat"`
-	IncomingMsat     int64            `db:"incoming_msat" json:"incomingMsat"`
-	OutgoingChanID   int64            `db:"outgoing_chan_id" json:"outgoingChanID"`
-	OutgoingHtlcID   int64            `db:"outgoing_htlc_id" json:"outgoingHtlcID"`
-	OutgoingFiat     float64          `db:"outgoing_fiat" json:"outgoingFiat"`
-	OutgoingMsat     int64            `db:"outgoing_msat" json:"outgoingMsat"`
-	FeeFiat          float64          `db:"fee_fiat" json:"feeFiat"`
-	FeeMsat          int64            `db:"fee_msat" json:"feeMsat"`
-	LastUpdated      time.Time        `db:"last_updated" json:"lastUpdated"`
+	ID               int64              `db:"id" json:"id"`
+	NodeID           int64              `db:"node_id" json:"nodeID"`
+	EventType        RoutingEventType   `db:"event_type" json:"eventType"`
+	Currency         string             `db:"currency" json:"currency"`
+	CurrencyRate     int64              `db:"currency_rate" json:"currencyRate"`
+	CurrencyRateMsat int64              `db:"currency_rate_msat" json:"currencyRateMsat"`
+	IncomingChanID   int64              `db:"incoming_chan_id" json:"incomingChanID"`
+	IncomingHtlcID   int64              `db:"incoming_htlc_id" json:"incomingHtlcID"`
+	IncomingFiat     float64            `db:"incoming_fiat" json:"incomingFiat"`
+	IncomingMsat     int64              `db:"incoming_msat" json:"incomingMsat"`
+	OutgoingChanID   int64              `db:"outgoing_chan_id" json:"outgoingChanID"`
+	OutgoingHtlcID   int64              `db:"outgoing_htlc_id" json:"outgoingHtlcID"`
+	OutgoingFiat     float64            `db:"outgoing_fiat" json:"outgoingFiat"`
+	OutgoingMsat     int64              `db:"outgoing_msat" json:"outgoingMsat"`
+	FeeFiat          float64            `db:"fee_fiat" json:"feeFiat"`
+	FeeMsat          int64              `db:"fee_msat" json:"feeMsat"`
+	LastUpdated      time.Time          `db:"last_updated" json:"lastUpdated"`
+	EventStatus      RoutingEventStatus `db:"event_status" json:"eventStatus"`
+	WireFailure      sql.NullInt32      `db:"wire_failure" json:"wireFailure"`
+	FailureDetail    sql.NullInt32      `db:"failure_detail" json:"failureDetail"`
+	FailureString    sql.NullString     `db:"failure_string" json:"failureString"`
 }
 
 type Session struct {

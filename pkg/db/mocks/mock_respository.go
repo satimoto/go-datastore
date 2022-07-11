@@ -129,6 +129,7 @@ type MockRepository interface {
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
+	GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error)
 	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
 	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
 	GetUpdateTariffByUidMockData() (db.UpdateTariffByUidParams, error)
@@ -476,6 +477,7 @@ type MockRepositoryService struct {
 	updateNodeMockData                                []db.UpdateNodeParams
 	updateOpeningTimeMockData                         []db.UpdateOpeningTimeParams
 	updateUserMockData                                []db.UpdateUserParams
+	updateRoutingEventMockData                        []db.UpdateRoutingEventParams
 	updateSessionByUidMockData                        []db.UpdateSessionByUidParams
 	updateSessionInvoiceMockData                      []db.UpdateSessionInvoiceParams
 	updateTariffByUidMockData                         []db.UpdateTariffByUidParams
