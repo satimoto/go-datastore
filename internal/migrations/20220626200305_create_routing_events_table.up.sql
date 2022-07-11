@@ -24,3 +24,9 @@ CREATE TABLE IF NOT EXISTS routing_events (
     fee_msat           BIGINT NOT NULL,
     last_updated       TIMESTAMP NOT NULL
 );
+
+ALTER TABLE routing_events 
+    ADD CONSTRAINT fk_routing_events_node_id 
+    FOREIGN KEY (node_id) 
+    REFERENCES nodes(id) 
+    ON DELETE CASCADE;
