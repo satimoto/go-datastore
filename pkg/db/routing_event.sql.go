@@ -27,8 +27,11 @@ INSERT INTO routing_events (
     outgoing_msat,
     fee_fiat,
     fee_msat,
+    wire_failure,
+    failure_detail,
+    failure_string,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
   RETURNING id, node_id, event_type, currency, currency_rate, currency_rate_msat, incoming_chan_id, incoming_htlc_id, incoming_fiat, incoming_msat, outgoing_chan_id, outgoing_htlc_id, outgoing_fiat, outgoing_msat, fee_fiat, fee_msat, last_updated, event_status, wire_failure, failure_detail, failure_string
 `
 
@@ -49,6 +52,9 @@ type CreateRoutingEventParams struct {
 	OutgoingMsat     int64              `db:"outgoing_msat" json:"outgoingMsat"`
 	FeeFiat          float64            `db:"fee_fiat" json:"feeFiat"`
 	FeeMsat          int64              `db:"fee_msat" json:"feeMsat"`
+	WireFailure      sql.NullInt32      `db:"wire_failure" json:"wireFailure"`
+	FailureDetail    sql.NullInt32      `db:"failure_detail" json:"failureDetail"`
+	FailureString    sql.NullString     `db:"failure_string" json:"failureString"`
 	LastUpdated      time.Time          `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -70,6 +76,9 @@ func (q *Queries) CreateRoutingEvent(ctx context.Context, arg CreateRoutingEvent
 		arg.OutgoingMsat,
 		arg.FeeFiat,
 		arg.FeeMsat,
+		arg.WireFailure,
+		arg.FailureDetail,
+		arg.FailureString,
 		arg.LastUpdated,
 	)
 	var i RoutingEvent

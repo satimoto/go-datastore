@@ -16,8 +16,11 @@ INSERT INTO routing_events (
     outgoing_msat,
     fee_fiat,
     fee_msat,
+    wire_failure,
+    failure_detail,
+    failure_string,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
   RETURNING *;
 
 -- name: UpdateRoutingEvent :one
