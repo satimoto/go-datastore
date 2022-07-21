@@ -13,5 +13,6 @@ func NewUpdateNodeParams(node db.Node) db.UpdateNodeParams {
 		Version:    node.Version,
 		Channels:   node.Channels,
 		Peers:      node.Peers,
+		IsActive:   node.IsActive,
 	}
 }
