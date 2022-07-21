@@ -226,6 +226,7 @@ type MockRepository interface {
 	SetListLocationsMockData(response LocationsMockData)
 	SetListLocationsByGeomMockData(response LocationsMockData)
 	SetListNodesMockData(response NodesMockData)
+	SetListActiveNodesMockData(response NodesMockData)
 	SetListParkingRestrictionsMockData(response ParkingRestrictionsMockData)
 	SetListPriceComponentsMockData(response PriceComponentsMockData)
 	SetListRegularHoursMockData(response RegularHoursMockData)
@@ -415,6 +416,7 @@ type MockRepositoryService struct {
 	listLocationsMockData                             []LocationsMockData
 	listLocationsByGeomMockData                       []LocationsMockData
 	listNodesMockData                                 []NodesMockData
+	listActiveNodesMockData                           []NodesMockData
 	listParkingRestrictionsMockData                   []ParkingRestrictionsMockData
 	listPriceComponentsMockData                       []PriceComponentsMockData
 	listRegularHoursMockData                          []RegularHoursMockData

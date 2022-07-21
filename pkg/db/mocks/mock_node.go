@@ -61,6 +61,16 @@ func (r *MockRepositoryService) ListNodes(ctx context.Context) ([]db.Node, error
 	return response.Nodes, response.Error
 }
 
+func (r *MockRepositoryService) ListActiveNodes(ctx context.Context) ([]db.Node, error) {
+	if len(r.listActiveNodesMockData) == 0 {
+		return []db.Node{}, nil
+	}
+
+	response := r.listActiveNodesMockData[0]
+	r.listActiveNodesMockData = r.listActiveNodesMockData[1:]
+	return response.Nodes, response.Error
+}
+
 func (r *MockRepositoryService) UpdateNode(ctx context.Context, arg db.UpdateNodeParams) (db.Node, error) {
 	r.updateNodeMockData = append(r.updateNodeMockData, arg)
 	return db.Node{}, nil
@@ -90,6 +100,10 @@ func (r *MockRepositoryService) SetGetNodeByUserIDMockData(response NodeMockData
 
 func (r *MockRepositoryService) SetListNodesMockData(response NodesMockData) {
 	r.listNodesMockData = append(r.listNodesMockData, response)
+}
+
+func (r *MockRepositoryService) SetListActiveNodesMockData(response NodesMockData) {
+	r.listActiveNodesMockData = append(r.listActiveNodesMockData, response)
 }
 
 func (r *MockRepositoryService) GetUpdateNodeMockData() (db.UpdateNodeParams, error) {

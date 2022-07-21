@@ -8,8 +8,9 @@ INSERT INTO nodes (
     commit_hash,
     version,
     channels,
-    peers
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    peers,
+    is_active
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING *;
 
 -- name: GetNode :one
@@ -29,6 +30,11 @@ SELECT n.* FROM nodes n
 SELECT * FROM nodes
   ORDER BY peers ASC;
 
+-- name: ListActiveNodes :many
+SELECT * FROM nodes
+  WHERE is_active = true
+  ORDER BY peers ASC;
+
 -- name: UpdateNode :one
 UPDATE nodes SET (
     node_addr,
@@ -38,7 +44,8 @@ UPDATE nodes SET (
     commit_hash,
     version,
     channels,
-    peers
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+    peers,
+    is_active
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
   RETURNING *;

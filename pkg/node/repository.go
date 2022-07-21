@@ -12,6 +12,7 @@ type NodeRepository interface {
 	GetNodeByPubkey(ctx context.Context, pubkey string) (db.Node, error)
 	GetNodeByUserID(ctx context.Context, id int64) (db.Node, error)
 	ListNodes(ctx context.Context) ([]db.Node, error)
+	ListActiveNodes(ctx context.Context) ([]db.Node, error)
 	UpdateNode(ctx context.Context, arg db.UpdateNodeParams) (db.Node, error)
 }
 

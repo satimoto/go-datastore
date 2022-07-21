@@ -889,6 +889,7 @@ type Node struct {
 	Version    string `db:"version" json:"version"`
 	Channels   int64  `db:"channels" json:"channels"`
 	Peers      int64  `db:"peers" json:"peers"`
+	IsActive   bool   `db:"is_active" json:"isActive"`
 }
 
 type OpeningTime struct {
