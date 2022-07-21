@@ -16,9 +16,9 @@ func (r *MockRepositoryService) CreateRoutingEvent(ctx context.Context, arg db.C
 	return db.RoutingEvent{}, nil
 }
 
-func (r *MockRepositoryService) UpdateRoutingEvent(ctx context.Context, arg db.UpdateRoutingEventParams) (db.Location, error) {
+func (r *MockRepositoryService) UpdateRoutingEvent(ctx context.Context, arg db.UpdateRoutingEventParams) (db.RoutingEvent, error) {
 	r.updateRoutingEventMockData = append(r.updateRoutingEventMockData, arg)
-	return db.Location{}, nil
+	return db.RoutingEvent{}, nil
 }
 
 func (r *MockRepositoryService) GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error) {

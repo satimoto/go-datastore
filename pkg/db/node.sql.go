@@ -17,9 +17,10 @@ INSERT INTO nodes (
     commit_hash,
     version,
     channels,
-    peers
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-  RETURNING id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers
+    peers,
+    is_active
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  RETURNING id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers, is_active
 `
 
 type CreateNodeParams struct {
@@ -32,6 +33,7 @@ type CreateNodeParams struct {
 	Version    string `db:"version" json:"version"`
 	Channels   int64  `db:"channels" json:"channels"`
 	Peers      int64  `db:"peers" json:"peers"`
+	IsActive   bool   `db:"is_active" json:"isActive"`
 }
 
 func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, error) {
@@ -45,6 +47,7 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 		arg.Version,
 		arg.Channels,
 		arg.Peers,
+		arg.IsActive,
 	)
 	var i Node
 	err := row.Scan(
@@ -58,12 +61,13 @@ func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (Node, e
 		&i.Version,
 		&i.Channels,
 		&i.Peers,
+		&i.IsActive,
 	)
 	return i, err
 }
 
 const getNode = `-- name: GetNode :one
-SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers FROM nodes
+SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers, is_active FROM nodes
   WHERE id = $1
 `
 
@@ -81,12 +85,13 @@ func (q *Queries) GetNode(ctx context.Context, id int64) (Node, error) {
 		&i.Version,
 		&i.Channels,
 		&i.Peers,
+		&i.IsActive,
 	)
 	return i, err
 }
 
 const getNodeByPubkey = `-- name: GetNodeByPubkey :one
-SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers FROM nodes
+SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers, is_active FROM nodes
   WHERE pubkey = $1
 `
 
@@ -104,12 +109,13 @@ func (q *Queries) GetNodeByPubkey(ctx context.Context, pubkey string) (Node, err
 		&i.Version,
 		&i.Channels,
 		&i.Peers,
+		&i.IsActive,
 	)
 	return i, err
 }
 
 const getNodeByUserID = `-- name: GetNodeByUserID :one
-SELECT n.id, n.pubkey, n.node_addr, n.lsp_addr, n.alias, n.color, n.commit_hash, n.version, n.channels, n.peers FROM nodes n
+SELECT n.id, n.pubkey, n.node_addr, n.lsp_addr, n.alias, n.color, n.commit_hash, n.version, n.channels, n.peers, n.is_active FROM nodes n
   INNER JOIN users u ON u.node_id = n.id
   WHERE u.id = $1
 `
@@ -128,12 +134,54 @@ func (q *Queries) GetNodeByUserID(ctx context.Context, id int64) (Node, error) {
 		&i.Version,
 		&i.Channels,
 		&i.Peers,
+		&i.IsActive,
 	)
 	return i, err
 }
 
+const listActiveNodes = `-- name: ListActiveNodes :many
+SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers, is_active FROM nodes
+  WHERE is_active = true
+  ORDER BY peers ASC
+`
+
+func (q *Queries) ListActiveNodes(ctx context.Context) ([]Node, error) {
+	rows, err := q.db.QueryContext(ctx, listActiveNodes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Node
+	for rows.Next() {
+		var i Node
+		if err := rows.Scan(
+			&i.ID,
+			&i.Pubkey,
+			&i.NodeAddr,
+			&i.LspAddr,
+			&i.Alias,
+			&i.Color,
+			&i.CommitHash,
+			&i.Version,
+			&i.Channels,
+			&i.Peers,
+			&i.IsActive,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listNodes = `-- name: ListNodes :many
-SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers FROM nodes
+SELECT id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers, is_active FROM nodes
   ORDER BY peers ASC
 `
 
@@ -157,6 +205,7 @@ func (q *Queries) ListNodes(ctx context.Context) ([]Node, error) {
 			&i.Version,
 			&i.Channels,
 			&i.Peers,
+			&i.IsActive,
 		); err != nil {
 			return nil, err
 		}
@@ -180,10 +229,11 @@ UPDATE nodes SET (
     commit_hash,
     version,
     channels,
-    peers
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+    peers,
+    is_active
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
-  RETURNING id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers
+  RETURNING id, pubkey, node_addr, lsp_addr, alias, color, commit_hash, version, channels, peers, is_active
 `
 
 type UpdateNodeParams struct {
@@ -196,6 +246,7 @@ type UpdateNodeParams struct {
 	Version    string `db:"version" json:"version"`
 	Channels   int64  `db:"channels" json:"channels"`
 	Peers      int64  `db:"peers" json:"peers"`
+	IsActive   bool   `db:"is_active" json:"isActive"`
 }
 
 func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) (Node, error) {
@@ -209,6 +260,7 @@ func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) (Node, e
 		arg.Version,
 		arg.Channels,
 		arg.Peers,
+		arg.IsActive,
 	)
 	var i Node
 	err := row.Scan(
@@ -222,6 +274,7 @@ func (q *Queries) UpdateNode(ctx context.Context, arg UpdateNodeParams) (Node, e
 		&i.Version,
 		&i.Channels,
 		&i.Peers,
+		&i.IsActive,
 	)
 	return i, err
 }
