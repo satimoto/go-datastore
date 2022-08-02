@@ -19,6 +19,7 @@ type LocationRepository interface {
 	GetLocationByUid(ctx context.Context, uid string) (db.Location, error)
 	ListAdditionalGeoLocations(ctx context.Context, locationID int64) ([]db.AdditionalGeoLocation, error)
 	ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
+	ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
 	ListFacilities(ctx context.Context) ([]db.Facility, error)
 	ListLocationsByGeom(ctx context.Context, arg db.ListLocationsByGeomParams) ([]db.Location, error)
 	ListLocationDirections(ctx context.Context, locationID int64) ([]db.DisplayText, error)
