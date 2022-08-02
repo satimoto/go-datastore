@@ -355,7 +355,8 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
 SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
-  WHERE ST_Intersects(geom, ST_MakeEnvelope($1::FLOAT, $2::FLOAT, $3::FLOAT, $4::FLOAT, 4326)) AND
+  WHERE total_evses > 0 AND 
+    ST_Intersects(geom, ST_MakeEnvelope($1::FLOAT, $2::FLOAT, $3::FLOAT, $4::FLOAT, 4326)) AND
     ($5::TEXT = '' OR last_updated > TO_TIMESTAMP($5::TEXT, 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))
   LIMIT 500
 `

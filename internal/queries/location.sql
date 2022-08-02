@@ -58,7 +58,8 @@ SELECT * FROM locations
 
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
-  WHERE ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
+  WHERE total_evses > 0 AND 
+    ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
     (@last_update::TEXT = '' OR last_updated > TO_TIMESTAMP(@last_update::TEXT, 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))
   LIMIT 500;
 
