@@ -40,6 +40,11 @@ SELECT * FROM evses
   WHERE location_id = $1
   ORDER BY id;
 
+-- name: ListActiveEvses :many
+SELECT * FROM evses
+  WHERE location_id = $1 AND status != 'REMOVED'
+  ORDER BY id;
+
 -- name: UpdateEvse :one
 UPDATE evses SET (
     evse_id, 

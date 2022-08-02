@@ -62,20 +62,30 @@ func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64)
 	return response.Evses, response.Error
 }
 
+func (r *MockRepositoryService) ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error) {
+	if len(r.listActiveEvsesMockData) == 0 {
+		return []db.Evse{}, nil
+	}
+
+	response := r.listActiveEvsesMockData[0]
+	r.listActiveEvsesMockData = r.listActiveEvsesMockData[1:]
+	return response.Evses, response.Error
+}
+
 func (r *MockRepositoryService) UpdateEvseByUid(ctx context.Context, arg db.UpdateEvseByUidParams) (db.Evse, error) {
 	r.updateEvseByUidMockData = append(r.updateEvseByUidMockData, arg)
 	return db.Evse{
-		Uid: arg.Uid,
-		EvseID: arg.EvseID,
-		Identifier: arg.Identifier,
-		Status: arg.Status,
-		FloorLevel: arg.FloorLevel,
-		Geom: arg.Geom,
-		GeoLocationID: arg.GeoLocationID,
-		IsRemoteCapable: arg.IsRemoteCapable,
-		IsRfidCapable: arg.IsRfidCapable,
+		Uid:               arg.Uid,
+		EvseID:            arg.EvseID,
+		Identifier:        arg.Identifier,
+		Status:            arg.Status,
+		FloorLevel:        arg.FloorLevel,
+		Geom:              arg.Geom,
+		GeoLocationID:     arg.GeoLocationID,
+		IsRemoteCapable:   arg.IsRemoteCapable,
+		IsRfidCapable:     arg.IsRfidCapable,
 		PhysicalReference: arg.PhysicalReference,
-		LastUpdated: arg.LastUpdated,
+		LastUpdated:       arg.LastUpdated,
 	}, nil
 }
 
@@ -128,4 +138,8 @@ func (r *MockRepositoryService) SetGetEvseByUidMockData(response EvseMockData) {
 
 func (r *MockRepositoryService) SetListEvsesMockData(response EvsesMockData) {
 	r.listEvsesMockData = append(r.listEvsesMockData, response)
+}
+
+func (r *MockRepositoryService) SetListActiveEvsesMockData(response EvsesMockData) {
+	r.listActiveEvsesMockData = append(r.listActiveEvsesMockData, response)
 }

@@ -176,6 +176,49 @@ func (q *Queries) GetEvseByUid(ctx context.Context, uid string) (Evse, error) {
 	return i, err
 }
 
+const listActiveEvses = `-- name: ListActiveEvses :many
+SELECT id, location_id, uid, evse_id, identifier, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
+  WHERE location_id = $1 AND status != 'REMOVED'
+  ORDER BY id
+`
+
+func (q *Queries) ListActiveEvses(ctx context.Context, locationID int64) ([]Evse, error) {
+	rows, err := q.db.QueryContext(ctx, listActiveEvses, locationID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Evse
+	for rows.Next() {
+		var i Evse
+		if err := rows.Scan(
+			&i.ID,
+			&i.LocationID,
+			&i.Uid,
+			&i.EvseID,
+			&i.Identifier,
+			&i.Status,
+			&i.FloorLevel,
+			&i.Geom,
+			&i.GeoLocationID,
+			&i.IsRemoteCapable,
+			&i.IsRfidCapable,
+			&i.PhysicalReference,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listEvses = `-- name: ListEvses :many
 SELECT id, location_id, uid, evse_id, identifier, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
   WHERE location_id = $1

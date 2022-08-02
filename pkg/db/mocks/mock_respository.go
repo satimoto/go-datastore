@@ -213,6 +213,7 @@ type MockRepository interface {
 	SetListEnergySourcesMockData(response EnergySourcesMockData)
 	SetListEnvironmentalImpactsMockData(response EnvironmentalImpactsMockData)
 	SetListEvsesMockData(response EvsesMockData)
+	SetListActiveEvsesMockData(response EvsesMockData)
 	SetListEvseCapabilitiesMockData(response CapabilitiesMockData)
 	SetListEvseDirectionsMockData(response DisplayTextsMockData)
 	SetListEvseImagesMockData(response ImagesMockData)
@@ -403,6 +404,7 @@ type MockRepositoryService struct {
 	listEnergySourcesMockData                         []EnergySourcesMockData
 	listEnvironmentalImpactsMockData                  []EnvironmentalImpactsMockData
 	listEvsesMockData                                 []EvsesMockData
+	listActiveEvsesMockData                           []EvsesMockData
 	listEvseCapabilitiesMockData                      []CapabilitiesMockData
 	listEvseDirectionsMockData                        []DisplayTextsMockData
 	listEvseImagesMockData                            []ImagesMockData
