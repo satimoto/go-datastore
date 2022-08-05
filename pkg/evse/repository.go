@@ -9,6 +9,7 @@ import (
 
 type EvseRepository interface {
 	CreateEvse(ctx context.Context, arg db.CreateEvseParams) (db.Evse, error)
+	CreateEvseStatusPeriod(ctx context.Context, arg db.CreateEvseStatusPeriodParams) (db.EvseStatusPeriod, error)
 	CreateStatusSchedule(ctx context.Context, arg db.CreateStatusScheduleParams) (db.StatusSchedule, error)
 	DeleteConnectors(ctx context.Context, evseID int64) error
 	DeleteEvseDirections(ctx context.Context, evseID int64) error
@@ -21,6 +22,7 @@ type EvseRepository interface {
 	ListCapabilities(ctx context.Context) ([]db.Capability, error)
 	ListConnectors(ctx context.Context, evseID int64) ([]db.Connector, error)
 	ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
+	ListEvseStatusPeriods(ctx context.Context, evseID int64) ([]db.EvseStatusPeriod, error)
 	ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
 	ListEvseCapabilities(ctx context.Context, evseID int64) ([]db.Capability, error)
 	ListEvseDirections(ctx context.Context, evseID int64) ([]db.DisplayText, error)
