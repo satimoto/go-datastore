@@ -32,6 +32,7 @@ type MockRepository interface {
 	GetCreateEnergySourceMockData() (db.CreateEnergySourceParams, error)
 	GetCreateEnvironmentalImpactMockData() (db.CreateEnvironmentalImpactParams, error)
 	GetCreateEvseMockData() (db.CreateEvseParams, error)
+	GetCreateEvseStatusPeriodMockData() (db.CreateEvseStatusPeriodParams, error)
 	GetCreateExceptionalPeriodMockData() (db.CreateExceptionalPeriodParams, error)
 	GetCreateGeoLocationMockData() (db.CreateGeoLocationParams, error)
 	GetCreateImageMockData() (db.CreateImageParams, error)
@@ -213,6 +214,7 @@ type MockRepository interface {
 	SetListEnergySourcesMockData(response EnergySourcesMockData)
 	SetListEnvironmentalImpactsMockData(response EnvironmentalImpactsMockData)
 	SetListEvsesMockData(response EvsesMockData)
+	SetListEvseStatusPeriodsMockData(response EvseStatusPeriodsMockData)
 	SetListActiveEvsesMockData(response EvsesMockData)
 	SetListEvseCapabilitiesMockData(response CapabilitiesMockData)
 	SetListEvseDirectionsMockData(response DisplayTextsMockData)
@@ -274,6 +276,7 @@ type MockRepositoryService struct {
 	createEnergySourceMockData                        []db.CreateEnergySourceParams
 	createEnvironmentalImpactMockData                 []db.CreateEnvironmentalImpactParams
 	createEvseMockData                                []db.CreateEvseParams
+	createEvseStatusPeriodMockData                    []db.CreateEvseStatusPeriodParams
 	createExceptionalPeriodMockData                   []db.CreateExceptionalPeriodParams
 	createGeoLocationMockData                         []db.CreateGeoLocationParams
 	createImageMockData                               []db.CreateImageParams
@@ -404,6 +407,7 @@ type MockRepositoryService struct {
 	listEnergySourcesMockData                         []EnergySourcesMockData
 	listEnvironmentalImpactsMockData                  []EnvironmentalImpactsMockData
 	listEvsesMockData                                 []EvsesMockData
+	listEvseStatusPeriodsMockData                     []EvseStatusPeriodsMockData
 	listActiveEvsesMockData                           []EvsesMockData
 	listEvseCapabilitiesMockData                      []CapabilitiesMockData
 	listEvseDirectionsMockData                        []DisplayTextsMockData

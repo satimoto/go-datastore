@@ -803,6 +803,14 @@ type EvseParkingRestriction struct {
 	ParkingRestrictionID int64 `db:"parking_restriction_id" json:"parkingRestrictionID"`
 }
 
+type EvseStatusPeriod struct {
+	ID        int64      `db:"id" json:"id"`
+	EvseID    int64      `db:"evse_id" json:"evseID"`
+	Status    EvseStatus `db:"status" json:"status"`
+	StartDate time.Time  `db:"start_date" json:"startDate"`
+	EndDate   time.Time  `db:"end_date" json:"endDate"`
+}
+
 type ExceptionalPeriod struct {
 	ID            int64      `db:"id" json:"id"`
 	OpeningTimeID int64      `db:"opening_time_id" json:"openingTimeID"`
