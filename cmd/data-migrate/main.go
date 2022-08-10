@@ -53,11 +53,9 @@ var migrateCommand = &cobra.Command{
 
 		if len(forceVersion) > 0 {
 			if value, err := strconv.Atoi(forceVersion); err == nil {
-				m.Force(value)
+				err = m.Force(value)
 			}
-		}
-
-		if len(steps) > 0 {
+		} else if len(steps) > 0 {
 			if value, err := strconv.Atoi(steps); err == nil {
 				if down {
 					err = m.Steps(-value)
@@ -75,7 +73,13 @@ var migrateCommand = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		log.Println("Migration Complete")
+		version, dirty, err := m.Version()
+
+		if err != nil {
+			log.Printf("Migration no changes: %v", err)
+		} else {
+			log.Printf("Migration complete: %v (%v)", version, dirty)
+		}
 	},
 }
 
