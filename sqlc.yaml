@@ -1,13 +1,16 @@
 version: 1
 packages:
-  - path: "db"
-    queries: "./db/queries/"
-    schema: "./db/migrations/"
+  - path: "pkg/db"
+    queries: "./internal/queries/"
+    schema: "./internal/migrations/"
     emit_db_tags: true
     emit_json_tags: true
     json_tags_case_style: "camel"
     output_models_file_name: "model.go"
 overrides:
   - db_type: "geometry"
-    go_type: "github.com/twpayne/go-geom.Point"
-    nullable: false
+    go_type: "github.com/satimoto/go-datastore/pkg/geom.Geometry4326"
+    nullable: false  
+  - db_type: "geometry"
+    go_type: "github.com/satimoto/go-datastore/pkg/geom.NullGeometry4326"
+    nullable: true
