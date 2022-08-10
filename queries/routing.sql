@@ -1,0 +1,2 @@
+SELECT id, incoming_chan_id, incoming_msat/1000 as incoming, outgoing_chan_id, outgoing_msat/1000 as outgoing, fee_msat/1000 as fee, event_status, last_updated FROM public.routing_events
+ORDER BY id ASC 
