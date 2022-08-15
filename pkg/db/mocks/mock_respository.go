@@ -41,6 +41,7 @@ type MockRepository interface {
 	GetCreateOpeningTimeMockData() (bool, error)
 	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
+	GetCreatePsbtFundingStateMockData() (db.CreatePsbtFundingStateParams, error)
 	GetCreateRegularHourMockData() (db.CreateRegularHourParams, error)
 	GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error)
 	GetCreateSessionMockData() (db.CreateSessionParams, error)
@@ -96,6 +97,7 @@ type MockRepository interface {
 	GetSetLocationDirectionMockData() (db.SetLocationDirectionParams, error)
 	GetSetLocationFacilityMockData() (db.SetLocationFacilityParams, error)
 	GetSetLocationImageMockData() (db.SetLocationImageParams, error)
+	GetSetPsbtFundingStateChannelRequestMockData() (db.SetPsbtFundingStateChannelRequestParams, error)
 	GetSetSessionChargingPeriodMockData() (db.SetSessionChargingPeriodParams, error)
 	GetSetTariffAltTextMockData() (db.SetTariffAltTextParams, error)
 	GetSetTariffRestrictionWeekdayMockData() (db.SetTariffRestrictionWeekdayParams, error)
@@ -130,6 +132,7 @@ type MockRepository interface {
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
+	GetUpdatePsbtFundingStateMockData() (db.UpdatePsbtFundingStateParams, error)
 	GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error)
 	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
 	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
@@ -228,6 +231,8 @@ type MockRepository interface {
 	SetListLocationImagesMockData(response ImagesMockData)
 	SetListLocationsMockData(response LocationsMockData)
 	SetListLocationsByGeomMockData(response LocationsMockData)
+	SetListPsbtFundingStatesMockData(response PsbtFundingStatesMockData)
+	SetListPsbtFundingStateChannelRequestsMockData(response ChannelRequestsMockData)
 	SetListNodesMockData(response NodesMockData)
 	SetListActiveNodesMockData(response NodesMockData)
 	SetListParkingRestrictionsMockData(response ParkingRestrictionsMockData)
@@ -285,6 +290,7 @@ type MockRepositoryService struct {
 	createNodeMockData                                []db.CreateNodeParams
 	createPriceComponentMockData                      []db.CreatePriceComponentParams
 	createPriceComponentRoundingMockData              []db.CreatePriceComponentRoundingParams
+	createPsbtFundingStateMockData                    []db.CreatePsbtFundingStateParams
 	createRegularHourMockData                         []db.CreateRegularHourParams
 	createRoutingEventMockData                        []db.CreateRoutingEventParams
 	createSessionMockData                             []db.CreateSessionParams
@@ -425,6 +431,8 @@ type MockRepositoryService struct {
 	listActiveNodesMockData                           []NodesMockData
 	listParkingRestrictionsMockData                   []ParkingRestrictionsMockData
 	listPriceComponentsMockData                       []PriceComponentsMockData
+	listPsbtFundingStatesMockData                     []PsbtFundingStatesMockData
+	listPsbtFundingStateChannelRequestsMockData       []ChannelRequestsMockData
 	listRegularHoursMockData                          []RegularHoursMockData
 	listRelatedLocationsMockData                      []GeoLocationsMockData
 	listSessionChargingPeriodsMockData                []ChargingPeriodsMockData
@@ -450,6 +458,7 @@ type MockRepositoryService struct {
 	setLocationDirectionMockData                      []db.SetLocationDirectionParams
 	setLocationFacilityMockData                       []db.SetLocationFacilityParams
 	setLocationImageMockData                          []db.SetLocationImageParams
+	setPsbtFundingStateChannelRequestMockData         []db.SetPsbtFundingStateChannelRequestParams
 	setSessionChargingPeriodMockData                  []db.SetSessionChargingPeriodParams
 	setTariffAltTextMockData                          []db.SetTariffAltTextParams
 	setTariffRestrictionWeekdayMockData               []db.SetTariffRestrictionWeekdayParams
@@ -484,6 +493,7 @@ type MockRepositoryService struct {
 	updateLocationLastUpdatedMockData                 []db.UpdateLocationLastUpdatedParams
 	updateNodeMockData                                []db.UpdateNodeParams
 	updateOpeningTimeMockData                         []db.UpdateOpeningTimeParams
+	updatePsbtFundingStateMockData                    []db.UpdatePsbtFundingStateParams
 	updateUserMockData                                []db.UpdateUserParams
 	updateRoutingEventMockData                        []db.UpdateRoutingEventParams
 	updateSessionByUidMockData                        []db.UpdateSessionByUidParams

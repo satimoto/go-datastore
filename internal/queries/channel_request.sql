@@ -28,8 +28,9 @@ UPDATE channel_requests SET (
     status,
     settled_msat,
     funding_tx_id, 
-    output_index
-  ) = ($2, $3, $4, $5)
+    output_index,
+    pending_chan_id
+  ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
   RETURNING *;
 

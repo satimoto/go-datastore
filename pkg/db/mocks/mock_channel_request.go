@@ -11,6 +11,11 @@ type ChannelRequestMockData struct {
 	Error          error
 }
 
+type ChannelRequestsMockData struct {
+	ChannelRequests []db.ChannelRequest
+	Error           error
+}
+
 func (r *MockRepositoryService) CreateChannelRequest(ctx context.Context, arg db.CreateChannelRequestParams) (db.ChannelRequest, error) {
 	r.createChannelRequestMockData = append(r.createChannelRequestMockData, arg)
 	return db.ChannelRequest{}, nil
