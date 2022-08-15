@@ -604,17 +604,18 @@ type CdrChargingPeriod struct {
 }
 
 type ChannelRequest struct {
-	ID          int64                `db:"id" json:"id"`
-	UserID      int64                `db:"user_id" json:"userID"`
-	Status      ChannelRequestStatus `db:"status" json:"status"`
-	Pubkey      string               `db:"pubkey" json:"pubkey"`
-	PaymentHash []byte               `db:"payment_hash" json:"paymentHash"`
-	PaymentAddr []byte               `db:"payment_addr" json:"paymentAddr"`
-	AmountMsat  int64                `db:"amount_msat" json:"amountMsat"`
-	SettledMsat int64                `db:"settled_msat" json:"settledMsat"`
-	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
-	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
-	NodeID      int64                `db:"node_id" json:"nodeID"`
+	ID            int64                `db:"id" json:"id"`
+	UserID        int64                `db:"user_id" json:"userID"`
+	Status        ChannelRequestStatus `db:"status" json:"status"`
+	Pubkey        string               `db:"pubkey" json:"pubkey"`
+	PaymentHash   []byte               `db:"payment_hash" json:"paymentHash"`
+	PaymentAddr   []byte               `db:"payment_addr" json:"paymentAddr"`
+	AmountMsat    int64                `db:"amount_msat" json:"amountMsat"`
+	SettledMsat   int64                `db:"settled_msat" json:"settledMsat"`
+	FundingTxID   []byte               `db:"funding_tx_id" json:"fundingTxID"`
+	OutputIndex   sql.NullInt64        `db:"output_index" json:"outputIndex"`
+	NodeID        int64                `db:"node_id" json:"nodeID"`
+	PendingChanID sql.NullInt64        `db:"pending_chan_id" json:"pendingChanID"`
 }
 
 type ChannelRequestHtlc struct {
@@ -926,6 +927,19 @@ type PriceComponentRounding struct {
 	ID          int64               `db:"id" json:"id"`
 	Granularity RoundingGranularity `db:"granularity" json:"granularity"`
 	Rule        RoundingRule        `db:"rule" json:"rule"`
+}
+
+type PsbtFundingState struct {
+	ID         int64     `db:"id" json:"id"`
+	BasePsbt   []byte    `db:"base_psbt" json:"basePsbt"`
+	Psbt       []byte    `db:"psbt" json:"psbt"`
+	FundedPsbt []byte    `db:"funded_psbt" json:"fundedPsbt"`
+	ExpiryDate time.Time `db:"expiry_date" json:"expiryDate"`
+}
+
+type PsbtFundingStateChannelRequest struct {
+	PsbtFundingStateID int64 `db:"psbt_funding_state_id" json:"psbtFundingStateID"`
+	ChannelRequestID   int64 `db:"channel_request_id" json:"channelRequestID"`
 }
 
 type RegularHour struct {
