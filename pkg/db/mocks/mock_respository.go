@@ -151,6 +151,7 @@ type MockRepository interface {
 	SetGetChannelRequestHtlcMockData(response ChannelRequestHtlcMockData)
 	SetGetChannelRequestHtlcByCircuitKeyMockData(response ChannelRequestHtlcMockData)
 	SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData)
+	SetGetChannelRequestByPendingChanIdMockData(response ChannelRequestMockData)
 	SetGetConnectorMockData(response ConnectorMockData)
 	SetGetConnectorByIdentifierMockData(response ConnectorMockData)
 	SetGetConnectorByUidMockData(response ConnectorMockData)
@@ -349,6 +350,7 @@ type MockRepositoryService struct {
 	getChannelRequestHtlcMockData                     []ChannelRequestHtlcMockData
 	getChannelRequestHtlcByCircuitKeyMockData         []ChannelRequestHtlcMockData
 	getChannelRequestByPaymentHashMockData            []ChannelRequestMockData
+	getChannelRequestByPendingChanIdMockData          []ChannelRequestMockData
 	getConnectorMockData                              []ConnectorMockData
 	getConnectorByIdentifierMockData                  []ConnectorMockData
 	getConnectorByUidMockData                         []ConnectorMockData

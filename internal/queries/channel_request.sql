@@ -8,8 +8,9 @@ INSERT INTO channel_requests (
     payment_addr,
     amount,
     amount_msat,
-    settled_msat
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    settled_msat,
+    pending_chan_id
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   RETURNING *;
 
 -- name: DeleteChannelRequest :exec
@@ -24,12 +25,15 @@ SELECT * FROM channel_requests
 SELECT * FROM channel_requests
   WHERE payment_hash = $1 OR sha256('probing-01:' || payment_hash) = $1;
 
+-- name: GetChannelRequestByPendingChanId :one
+SELECT * FROM channel_requests
+  WHERE pending_chan_id = $1;
+
 -- name: UpdateChannelRequest :one
 UPDATE channel_requests SET (
     status,
-    settled_msat,
-    pending_chan_id
-  ) = ($2, $3, $4)
+    settled_msat
+  ) = ($2, $3)
   WHERE id = $1
   RETURNING *;
 
