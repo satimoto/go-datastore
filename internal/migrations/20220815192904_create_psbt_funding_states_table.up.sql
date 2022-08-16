@@ -1,7 +1,7 @@
 
 -- Channel requests
 ALTER TABLE channel_requests
-    ADD COLUMN pending_chan_id BIGINT;
+    ADD COLUMN pending_chan_id BYTEA;
 
 -- Psbt funding states
 CREATE TABLE IF NOT EXISTS psbt_funding_states (
