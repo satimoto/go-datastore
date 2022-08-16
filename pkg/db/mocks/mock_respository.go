@@ -180,6 +180,7 @@ type MockRepository interface {
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
 	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
 	SetGetPsbtFundingStateMockData(response PsbtFundingStateMockData)
+	SetGetUnfundedPsbtFundingStateMockData(response PsbtFundingStateMockData)
 	SetGetSessionMockData(response SessionMockData)
 	SetGetSessionByAuthorizationIDMockData(response SessionMockData)
 	SetGetSessionByLastUpdatedMockData(response SessionMockData)
@@ -232,7 +233,7 @@ type MockRepository interface {
 	SetListLocationImagesMockData(response ImagesMockData)
 	SetListLocationsMockData(response LocationsMockData)
 	SetListLocationsByGeomMockData(response LocationsMockData)
-	SetListPsbtFundingStatesMockData(response PsbtFundingStatesMockData)
+	SetListUnfundedPsbtFundingStatesMockData(response PsbtFundingStatesMockData)
 	SetListPsbtFundingStateChannelRequestsMockData(response ChannelRequestsMockData)
 	SetListNodesMockData(response NodesMockData)
 	SetListActiveNodesMockData(response NodesMockData)
@@ -377,6 +378,7 @@ type MockRepositoryService struct {
 	getOpeningTimeMockData                            []OpeningTimeMockData
 	getPriceComponentRoundingMockData                 []PriceComponentRoundingMockData
 	getPsbtFundingStateMockData                       []PsbtFundingStateMockData
+	getUnfundedPsbtFundingStateMockData               []PsbtFundingStateMockData
 	getSessionMockData                                []SessionMockData
 	getSessionByAuthorizationIDMockData               []SessionMockData
 	getSessionByLastUpdatedMockData                   []SessionMockData
@@ -433,7 +435,7 @@ type MockRepositoryService struct {
 	listActiveNodesMockData                           []NodesMockData
 	listParkingRestrictionsMockData                   []ParkingRestrictionsMockData
 	listPriceComponentsMockData                       []PriceComponentsMockData
-	listPsbtFundingStatesMockData                     []PsbtFundingStatesMockData
+	listUnfundedPsbtFundingStatesMockData             []PsbtFundingStatesMockData
 	listPsbtFundingStateChannelRequestsMockData       []ChannelRequestsMockData
 	listRegularHoursMockData                          []RegularHoursMockData
 	listRelatedLocationsMockData                      []GeoLocationsMockData

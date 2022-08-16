@@ -21,7 +21,7 @@ func (r *MockRepositoryService) CreatePsbtFundingState(ctx context.Context, arg 
 	return db.PsbtFundingState{}, nil
 }
 
-func (r *MockRepositoryService) GetPsbtFundingState(ctx context.Context, nodeID int64) (db.PsbtFundingState, error) {
+func (r *MockRepositoryService) GetPsbtFundingState(ctx context.Context, id int64) (db.PsbtFundingState, error) {
 	if len(r.getPsbtFundingStateMockData) == 0 {
 		return db.PsbtFundingState{}, ErrorNotFound()
 	}
@@ -31,13 +31,23 @@ func (r *MockRepositoryService) GetPsbtFundingState(ctx context.Context, nodeID 
 	return response.PsbtFundingState, response.Error
 }
 
-func (r *MockRepositoryService) ListPsbtFundingState(ctx context.Context, nodeID int64) ([]db.PsbtFundingState, error) {
-	if len(r.listPsbtFundingStatesMockData) == 0 {
+func (r *MockRepositoryService) GetUnfundedPsbtFundingState(ctx context.Context, nodeID int64) (db.PsbtFundingState, error) {
+	if len(r.getUnfundedPsbtFundingStateMockData) == 0 {
+		return db.PsbtFundingState{}, ErrorNotFound()
+	}
+
+	response := r.getUnfundedPsbtFundingStateMockData[0]
+	r.getUnfundedPsbtFundingStateMockData = r.getUnfundedPsbtFundingStateMockData[1:]
+	return response.PsbtFundingState, response.Error
+}
+
+func (r *MockRepositoryService) ListUnfundedPsbtFundingState(ctx context.Context, nodeID int64) ([]db.PsbtFundingState, error) {
+	if len(r.listUnfundedPsbtFundingStatesMockData) == 0 {
 		return []db.PsbtFundingState{}, nil
 	}
 
-	response := r.listPsbtFundingStatesMockData[0]
-	r.listPsbtFundingStatesMockData = r.listPsbtFundingStatesMockData[1:]
+	response := r.listUnfundedPsbtFundingStatesMockData[0]
+	r.listUnfundedPsbtFundingStatesMockData = r.listUnfundedPsbtFundingStatesMockData[1:]
 	return response.PsbtFundingStates, response.Error
 }
 
@@ -70,6 +80,10 @@ func (r *MockRepositoryService) SetGetPsbtFundingStateMockData(response PsbtFund
 	r.getPsbtFundingStateMockData = append(r.getPsbtFundingStateMockData, response)
 }
 
+func (r *MockRepositoryService) SetGetUnfundedPsbtFundingStateMockData(response PsbtFundingStateMockData) {
+	r.getUnfundedPsbtFundingStateMockData = append(r.getUnfundedPsbtFundingStateMockData, response)
+}
+
 func (r *MockRepositoryService) SetListPsbtFundingStatesMockData(response PsbtFundingStatesMockData) {
-	r.listPsbtFundingStatesMockData = append(r.listPsbtFundingStatesMockData, response)
+	r.listUnfundedPsbtFundingStatesMockData = append(r.listUnfundedPsbtFundingStatesMockData, response)
 }

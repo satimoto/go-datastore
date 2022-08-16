@@ -9,9 +9,13 @@ INSERT INTO psbt_funding_states (
 
 -- name: GetPsbtFundingState :one
 SELECT * FROM psbt_funding_states
+  WHERE id = $1;
+
+-- name: GetUnfundedPsbtFundingState :one
+SELECT * FROM psbt_funding_states
   WHERE node_id = $1 AND funded_psbt is null;
 
--- name: ListPsbtFundingStates :many
+-- name: ListUnfundedPsbtFundingStates :many
 SELECT * FROM psbt_funding_states
   WHERE node_id = $1 AND funded_psbt is null
   ORDER BY id;
