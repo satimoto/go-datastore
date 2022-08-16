@@ -112,9 +112,9 @@ type MockRepository interface {
 	GetUpdateBusinessDetailMockData() (db.UpdateBusinessDetailParams, error)
 	GetUpdateConnectorByUidMockData() (db.UpdateConnectorByUidParams, error)
 	GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error)
-	GetUpdateChannelRequestByChannelPointMockData() (db.UpdateChannelRequestByChannelPointParams, error)
 	GetUpdateChannelRequestStatusMockData() (db.UpdateChannelRequestStatusParams, error)
 	GetUpdateChannelRequestHtlcsMockData() (db.UpdateChannelRequestHtlcParams, error)
+	GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error)
 	GetUpdateCommandReservationMockData() (db.UpdateCommandReservationParams, error)
 	GetUpdateCommandStartMockData() (db.UpdateCommandStartParams, error)
 	GetUpdateCommandStopMockData() (db.UpdateCommandStopParams, error)
@@ -476,9 +476,9 @@ type MockRepositoryService struct {
 	updateAuthenticationMockData                      []db.UpdateAuthenticationParams
 	updateBusinessDetailMockData                      []db.UpdateBusinessDetailParams
 	updateChannelRequestMockData                      []db.UpdateChannelRequestParams
-	updateChannelRequestByChannelPointMockData        []db.UpdateChannelRequestByChannelPointParams
 	updateChannelRequestStatusMockData                []db.UpdateChannelRequestStatusParams
 	updateChannelRequestHtlcMockData                  []db.UpdateChannelRequestHtlcParams
+	updatePendingChannelRequestByPubkeyMockData       []db.UpdatePendingChannelRequestByPubkeyParams
 	updateConnectorByUidMockData                      []db.UpdateConnectorByUidParams
 	updateCommandReservationMockData                  []db.UpdateCommandReservationParams
 	updateCommandStartMockData                        []db.UpdateCommandStartParams

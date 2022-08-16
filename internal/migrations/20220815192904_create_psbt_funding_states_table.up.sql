@@ -1,6 +1,14 @@
 
 -- Channel requests
 ALTER TABLE channel_requests
+    ADD COLUMN amount BIGINT;
+    
+UPDATE channel_requests SET amount = amount_msat / 1000;   
+
+ALTER TABLE channel_requests
+    ALTER COLUMN amount SET NOT NULL;
+
+ALTER TABLE channel_requests
     ADD COLUMN pending_chan_id BYTEA;
 
 -- Psbt funding states

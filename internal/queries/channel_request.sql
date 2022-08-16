@@ -6,9 +6,10 @@ INSERT INTO channel_requests (
     pubkey, 
     payment_hash, 
     payment_addr,
+    amount,
     amount_msat,
     settled_msat
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
   RETURNING *;
 
 -- name: DeleteChannelRequest :exec
@@ -27,10 +28,8 @@ SELECT * FROM channel_requests
 UPDATE channel_requests SET (
     status,
     settled_msat,
-    funding_tx_id, 
-    output_index,
     pending_chan_id
-  ) = ($2, $3, $4, $5, $6)
+  ) = ($2, $3, $4)
   WHERE id = $1
   RETURNING *;
 
@@ -39,7 +38,7 @@ UPDATE channel_requests SET status = $2
   WHERE id = $1
   RETURNING *;
 
--- name: UpdateChannelRequestByChannelPoint :one
+-- name: UpdatePendingChannelRequestByPubkey :one
 UPDATE channel_requests SET status = $3
-  WHERE funding_tx_id = $1 AND output_index = $2
+  WHERE pubkey = $1 AND amount = $2 AND status = 'OPENING_CHANNEL'
   RETURNING *;
