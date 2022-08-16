@@ -615,7 +615,7 @@ type ChannelRequest struct {
 	FundingTxID   []byte               `db:"funding_tx_id" json:"fundingTxID"`
 	OutputIndex   sql.NullInt64        `db:"output_index" json:"outputIndex"`
 	NodeID        int64                `db:"node_id" json:"nodeID"`
-	PendingChanID sql.NullInt64        `db:"pending_chan_id" json:"pendingChanID"`
+	PendingChanID []byte               `db:"pending_chan_id" json:"pendingChanID"`
 }
 
 type ChannelRequestHtlc struct {
