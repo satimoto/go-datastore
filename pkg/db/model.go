@@ -931,6 +931,7 @@ type PriceComponentRounding struct {
 
 type PsbtFundingState struct {
 	ID         int64     `db:"id" json:"id"`
+	NodeID     int64     `db:"node_id" json:"nodeID"`
 	BasePsbt   []byte    `db:"base_psbt" json:"basePsbt"`
 	Psbt       []byte    `db:"psbt" json:"psbt"`
 	FundedPsbt []byte    `db:"funded_psbt" json:"fundedPsbt"`

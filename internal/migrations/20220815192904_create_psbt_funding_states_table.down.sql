@@ -8,6 +8,9 @@ ALTER TABLE IF EXISTS psbt_funding_state_channel_requests
 DROP TABLE IF EXISTS psbt_funding_state_channel_requests;
 
 -- Psbt funding states
+ALTER TABLE IF EXISTS psbt_funding_states 
+    DROP CONSTRAINT IF EXISTS fk_psbt_funding_states_node_id;
+
 DROP TABLE IF EXISTS psbt_funding_states;
 
 -- Channel requests
