@@ -140,7 +140,7 @@ type UpdateChannelRequestParams struct {
 	SettledMsat   int64                `db:"settled_msat" json:"settledMsat"`
 	FundingTxID   []byte               `db:"funding_tx_id" json:"fundingTxID"`
 	OutputIndex   sql.NullInt64        `db:"output_index" json:"outputIndex"`
-	PendingChanID sql.NullInt64        `db:"pending_chan_id" json:"pendingChanID"`
+	PendingChanID []byte               `db:"pending_chan_id" json:"pendingChanID"`
 }
 
 func (q *Queries) UpdateChannelRequest(ctx context.Context, arg UpdateChannelRequestParams) (ChannelRequest, error) {
