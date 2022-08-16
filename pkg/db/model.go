@@ -935,6 +935,7 @@ type PsbtFundingState struct {
 	BasePsbt   []byte    `db:"base_psbt" json:"basePsbt"`
 	Psbt       []byte    `db:"psbt" json:"psbt"`
 	FundedPsbt []byte    `db:"funded_psbt" json:"fundedPsbt"`
+	SignedPsbt []byte    `db:"signed_psbt" json:"signedPsbt"`
 	ExpiryDate time.Time `db:"expiry_date" json:"expiryDate"`
 }
 

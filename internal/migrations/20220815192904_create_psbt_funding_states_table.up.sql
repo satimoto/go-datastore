@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS psbt_funding_states (
     base_psbt   BYTEA NOT NULL,    
     psbt        BYTEA NOT NULL,
     funded_psbt BYTEA,
+    signed_psbt BYTEA,
     expiry_date TIMESTAMP NOT NULL
 );
 
