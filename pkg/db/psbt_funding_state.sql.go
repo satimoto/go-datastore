@@ -46,11 +46,11 @@ func (q *Queries) CreatePsbtFundingState(ctx context.Context, arg CreatePsbtFund
 
 const getPsbtFundingState = `-- name: GetPsbtFundingState :one
 SELECT id, node_id, base_psbt, psbt, funded_psbt, expiry_date FROM psbt_funding_states
-  WHERE node_id = $1 AND funded_psbt is null
+  WHERE id = $1
 `
 
-func (q *Queries) GetPsbtFundingState(ctx context.Context, nodeID int64) (PsbtFundingState, error) {
-	row := q.db.QueryRowContext(ctx, getPsbtFundingState, nodeID)
+func (q *Queries) GetPsbtFundingState(ctx context.Context, id int64) (PsbtFundingState, error) {
+	row := q.db.QueryRowContext(ctx, getPsbtFundingState, id)
 	var i PsbtFundingState
 	err := row.Scan(
 		&i.ID,
@@ -63,14 +63,33 @@ func (q *Queries) GetPsbtFundingState(ctx context.Context, nodeID int64) (PsbtFu
 	return i, err
 }
 
-const listPsbtFundingStates = `-- name: ListPsbtFundingStates :many
+const getUnfundedPsbtFundingState = `-- name: GetUnfundedPsbtFundingState :one
+SELECT id, node_id, base_psbt, psbt, funded_psbt, expiry_date FROM psbt_funding_states
+  WHERE node_id = $1 AND funded_psbt is null
+`
+
+func (q *Queries) GetUnfundedPsbtFundingState(ctx context.Context, nodeID int64) (PsbtFundingState, error) {
+	row := q.db.QueryRowContext(ctx, getUnfundedPsbtFundingState, nodeID)
+	var i PsbtFundingState
+	err := row.Scan(
+		&i.ID,
+		&i.NodeID,
+		&i.BasePsbt,
+		&i.Psbt,
+		&i.FundedPsbt,
+		&i.ExpiryDate,
+	)
+	return i, err
+}
+
+const listUnfundedPsbtFundingStates = `-- name: ListUnfundedPsbtFundingStates :many
 SELECT id, node_id, base_psbt, psbt, funded_psbt, expiry_date FROM psbt_funding_states
   WHERE node_id = $1 AND funded_psbt is null
   ORDER BY id
 `
 
-func (q *Queries) ListPsbtFundingStates(ctx context.Context, nodeID int64) ([]PsbtFundingState, error) {
-	rows, err := q.db.QueryContext(ctx, listPsbtFundingStates, nodeID)
+func (q *Queries) ListUnfundedPsbtFundingStates(ctx context.Context, nodeID int64) ([]PsbtFundingState, error) {
+	rows, err := q.db.QueryContext(ctx, listUnfundedPsbtFundingStates, nodeID)
 	if err != nil {
 		return nil, err
 	}
