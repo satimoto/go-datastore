@@ -51,13 +51,13 @@ func (r *MockRepositoryService) UpdateChannelRequest(ctx context.Context, arg db
 	return db.ChannelRequest{}, nil
 }
 
-func (r *MockRepositoryService) UpdateChannelRequestByChannelPoint(ctx context.Context, arg db.UpdateChannelRequestByChannelPointParams) (db.ChannelRequest, error) {
-	r.updateChannelRequestByChannelPointMockData = append(r.updateChannelRequestByChannelPointMockData, arg)
+func (r *MockRepositoryService) UpdateChannelRequestStatus(ctx context.Context, arg db.UpdateChannelRequestStatusParams) (db.ChannelRequest, error) {
+	r.updateChannelRequestStatusMockData = append(r.updateChannelRequestStatusMockData, arg)
 	return db.ChannelRequest{}, nil
 }
 
-func (r *MockRepositoryService) UpdateChannelRequestStatus(ctx context.Context, arg db.UpdateChannelRequestStatusParams) (db.ChannelRequest, error) {
-	r.updateChannelRequestStatusMockData = append(r.updateChannelRequestStatusMockData, arg)
+func (r *MockRepositoryService) UpdatePendingChannelRequestByPubkey(ctx context.Context, arg db.UpdatePendingChannelRequestByPubkeyParams) (db.ChannelRequest, error) {
+	r.updatePendingChannelRequestByPubkeyMockData = append(r.updatePendingChannelRequestByPubkeyMockData, arg)
 	return db.ChannelRequest{}, nil
 }
 
@@ -99,16 +99,6 @@ func (r *MockRepositoryService) GetUpdateChannelRequestMockData() (db.UpdateChan
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdateChannelRequestByChannelPointMockData() (db.UpdateChannelRequestByChannelPointParams, error) {
-	if len(r.updateChannelRequestByChannelPointMockData) == 0 {
-		return db.UpdateChannelRequestByChannelPointParams{}, ErrorNotFound()
-	}
-
-	response := r.updateChannelRequestByChannelPointMockData[0]
-	r.updateChannelRequestByChannelPointMockData = r.updateChannelRequestByChannelPointMockData[1:]
-	return response, nil
-}
-
 func (r *MockRepositoryService) GetUpdateChannelRequestStatusMockData() (db.UpdateChannelRequestStatusParams, error) {
 	if len(r.updateChannelRequestStatusMockData) == 0 {
 		return db.UpdateChannelRequestStatusParams{}, ErrorNotFound()
@@ -116,5 +106,15 @@ func (r *MockRepositoryService) GetUpdateChannelRequestStatusMockData() (db.Upda
 
 	response := r.updateChannelRequestStatusMockData[0]
 	r.updateChannelRequestStatusMockData = r.updateChannelRequestStatusMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error) {
+	if len(r.updatePendingChannelRequestByPubkeyMockData) == 0 {
+		return db.UpdatePendingChannelRequestByPubkeyParams{}, ErrorNotFound()
+	}
+
+	response := r.updatePendingChannelRequestByPubkeyMockData[0]
+	r.updatePendingChannelRequestByPubkeyMockData = r.updatePendingChannelRequestByPubkeyMockData[1:]
 	return response, nil
 }

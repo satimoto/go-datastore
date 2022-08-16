@@ -7,8 +7,6 @@ func NewUpdateChannelRequestParams(channelRequest db.ChannelRequest) db.UpdateCh
 		ID:            channelRequest.ID,
 		Status:        channelRequest.Status,
 		SettledMsat:   channelRequest.SettledMsat,
-		FundingTxID:   channelRequest.FundingTxID,
-		OutputIndex:   channelRequest.OutputIndex,
 		PendingChanID: channelRequest.PendingChanID,
 	}
 }
