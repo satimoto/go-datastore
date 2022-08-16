@@ -23,7 +23,8 @@ SELECT * FROM psbt_funding_states
 -- name: UpdatePsbtFundingState :one
 UPDATE psbt_funding_states SET (
     psbt,
-    funded_psbt
-  ) = ($2, $3)
+    funded_psbt,
+    signed_psbt
+  ) = ($2, $3, $4)
   WHERE id = $1
   RETURNING *;
