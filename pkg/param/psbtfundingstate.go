@@ -8,5 +8,6 @@ func NewUpdatePsbtFundingStateParams(psbtFundingState db.PsbtFundingState) db.Up
 		Psbt:       psbtFundingState.Psbt,
 		FundedPsbt: psbtFundingState.FundedPsbt,
 		SignedPsbt: psbtFundingState.SignedPsbt,
+		SignedTx:   psbtFundingState.SignedTx,
 	}
 }

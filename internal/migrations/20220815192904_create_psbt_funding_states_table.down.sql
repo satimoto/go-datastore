@@ -16,3 +16,9 @@ DROP TABLE IF EXISTS psbt_funding_states;
 -- Channel requests
 ALTER TABLE IF EXISTS channel_requests 
     DROP IF EXISTS pending_chan_id;
+
+ALTER TABLE IF EXISTS channel_requests 
+    DROP IF EXISTS funding_amount;
+
+ALTER TABLE IF EXISTS channel_requests 
+    DROP IF EXISTS amount;

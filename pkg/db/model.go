@@ -616,6 +616,7 @@ type ChannelRequest struct {
 	OutputIndex   sql.NullInt64        `db:"output_index" json:"outputIndex"`
 	NodeID        int64                `db:"node_id" json:"nodeID"`
 	Amount        int64                `db:"amount" json:"amount"`
+	FundingAmount sql.NullInt64        `db:"funding_amount" json:"fundingAmount"`
 	PendingChanID []byte               `db:"pending_chan_id" json:"pendingChanID"`
 }
 
@@ -937,6 +938,7 @@ type PsbtFundingState struct {
 	Psbt       []byte    `db:"psbt" json:"psbt"`
 	FundedPsbt []byte    `db:"funded_psbt" json:"fundedPsbt"`
 	SignedPsbt []byte    `db:"signed_psbt" json:"signedPsbt"`
+	SignedTx   []byte    `db:"signed_tx" json:"signedTx"`
 	ExpiryDate time.Time `db:"expiry_date" json:"expiryDate"`
 }
 

@@ -32,8 +32,9 @@ SELECT * FROM channel_requests
 -- name: UpdateChannelRequest :one
 UPDATE channel_requests SET (
     status,
-    settled_msat
-  ) = ($2, $3)
+    settled_msat,
+    funding_amount
+  ) = ($2, $3, $4)
   WHERE id = $1
   RETURNING *;
 
@@ -48,5 +49,5 @@ UPDATE channel_requests SET (
     funding_tx_id, 
     output_index
   ) = ($3, $4, $5)
-  WHERE pubkey = $1 AND amount = $2 AND status = 'OPENING_CHANNEL'
+  WHERE pubkey = $1 AND funding_amount = $2 AND status = 'OPENING_CHANNEL'
   RETURNING *;
