@@ -7,6 +7,9 @@ UPDATE channel_requests SET amount = amount_msat / 1000;
 
 ALTER TABLE channel_requests
     ALTER COLUMN amount SET NOT NULL;
+    
+ALTER TABLE channel_requests
+    ADD COLUMN funding_amount BIGINT;
 
 ALTER TABLE channel_requests
     ADD COLUMN pending_chan_id BYTEA;
@@ -19,7 +22,8 @@ CREATE TABLE IF NOT EXISTS psbt_funding_states (
     psbt        BYTEA NOT NULL,
     funded_psbt BYTEA,
     signed_psbt BYTEA,
-    expiry_date TIMESTAMP NOT NULL
+    signed_tx   BYTEA,
+    expiry_date TIMESTAMPTZ NOT NULL
 );
 
 ALTER TABLE psbt_funding_states 

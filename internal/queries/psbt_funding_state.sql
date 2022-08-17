@@ -24,7 +24,8 @@ SELECT * FROM psbt_funding_states
 UPDATE psbt_funding_states SET (
     psbt,
     funded_psbt,
-    signed_psbt
-  ) = ($2, $3, $4)
+    signed_psbt,
+    signed_tx
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
   RETURNING *;
