@@ -19,6 +19,7 @@ type ChannelRequestRepository interface {
 	UpdateChannelRequest(ctx context.Context, arg db.UpdateChannelRequestParams) (db.ChannelRequest, error)
 	UpdateChannelRequestStatus(ctx context.Context, arg db.UpdateChannelRequestStatusParams) (db.ChannelRequest, error)
 	UpdateChannelRequestHtlc(ctx context.Context, arg db.UpdateChannelRequestHtlcParams) (db.ChannelRequestHtlc, error)
+	UpdatePendingChannelRequestByChannelPoint(ctx context.Context, arg db.UpdatePendingChannelRequestByChannelPointParams) (db.ChannelRequest, error)
 	UpdatePendingChannelRequestByPubkey(ctx context.Context, arg db.UpdatePendingChannelRequestByPubkeyParams) (db.ChannelRequest, error)
 }
 
