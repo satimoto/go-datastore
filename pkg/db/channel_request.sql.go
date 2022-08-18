@@ -238,20 +238,20 @@ func (q *Queries) UpdateChannelRequestStatus(ctx context.Context, arg UpdateChan
 	return i, err
 }
 
-const updatePendingChannelRequestByCircuitKey = `-- name: UpdatePendingChannelRequestByCircuitKey :one
+const updatePendingChannelRequestByChannelPoint = `-- name: UpdatePendingChannelRequestByChannelPoint :one
 UPDATE channel_requests SET status = $3
   WHERE status = 'OPENING_CHANNEL' AND output_index = $1 AND funding_tx_id = $2
   RETURNING id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id
 `
 
-type UpdatePendingChannelRequestByCircuitKeyParams struct {
+type UpdatePendingChannelRequestByChannelPointParams struct {
 	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
 	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
 	Status      ChannelRequestStatus `db:"status" json:"status"`
 }
 
-func (q *Queries) UpdatePendingChannelRequestByCircuitKey(ctx context.Context, arg UpdatePendingChannelRequestByCircuitKeyParams) (ChannelRequest, error) {
-	row := q.db.QueryRowContext(ctx, updatePendingChannelRequestByCircuitKey, arg.OutputIndex, arg.FundingTxID, arg.Status)
+func (q *Queries) UpdatePendingChannelRequestByChannelPoint(ctx context.Context, arg UpdatePendingChannelRequestByChannelPointParams) (ChannelRequest, error) {
+	row := q.db.QueryRowContext(ctx, updatePendingChannelRequestByChannelPoint, arg.OutputIndex, arg.FundingTxID, arg.Status)
 	var i ChannelRequest
 	err := row.Scan(
 		&i.ID,

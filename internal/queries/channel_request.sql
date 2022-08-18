@@ -43,7 +43,7 @@ UPDATE channel_requests SET status = $2
   WHERE id = $1
   RETURNING *;
 
--- name: UpdatePendingChannelRequestByCircuitKey :one
+-- name: UpdatePendingChannelRequestByChannelPoint :one
 UPDATE channel_requests SET status = $3
   WHERE status = 'OPENING_CHANNEL' AND output_index = $1 AND funding_tx_id = $2
   RETURNING *;
