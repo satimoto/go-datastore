@@ -43,11 +43,15 @@ UPDATE channel_requests SET status = $2
   WHERE id = $1
   RETURNING *;
 
+-- name: UpdatePendingChannelRequestByCircuitKey :one
+UPDATE channel_requests SET status = $3
+  WHERE status = 'OPENING_CHANNEL' AND output_index = $1 AND funding_tx_id = $2
+  RETURNING *;
+
 -- name: UpdatePendingChannelRequestByPubkey :one
 UPDATE channel_requests SET (
-    status,
     funding_tx_id, 
     output_index
-  ) = ($3, $4, $5)
-  WHERE pubkey = $1 AND funding_amount = $2 AND status = 'OPENING_CHANNEL'
+  ) = ($3, $4)
+  WHERE status = 'OPENING_CHANNEL' AND pubkey = $1 AND funding_amount = $2
   RETURNING *;

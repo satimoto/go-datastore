@@ -66,6 +66,11 @@ func (r *MockRepositoryService) UpdateChannelRequestStatus(ctx context.Context, 
 	return db.ChannelRequest{}, nil
 }
 
+func (r *MockRepositoryService) UpdatePendingChannelRequestByCircuitKey(ctx context.Context, arg db.UpdatePendingChannelRequestByCircuitKeyParams) (db.ChannelRequest, error) {
+	r.updatePendingChannelRequestByCircuitKeyMockData = append(r.updatePendingChannelRequestByCircuitKeyMockData, arg)
+	return db.ChannelRequest{}, nil
+}
+
 func (r *MockRepositoryService) UpdatePendingChannelRequestByPubkey(ctx context.Context, arg db.UpdatePendingChannelRequestByPubkeyParams) (db.ChannelRequest, error) {
 	r.updatePendingChannelRequestByPubkeyMockData = append(r.updatePendingChannelRequestByPubkeyMockData, arg)
 	return db.ChannelRequest{}, nil
@@ -120,6 +125,16 @@ func (r *MockRepositoryService) GetUpdateChannelRequestStatusMockData() (db.Upda
 
 	response := r.updateChannelRequestStatusMockData[0]
 	r.updateChannelRequestStatusMockData = r.updateChannelRequestStatusMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdatePendingChannelRequestByCircuitKeyMockData() (db.UpdatePendingChannelRequestByCircuitKeyParams, error) {
+	if len(r.updatePendingChannelRequestByCircuitKeyMockData) == 0 {
+		return db.UpdatePendingChannelRequestByCircuitKeyParams{}, ErrorNotFound()
+	}
+
+	response := r.updatePendingChannelRequestByCircuitKeyMockData[0]
+	r.updatePendingChannelRequestByCircuitKeyMockData = r.updatePendingChannelRequestByCircuitKeyMockData[1:]
 	return response, nil
 }
 
