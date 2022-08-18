@@ -238,29 +238,60 @@ func (q *Queries) UpdateChannelRequestStatus(ctx context.Context, arg UpdateChan
 	return i, err
 }
 
+const updatePendingChannelRequestByCircuitKey = `-- name: UpdatePendingChannelRequestByCircuitKey :one
+UPDATE channel_requests SET status = $3
+  WHERE status = 'OPENING_CHANNEL' AND output_index = $1 AND funding_tx_id = $2
+  RETURNING id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id
+`
+
+type UpdatePendingChannelRequestByCircuitKeyParams struct {
+	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
+	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
+	Status      ChannelRequestStatus `db:"status" json:"status"`
+}
+
+func (q *Queries) UpdatePendingChannelRequestByCircuitKey(ctx context.Context, arg UpdatePendingChannelRequestByCircuitKeyParams) (ChannelRequest, error) {
+	row := q.db.QueryRowContext(ctx, updatePendingChannelRequestByCircuitKey, arg.OutputIndex, arg.FundingTxID, arg.Status)
+	var i ChannelRequest
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Status,
+		&i.Pubkey,
+		&i.PaymentHash,
+		&i.PaymentAddr,
+		&i.AmountMsat,
+		&i.SettledMsat,
+		&i.FundingTxID,
+		&i.OutputIndex,
+		&i.NodeID,
+		&i.Amount,
+		&i.FundingAmount,
+		&i.PendingChanID,
+	)
+	return i, err
+}
+
 const updatePendingChannelRequestByPubkey = `-- name: UpdatePendingChannelRequestByPubkey :one
 UPDATE channel_requests SET (
-    status,
     funding_tx_id, 
     output_index
-  ) = ($3, $4, $5)
-  WHERE pubkey = $1 AND funding_amount = $2 AND status = 'OPENING_CHANNEL'
+  ) = ($3, $4)
+  WHERE status = 'OPENING_CHANNEL' AND pubkey = $1 AND funding_amount = $2
   RETURNING id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id
 `
 
 type UpdatePendingChannelRequestByPubkeyParams struct {
-	Pubkey        string               `db:"pubkey" json:"pubkey"`
-	FundingAmount sql.NullInt64        `db:"funding_amount" json:"fundingAmount"`
-	Status        ChannelRequestStatus `db:"status" json:"status"`
-	FundingTxID   []byte               `db:"funding_tx_id" json:"fundingTxID"`
-	OutputIndex   sql.NullInt64        `db:"output_index" json:"outputIndex"`
+	Pubkey        string        `db:"pubkey" json:"pubkey"`
+	FundingAmount sql.NullInt64 `db:"funding_amount" json:"fundingAmount"`
+	FundingTxID   []byte        `db:"funding_tx_id" json:"fundingTxID"`
+	OutputIndex   sql.NullInt64 `db:"output_index" json:"outputIndex"`
 }
 
 func (q *Queries) UpdatePendingChannelRequestByPubkey(ctx context.Context, arg UpdatePendingChannelRequestByPubkeyParams) (ChannelRequest, error) {
 	row := q.db.QueryRowContext(ctx, updatePendingChannelRequestByPubkey,
 		arg.Pubkey,
 		arg.FundingAmount,
-		arg.Status,
 		arg.FundingTxID,
 		arg.OutputIndex,
 	)
