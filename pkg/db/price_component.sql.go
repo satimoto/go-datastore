@@ -12,18 +12,20 @@ const createPriceComponent = `-- name: CreatePriceComponent :one
 INSERT INTO price_components (
     element_id,
     type,
+    currency,
     price,
     step_size,
     price_rounding_id,
     step_rounding_id,
     exact_price_component
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-  RETURNING id, element_id, type, price, step_size, price_rounding_id, step_rounding_id, exact_price_component
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  RETURNING id, element_id, type, price, step_size, price_rounding_id, step_rounding_id, exact_price_component, currency
 `
 
 type CreatePriceComponentParams struct {
 	ElementID           int64           `db:"element_id" json:"elementID"`
 	Type                TariffDimension `db:"type" json:"type"`
+	Currency            string          `db:"currency" json:"currency"`
 	Price               float64         `db:"price" json:"price"`
 	StepSize            int32           `db:"step_size" json:"stepSize"`
 	PriceRoundingID     sql.NullInt64   `db:"price_rounding_id" json:"priceRoundingID"`
@@ -35,6 +37,7 @@ func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceCompo
 	row := q.db.QueryRowContext(ctx, createPriceComponent,
 		arg.ElementID,
 		arg.Type,
+		arg.Currency,
 		arg.Price,
 		arg.StepSize,
 		arg.PriceRoundingID,
@@ -51,6 +54,7 @@ func (q *Queries) CreatePriceComponent(ctx context.Context, arg CreatePriceCompo
 		&i.PriceRoundingID,
 		&i.StepRoundingID,
 		&i.ExactPriceComponent,
+		&i.Currency,
 	)
 	return i, err
 }
@@ -67,7 +71,7 @@ func (q *Queries) DeletePriceComponents(ctx context.Context, tariffID int64) err
 }
 
 const listPriceComponents = `-- name: ListPriceComponents :many
-SELECT id, element_id, type, price, step_size, price_rounding_id, step_rounding_id, exact_price_component FROM price_components
+SELECT id, element_id, type, price, step_size, price_rounding_id, step_rounding_id, exact_price_component, currency FROM price_components
   WHERE element_id = $1
   ORDER BY id
 `
@@ -90,6 +94,7 @@ func (q *Queries) ListPriceComponents(ctx context.Context, elementID int64) ([]P
 			&i.PriceRoundingID,
 			&i.StepRoundingID,
 			&i.ExactPriceComponent,
+			&i.Currency,
 		); err != nil {
 			return nil, err
 		}
