@@ -923,6 +923,7 @@ type PriceComponent struct {
 	PriceRoundingID     sql.NullInt64   `db:"price_rounding_id" json:"priceRoundingID"`
 	StepRoundingID      sql.NullInt64   `db:"step_rounding_id" json:"stepRoundingID"`
 	ExactPriceComponent sql.NullBool    `db:"exact_price_component" json:"exactPriceComponent"`
+	Currency            string          `db:"currency" json:"currency"`
 }
 
 type PriceComponentRounding struct {
