@@ -21,6 +21,10 @@ DELETE FROM channel_requests
 SELECT * FROM channel_requests
   WHERE id = $1;
 
+-- name: GetChannelRequestByChannelPoint :one
+SELECT * FROM channel_requests
+  WHERE output_index = $1 AND funding_tx_id = $2;
+
 -- name: GetChannelRequestByPaymentHash :one
 SELECT * FROM channel_requests
   WHERE payment_hash = $1 OR sha256('probing-01:' || payment_hash) = $1;
@@ -36,16 +40,6 @@ UPDATE channel_requests SET (
     funding_amount
   ) = ($2, $3, $4)
   WHERE id = $1
-  RETURNING *;
-
--- name: UpdateChannelRequestStatus :one
-UPDATE channel_requests SET status = $2
-  WHERE id = $1
-  RETURNING *;
-
--- name: UpdatePendingChannelRequestByChannelPoint :one
-UPDATE channel_requests SET status = $3
-  WHERE status = 'OPENING_CHANNEL' AND output_index = $1 AND funding_tx_id = $2
   RETURNING *;
 
 -- name: UpdatePendingChannelRequestByPubkey :one

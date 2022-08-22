@@ -107,6 +107,38 @@ func (q *Queries) GetChannelRequest(ctx context.Context, id int64) (ChannelReque
 	return i, err
 }
 
+const getChannelRequestByChannelPoint = `-- name: GetChannelRequestByChannelPoint :one
+SELECT id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id FROM channel_requests
+  WHERE output_index = $1 AND funding_tx_id = $2
+`
+
+type GetChannelRequestByChannelPointParams struct {
+	OutputIndex sql.NullInt64 `db:"output_index" json:"outputIndex"`
+	FundingTxID []byte        `db:"funding_tx_id" json:"fundingTxID"`
+}
+
+func (q *Queries) GetChannelRequestByChannelPoint(ctx context.Context, arg GetChannelRequestByChannelPointParams) (ChannelRequest, error) {
+	row := q.db.QueryRowContext(ctx, getChannelRequestByChannelPoint, arg.OutputIndex, arg.FundingTxID)
+	var i ChannelRequest
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Status,
+		&i.Pubkey,
+		&i.PaymentHash,
+		&i.PaymentAddr,
+		&i.AmountMsat,
+		&i.SettledMsat,
+		&i.FundingTxID,
+		&i.OutputIndex,
+		&i.NodeID,
+		&i.Amount,
+		&i.FundingAmount,
+		&i.PendingChanID,
+	)
+	return i, err
+}
+
 const getChannelRequestByPaymentHash = `-- name: GetChannelRequestByPaymentHash :one
 SELECT id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id FROM channel_requests
   WHERE payment_hash = $1 OR sha256('probing-01:' || payment_hash) = $1
@@ -185,73 +217,6 @@ func (q *Queries) UpdateChannelRequest(ctx context.Context, arg UpdateChannelReq
 		arg.SettledMsat,
 		arg.FundingAmount,
 	)
-	var i ChannelRequest
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.Status,
-		&i.Pubkey,
-		&i.PaymentHash,
-		&i.PaymentAddr,
-		&i.AmountMsat,
-		&i.SettledMsat,
-		&i.FundingTxID,
-		&i.OutputIndex,
-		&i.NodeID,
-		&i.Amount,
-		&i.FundingAmount,
-		&i.PendingChanID,
-	)
-	return i, err
-}
-
-const updateChannelRequestStatus = `-- name: UpdateChannelRequestStatus :one
-UPDATE channel_requests SET status = $2
-  WHERE id = $1
-  RETURNING id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id
-`
-
-type UpdateChannelRequestStatusParams struct {
-	ID     int64                `db:"id" json:"id"`
-	Status ChannelRequestStatus `db:"status" json:"status"`
-}
-
-func (q *Queries) UpdateChannelRequestStatus(ctx context.Context, arg UpdateChannelRequestStatusParams) (ChannelRequest, error) {
-	row := q.db.QueryRowContext(ctx, updateChannelRequestStatus, arg.ID, arg.Status)
-	var i ChannelRequest
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.Status,
-		&i.Pubkey,
-		&i.PaymentHash,
-		&i.PaymentAddr,
-		&i.AmountMsat,
-		&i.SettledMsat,
-		&i.FundingTxID,
-		&i.OutputIndex,
-		&i.NodeID,
-		&i.Amount,
-		&i.FundingAmount,
-		&i.PendingChanID,
-	)
-	return i, err
-}
-
-const updatePendingChannelRequestByChannelPoint = `-- name: UpdatePendingChannelRequestByChannelPoint :one
-UPDATE channel_requests SET status = $3
-  WHERE status = 'OPENING_CHANNEL' AND output_index = $1 AND funding_tx_id = $2
-  RETURNING id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id
-`
-
-type UpdatePendingChannelRequestByChannelPointParams struct {
-	OutputIndex sql.NullInt64        `db:"output_index" json:"outputIndex"`
-	FundingTxID []byte               `db:"funding_tx_id" json:"fundingTxID"`
-	Status      ChannelRequestStatus `db:"status" json:"status"`
-}
-
-func (q *Queries) UpdatePendingChannelRequestByChannelPoint(ctx context.Context, arg UpdatePendingChannelRequestByChannelPointParams) (ChannelRequest, error) {
-	row := q.db.QueryRowContext(ctx, updatePendingChannelRequestByChannelPoint, arg.OutputIndex, arg.FundingTxID, arg.Status)
 	var i ChannelRequest
 	err := row.Scan(
 		&i.ID,
