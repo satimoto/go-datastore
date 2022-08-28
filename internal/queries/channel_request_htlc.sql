@@ -3,9 +3,10 @@ INSERT INTO channel_request_htlcs (
     channel_request_id,
     chan_id, 
     htlc_id, 
+    amount_msat,
     is_settled,
     is_failed
-  ) VALUES ($1, $2, $3, $4, $5)
+  ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
 -- name: GetChannelRequestHtlc :one
