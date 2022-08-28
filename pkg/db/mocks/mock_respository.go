@@ -112,7 +112,7 @@ type MockRepository interface {
 	GetUpdateBusinessDetailMockData() (db.UpdateBusinessDetailParams, error)
 	GetUpdateConnectorByUidMockData() (db.UpdateConnectorByUidParams, error)
 	GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error)
-	GetUpdateChannelRequestHtlcsMockData() (db.UpdateChannelRequestHtlcParams, error)
+	GetUpdateChannelRequestHtlcByCircuitKeysMockData() (db.UpdateChannelRequestHtlcByCircuitKeyParams, error)
 	GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error)
 	GetUpdateCommandReservationMockData() (db.UpdateCommandReservationParams, error)
 	GetUpdateCommandStartMockData() (db.UpdateCommandStartParams, error)
@@ -149,7 +149,6 @@ type MockRepository interface {
 	SetGetChannelRequestMockData(response ChannelRequestMockData)
 	SetGetChannelRequestByChannelPointMockData(response ChannelRequestMockData)
 	SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData)
-	SetGetChannelRequestByPendingChanIdMockData(response ChannelRequestMockData)
 	SetGetChannelRequestHtlcMockData(response ChannelRequestHtlcMockData)
 	SetGetChannelRequestHtlcByCircuitKeyMockData(response ChannelRequestHtlcMockData)
 	SetGetConnectorMockData(response ConnectorMockData)
@@ -213,7 +212,6 @@ type MockRepository interface {
 	SetListChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
 	SetListChargingPeriodDimensionsMockData(response ChargingPeriodDimensionsMockData)
 	SetListCredentialsMockData(response CredentialsMockData)
-	SetListUnsettledChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
 	SetListConnectorsMockData(response ConnectorsMockData)
 	SetListElementsMockData(response ElementsMockData)
 	SetListElementRestrictionWeekdaysMockData(response WeekdaysMockData)
@@ -349,7 +347,6 @@ type MockRepositoryService struct {
 	getChannelRequestMockData                         []ChannelRequestMockData
 	getChannelRequestByChannelPointMockData           []ChannelRequestMockData
 	getChannelRequestByPaymentHashMockData            []ChannelRequestMockData
-	getChannelRequestByPendingChanIdMockData          []ChannelRequestMockData
 	getChannelRequestHtlcMockData                     []ChannelRequestHtlcMockData
 	getChannelRequestHtlcByCircuitKeyMockData         []ChannelRequestHtlcMockData
 	getConnectorMockData                              []ConnectorMockData
@@ -413,7 +410,6 @@ type MockRepositoryService struct {
 	listChannelRequestHtlcsMockData                   []ChannelRequestHtlcsMockData
 	listChargingPeriodDimensionsMockData              []ChargingPeriodDimensionsMockData
 	listCredentialsMockData                           []CredentialsMockData
-	listUnsettledChannelRequestHtlcsMockData          []ChannelRequestHtlcsMockData
 	listConnectorsMockData                            []ConnectorsMockData
 	listElementsMockData                              []ElementsMockData
 	listElementRestrictionWeekdaysMockData            []WeekdaysMockData
@@ -479,7 +475,7 @@ type MockRepositoryService struct {
 	updateAuthenticationMockData                      []db.UpdateAuthenticationParams
 	updateBusinessDetailMockData                      []db.UpdateBusinessDetailParams
 	updateChannelRequestMockData                      []db.UpdateChannelRequestParams
-	updateChannelRequestHtlcMockData                  []db.UpdateChannelRequestHtlcParams
+	updateChannelRequestHtlcByCircuitKeyMockData      []db.UpdateChannelRequestHtlcByCircuitKeyParams
 	updatePendingChannelRequestByPubkeyMockData       []db.UpdatePendingChannelRequestByPubkeyParams
 	updateConnectorByUidMockData                      []db.UpdateConnectorByUidParams
 	updateCommandReservationMockData                  []db.UpdateCommandReservationParams

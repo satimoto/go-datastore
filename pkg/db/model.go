@@ -626,6 +626,8 @@ type ChannelRequestHtlc struct {
 	ChanID           int64 `db:"chan_id" json:"chanID"`
 	HtlcID           int64 `db:"htlc_id" json:"htlcID"`
 	IsSettled        bool  `db:"is_settled" json:"isSettled"`
+	AmountMsat       int64 `db:"amount_msat" json:"amountMsat"`
+	IsFailed         bool  `db:"is_failed" json:"isFailed"`
 }
 
 type ChargingPeriod struct {
