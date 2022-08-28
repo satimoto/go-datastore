@@ -12,9 +12,10 @@ INSERT INTO channel_request_htlcs (
     channel_request_id,
     chan_id, 
     htlc_id, 
-    is_settled
-  ) VALUES ($1, $2, $3, $4)
-  RETURNING id, channel_request_id, chan_id, htlc_id, is_settled
+    is_settled,
+    is_failed
+  ) VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, channel_request_id, chan_id, htlc_id, is_settled, amount_msat, is_failed
 `
 
 type CreateChannelRequestHtlcParams struct {
@@ -22,6 +23,7 @@ type CreateChannelRequestHtlcParams struct {
 	ChanID           int64 `db:"chan_id" json:"chanID"`
 	HtlcID           int64 `db:"htlc_id" json:"htlcID"`
 	IsSettled        bool  `db:"is_settled" json:"isSettled"`
+	IsFailed         bool  `db:"is_failed" json:"isFailed"`
 }
 
 func (q *Queries) CreateChannelRequestHtlc(ctx context.Context, arg CreateChannelRequestHtlcParams) (ChannelRequestHtlc, error) {
@@ -30,6 +32,7 @@ func (q *Queries) CreateChannelRequestHtlc(ctx context.Context, arg CreateChanne
 		arg.ChanID,
 		arg.HtlcID,
 		arg.IsSettled,
+		arg.IsFailed,
 	)
 	var i ChannelRequestHtlc
 	err := row.Scan(
@@ -38,12 +41,14 @@ func (q *Queries) CreateChannelRequestHtlc(ctx context.Context, arg CreateChanne
 		&i.ChanID,
 		&i.HtlcID,
 		&i.IsSettled,
+		&i.AmountMsat,
+		&i.IsFailed,
 	)
 	return i, err
 }
 
 const getChannelRequestHtlc = `-- name: GetChannelRequestHtlc :one
-SELECT id, channel_request_id, chan_id, htlc_id, is_settled FROM channel_request_htlcs
+SELECT id, channel_request_id, chan_id, htlc_id, is_settled, amount_msat, is_failed FROM channel_request_htlcs
   WHERE channel_request_id = $1
 `
 
@@ -56,12 +61,14 @@ func (q *Queries) GetChannelRequestHtlc(ctx context.Context, channelRequestID in
 		&i.ChanID,
 		&i.HtlcID,
 		&i.IsSettled,
+		&i.AmountMsat,
+		&i.IsFailed,
 	)
 	return i, err
 }
 
 const getChannelRequestHtlcByCircuitKey = `-- name: GetChannelRequestHtlcByCircuitKey :one
-SELECT id, channel_request_id, chan_id, htlc_id, is_settled FROM channel_request_htlcs
+SELECT id, channel_request_id, chan_id, htlc_id, is_settled, amount_msat, is_failed FROM channel_request_htlcs
   WHERE chan_id = $1 AND htlc_id = $2
 `
 
@@ -79,12 +86,14 @@ func (q *Queries) GetChannelRequestHtlcByCircuitKey(ctx context.Context, arg Get
 		&i.ChanID,
 		&i.HtlcID,
 		&i.IsSettled,
+		&i.AmountMsat,
+		&i.IsFailed,
 	)
 	return i, err
 }
 
 const listChannelRequestHtlcs = `-- name: ListChannelRequestHtlcs :many
-SELECT id, channel_request_id, chan_id, htlc_id, is_settled FROM channel_request_htlcs
+SELECT id, channel_request_id, chan_id, htlc_id, is_settled, amount_msat, is_failed FROM channel_request_htlcs
   WHERE channel_request_id = $1
   ORDER BY id
 `
@@ -104,6 +113,8 @@ func (q *Queries) ListChannelRequestHtlcs(ctx context.Context, channelRequestID 
 			&i.ChanID,
 			&i.HtlcID,
 			&i.IsSettled,
+			&i.AmountMsat,
+			&i.IsFailed,
 		); err != nil {
 			return nil, err
 		}
@@ -118,55 +129,29 @@ func (q *Queries) ListChannelRequestHtlcs(ctx context.Context, channelRequestID 
 	return items, nil
 }
 
-const listUnsettledChannelRequestHtlcs = `-- name: ListUnsettledChannelRequestHtlcs :many
-SELECT id, channel_request_id, chan_id, htlc_id, is_settled FROM channel_request_htlcs
-  WHERE channel_request_id = $1 AND is_settled != true
-  ORDER BY id
+const updateChannelRequestHtlcByCircuitKey = `-- name: UpdateChannelRequestHtlcByCircuitKey :one
+UPDATE channel_request_htlcs SET (
+    is_settled, 
+    is_failed
+  ) = ($3, $4)
+  WHERE chan_id = $1 AND htlc_id = $2
+  RETURNING id, channel_request_id, chan_id, htlc_id, is_settled, amount_msat, is_failed
 `
 
-func (q *Queries) ListUnsettledChannelRequestHtlcs(ctx context.Context, channelRequestID int64) ([]ChannelRequestHtlc, error) {
-	rows, err := q.db.QueryContext(ctx, listUnsettledChannelRequestHtlcs, channelRequestID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ChannelRequestHtlc
-	for rows.Next() {
-		var i ChannelRequestHtlc
-		if err := rows.Scan(
-			&i.ID,
-			&i.ChannelRequestID,
-			&i.ChanID,
-			&i.HtlcID,
-			&i.IsSettled,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const updateChannelRequestHtlc = `-- name: UpdateChannelRequestHtlc :one
-UPDATE channel_request_htlcs SET 
-    is_settled = $2
-  WHERE id = $1
-  RETURNING id, channel_request_id, chan_id, htlc_id, is_settled
-`
-
-type UpdateChannelRequestHtlcParams struct {
-	ID        int64 `db:"id" json:"id"`
+type UpdateChannelRequestHtlcByCircuitKeyParams struct {
+	ChanID    int64 `db:"chan_id" json:"chanID"`
+	HtlcID    int64 `db:"htlc_id" json:"htlcID"`
 	IsSettled bool  `db:"is_settled" json:"isSettled"`
+	IsFailed  bool  `db:"is_failed" json:"isFailed"`
 }
 
-func (q *Queries) UpdateChannelRequestHtlc(ctx context.Context, arg UpdateChannelRequestHtlcParams) (ChannelRequestHtlc, error) {
-	row := q.db.QueryRowContext(ctx, updateChannelRequestHtlc, arg.ID, arg.IsSettled)
+func (q *Queries) UpdateChannelRequestHtlcByCircuitKey(ctx context.Context, arg UpdateChannelRequestHtlcByCircuitKeyParams) (ChannelRequestHtlc, error) {
+	row := q.db.QueryRowContext(ctx, updateChannelRequestHtlcByCircuitKey,
+		arg.ChanID,
+		arg.HtlcID,
+		arg.IsSettled,
+		arg.IsFailed,
+	)
 	var i ChannelRequestHtlc
 	err := row.Scan(
 		&i.ID,
@@ -174,6 +159,8 @@ func (q *Queries) UpdateChannelRequestHtlc(ctx context.Context, arg UpdateChanne
 		&i.ChanID,
 		&i.HtlcID,
 		&i.IsSettled,
+		&i.AmountMsat,
+		&i.IsFailed,
 	)
 	return i, err
 }

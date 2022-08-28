@@ -51,18 +51,8 @@ func (r *MockRepositoryService) ListChannelRequestHtlcs(ctx context.Context, cha
 	return response.ChannelRequestHtlcs, response.Error
 }
 
-func (r *MockRepositoryService) ListUnsettledChannelRequestHtlcs(ctx context.Context, channelRequestID int64) ([]db.ChannelRequestHtlc, error) {
-	if len(r.listUnsettledChannelRequestHtlcsMockData) == 0 {
-		return []db.ChannelRequestHtlc{}, nil
-	}
-
-	response := r.listUnsettledChannelRequestHtlcsMockData[0]
-	r.listUnsettledChannelRequestHtlcsMockData = r.listUnsettledChannelRequestHtlcsMockData[1:]
-	return response.ChannelRequestHtlcs, response.Error
-}
-
-func (r *MockRepositoryService) UpdateChannelRequestHtlc(ctx context.Context, arg db.UpdateChannelRequestHtlcParams) (db.ChannelRequestHtlc, error) {
-	r.updateChannelRequestHtlcMockData = append(r.updateChannelRequestHtlcMockData, arg)
+func (r *MockRepositoryService) UpdateChannelRequestHtlcByCircuitKey(ctx context.Context, arg db.UpdateChannelRequestHtlcByCircuitKeyParams) (db.ChannelRequestHtlc, error) {
+	r.updateChannelRequestHtlcByCircuitKeyMockData = append(r.updateChannelRequestHtlcByCircuitKeyMockData, arg)
 	return db.ChannelRequestHtlc{}, nil
 }
 
@@ -88,16 +78,12 @@ func (r *MockRepositoryService) SetListChannelRequestHtlcsMockData(response Chan
 	r.listChannelRequestHtlcsMockData = append(r.listChannelRequestHtlcsMockData, response)
 }
 
-func (r *MockRepositoryService) SetListUnsettledChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData) {
-	r.listUnsettledChannelRequestHtlcsMockData = append(r.listUnsettledChannelRequestHtlcsMockData, response)
-}
-
-func (r *MockRepositoryService) GetUpdateChannelRequestHtlcMockData() (db.UpdateChannelRequestHtlcParams, error) {
-	if len(r.updateChannelRequestHtlcMockData) == 0 {
-		return db.UpdateChannelRequestHtlcParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdateChannelRequestHtlcByCircuitKeyMockData() (db.UpdateChannelRequestHtlcByCircuitKeyParams, error) {
+	if len(r.updateChannelRequestHtlcByCircuitKeyMockData) == 0 {
+		return db.UpdateChannelRequestHtlcByCircuitKeyParams{}, ErrorNotFound()
 	}
 
-	response := r.updateChannelRequestHtlcMockData[0]
-	r.updateChannelRequestHtlcMockData = r.updateChannelRequestHtlcMockData[1:]
+	response := r.updateChannelRequestHtlcByCircuitKeyMockData[0]
+	r.updateChannelRequestHtlcByCircuitKeyMockData = r.updateChannelRequestHtlcByCircuitKeyMockData[1:]
 	return response, nil
 }

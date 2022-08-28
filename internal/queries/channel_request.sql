@@ -29,10 +29,6 @@ SELECT * FROM channel_requests
 SELECT * FROM channel_requests
   WHERE payment_hash = $1 OR sha256('probing-01:' || payment_hash) = $1;
 
--- name: GetChannelRequestByPendingChanId :one
-SELECT * FROM channel_requests
-  WHERE pending_chan_id = $1;
-
 -- name: UpdateChannelRequest :one
 UPDATE channel_requests SET (
     status,
