@@ -12,9 +12,10 @@ INSERT INTO channel_request_htlcs (
     channel_request_id,
     chan_id, 
     htlc_id, 
+    amount_msat,
     is_settled,
     is_failed
-  ) VALUES ($1, $2, $3, $4, $5)
+  ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING id, channel_request_id, chan_id, htlc_id, is_settled, amount_msat, is_failed
 `
 
@@ -22,6 +23,7 @@ type CreateChannelRequestHtlcParams struct {
 	ChannelRequestID int64 `db:"channel_request_id" json:"channelRequestID"`
 	ChanID           int64 `db:"chan_id" json:"chanID"`
 	HtlcID           int64 `db:"htlc_id" json:"htlcID"`
+	AmountMsat       int64 `db:"amount_msat" json:"amountMsat"`
 	IsSettled        bool  `db:"is_settled" json:"isSettled"`
 	IsFailed         bool  `db:"is_failed" json:"isFailed"`
 }
@@ -31,6 +33,7 @@ func (q *Queries) CreateChannelRequestHtlc(ctx context.Context, arg CreateChanne
 		arg.ChannelRequestID,
 		arg.ChanID,
 		arg.HtlcID,
+		arg.AmountMsat,
 		arg.IsSettled,
 		arg.IsFailed,
 	)
