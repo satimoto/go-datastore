@@ -943,6 +943,7 @@ type PsbtFundingState struct {
 	SignedPsbt []byte    `db:"signed_psbt" json:"signedPsbt"`
 	SignedTx   []byte    `db:"signed_tx" json:"signedTx"`
 	ExpiryDate time.Time `db:"expiry_date" json:"expiryDate"`
+	IsFailed   bool      `db:"is_failed" json:"isFailed"`
 }
 
 type PsbtFundingStateChannelRequest struct {
