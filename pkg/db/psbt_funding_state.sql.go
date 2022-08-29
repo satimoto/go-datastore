@@ -15,7 +15,7 @@ INSERT INTO psbt_funding_states (
     psbt, 
     expiry_date
   ) VALUES ($1, $2, $3, $4)
-  RETURNING id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date
+  RETURNING id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date, is_failed
 `
 
 type CreatePsbtFundingStateParams struct {
@@ -42,12 +42,13 @@ func (q *Queries) CreatePsbtFundingState(ctx context.Context, arg CreatePsbtFund
 		&i.SignedPsbt,
 		&i.SignedTx,
 		&i.ExpiryDate,
+		&i.IsFailed,
 	)
 	return i, err
 }
 
 const getPsbtFundingState = `-- name: GetPsbtFundingState :one
-SELECT id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date FROM psbt_funding_states
+SELECT id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date, is_failed FROM psbt_funding_states
   WHERE id = $1
 `
 
@@ -63,13 +64,14 @@ func (q *Queries) GetPsbtFundingState(ctx context.Context, id int64) (PsbtFundin
 		&i.SignedPsbt,
 		&i.SignedTx,
 		&i.ExpiryDate,
+		&i.IsFailed,
 	)
 	return i, err
 }
 
 const getUnfundedPsbtFundingState = `-- name: GetUnfundedPsbtFundingState :one
-SELECT id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date FROM psbt_funding_states
-  WHERE node_id = $1 AND funded_psbt is null
+SELECT id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date, is_failed FROM psbt_funding_states
+  WHERE node_id = $1 AND funded_psbt is null AND not is_failed
 `
 
 func (q *Queries) GetUnfundedPsbtFundingState(ctx context.Context, nodeID int64) (PsbtFundingState, error) {
@@ -84,13 +86,14 @@ func (q *Queries) GetUnfundedPsbtFundingState(ctx context.Context, nodeID int64)
 		&i.SignedPsbt,
 		&i.SignedTx,
 		&i.ExpiryDate,
+		&i.IsFailed,
 	)
 	return i, err
 }
 
 const listUnfundedPsbtFundingStates = `-- name: ListUnfundedPsbtFundingStates :many
-SELECT id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date FROM psbt_funding_states
-  WHERE node_id = $1 AND funded_psbt is null
+SELECT id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date, is_failed FROM psbt_funding_states
+  WHERE node_id = $1 AND funded_psbt is null AND not is_failed
   ORDER BY id
 `
 
@@ -112,6 +115,7 @@ func (q *Queries) ListUnfundedPsbtFundingStates(ctx context.Context, nodeID int6
 			&i.SignedPsbt,
 			&i.SignedTx,
 			&i.ExpiryDate,
+			&i.IsFailed,
 		); err != nil {
 			return nil, err
 		}
@@ -131,10 +135,11 @@ UPDATE psbt_funding_states SET (
     psbt,
     funded_psbt,
     signed_psbt,
-    signed_tx
-  ) = ($2, $3, $4, $5)
+    signed_tx,
+    is_failed
+  ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
-  RETURNING id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date
+  RETURNING id, node_id, base_psbt, psbt, funded_psbt, signed_psbt, signed_tx, expiry_date, is_failed
 `
 
 type UpdatePsbtFundingStateParams struct {
@@ -143,6 +148,7 @@ type UpdatePsbtFundingStateParams struct {
 	FundedPsbt []byte `db:"funded_psbt" json:"fundedPsbt"`
 	SignedPsbt []byte `db:"signed_psbt" json:"signedPsbt"`
 	SignedTx   []byte `db:"signed_tx" json:"signedTx"`
+	IsFailed   bool   `db:"is_failed" json:"isFailed"`
 }
 
 func (q *Queries) UpdatePsbtFundingState(ctx context.Context, arg UpdatePsbtFundingStateParams) (PsbtFundingState, error) {
@@ -152,6 +158,7 @@ func (q *Queries) UpdatePsbtFundingState(ctx context.Context, arg UpdatePsbtFund
 		arg.FundedPsbt,
 		arg.SignedPsbt,
 		arg.SignedTx,
+		arg.IsFailed,
 	)
 	var i PsbtFundingState
 	err := row.Scan(
@@ -163,6 +170,7 @@ func (q *Queries) UpdatePsbtFundingState(ctx context.Context, arg UpdatePsbtFund
 		&i.SignedPsbt,
 		&i.SignedTx,
 		&i.ExpiryDate,
+		&i.IsFailed,
 	)
 	return i, err
 }
