@@ -141,7 +141,7 @@ func (q *Queries) GetChannelRequestByChannelPoint(ctx context.Context, arg GetCh
 
 const getChannelRequestByPaymentHash = `-- name: GetChannelRequestByPaymentHash :one
 SELECT id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id FROM channel_requests
-  WHERE payment_hash = $1 OR sha256('probing-01:' || payment_hash) = $1
+  WHERE payment_hash = $1 OR digest('probing-01:' || payment_hash, 'sha256') = $1
 `
 
 func (q *Queries) GetChannelRequestByPaymentHash(ctx context.Context, paymentHash []byte) (ChannelRequest, error) {
