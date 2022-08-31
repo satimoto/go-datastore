@@ -166,6 +166,33 @@ func (q *Queries) GetChannelRequestByPaymentHash(ctx context.Context, paymentHas
 	return i, err
 }
 
+const getChannelRequestByPendingChanId = `-- name: GetChannelRequestByPendingChanId :one
+SELECT id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id, output_index, node_id, amount, funding_amount, pending_chan_id FROM channel_requests
+  WHERE pending_chan_id = $1
+`
+
+func (q *Queries) GetChannelRequestByPendingChanId(ctx context.Context, pendingChanID []byte) (ChannelRequest, error) {
+	row := q.db.QueryRowContext(ctx, getChannelRequestByPendingChanId, pendingChanID)
+	var i ChannelRequest
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Status,
+		&i.Pubkey,
+		&i.PaymentHash,
+		&i.PaymentAddr,
+		&i.AmountMsat,
+		&i.SettledMsat,
+		&i.FundingTxID,
+		&i.OutputIndex,
+		&i.NodeID,
+		&i.Amount,
+		&i.FundingAmount,
+		&i.PendingChanID,
+	)
+	return i, err
+}
+
 const updateChannelRequest = `-- name: UpdateChannelRequest :one
 UPDATE channel_requests SET (
     status,
