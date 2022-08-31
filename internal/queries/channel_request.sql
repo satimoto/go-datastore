@@ -27,7 +27,7 @@ SELECT * FROM channel_requests
 
 -- name: GetChannelRequestByPaymentHash :one
 SELECT * FROM channel_requests
-  WHERE payment_hash = $1 OR sha256('probing-01:' || payment_hash) = $1;
+  WHERE payment_hash = $1 OR digest('probing-01:' || payment_hash, 'sha256') = $1;
 
 -- name: GetChannelRequestByPendingChanId :one
 SELECT * FROM channel_requests
