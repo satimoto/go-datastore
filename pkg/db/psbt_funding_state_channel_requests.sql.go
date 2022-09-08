@@ -8,7 +8,7 @@ import (
 )
 
 const listPsbtFundingStateChannelRequests = `-- name: ListPsbtFundingStateChannelRequests :many
-SELECT cr.id, cr.user_id, cr.status, cr.pubkey, cr.payment_hash, cr.payment_addr, cr.amount_msat, cr.settled_msat, cr.funding_tx_id, cr.output_index, cr.node_id, cr.amount, cr.funding_amount, cr.pending_chan_id FROM channel_requests cr
+SELECT cr.id, cr.user_id, cr.status, cr.pubkey, cr.payment_hash, cr.payment_addr, cr.amount_msat, cr.settled_msat, cr.funding_tx_id, cr.output_index, cr.node_id, cr.amount, cr.funding_amount, cr.pending_chan_id, cr.scid FROM channel_requests cr
   INNER JOIN psbt_funding_state_channel_requests pfscr ON pfscr.channel_request_id = cr.id
   WHERE pfscr.psbt_funding_state_id = $1
   ORDER BY cr.id
@@ -38,6 +38,7 @@ func (q *Queries) ListPsbtFundingStateChannelRequests(ctx context.Context, psbtF
 			&i.Amount,
 			&i.FundingAmount,
 			&i.PendingChanID,
+			&i.Scid,
 		); err != nil {
 			return nil, err
 		}
