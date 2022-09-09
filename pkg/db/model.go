@@ -604,21 +604,24 @@ type CdrChargingPeriod struct {
 }
 
 type ChannelRequest struct {
-	ID            int64                `db:"id" json:"id"`
-	UserID        int64                `db:"user_id" json:"userID"`
-	Status        ChannelRequestStatus `db:"status" json:"status"`
-	Pubkey        string               `db:"pubkey" json:"pubkey"`
-	PaymentHash   []byte               `db:"payment_hash" json:"paymentHash"`
-	PaymentAddr   []byte               `db:"payment_addr" json:"paymentAddr"`
-	AmountMsat    int64                `db:"amount_msat" json:"amountMsat"`
-	SettledMsat   int64                `db:"settled_msat" json:"settledMsat"`
-	FundingTxID   []byte               `db:"funding_tx_id" json:"fundingTxID"`
-	OutputIndex   sql.NullInt64        `db:"output_index" json:"outputIndex"`
-	NodeID        int64                `db:"node_id" json:"nodeID"`
-	Amount        int64                `db:"amount" json:"amount"`
-	FundingAmount sql.NullInt64        `db:"funding_amount" json:"fundingAmount"`
-	PendingChanID []byte               `db:"pending_chan_id" json:"pendingChanID"`
-	Scid          []byte               `db:"scid" json:"scid"`
+	ID                        int64                `db:"id" json:"id"`
+	UserID                    int64                `db:"user_id" json:"userID"`
+	Status                    ChannelRequestStatus `db:"status" json:"status"`
+	Pubkey                    string               `db:"pubkey" json:"pubkey"`
+	PaymentHash               []byte               `db:"payment_hash" json:"paymentHash"`
+	PaymentAddr               []byte               `db:"payment_addr" json:"paymentAddr"`
+	AmountMsat                int64                `db:"amount_msat" json:"amountMsat"`
+	SettledMsat               int64                `db:"settled_msat" json:"settledMsat"`
+	FundingTxID               []byte               `db:"funding_tx_id" json:"fundingTxID"`
+	OutputIndex               sql.NullInt64        `db:"output_index" json:"outputIndex"`
+	NodeID                    int64                `db:"node_id" json:"nodeID"`
+	Amount                    int64                `db:"amount" json:"amount"`
+	FundingAmount             sql.NullInt64        `db:"funding_amount" json:"fundingAmount"`
+	PendingChanID             []byte               `db:"pending_chan_id" json:"pendingChanID"`
+	Scid                      []byte               `db:"scid" json:"scid"`
+	FeeBaseMsat               int64                `db:"fee_base_msat" json:"feeBaseMsat"`
+	FeeProportionalMillionths int64                `db:"fee_proportional_millionths" json:"feeProportionalMillionths"`
+	CltvExpiryDelta           int64                `db:"cltv_expiry_delta" json:"cltvExpiryDelta"`
 }
 
 type ChannelRequestHtlc struct {

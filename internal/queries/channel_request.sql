@@ -10,8 +10,11 @@ INSERT INTO channel_requests (
     amount_msat,
     settled_msat,
     pending_chan_id,
-    scid
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    scid,
+    fee_base_msat,
+    fee_proportional_millionths,
+    cltv_expiry_delta
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
   RETURNING *;
 
 -- name: DeleteChannelRequest :exec
