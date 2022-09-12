@@ -27,7 +27,7 @@ SELECT * FROM channel_requests
 
 -- name: GetChannelRequestByChannelPoint :one
 SELECT * FROM channel_requests
-  WHERE output_index = $1 AND funding_tx_id = $2;
+  WHERE funding_tx_id = $1 AND output_index = $2;
 
 -- name: GetChannelRequestByPaymentHash :one
 SELECT * FROM channel_requests
@@ -49,7 +49,8 @@ UPDATE channel_requests SET (
 -- name: UpdatePendingChannelRequestByPubkey :one
 UPDATE channel_requests SET (
     funding_tx_id, 
+    funding_tx_id_bytes, 
     output_index
-  ) = ($3, $4)
+  ) = ($3, $4, $5)
   WHERE status = 'OPENING_CHANNEL' AND pubkey = $1 AND funding_amount = $2
   RETURNING *;

@@ -8,7 +8,7 @@ import (
 )
 
 const listPsbtFundingStateChannelRequests = `-- name: ListPsbtFundingStateChannelRequests :many
-SELECT cr.id, cr.user_id, cr.status, cr.pubkey, cr.payment_hash, cr.payment_addr, cr.amount_msat, cr.settled_msat, cr.funding_tx_id, cr.output_index, cr.node_id, cr.amount, cr.funding_amount, cr.pending_chan_id, cr.scid, cr.fee_base_msat, cr.fee_proportional_millionths, cr.cltv_expiry_delta FROM channel_requests cr
+SELECT cr.id, cr.user_id, cr.status, cr.pubkey, cr.payment_hash, cr.payment_addr, cr.amount_msat, cr.settled_msat, cr.funding_tx_id_bytes, cr.output_index, cr.node_id, cr.amount, cr.funding_amount, cr.pending_chan_id, cr.scid, cr.fee_base_msat, cr.fee_proportional_millionths, cr.cltv_expiry_delta, cr.funding_tx_id FROM channel_requests cr
   INNER JOIN psbt_funding_state_channel_requests pfscr ON pfscr.channel_request_id = cr.id
   WHERE pfscr.psbt_funding_state_id = $1
   ORDER BY cr.id
@@ -32,7 +32,7 @@ func (q *Queries) ListPsbtFundingStateChannelRequests(ctx context.Context, psbtF
 			&i.PaymentAddr,
 			&i.AmountMsat,
 			&i.SettledMsat,
-			&i.FundingTxID,
+			&i.FundingTxIDBytes,
 			&i.OutputIndex,
 			&i.NodeID,
 			&i.Amount,
@@ -42,6 +42,7 @@ func (q *Queries) ListPsbtFundingStateChannelRequests(ctx context.Context, psbtF
 			&i.FeeBaseMsat,
 			&i.FeeProportionalMillionths,
 			&i.CltvExpiryDelta,
+			&i.FundingTxID,
 		); err != nil {
 			return nil, err
 		}
