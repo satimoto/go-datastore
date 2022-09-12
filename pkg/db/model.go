@@ -612,7 +612,7 @@ type ChannelRequest struct {
 	PaymentAddr               []byte               `db:"payment_addr" json:"paymentAddr"`
 	AmountMsat                int64                `db:"amount_msat" json:"amountMsat"`
 	SettledMsat               int64                `db:"settled_msat" json:"settledMsat"`
-	FundingTxID               []byte               `db:"funding_tx_id" json:"fundingTxID"`
+	FundingTxIDBytes          []byte               `db:"funding_tx_id_bytes" json:"fundingTxIDBytes"`
 	OutputIndex               sql.NullInt64        `db:"output_index" json:"outputIndex"`
 	NodeID                    int64                `db:"node_id" json:"nodeID"`
 	Amount                    int64                `db:"amount" json:"amount"`
@@ -622,6 +622,7 @@ type ChannelRequest struct {
 	FeeBaseMsat               int64                `db:"fee_base_msat" json:"feeBaseMsat"`
 	FeeProportionalMillionths int64                `db:"fee_proportional_millionths" json:"feeProportionalMillionths"`
 	CltvExpiryDelta           int64                `db:"cltv_expiry_delta" json:"cltvExpiryDelta"`
+	FundingTxID               sql.NullString       `db:"funding_tx_id" json:"fundingTxID"`
 }
 
 type ChannelRequestHtlc struct {
