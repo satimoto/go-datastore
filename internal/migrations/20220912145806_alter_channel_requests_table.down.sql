@@ -1,4 +1,6 @@
 -- Channel requests
+DROP INDEX IF EXISTS channel_point_bytes_idx;
+
 DROP INDEX IF EXISTS channel_point_idx;
 
 ALTER TABLE channel_requests

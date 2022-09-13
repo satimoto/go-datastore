@@ -27,7 +27,7 @@ SELECT * FROM channel_requests
 
 -- name: GetChannelRequestByChannelPoint :one
 SELECT * FROM channel_requests
-  WHERE funding_tx_id = $1 AND output_index = $2;
+  WHERE funding_tx_id_bytes = $1 AND output_index = $2;
 
 -- name: GetChannelRequestByPaymentHash :one
 SELECT * FROM channel_requests
