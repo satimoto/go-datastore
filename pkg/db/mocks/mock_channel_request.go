@@ -11,6 +11,11 @@ type ChannelRequestMockData struct {
 	Error          error
 }
 
+type ChannelRequestsMockData struct {
+	ChannelRequests []db.ChannelRequest
+	Error           error
+}
+
 func (r *MockRepositoryService) CreateChannelRequest(ctx context.Context, arg db.CreateChannelRequestParams) (db.ChannelRequest, error) {
 	r.createChannelRequestMockData = append(r.createChannelRequestMockData, arg)
 	return db.ChannelRequest{}, nil
@@ -31,6 +36,16 @@ func (r *MockRepositoryService) GetChannelRequest(ctx context.Context, id int64)
 	return response.ChannelRequest, response.Error
 }
 
+func (r *MockRepositoryService) GetChannelRequestByChannelPoint(ctx context.Context, arg db.GetChannelRequestByChannelPointParams) (db.ChannelRequest, error) {
+	if len(r.getChannelRequestByChannelPointMockData) == 0 {
+		return db.ChannelRequest{}, ErrorNotFound()
+	}
+
+	response := r.getChannelRequestByChannelPointMockData[0]
+	r.getChannelRequestByChannelPointMockData = r.getChannelRequestByChannelPointMockData[1:]
+	return response.ChannelRequest, response.Error
+}
+
 func (r *MockRepositoryService) GetChannelRequestByPaymentHash(ctx context.Context, paymentHash []byte) (db.ChannelRequest, error) {
 	if len(r.getChannelRequestByPaymentHashMockData) == 0 {
 		return db.ChannelRequest{}, ErrorNotFound()
@@ -41,18 +56,23 @@ func (r *MockRepositoryService) GetChannelRequestByPaymentHash(ctx context.Conte
 	return response.ChannelRequest, response.Error
 }
 
+func (r *MockRepositoryService) GetChannelRequestByPendingChanId(ctx context.Context, pendingChanId []byte) (db.ChannelRequest, error) {
+	if len(r.getChannelRequestByPendingChanIdMockData) == 0 {
+		return db.ChannelRequest{}, ErrorNotFound()
+	}
+
+	response := r.getChannelRequestByPendingChanIdMockData[0]
+	r.getChannelRequestByPendingChanIdMockData = r.getChannelRequestByPendingChanIdMockData[1:]
+	return response.ChannelRequest, response.Error
+}
+
 func (r *MockRepositoryService) UpdateChannelRequest(ctx context.Context, arg db.UpdateChannelRequestParams) (db.ChannelRequest, error) {
 	r.updateChannelRequestMockData = append(r.updateChannelRequestMockData, arg)
 	return db.ChannelRequest{}, nil
 }
 
-func (r *MockRepositoryService) UpdateChannelRequestByChannelPoint(ctx context.Context, arg db.UpdateChannelRequestByChannelPointParams) (db.ChannelRequest, error) {
-	r.updateChannelRequestByChannelPointMockData = append(r.updateChannelRequestByChannelPointMockData, arg)
-	return db.ChannelRequest{}, nil
-}
-
-func (r *MockRepositoryService) UpdateChannelRequestStatus(ctx context.Context, arg db.UpdateChannelRequestStatusParams) (db.ChannelRequest, error) {
-	r.updateChannelRequestStatusMockData = append(r.updateChannelRequestStatusMockData, arg)
+func (r *MockRepositoryService) UpdatePendingChannelRequestByPubkey(ctx context.Context, arg db.UpdatePendingChannelRequestByPubkeyParams) (db.ChannelRequest, error) {
+	r.updatePendingChannelRequestByPubkeyMockData = append(r.updatePendingChannelRequestByPubkeyMockData, arg)
 	return db.ChannelRequest{}, nil
 }
 
@@ -80,8 +100,16 @@ func (r *MockRepositoryService) SetGetChannelRequestMockData(response ChannelReq
 	r.getChannelRequestMockData = append(r.getChannelRequestMockData, response)
 }
 
+func (r *MockRepositoryService) SetGetChannelRequestByChannelPointMockData(response ChannelRequestMockData) {
+	r.getChannelRequestByChannelPointMockData = append(r.getChannelRequestByChannelPointMockData, response)
+}
+
 func (r *MockRepositoryService) SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData) {
 	r.getChannelRequestByPaymentHashMockData = append(r.getChannelRequestByPaymentHashMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetChannelRequestByPendingChanIdMockData(response ChannelRequestMockData) {
+	r.getChannelRequestByPendingChanIdMockData = append(r.getChannelRequestByPendingChanIdMockData, response)
 }
 
 func (r *MockRepositoryService) GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error) {
@@ -94,22 +122,12 @@ func (r *MockRepositoryService) GetUpdateChannelRequestMockData() (db.UpdateChan
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdateChannelRequestByChannelPointMockData() (db.UpdateChannelRequestByChannelPointParams, error) {
-	if len(r.updateChannelRequestByChannelPointMockData) == 0 {
-		return db.UpdateChannelRequestByChannelPointParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error) {
+	if len(r.updatePendingChannelRequestByPubkeyMockData) == 0 {
+		return db.UpdatePendingChannelRequestByPubkeyParams{}, ErrorNotFound()
 	}
 
-	response := r.updateChannelRequestByChannelPointMockData[0]
-	r.updateChannelRequestByChannelPointMockData = r.updateChannelRequestByChannelPointMockData[1:]
-	return response, nil
-}
-
-func (r *MockRepositoryService) GetUpdateChannelRequestStatusMockData() (db.UpdateChannelRequestStatusParams, error) {
-	if len(r.updateChannelRequestStatusMockData) == 0 {
-		return db.UpdateChannelRequestStatusParams{}, ErrorNotFound()
-	}
-
-	response := r.updateChannelRequestStatusMockData[0]
-	r.updateChannelRequestStatusMockData = r.updateChannelRequestStatusMockData[1:]
+	response := r.updatePendingChannelRequestByPubkeyMockData[0]
+	r.updatePendingChannelRequestByPubkeyMockData = r.updatePendingChannelRequestByPubkeyMockData[1:]
 	return response, nil
 }
