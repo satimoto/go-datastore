@@ -41,6 +41,7 @@ type MockRepository interface {
 	GetCreateOpeningTimeMockData() (bool, error)
 	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
+	GetCreatePsbtFundingStateMockData() (db.CreatePsbtFundingStateParams, error)
 	GetCreateRegularHourMockData() (db.CreateRegularHourParams, error)
 	GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error)
 	GetCreateSessionMockData() (db.CreateSessionParams, error)
@@ -96,6 +97,7 @@ type MockRepository interface {
 	GetSetLocationDirectionMockData() (db.SetLocationDirectionParams, error)
 	GetSetLocationFacilityMockData() (db.SetLocationFacilityParams, error)
 	GetSetLocationImageMockData() (db.SetLocationImageParams, error)
+	GetSetPsbtFundingStateChannelRequestMockData() (db.SetPsbtFundingStateChannelRequestParams, error)
 	GetSetSessionChargingPeriodMockData() (db.SetSessionChargingPeriodParams, error)
 	GetSetTariffAltTextMockData() (db.SetTariffAltTextParams, error)
 	GetSetTariffRestrictionWeekdayMockData() (db.SetTariffRestrictionWeekdayParams, error)
@@ -110,9 +112,8 @@ type MockRepository interface {
 	GetUpdateBusinessDetailMockData() (db.UpdateBusinessDetailParams, error)
 	GetUpdateConnectorByUidMockData() (db.UpdateConnectorByUidParams, error)
 	GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error)
-	GetUpdateChannelRequestByChannelPointMockData() (db.UpdateChannelRequestByChannelPointParams, error)
-	GetUpdateChannelRequestStatusMockData() (db.UpdateChannelRequestStatusParams, error)
-	GetUpdateChannelRequestHtlcsMockData() (db.UpdateChannelRequestHtlcParams, error)
+	GetUpdateChannelRequestHtlcByCircuitKeysMockData() (db.UpdateChannelRequestHtlcByCircuitKeyParams, error)
+	GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error)
 	GetUpdateCommandReservationMockData() (db.UpdateCommandReservationParams, error)
 	GetUpdateCommandStartMockData() (db.UpdateCommandStartParams, error)
 	GetUpdateCommandStopMockData() (db.UpdateCommandStopParams, error)
@@ -130,6 +131,7 @@ type MockRepository interface {
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
+	GetUpdatePsbtFundingStateMockData() (db.UpdatePsbtFundingStateParams, error)
 	GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error)
 	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
 	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
@@ -145,9 +147,11 @@ type MockRepository interface {
 	SetGetCdrByLastUpdatedMockData(response CdrMockData)
 	SetGetCdrByUidMockData(response CdrMockData)
 	SetGetChannelRequestMockData(response ChannelRequestMockData)
+	SetGetChannelRequestByChannelPointMockData(response ChannelRequestMockData)
+	SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData)
+	SetGetChannelRequestByPendingChanIdMockData(response ChannelRequestMockData)
 	SetGetChannelRequestHtlcMockData(response ChannelRequestHtlcMockData)
 	SetGetChannelRequestHtlcByCircuitKeyMockData(response ChannelRequestHtlcMockData)
-	SetGetChannelRequestByPaymentHashMockData(response ChannelRequestMockData)
 	SetGetConnectorMockData(response ConnectorMockData)
 	SetGetConnectorByIdentifierMockData(response ConnectorMockData)
 	SetGetConnectorByUidMockData(response ConnectorMockData)
@@ -176,6 +180,8 @@ type MockRepository interface {
 	SetGetNodeByUserIDMockData(response NodeMockData)
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
 	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
+	SetGetPsbtFundingStateMockData(response PsbtFundingStateMockData)
+	SetGetUnfundedPsbtFundingStateMockData(response PsbtFundingStateMockData)
 	SetGetSessionMockData(response SessionMockData)
 	SetGetSessionByAuthorizationIDMockData(response SessionMockData)
 	SetGetSessionByLastUpdatedMockData(response SessionMockData)
@@ -207,7 +213,6 @@ type MockRepository interface {
 	SetListChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
 	SetListChargingPeriodDimensionsMockData(response ChargingPeriodDimensionsMockData)
 	SetListCredentialsMockData(response CredentialsMockData)
-	SetListUnsettledChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
 	SetListConnectorsMockData(response ConnectorsMockData)
 	SetListElementsMockData(response ElementsMockData)
 	SetListElementRestrictionWeekdaysMockData(response WeekdaysMockData)
@@ -228,6 +233,8 @@ type MockRepository interface {
 	SetListLocationImagesMockData(response ImagesMockData)
 	SetListLocationsMockData(response LocationsMockData)
 	SetListLocationsByGeomMockData(response LocationsMockData)
+	SetListUnfundedPsbtFundingStatesMockData(response PsbtFundingStatesMockData)
+	SetListPsbtFundingStateChannelRequestsMockData(response ChannelRequestsMockData)
 	SetListNodesMockData(response NodesMockData)
 	SetListActiveNodesMockData(response NodesMockData)
 	SetListParkingRestrictionsMockData(response ParkingRestrictionsMockData)
@@ -285,6 +292,7 @@ type MockRepositoryService struct {
 	createNodeMockData                                []db.CreateNodeParams
 	createPriceComponentMockData                      []db.CreatePriceComponentParams
 	createPriceComponentRoundingMockData              []db.CreatePriceComponentRoundingParams
+	createPsbtFundingStateMockData                    []db.CreatePsbtFundingStateParams
 	createRegularHourMockData                         []db.CreateRegularHourParams
 	createRoutingEventMockData                        []db.CreateRoutingEventParams
 	createSessionMockData                             []db.CreateSessionParams
@@ -338,9 +346,11 @@ type MockRepositoryService struct {
 	getCdrByLastUpdatedMockData                       []CdrMockData
 	getCdrByUidMockData                               []CdrMockData
 	getChannelRequestMockData                         []ChannelRequestMockData
+	getChannelRequestByChannelPointMockData           []ChannelRequestMockData
+	getChannelRequestByPaymentHashMockData            []ChannelRequestMockData
+	getChannelRequestByPendingChanIdMockData          []ChannelRequestMockData
 	getChannelRequestHtlcMockData                     []ChannelRequestHtlcMockData
 	getChannelRequestHtlcByCircuitKeyMockData         []ChannelRequestHtlcMockData
-	getChannelRequestByPaymentHashMockData            []ChannelRequestMockData
 	getConnectorMockData                              []ConnectorMockData
 	getConnectorByIdentifierMockData                  []ConnectorMockData
 	getConnectorByUidMockData                         []ConnectorMockData
@@ -369,6 +379,8 @@ type MockRepositoryService struct {
 	getNodeByUserIDMockData                           []NodeMockData
 	getOpeningTimeMockData                            []OpeningTimeMockData
 	getPriceComponentRoundingMockData                 []PriceComponentRoundingMockData
+	getPsbtFundingStateMockData                       []PsbtFundingStateMockData
+	getUnfundedPsbtFundingStateMockData               []PsbtFundingStateMockData
 	getSessionMockData                                []SessionMockData
 	getSessionByAuthorizationIDMockData               []SessionMockData
 	getSessionByLastUpdatedMockData                   []SessionMockData
@@ -400,7 +412,6 @@ type MockRepositoryService struct {
 	listChannelRequestHtlcsMockData                   []ChannelRequestHtlcsMockData
 	listChargingPeriodDimensionsMockData              []ChargingPeriodDimensionsMockData
 	listCredentialsMockData                           []CredentialsMockData
-	listUnsettledChannelRequestHtlcsMockData          []ChannelRequestHtlcsMockData
 	listConnectorsMockData                            []ConnectorsMockData
 	listElementsMockData                              []ElementsMockData
 	listElementRestrictionWeekdaysMockData            []WeekdaysMockData
@@ -425,6 +436,8 @@ type MockRepositoryService struct {
 	listActiveNodesMockData                           []NodesMockData
 	listParkingRestrictionsMockData                   []ParkingRestrictionsMockData
 	listPriceComponentsMockData                       []PriceComponentsMockData
+	listUnfundedPsbtFundingStatesMockData             []PsbtFundingStatesMockData
+	listPsbtFundingStateChannelRequestsMockData       []ChannelRequestsMockData
 	listRegularHoursMockData                          []RegularHoursMockData
 	listRelatedLocationsMockData                      []GeoLocationsMockData
 	listSessionChargingPeriodsMockData                []ChargingPeriodsMockData
@@ -450,6 +463,7 @@ type MockRepositoryService struct {
 	setLocationDirectionMockData                      []db.SetLocationDirectionParams
 	setLocationFacilityMockData                       []db.SetLocationFacilityParams
 	setLocationImageMockData                          []db.SetLocationImageParams
+	setPsbtFundingStateChannelRequestMockData         []db.SetPsbtFundingStateChannelRequestParams
 	setSessionChargingPeriodMockData                  []db.SetSessionChargingPeriodParams
 	setTariffAltTextMockData                          []db.SetTariffAltTextParams
 	setTariffRestrictionWeekdayMockData               []db.SetTariffRestrictionWeekdayParams
@@ -463,9 +477,8 @@ type MockRepositoryService struct {
 	updateAuthenticationMockData                      []db.UpdateAuthenticationParams
 	updateBusinessDetailMockData                      []db.UpdateBusinessDetailParams
 	updateChannelRequestMockData                      []db.UpdateChannelRequestParams
-	updateChannelRequestByChannelPointMockData        []db.UpdateChannelRequestByChannelPointParams
-	updateChannelRequestStatusMockData                []db.UpdateChannelRequestStatusParams
-	updateChannelRequestHtlcMockData                  []db.UpdateChannelRequestHtlcParams
+	updateChannelRequestHtlcByCircuitKeyMockData      []db.UpdateChannelRequestHtlcByCircuitKeyParams
+	updatePendingChannelRequestByPubkeyMockData       []db.UpdatePendingChannelRequestByPubkeyParams
 	updateConnectorByUidMockData                      []db.UpdateConnectorByUidParams
 	updateCommandReservationMockData                  []db.UpdateCommandReservationParams
 	updateCommandStartMockData                        []db.UpdateCommandStartParams
@@ -484,6 +497,7 @@ type MockRepositoryService struct {
 	updateLocationLastUpdatedMockData                 []db.UpdateLocationLastUpdatedParams
 	updateNodeMockData                                []db.UpdateNodeParams
 	updateOpeningTimeMockData                         []db.UpdateOpeningTimeParams
+	updatePsbtFundingStateMockData                    []db.UpdatePsbtFundingStateParams
 	updateUserMockData                                []db.UpdateUserParams
 	updateRoutingEventMockData                        []db.UpdateRoutingEventParams
 	updateSessionByUidMockData                        []db.UpdateSessionByUidParams

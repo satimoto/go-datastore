@@ -64,7 +64,7 @@ var migrateCommand = &cobra.Command{
 				}
 			}
 		} else if down {
-			err = m.Down()
+			log.Fatalf("Reverse migrations must be used with steps")
 		} else {
 			err = m.Up()
 		}
