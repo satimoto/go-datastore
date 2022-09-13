@@ -131,16 +131,16 @@ func (q *Queries) GetChannelRequest(ctx context.Context, id int64) (ChannelReque
 
 const getChannelRequestByChannelPoint = `-- name: GetChannelRequestByChannelPoint :one
 SELECT id, user_id, status, pubkey, payment_hash, payment_addr, amount_msat, settled_msat, funding_tx_id_bytes, output_index, node_id, amount, funding_amount, pending_chan_id, scid, fee_base_msat, fee_proportional_millionths, cltv_expiry_delta, funding_tx_id FROM channel_requests
-  WHERE funding_tx_id = $1 AND output_index = $2
+  WHERE funding_tx_id_bytes = $1 AND output_index = $2
 `
 
 type GetChannelRequestByChannelPointParams struct {
-	FundingTxID sql.NullString `db:"funding_tx_id" json:"fundingTxID"`
-	OutputIndex sql.NullInt64  `db:"output_index" json:"outputIndex"`
+	FundingTxIDBytes []byte        `db:"funding_tx_id_bytes" json:"fundingTxIDBytes"`
+	OutputIndex      sql.NullInt64 `db:"output_index" json:"outputIndex"`
 }
 
 func (q *Queries) GetChannelRequestByChannelPoint(ctx context.Context, arg GetChannelRequestByChannelPointParams) (ChannelRequest, error) {
-	row := q.db.QueryRowContext(ctx, getChannelRequestByChannelPoint, arg.FundingTxID, arg.OutputIndex)
+	row := q.db.QueryRowContext(ctx, getChannelRequestByChannelPoint, arg.FundingTxIDBytes, arg.OutputIndex)
 	var i ChannelRequest
 	err := row.Scan(
 		&i.ID,
