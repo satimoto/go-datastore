@@ -5,7 +5,7 @@ INSERT INTO users (
     linking_pubkey,
     node_id,
     pubkey,
-    referrer_id
+    circuit_user_id
   ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
@@ -43,7 +43,7 @@ UPDATE users SET (
     node_id,
     pubkey,
     is_restricted,
-    referrer_id
+    circuit_user_id
   ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
   RETURNING *;

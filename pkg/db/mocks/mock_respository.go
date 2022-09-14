@@ -36,11 +36,13 @@ type MockRepository interface {
 	GetCreateExceptionalPeriodMockData() (db.CreateExceptionalPeriodParams, error)
 	GetCreateGeoLocationMockData() (db.CreateGeoLocationParams, error)
 	GetCreateImageMockData() (db.CreateImageParams, error)
+	GetCreateInvoiceRequestMockData() (db.CreateInvoiceRequestParams, error)
 	GetCreateLocationMockData() (db.CreateLocationParams, error)
 	GetCreateNodeMockData() (db.CreateNodeParams, error)
 	GetCreateOpeningTimeMockData() (bool, error)
 	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
+	GetCreatePromotionMockData() (db.CreatePromotionParams, error)
 	GetCreatePsbtFundingStateMockData() (db.CreatePsbtFundingStateParams, error)
 	GetCreateRegularHourMockData() (db.CreateRegularHourParams, error)
 	GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error)
@@ -73,6 +75,7 @@ type MockRepository interface {
 	GetDeleteExceptionalOpeningPeriodsMockData() (int64, error)
 	GetDeleteGeoLocationMockData() (int64, error)
 	GetDeleteImageMockData() (int64, error)
+	GetDeleteInvoiceRequestMockData() (int64, error)
 	GetDeleteLocationDirectionsMockData() (int64, error)
 	GetDeleteLocationImagesMockData() (int64, error)
 	GetDeleteOpeningTimeMockData() (int64, error)
@@ -126,6 +129,7 @@ type MockRepository interface {
 	GetUpdateEvseLastUpdatedMockData() (db.UpdateEvseLastUpdatedParams, error)
 	GetUpdateGeoLocationMockData() (db.UpdateGeoLocationParams, error)
 	GetUpdateImageMockData() (db.UpdateImageParams, error)
+	GetUpdateInvoiceRequestMockData() (db.UpdateInvoiceRequestParams, error)
 	GetUpdateLocationAvailabilityMockData() (db.UpdateLocationAvailabilityParams, error)
 	GetUpdateLocationByUidMockData() (db.UpdateLocationByUidParams, error)
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
@@ -172,6 +176,7 @@ type MockRepository interface {
 	SetGetEvseByUidMockData(response EvseMockData)
 	SetGetGeoLocationMockData(response GeoLocationMockData)
 	SetGetImageMockData(response ImageMockData)
+	SetGetUnsettledInvoiceRequestByPromotionCodeMockData(response InvoiceRequestMockData)
 	SetGetLocationMockData(response LocationMockData)
 	SetGetLocationByLastUpdatedMockData(response LocationMockData)
 	SetGetLocationByUidMockData(response LocationMockData)
@@ -180,6 +185,7 @@ type MockRepository interface {
 	SetGetNodeByUserIDMockData(response NodeMockData)
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
 	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
+	SetGetPromotionByCodeMockData(response PromotionMockData)
 	SetGetPsbtFundingStateMockData(response PsbtFundingStateMockData)
 	SetGetUnfundedPsbtFundingStateMockData(response PsbtFundingStateMockData)
 	SetGetSessionMockData(response SessionMockData)
@@ -228,6 +234,7 @@ type MockRepository interface {
 	SetListExceptionalOpeningPeriodsMockData(response ExceptionalPeriodsMockData)
 	SetListExceptionalClosingPeriodsMockData(response ExceptionalPeriodsMockData)
 	SetListFacilitiesMockData(response FacilitiesMockData)
+	SetListInvoiceRequestsMockData(response InvoiceRequestsMockData)
 	SetListLocationDirectionsMockData(response DisplayTextsMockData)
 	SetListLocationFacilitiesMockData(response FacilitiesMockData)
 	SetListLocationImagesMockData(response ImagesMockData)
@@ -287,11 +294,13 @@ type MockRepositoryService struct {
 	createExceptionalPeriodMockData                   []db.CreateExceptionalPeriodParams
 	createGeoLocationMockData                         []db.CreateGeoLocationParams
 	createImageMockData                               []db.CreateImageParams
+	createInvoiceRequestMockData                      []db.CreateInvoiceRequestParams
 	createLocationMockData                            []db.CreateLocationParams
 	createOpeningTimeMockData                         []bool
 	createNodeMockData                                []db.CreateNodeParams
 	createPriceComponentMockData                      []db.CreatePriceComponentParams
 	createPriceComponentRoundingMockData              []db.CreatePriceComponentRoundingParams
+	createPromotionMockData                           []db.CreatePromotionParams
 	createPsbtFundingStateMockData                    []db.CreatePsbtFundingStateParams
 	createRegularHourMockData                         []db.CreateRegularHourParams
 	createRoutingEventMockData                        []db.CreateRoutingEventParams
@@ -324,6 +333,7 @@ type MockRepositoryService struct {
 	deleteExceptionalOpeningPeriodsMockData           []int64
 	deleteGeoLocationMockData                         []int64
 	deleteImageMockData                               []int64
+	deleteInvoiceRequestMockData                      []int64
 	deleteLocationDirectionsMockData                  []int64
 	deleteLocationImagesMockData                      []int64
 	deleteOpeningTimeMockData                         []int64
@@ -371,6 +381,7 @@ type MockRepositoryService struct {
 	getEvseByUidMockData                              []EvseMockData
 	getGeoLocationMockData                            []GeoLocationMockData
 	getImageMockData                                  []ImageMockData
+	getUnsettledInvoiceRequestByPromotionCodeMockData []InvoiceRequestMockData
 	getLocationMockData                               []LocationMockData
 	GetLocationByLastUpdatedMockData                  []LocationMockData
 	getLocationByUidMockData                          []LocationMockData
@@ -379,6 +390,7 @@ type MockRepositoryService struct {
 	getNodeByUserIDMockData                           []NodeMockData
 	getOpeningTimeMockData                            []OpeningTimeMockData
 	getPriceComponentRoundingMockData                 []PriceComponentRoundingMockData
+	getPromotionByCodeMockData                        []PromotionMockData
 	getPsbtFundingStateMockData                       []PsbtFundingStateMockData
 	getUnfundedPsbtFundingStateMockData               []PsbtFundingStateMockData
 	getSessionMockData                                []SessionMockData
@@ -427,6 +439,7 @@ type MockRepositoryService struct {
 	listExceptionalOpeningPeriodsMockData             []ExceptionalPeriodsMockData
 	listExceptionalClosingPeriodsMockData             []ExceptionalPeriodsMockData
 	listFacilitiesMockData                            []FacilitiesMockData
+	listUnsettledInvoiceRequestsMockData              []InvoiceRequestsMockData
 	listLocationDirectionsMockData                    []DisplayTextsMockData
 	listLocationFacilitiesMockData                    []FacilitiesMockData
 	listLocationImagesMockData                        []ImagesMockData
@@ -492,6 +505,7 @@ type MockRepositoryService struct {
 	updateEvseLastUpdatedMockData                     []db.UpdateEvseLastUpdatedParams
 	updateGeoLocationMockData                         []db.UpdateGeoLocationParams
 	updateImageMockData                               []db.UpdateImageParams
+	updateInvoiceRequestMockData                      []db.UpdateInvoiceRequestParams
 	updateLocationAvailabilityMockData                []db.UpdateLocationAvailabilityParams
 	updateLocationByUidMockData                       []db.UpdateLocationByUidParams
 	updateLocationLastUpdatedMockData                 []db.UpdateLocationLastUpdatedParams

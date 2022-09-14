@@ -853,6 +853,15 @@ type Image struct {
 	Height    sql.NullInt32  `db:"height" json:"height"`
 }
 
+type InvoiceRequest struct {
+	ID             int64          `db:"id" json:"id"`
+	UserID         int64          `db:"user_id" json:"userID"`
+	PromotionID    int64          `db:"promotion_id" json:"promotionID"`
+	AmountMsat     int64          `db:"amount_msat" json:"amountMsat"`
+	IsSettled      bool           `db:"is_settled" json:"isSettled"`
+	PaymentRequest sql.NullString `db:"payment_request" json:"paymentRequest"`
+}
+
 type Location struct {
 	ID                 int64             `db:"id" json:"id"`
 	Uid                string            `db:"uid" json:"uid"`
@@ -937,6 +946,15 @@ type PriceComponentRounding struct {
 	ID          int64               `db:"id" json:"id"`
 	Granularity RoundingGranularity `db:"granularity" json:"granularity"`
 	Rule        RoundingRule        `db:"rule" json:"rule"`
+}
+
+type Promotion struct {
+	ID          int64        `db:"id" json:"id"`
+	Code        string       `db:"code" json:"code"`
+	Description string       `db:"description" json:"description"`
+	IsActive    bool         `db:"is_active" json:"isActive"`
+	StartDate   sql.NullTime `db:"start_date" json:"startDate"`
+	EndDate     sql.NullTime `db:"end_date" json:"endDate"`
 }
 
 type PsbtFundingState struct {
@@ -1119,7 +1137,7 @@ type User struct {
 	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
 	IsAdmin           bool          `db:"is_admin" json:"isAdmin"`
 	IsRestricted      bool          `db:"is_restricted" json:"isRestricted"`
-	ReferrerID        sql.NullInt64 `db:"referrer_id" json:"referrerID"`
+	CircuitUserID     sql.NullInt64 `db:"circuit_user_id" json:"circuitUserID"`
 }
 
 type Version struct {
