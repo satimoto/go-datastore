@@ -357,16 +357,16 @@ const listLocationsByGeom = `-- name: ListLocationsByGeom :many
 SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated FROM locations
   WHERE total_evses > 0 AND 
     ST_Intersects(geom, ST_MakeEnvelope($1::FLOAT, $2::FLOAT, $3::FLOAT, $4::FLOAT, 4326)) AND
-    ($5::TEXT = '' OR last_updated > TO_TIMESTAMP($5::TEXT, 'YYYY-MM-DD"T"HH24:MI:SS"Z"'))
+    ($5::INT = 0 OR last_updated > last_updated - interval $5::INT || ' seconds')
   LIMIT 500
 `
 
 type ListLocationsByGeomParams struct {
-	XMin       float64 `db:"x_min" json:"xMin"`
-	YMin       float64 `db:"y_min" json:"yMin"`
-	XMax       float64 `db:"x_max" json:"xMax"`
-	YMax       float64 `db:"y_max" json:"yMax"`
-	LastUpdate string  `db:"last_update" json:"lastUpdate"`
+	XMin     float64 `db:"x_min" json:"xMin"`
+	YMin     float64 `db:"y_min" json:"yMin"`
+	XMax     float64 `db:"x_max" json:"xMax"`
+	YMax     float64 `db:"y_max" json:"yMax"`
+	Interval int32   `db:"interval" json:"interval"`
 }
 
 func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGeomParams) ([]Location, error) {
@@ -375,7 +375,7 @@ func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGe
 		arg.YMin,
 		arg.XMax,
 		arg.YMax,
-		arg.LastUpdate,
+		arg.Interval,
 	)
 	if err != nil {
 		return nil, err
