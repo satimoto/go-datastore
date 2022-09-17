@@ -5,17 +5,19 @@ INSERT INTO session_invoices (
     currency,
     currency_rate,
     currency_rate_msat,
-    amount_fiat,
-    amount_msat,
+    price_fiat,
+    price_msat,
     commission_fiat,
     commission_msat,
     tax_fiat,
     tax_msat,
+    total_fiat,
+    total_msat,
     payment_request,
     is_settled,
     is_expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   RETURNING *;
 
 -- name: GetSessionInvoice :one

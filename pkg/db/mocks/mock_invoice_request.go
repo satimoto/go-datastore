@@ -26,13 +26,13 @@ func (r *MockRepositoryService) DeleteInvoiceRequest(ctx context.Context, id int
 	return nil
 }
 
-func (r *MockRepositoryService) GetUnsettledInvoiceRequestByPromotionCode(ctx context.Context, arg db.GetUnsettledInvoiceRequestByPromotionCodeParams) (db.InvoiceRequest, error) {
-	if len(r.getUnsettledInvoiceRequestByPromotionCodeMockData) == 0 {
+func (r *MockRepositoryService) GetUnsettledInvoiceRequest(ctx context.Context, arg db.GetUnsettledInvoiceRequestParams) (db.InvoiceRequest, error) {
+	if len(r.getUnsettledInvoiceRequestMockData) == 0 {
 		return db.InvoiceRequest{}, ErrorNotFound()
 	}
 
-	response := r.getUnsettledInvoiceRequestByPromotionCodeMockData[0]
-	r.getUnsettledInvoiceRequestByPromotionCodeMockData = r.getUnsettledInvoiceRequestByPromotionCodeMockData[1:]
+	response := r.getUnsettledInvoiceRequestMockData[0]
+	r.getUnsettledInvoiceRequestMockData = r.getUnsettledInvoiceRequestMockData[1:]
 	return response.InvoiceRequest, response.Error
 }
 
@@ -71,8 +71,8 @@ func (r *MockRepositoryService) GetDeleteInvoiceRequestMockData() (int64, error)
 	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetUnsettledInvoiceRequestByPromotionCodeMockData(response InvoiceRequestMockData) {
-	r.getUnsettledInvoiceRequestByPromotionCodeMockData = append(r.getUnsettledInvoiceRequestByPromotionCodeMockData, response)
+func (r *MockRepositoryService) SetGetUnsettledInvoiceRequestMockData(response InvoiceRequestMockData) {
+	r.getUnsettledInvoiceRequestMockData = append(r.getUnsettledInvoiceRequestMockData, response)
 }
 
 func (r *MockRepositoryService) SetListInvoiceRequestsMockData(response InvoiceRequestsMockData) {

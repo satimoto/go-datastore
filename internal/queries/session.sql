@@ -55,7 +55,8 @@ UPDATE sessions SET (
     currency,
     total_cost,
     status,
+    invoice_request_id,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
   WHERE uid = $1
   RETURNING *;

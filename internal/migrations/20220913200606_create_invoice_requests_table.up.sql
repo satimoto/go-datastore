@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS promotions (
 );
 
 INSERT INTO promotions (code, description, is_active, start_date) VALUES 
-    ('CIRCUIT', 'Earn sats with referrals', true, now());
+    ('CIRCUIT', 'Earn sats with referrals', true, now()), 
+    ('REBATE', 'Rebate overpaid invoice', true, now());
 
 -- Invoice Requests
 CREATE TABLE IF NOT EXISTS invoice_requests (
