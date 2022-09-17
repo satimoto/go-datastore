@@ -854,12 +854,20 @@ type Image struct {
 }
 
 type InvoiceRequest struct {
-	ID             int64          `db:"id" json:"id"`
-	UserID         int64          `db:"user_id" json:"userID"`
-	PromotionID    int64          `db:"promotion_id" json:"promotionID"`
-	AmountMsat     int64          `db:"amount_msat" json:"amountMsat"`
-	IsSettled      bool           `db:"is_settled" json:"isSettled"`
-	PaymentRequest sql.NullString `db:"payment_request" json:"paymentRequest"`
+	ID             int64           `db:"id" json:"id"`
+	UserID         int64           `db:"user_id" json:"userID"`
+	PromotionID    int64           `db:"promotion_id" json:"promotionID"`
+	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
+	IsSettled      bool            `db:"is_settled" json:"isSettled"`
+	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
+	Memo           string          `db:"memo" json:"memo"`
+	TotalFiat      sql.NullFloat64 `db:"total_fiat" json:"totalFiat"`
+	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
+	PriceMsat      sql.NullInt64   `db:"price_msat" json:"priceMsat"`
+	CommissionFiat sql.NullFloat64 `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
 }
 
 type Location struct {
@@ -1007,27 +1015,28 @@ type RoutingEvent struct {
 }
 
 type Session struct {
-	ID              int64             `db:"id" json:"id"`
-	Uid             string            `db:"uid" json:"uid"`
-	CredentialID    int64             `db:"credential_id" json:"credentialID"`
-	CountryCode     sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID         sql.NullString    `db:"party_id" json:"partyID"`
-	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
-	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
-	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
-	Kwh             float64           `db:"kwh" json:"kwh"`
-	AuthID          string            `db:"auth_id" json:"authID"`
-	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
-	UserID          int64             `db:"user_id" json:"userID"`
-	TokenID         int64             `db:"token_id" json:"tokenID"`
-	LocationID      int64             `db:"location_id" json:"locationID"`
-	EvseID          int64             `db:"evse_id" json:"evseID"`
-	ConnectorID     int64             `db:"connector_id" json:"connectorID"`
-	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
-	Currency        string            `db:"currency" json:"currency"`
-	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
-	Status          SessionStatusType `db:"status" json:"status"`
-	LastUpdated     time.Time         `db:"last_updated" json:"lastUpdated"`
+	ID               int64             `db:"id" json:"id"`
+	Uid              string            `db:"uid" json:"uid"`
+	CredentialID     int64             `db:"credential_id" json:"credentialID"`
+	CountryCode      sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID          sql.NullString    `db:"party_id" json:"partyID"`
+	AuthorizationID  sql.NullString    `db:"authorization_id" json:"authorizationID"`
+	StartDatetime    time.Time         `db:"start_datetime" json:"startDatetime"`
+	EndDatetime      sql.NullTime      `db:"end_datetime" json:"endDatetime"`
+	Kwh              float64           `db:"kwh" json:"kwh"`
+	AuthID           string            `db:"auth_id" json:"authID"`
+	AuthMethod       AuthMethodType    `db:"auth_method" json:"authMethod"`
+	UserID           int64             `db:"user_id" json:"userID"`
+	TokenID          int64             `db:"token_id" json:"tokenID"`
+	LocationID       int64             `db:"location_id" json:"locationID"`
+	EvseID           int64             `db:"evse_id" json:"evseID"`
+	ConnectorID      int64             `db:"connector_id" json:"connectorID"`
+	MeterID          sql.NullString    `db:"meter_id" json:"meterID"`
+	Currency         string            `db:"currency" json:"currency"`
+	TotalCost        sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status           SessionStatusType `db:"status" json:"status"`
+	LastUpdated      time.Time         `db:"last_updated" json:"lastUpdated"`
+	InvoiceRequestID sql.NullInt64     `db:"invoice_request_id" json:"invoiceRequestID"`
 }
 
 type SessionChargingPeriod struct {
@@ -1042,8 +1051,8 @@ type SessionInvoice struct {
 	Currency         string    `db:"currency" json:"currency"`
 	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
 	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`
-	AmountFiat       float64   `db:"amount_fiat" json:"amountFiat"`
-	AmountMsat       int64     `db:"amount_msat" json:"amountMsat"`
+	PriceFiat        float64   `db:"price_fiat" json:"priceFiat"`
+	PriceMsat        int64     `db:"price_msat" json:"priceMsat"`
 	CommissionFiat   float64   `db:"commission_fiat" json:"commissionFiat"`
 	CommissionMsat   int64     `db:"commission_msat" json:"commissionMsat"`
 	TaxFiat          float64   `db:"tax_fiat" json:"taxFiat"`
@@ -1052,6 +1061,8 @@ type SessionInvoice struct {
 	IsSettled        bool      `db:"is_settled" json:"isSettled"`
 	IsExpired        bool      `db:"is_expired" json:"isExpired"`
 	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
+	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
+	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
 }
 
 type StatusSchedule struct {

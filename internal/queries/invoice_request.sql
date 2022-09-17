@@ -2,20 +2,29 @@
 INSERT INTO invoice_requests (
     user_id,
     promotion_id,
-    amount_msat,
+    memo,
+    price_fiat,
+    price_msat,
+    commission_fiat,
+    commission_msat,
+    tax_fiat,
+    tax_msat,
+    total_fiat,
+    total_msat,
     is_settled, 
     payment_request
-  ) VALUES ($1, $2, $3, $4, $5)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   RETURNING *;
 
 -- name: DeleteInvoiceRequest :exec
 DELETE FROM invoice_requests
   WHERE id = $1;
 
--- name: GetUnsettledInvoiceRequestByPromotionCode :one
-SELECT ir.* FROM invoice_requests ir
-  INNER JOIN promotions p ON p.id = ir.promotion_id
-  WHERE p.code = $2 AND ir.user_id = $1 AND NOT ir.is_settled AND ir.payment_request IS NULL;
+-- name: GetUnsettledInvoiceRequest :one
+SELECT * FROM invoice_requests
+  WHERE user_id = @user_id::BIGINT AND promotion_id = @promotion_id::BIGINT AND 
+    (@memo::TEXT = '' OR @memo::TEXT = memo) AND
+    NOT is_settled AND payment_request IS NULL;
 
 -- name: ListUnsettledInvoiceRequests :many
 SELECT * FROM invoice_requests
@@ -24,9 +33,16 @@ SELECT * FROM invoice_requests
 
 -- name: UpdateInvoiceRequest :one
 UPDATE invoice_requests SET (
-    amount_msat,
+    price_fiat,
+    price_msat,
+    commission_fiat,
+    commission_msat,
+    tax_fiat,
+    tax_msat,
+    total_fiat,
+    total_msat,
     is_settled,
     payment_request
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE id = $1
   RETURNING *;

@@ -12,26 +12,50 @@ const createInvoiceRequest = `-- name: CreateInvoiceRequest :one
 INSERT INTO invoice_requests (
     user_id,
     promotion_id,
-    amount_msat,
+    memo,
+    price_fiat,
+    price_msat,
+    commission_fiat,
+    commission_msat,
+    tax_fiat,
+    tax_msat,
+    total_fiat,
+    total_msat,
     is_settled, 
     payment_request
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, user_id, promotion_id, amount_msat, is_settled, payment_request
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+  RETURNING id, user_id, promotion_id, total_msat, is_settled, payment_request, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat
 `
 
 type CreateInvoiceRequestParams struct {
-	UserID         int64          `db:"user_id" json:"userID"`
-	PromotionID    int64          `db:"promotion_id" json:"promotionID"`
-	AmountMsat     int64          `db:"amount_msat" json:"amountMsat"`
-	IsSettled      bool           `db:"is_settled" json:"isSettled"`
-	PaymentRequest sql.NullString `db:"payment_request" json:"paymentRequest"`
+	UserID         int64           `db:"user_id" json:"userID"`
+	PromotionID    int64           `db:"promotion_id" json:"promotionID"`
+	Memo           string          `db:"memo" json:"memo"`
+	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
+	PriceMsat      sql.NullInt64   `db:"price_msat" json:"priceMsat"`
+	CommissionFiat sql.NullFloat64 `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
+	TotalFiat      sql.NullFloat64 `db:"total_fiat" json:"totalFiat"`
+	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
+	IsSettled      bool            `db:"is_settled" json:"isSettled"`
+	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
 }
 
 func (q *Queries) CreateInvoiceRequest(ctx context.Context, arg CreateInvoiceRequestParams) (InvoiceRequest, error) {
 	row := q.db.QueryRowContext(ctx, createInvoiceRequest,
 		arg.UserID,
 		arg.PromotionID,
-		arg.AmountMsat,
+		arg.Memo,
+		arg.PriceFiat,
+		arg.PriceMsat,
+		arg.CommissionFiat,
+		arg.CommissionMsat,
+		arg.TaxFiat,
+		arg.TaxMsat,
+		arg.TotalFiat,
+		arg.TotalMsat,
 		arg.IsSettled,
 		arg.PaymentRequest,
 	)
@@ -40,9 +64,17 @@ func (q *Queries) CreateInvoiceRequest(ctx context.Context, arg CreateInvoiceReq
 		&i.ID,
 		&i.UserID,
 		&i.PromotionID,
-		&i.AmountMsat,
+		&i.TotalMsat,
 		&i.IsSettled,
 		&i.PaymentRequest,
+		&i.Memo,
+		&i.TotalFiat,
+		&i.PriceFiat,
+		&i.PriceMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
 	)
 	return i, err
 }
@@ -57,33 +89,43 @@ func (q *Queries) DeleteInvoiceRequest(ctx context.Context, id int64) error {
 	return err
 }
 
-const getUnsettledInvoiceRequestByPromotionCode = `-- name: GetUnsettledInvoiceRequestByPromotionCode :one
-SELECT ir.id, ir.user_id, ir.promotion_id, ir.amount_msat, ir.is_settled, ir.payment_request FROM invoice_requests ir
-  INNER JOIN promotions p ON p.id = ir.promotion_id
-  WHERE p.code = $2 AND ir.user_id = $1 AND NOT ir.is_settled AND ir.payment_request IS NULL
+const getUnsettledInvoiceRequest = `-- name: GetUnsettledInvoiceRequest :one
+SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
+  WHERE user_id = $1::BIGINT AND promotion_id = $2::BIGINT AND 
+    ($3::TEXT = '' OR $3::TEXT = memo) AND
+    NOT is_settled AND payment_request IS NULL
 `
 
-type GetUnsettledInvoiceRequestByPromotionCodeParams struct {
-	UserID int64  `db:"user_id" json:"userID"`
-	Code   string `db:"code" json:"code"`
+type GetUnsettledInvoiceRequestParams struct {
+	UserID      int64  `db:"user_id" json:"userID"`
+	PromotionID int64  `db:"promotion_id" json:"promotionID"`
+	Memo        string `db:"memo" json:"memo"`
 }
 
-func (q *Queries) GetUnsettledInvoiceRequestByPromotionCode(ctx context.Context, arg GetUnsettledInvoiceRequestByPromotionCodeParams) (InvoiceRequest, error) {
-	row := q.db.QueryRowContext(ctx, getUnsettledInvoiceRequestByPromotionCode, arg.UserID, arg.Code)
+func (q *Queries) GetUnsettledInvoiceRequest(ctx context.Context, arg GetUnsettledInvoiceRequestParams) (InvoiceRequest, error) {
+	row := q.db.QueryRowContext(ctx, getUnsettledInvoiceRequest, arg.UserID, arg.PromotionID, arg.Memo)
 	var i InvoiceRequest
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
 		&i.PromotionID,
-		&i.AmountMsat,
+		&i.TotalMsat,
 		&i.IsSettled,
 		&i.PaymentRequest,
+		&i.Memo,
+		&i.TotalFiat,
+		&i.PriceFiat,
+		&i.PriceMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
 	)
 	return i, err
 }
 
 const listUnsettledInvoiceRequests = `-- name: ListUnsettledInvoiceRequests :many
-SELECT id, user_id, promotion_id, amount_msat, is_settled, payment_request FROM invoice_requests
+SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
   WHERE NOT user_id = $1 AND is_settled AND payment_request IS NULL
   ORDER BY id
 `
@@ -101,9 +143,17 @@ func (q *Queries) ListUnsettledInvoiceRequests(ctx context.Context, userID int64
 			&i.ID,
 			&i.UserID,
 			&i.PromotionID,
-			&i.AmountMsat,
+			&i.TotalMsat,
 			&i.IsSettled,
 			&i.PaymentRequest,
+			&i.Memo,
+			&i.TotalFiat,
+			&i.PriceFiat,
+			&i.PriceMsat,
+			&i.CommissionFiat,
+			&i.CommissionMsat,
+			&i.TaxFiat,
+			&i.TaxMsat,
 		); err != nil {
 			return nil, err
 		}
@@ -120,25 +170,46 @@ func (q *Queries) ListUnsettledInvoiceRequests(ctx context.Context, userID int64
 
 const updateInvoiceRequest = `-- name: UpdateInvoiceRequest :one
 UPDATE invoice_requests SET (
-    amount_msat,
+    price_fiat,
+    price_msat,
+    commission_fiat,
+    commission_msat,
+    tax_fiat,
+    tax_msat,
+    total_fiat,
+    total_msat,
     is_settled,
     payment_request
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE id = $1
-  RETURNING id, user_id, promotion_id, amount_msat, is_settled, payment_request
+  RETURNING id, user_id, promotion_id, total_msat, is_settled, payment_request, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat
 `
 
 type UpdateInvoiceRequestParams struct {
-	ID             int64          `db:"id" json:"id"`
-	AmountMsat     int64          `db:"amount_msat" json:"amountMsat"`
-	IsSettled      bool           `db:"is_settled" json:"isSettled"`
-	PaymentRequest sql.NullString `db:"payment_request" json:"paymentRequest"`
+	ID             int64           `db:"id" json:"id"`
+	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
+	PriceMsat      sql.NullInt64   `db:"price_msat" json:"priceMsat"`
+	CommissionFiat sql.NullFloat64 `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
+	TotalFiat      sql.NullFloat64 `db:"total_fiat" json:"totalFiat"`
+	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
+	IsSettled      bool            `db:"is_settled" json:"isSettled"`
+	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
 }
 
 func (q *Queries) UpdateInvoiceRequest(ctx context.Context, arg UpdateInvoiceRequestParams) (InvoiceRequest, error) {
 	row := q.db.QueryRowContext(ctx, updateInvoiceRequest,
 		arg.ID,
-		arg.AmountMsat,
+		arg.PriceFiat,
+		arg.PriceMsat,
+		arg.CommissionFiat,
+		arg.CommissionMsat,
+		arg.TaxFiat,
+		arg.TaxMsat,
+		arg.TotalFiat,
+		arg.TotalMsat,
 		arg.IsSettled,
 		arg.PaymentRequest,
 	)
@@ -147,9 +218,17 @@ func (q *Queries) UpdateInvoiceRequest(ctx context.Context, arg UpdateInvoiceReq
 		&i.ID,
 		&i.UserID,
 		&i.PromotionID,
-		&i.AmountMsat,
+		&i.TotalMsat,
 		&i.IsSettled,
 		&i.PaymentRequest,
+		&i.Memo,
+		&i.TotalFiat,
+		&i.PriceFiat,
+		&i.PriceMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
 	)
 	return i, err
 }
