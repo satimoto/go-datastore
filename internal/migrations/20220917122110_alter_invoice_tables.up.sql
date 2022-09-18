@@ -19,7 +19,7 @@ ALTER TABLE invoice_requests
     ADD COLUMN memo TEXT NOT NULL;
 
 ALTER TABLE invoice_requests
-    ADD COLUMN total_fiat FLOAT;
+    ADD COLUMN total_fiat FLOAT NOT NULL;
 
 ALTER TABLE invoice_requests
     ADD COLUMN price_fiat FLOAT;

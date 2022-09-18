@@ -861,7 +861,7 @@ type InvoiceRequest struct {
 	IsSettled      bool            `db:"is_settled" json:"isSettled"`
 	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
 	Memo           string          `db:"memo" json:"memo"`
-	TotalFiat      sql.NullFloat64 `db:"total_fiat" json:"totalFiat"`
+	TotalFiat      float64         `db:"total_fiat" json:"totalFiat"`
 	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
 	PriceMsat      sql.NullInt64   `db:"price_msat" json:"priceMsat"`
 	CommissionFiat sql.NullFloat64 `db:"commission_fiat" json:"commissionFiat"`

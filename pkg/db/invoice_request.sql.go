@@ -37,7 +37,7 @@ type CreateInvoiceRequestParams struct {
 	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
 	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
 	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
-	TotalFiat      sql.NullFloat64 `db:"total_fiat" json:"totalFiat"`
+	TotalFiat      float64         `db:"total_fiat" json:"totalFiat"`
 	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
 	IsSettled      bool            `db:"is_settled" json:"isSettled"`
 	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
@@ -193,7 +193,7 @@ type UpdateInvoiceRequestParams struct {
 	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
 	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
 	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
-	TotalFiat      sql.NullFloat64 `db:"total_fiat" json:"totalFiat"`
+	TotalFiat      float64         `db:"total_fiat" json:"totalFiat"`
 	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
 	IsSettled      bool            `db:"is_settled" json:"isSettled"`
 	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
