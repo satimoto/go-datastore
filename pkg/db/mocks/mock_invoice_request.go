@@ -26,6 +26,16 @@ func (r *MockRepositoryService) DeleteInvoiceRequest(ctx context.Context, id int
 	return nil
 }
 
+func (r *MockRepositoryService) GetInvoiceRequest(ctx context.Context, id int64) (db.InvoiceRequest, error) {
+	if len(r.getInvoiceRequestMockData) == 0 {
+		return db.InvoiceRequest{}, ErrorNotFound()
+	}
+
+	response := r.getInvoiceRequestMockData[0]
+	r.getInvoiceRequestMockData = r.getInvoiceRequestMockData[1:]
+	return response.InvoiceRequest, response.Error
+}
+
 func (r *MockRepositoryService) GetUnsettledInvoiceRequest(ctx context.Context, arg db.GetUnsettledInvoiceRequestParams) (db.InvoiceRequest, error) {
 	if len(r.getUnsettledInvoiceRequestMockData) == 0 {
 		return db.InvoiceRequest{}, ErrorNotFound()
@@ -69,6 +79,10 @@ func (r *MockRepositoryService) GetDeleteInvoiceRequestMockData() (int64, error)
 	response := r.deleteInvoiceRequestMockData[0]
 	r.deleteInvoiceRequestMockData = r.deleteInvoiceRequestMockData[1:]
 	return response, nil
+}
+
+func (r *MockRepositoryService) SetGetInvoiceRequestMockData(response InvoiceRequestMockData) {
+	r.getInvoiceRequestMockData = append(r.getInvoiceRequestMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetUnsettledInvoiceRequestMockData(response InvoiceRequestMockData) {

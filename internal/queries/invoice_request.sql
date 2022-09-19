@@ -20,6 +20,11 @@ INSERT INTO invoice_requests (
 DELETE FROM invoice_requests
   WHERE id = $1;
 
+
+-- name: GetInvoiceRequest :exec
+SELECT * FROM invoice_requests
+  WHERE id = $1;
+
 -- name: GetUnsettledInvoiceRequest :one
 SELECT * FROM invoice_requests
   WHERE user_id = @user_id::BIGINT AND promotion_id = @promotion_id::BIGINT AND 
