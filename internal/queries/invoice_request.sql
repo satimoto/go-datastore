@@ -20,8 +20,7 @@ INSERT INTO invoice_requests (
 DELETE FROM invoice_requests
   WHERE id = $1;
 
-
--- name: GetInvoiceRequest :exec
+-- name: GetInvoiceRequest :one
 SELECT * FROM invoice_requests
   WHERE id = $1;
 
