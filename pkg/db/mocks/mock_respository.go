@@ -176,6 +176,7 @@ type MockRepository interface {
 	SetGetEvseByUidMockData(response EvseMockData)
 	SetGetGeoLocationMockData(response GeoLocationMockData)
 	SetGetImageMockData(response ImageMockData)
+	SetGetInvoiceRequestMockData(response InvoiceRequestMockData)
 	SetGetUnsettledInvoiceRequestMockData(response InvoiceRequestMockData)
 	SetGetLocationMockData(response LocationMockData)
 	SetGetLocationByLastUpdatedMockData(response LocationMockData)
@@ -382,6 +383,7 @@ type MockRepositoryService struct {
 	getEvseByUidMockData                              []EvseMockData
 	getGeoLocationMockData                            []GeoLocationMockData
 	getImageMockData                                  []ImageMockData
+	getInvoiceRequestMockData                         []InvoiceRequestMockData
 	getUnsettledInvoiceRequestMockData                []InvoiceRequestMockData
 	getLocationMockData                               []LocationMockData
 	GetLocationByLastUpdatedMockData                  []LocationMockData

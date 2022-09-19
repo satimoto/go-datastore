@@ -89,6 +89,16 @@ func (q *Queries) DeleteInvoiceRequest(ctx context.Context, id int64) error {
 	return err
 }
 
+const getInvoiceRequest = `-- name: GetInvoiceRequest :exec
+SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
+  WHERE id = $1
+`
+
+func (q *Queries) GetInvoiceRequest(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, getInvoiceRequest, id)
+	return err
+}
+
 const getUnsettledInvoiceRequest = `-- name: GetUnsettledInvoiceRequest :one
 SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
   WHERE user_id = $1::BIGINT AND promotion_id = $2::BIGINT AND 
