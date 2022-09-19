@@ -21,6 +21,16 @@ func (r *MockRepositoryService) CreatePromotion(ctx context.Context, arg db.Crea
 	return db.Promotion{}, nil
 }
 
+func (r *MockRepositoryService) GetPromotion(ctx context.Context, id int64) (db.Promotion, error) {
+	if len(r.getPromotionMockData) == 0 {
+		return db.Promotion{}, ErrorNotFound()
+	}
+
+	response := r.getPromotionMockData[0]
+	r.getPromotionMockData = r.getPromotionMockData[1:]
+	return response.Promotion, response.Error
+}
+
 func (r *MockRepositoryService) GetPromotionByCode(ctx context.Context, code string) (db.Promotion, error) {
 	if len(r.getPromotionByCodeMockData) == 0 {
 		return db.Promotion{}, ErrorNotFound()
@@ -39,6 +49,10 @@ func (r *MockRepositoryService) GetCreatePromotionMockData() (db.CreatePromotion
 	response := r.createPromotionMockData[0]
 	r.createPromotionMockData = r.createPromotionMockData[1:]
 	return response, nil
+}
+
+func (r *MockRepositoryService) SetGetPromotionMockData(response PromotionMockData) {
+	r.getPromotionMockData = append(r.getPromotionMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetPromotionByCodeMockData(response PromotionMockData) {
