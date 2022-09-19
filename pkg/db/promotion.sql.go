@@ -44,6 +44,25 @@ func (q *Queries) CreatePromotion(ctx context.Context, arg CreatePromotionParams
 	return i, err
 }
 
+const getPromotion = `-- name: GetPromotion :one
+SELECT id, code, description, is_active, start_date, end_date FROM promotions
+  WHERE id = $1
+`
+
+func (q *Queries) GetPromotion(ctx context.Context, id int64) (Promotion, error) {
+	row := q.db.QueryRowContext(ctx, getPromotion, id)
+	var i Promotion
+	err := row.Scan(
+		&i.ID,
+		&i.Code,
+		&i.Description,
+		&i.IsActive,
+		&i.StartDate,
+		&i.EndDate,
+	)
+	return i, err
+}
+
 const getPromotionByCode = `-- name: GetPromotionByCode :one
 SELECT id, code, description, is_active, start_date, end_date FROM promotions
   WHERE code = $1

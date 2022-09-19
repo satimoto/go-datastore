@@ -185,6 +185,7 @@ type MockRepository interface {
 	SetGetNodeByUserIDMockData(response NodeMockData)
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
 	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
+	SetGetPromotionMockData(response PromotionMockData)
 	SetGetPromotionByCodeMockData(response PromotionMockData)
 	SetGetPsbtFundingStateMockData(response PsbtFundingStateMockData)
 	SetGetUnfundedPsbtFundingStateMockData(response PsbtFundingStateMockData)
@@ -390,6 +391,7 @@ type MockRepositoryService struct {
 	getNodeByUserIDMockData                           []NodeMockData
 	getOpeningTimeMockData                            []OpeningTimeMockData
 	getPriceComponentRoundingMockData                 []PriceComponentRoundingMockData
+	getPromotionMockData                              []PromotionMockData
 	getPromotionByCodeMockData                        []PromotionMockData
 	getPsbtFundingStateMockData                       []PsbtFundingStateMockData
 	getUnfundedPsbtFundingStateMockData               []PsbtFundingStateMockData

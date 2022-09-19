@@ -7,6 +7,10 @@ INSERT INTO promotions (
   ) VALUES ($1, $2, $3, $4)
   RETURNING *;
 
+-- name: GetPromotion :one
+SELECT * FROM promotions
+  WHERE id = $1;
+
 -- name: GetPromotionByCode :one
 SELECT * FROM promotions
   WHERE code = $1;
