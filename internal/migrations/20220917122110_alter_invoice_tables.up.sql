@@ -16,6 +16,9 @@ ALTER TABLE invoice_requests
     RENAME COLUMN amount_msat TO total_msat;  
 
 ALTER TABLE invoice_requests
+    ADD COLUMN currency TEXT NOT NULL;
+
+ALTER TABLE invoice_requests
     ADD COLUMN memo TEXT NOT NULL;
 
 ALTER TABLE invoice_requests

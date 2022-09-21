@@ -2,6 +2,7 @@
 INSERT INTO invoice_requests (
     user_id,
     promotion_id,
+    currency,
     memo,
     price_fiat,
     price_msat,
@@ -13,7 +14,7 @@ INSERT INTO invoice_requests (
     total_msat,
     is_settled, 
     payment_request
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
   RETURNING *;
 
 -- name: DeleteInvoiceRequest :exec

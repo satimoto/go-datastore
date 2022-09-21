@@ -860,6 +860,7 @@ type InvoiceRequest struct {
 	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
 	IsSettled      bool            `db:"is_settled" json:"isSettled"`
 	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
+	Currency       string          `db:"currency" json:"currency"`
 	Memo           string          `db:"memo" json:"memo"`
 	TotalFiat      float64         `db:"total_fiat" json:"totalFiat"`
 	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
