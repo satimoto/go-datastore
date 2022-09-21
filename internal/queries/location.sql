@@ -60,7 +60,7 @@ SELECT * FROM locations
 SELECT * FROM locations
   WHERE total_evses > 0 AND 
     ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
-    (@interval::INT = 0 OR last_updated > last_updated - interval @interval::INT || ' seconds')
+    (@interval::INT = 0 OR last_updated > NOW() - '1 second'::INTERVAL * @interval::INT)
   LIMIT 500;
 
 -- name: UpdateLocation :one
