@@ -2,6 +2,7 @@
 INSERT INTO invoice_requests (
     user_id,
     promotion_id,
+    release_date,
     currency,
     memo,
     price_fiat,
@@ -14,7 +15,7 @@ INSERT INTO invoice_requests (
     total_msat,
     is_settled, 
     payment_request
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
   RETURNING *;
 
 -- name: DeleteInvoiceRequest :exec
@@ -33,7 +34,8 @@ SELECT * FROM invoice_requests
 
 -- name: ListUnsettledInvoiceRequests :many
 SELECT * FROM invoice_requests
-  WHERE NOT user_id = $1 AND is_settled AND payment_request IS NULL
+  WHERE user_id = $1 AND is_settled AND payment_request IS NULL AND
+    (release_date IS NULL OR NOW() > release_date)
   ORDER BY id;
 
 -- name: UpdateInvoiceRequest :one
