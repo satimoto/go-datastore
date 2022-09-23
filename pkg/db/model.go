@@ -1064,6 +1064,7 @@ type SessionInvoice struct {
 	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
 	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
 	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
+	Signature        []byte    `db:"signature" json:"signature"`
 }
 
 type StatusSchedule struct {
