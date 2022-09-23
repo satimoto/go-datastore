@@ -12,6 +12,7 @@ const createInvoiceRequest = `-- name: CreateInvoiceRequest :one
 INSERT INTO invoice_requests (
     user_id,
     promotion_id,
+    release_date,
     currency,
     memo,
     price_fiat,
@@ -24,13 +25,14 @@ INSERT INTO invoice_requests (
     total_msat,
     is_settled, 
     payment_request
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-  RETURNING id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  RETURNING id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, release_date
 `
 
 type CreateInvoiceRequestParams struct {
 	UserID         int64           `db:"user_id" json:"userID"`
 	PromotionID    int64           `db:"promotion_id" json:"promotionID"`
+	ReleaseDate    sql.NullTime    `db:"release_date" json:"releaseDate"`
 	Currency       string          `db:"currency" json:"currency"`
 	Memo           string          `db:"memo" json:"memo"`
 	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
@@ -49,6 +51,7 @@ func (q *Queries) CreateInvoiceRequest(ctx context.Context, arg CreateInvoiceReq
 	row := q.db.QueryRowContext(ctx, createInvoiceRequest,
 		arg.UserID,
 		arg.PromotionID,
+		arg.ReleaseDate,
 		arg.Currency,
 		arg.Memo,
 		arg.PriceFiat,
@@ -79,6 +82,7 @@ func (q *Queries) CreateInvoiceRequest(ctx context.Context, arg CreateInvoiceReq
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
+		&i.ReleaseDate,
 	)
 	return i, err
 }
@@ -94,7 +98,7 @@ func (q *Queries) DeleteInvoiceRequest(ctx context.Context, id int64) error {
 }
 
 const getInvoiceRequest = `-- name: GetInvoiceRequest :one
-SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
+SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, release_date FROM invoice_requests
   WHERE id = $1
 `
 
@@ -117,12 +121,13 @@ func (q *Queries) GetInvoiceRequest(ctx context.Context, id int64) (InvoiceReque
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
+		&i.ReleaseDate,
 	)
 	return i, err
 }
 
 const getUnsettledInvoiceRequest = `-- name: GetUnsettledInvoiceRequest :one
-SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
+SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, release_date FROM invoice_requests
   WHERE user_id = $1::BIGINT AND promotion_id = $2::BIGINT AND 
     ($3::TEXT = '' OR $3::TEXT = memo) AND
     NOT is_settled AND payment_request IS NULL
@@ -153,13 +158,15 @@ func (q *Queries) GetUnsettledInvoiceRequest(ctx context.Context, arg GetUnsettl
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
+		&i.ReleaseDate,
 	)
 	return i, err
 }
 
 const listUnsettledInvoiceRequests = `-- name: ListUnsettledInvoiceRequests :many
-SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat FROM invoice_requests
-  WHERE NOT user_id = $1 AND is_settled AND payment_request IS NULL
+SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, release_date FROM invoice_requests
+  WHERE user_id = $1 AND is_settled AND payment_request IS NULL AND
+    (release_date IS NULL OR NOW() > release_date)
   ORDER BY id
 `
 
@@ -188,6 +195,7 @@ func (q *Queries) ListUnsettledInvoiceRequests(ctx context.Context, userID int64
 			&i.CommissionMsat,
 			&i.TaxFiat,
 			&i.TaxMsat,
+			&i.ReleaseDate,
 		); err != nil {
 			return nil, err
 		}
@@ -216,7 +224,7 @@ UPDATE invoice_requests SET (
     payment_request
   ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   WHERE id = $1
-  RETURNING id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat
+  RETURNING id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, release_date
 `
 
 type UpdateInvoiceRequestParams struct {
@@ -264,6 +272,7 @@ func (q *Queries) UpdateInvoiceRequest(ctx context.Context, arg UpdateInvoiceReq
 		&i.CommissionMsat,
 		&i.TaxFiat,
 		&i.TaxMsat,
+		&i.ReleaseDate,
 	)
 	return i, err
 }

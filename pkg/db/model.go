@@ -869,6 +869,7 @@ type InvoiceRequest struct {
 	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
 	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
 	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
+	ReleaseDate    sql.NullTime    `db:"release_date" json:"releaseDate"`
 }
 
 type Location struct {
