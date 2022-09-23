@@ -24,10 +24,11 @@ INSERT INTO session_invoices (
     total_fiat,
     total_msat,
     payment_request,
+    signature,
     is_settled,
     is_expired,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
   RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature
 `
 
@@ -46,6 +47,7 @@ type CreateSessionInvoiceParams struct {
 	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
 	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
 	PaymentRequest   string    `db:"payment_request" json:"paymentRequest"`
+	Signature        []byte    `db:"signature" json:"signature"`
 	IsSettled        bool      `db:"is_settled" json:"isSettled"`
 	IsExpired        bool      `db:"is_expired" json:"isExpired"`
 	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
@@ -67,6 +69,7 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		arg.TotalFiat,
 		arg.TotalMsat,
 		arg.PaymentRequest,
+		arg.Signature,
 		arg.IsSettled,
 		arg.IsExpired,
 		arg.LastUpdated,
