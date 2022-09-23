@@ -12,16 +12,18 @@ const createTokenAuthorization = `-- name: CreateTokenAuthorization :one
 INSERT INTO token_authorizations (
     token_id,
     authorization_id,
+    signing_key,
     country_code,
     party_id,
     location_id
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, token_id, authorization_id, country_code, party_id, location_id
+  ) VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, token_id, authorization_id, country_code, party_id, location_id, signing_key
 `
 
 type CreateTokenAuthorizationParams struct {
 	TokenID         int64          `db:"token_id" json:"tokenID"`
 	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
+	SigningKey      []byte         `db:"signing_key" json:"signingKey"`
 	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
@@ -31,6 +33,7 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 	row := q.db.QueryRowContext(ctx, createTokenAuthorization,
 		arg.TokenID,
 		arg.AuthorizationID,
+		arg.SigningKey,
 		arg.CountryCode,
 		arg.PartyID,
 		arg.LocationID,
@@ -43,12 +46,13 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 		&i.CountryCode,
 		&i.PartyID,
 		&i.LocationID,
+		&i.SigningKey,
 	)
 	return i, err
 }
 
 const getTokenAuthorizationByAuthorizationID = `-- name: GetTokenAuthorizationByAuthorizationID :one
-SELECT id, token_id, authorization_id, country_code, party_id, location_id FROM token_authorizations
+SELECT id, token_id, authorization_id, country_code, party_id, location_id, signing_key FROM token_authorizations
   WHERE authorization_id = $1
 `
 
@@ -62,6 +66,7 @@ func (q *Queries) GetTokenAuthorizationByAuthorizationID(ctx context.Context, au
 		&i.CountryCode,
 		&i.PartyID,
 		&i.LocationID,
+		&i.SigningKey,
 	)
 	return i, err
 }
@@ -72,7 +77,7 @@ UPDATE token_authorizations SET (
     party_id
   ) = ($2, $3)
   WHERE authorization_id = $1
-  RETURNING id, token_id, authorization_id, country_code, party_id, location_id
+  RETURNING id, token_id, authorization_id, country_code, party_id, location_id, signing_key
 `
 
 type UpdateTokenAuthorizationByAuthorizationIDParams struct {
@@ -91,6 +96,7 @@ func (q *Queries) UpdateTokenAuthorizationByAuthorizationID(ctx context.Context,
 		&i.CountryCode,
 		&i.PartyID,
 		&i.LocationID,
+		&i.SigningKey,
 	)
 	return i, err
 }
