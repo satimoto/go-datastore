@@ -1,3 +1,3 @@
 -- Locations
 ALTER TABLE locations
-    ADD COLUMN publish BOOLEAN DEFAULT false;
+    ADD COLUMN publish BOOLEAN NOT NULL DEFAULT false;
