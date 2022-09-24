@@ -898,7 +898,7 @@ type Location struct {
 	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
-	Publish            sql.NullBool      `db:"publish" json:"publish"`
+	Publish            bool              `db:"publish" json:"publish"`
 }
 
 type LocationDirection struct {

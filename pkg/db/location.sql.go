@@ -707,8 +707,8 @@ UPDATE locations SET publish = $2
 `
 
 type UpdateLocationPublishParams struct {
-	ID      int64        `db:"id" json:"id"`
-	Publish sql.NullBool `db:"publish" json:"publish"`
+	ID      int64 `db:"id" json:"id"`
+	Publish bool  `db:"publish" json:"publish"`
 }
 
 func (q *Queries) UpdateLocationPublish(ctx context.Context, arg UpdateLocationPublishParams) error {
@@ -722,8 +722,8 @@ UPDATE locations SET publish = $2
 `
 
 type UpdateLocationsPublishByCredentialParams struct {
-	CredentialID int64        `db:"credential_id" json:"credentialID"`
-	Publish      sql.NullBool `db:"publish" json:"publish"`
+	CredentialID int64 `db:"credential_id" json:"credentialID"`
+	Publish      bool  `db:"publish" json:"publish"`
 }
 
 func (q *Queries) UpdateLocationsPublishByCredential(ctx context.Context, arg UpdateLocationsPublishByCredentialParams) error {
@@ -739,7 +739,7 @@ UPDATE locations SET publish = $3
 type UpdateLocationsPublishByPartyAndCountryCodeParams struct {
 	PartyID     sql.NullString `db:"party_id" json:"partyID"`
 	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
-	Publish     sql.NullBool   `db:"publish" json:"publish"`
+	Publish     bool           `db:"publish" json:"publish"`
 }
 
 func (q *Queries) UpdateLocationsPublishByPartyAndCountryCode(ctx context.Context, arg UpdateLocationsPublishByPartyAndCountryCodeParams) error {
