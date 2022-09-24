@@ -182,7 +182,7 @@ func (q *Queries) GetSessionByAuthorizationID(ctx context.Context, authorization
 
 const getSessionByLastUpdated = `-- name: GetSessionByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id FROM sessions
-  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
+  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
   ORDER BY last_updated DESC
@@ -190,13 +190,13 @@ SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_d
 `
 
 type GetSessionByLastUpdatedParams struct {
-	CredentalID int64  `db:"credental_id" json:"credentalID"`
-	CountryCode string `db:"country_code" json:"countryCode"`
-	PartyID     string `db:"party_id" json:"partyID"`
+	CredentialID int64  `db:"credential_id" json:"credentialID"`
+	CountryCode  string `db:"country_code" json:"countryCode"`
+	PartyID      string `db:"party_id" json:"partyID"`
 }
 
 func (q *Queries) GetSessionByLastUpdated(ctx context.Context, arg GetSessionByLastUpdatedParams) (Session, error) {
-	row := q.db.QueryRowContext(ctx, getSessionByLastUpdated, arg.CredentalID, arg.CountryCode, arg.PartyID)
+	row := q.db.QueryRowContext(ctx, getSessionByLastUpdated, arg.CredentialID, arg.CountryCode, arg.PartyID)
 	var i Session
 	err := row.Scan(
 		&i.ID,

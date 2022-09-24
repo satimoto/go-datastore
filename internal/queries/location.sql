@@ -42,7 +42,7 @@ SELECT * FROM locations
 
 -- name: GetLocationByLastUpdated :one
 SELECT * FROM locations
-  WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
+  WHERE (@credential_id::BIGINT = -1 OR @credential_id::BIGINT = credential_id) AND
     (@country_code::TEXT = '' OR @country_code::TEXT = country_code) AND
     (@party_id::TEXT = '' OR @party_id::TEXT = party_id)
   ORDER BY last_updated DESC
@@ -58,7 +58,7 @@ SELECT * FROM locations
 
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
-  WHERE total_evses > 0 AND 
+  WHERE publish AND total_evses > 0 AND 
     ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
     (@interval::INT = 0 OR last_updated > NOW() - '1 second'::INTERVAL * @interval::INT)
   LIMIT 500;
@@ -131,3 +131,15 @@ UPDATE locations SET (
 -- name: UpdateLocationLastUpdated :exec
 UPDATE locations SET last_updated = $2
   WHERE id = $1;
+
+-- name: UpdateLocationPublish :exec
+UPDATE locations SET publish = $2
+  WHERE id = $1;
+
+-- name: UpdateLocationsPublishByCredential :exec
+UPDATE locations SET publish = $2
+  WHERE credential_id = $1;
+
+-- name: UpdateLocationsPublishByPartyAndCountryCode :exec
+UPDATE locations SET publish = $3
+  WHERE party_id = $1 AND country_code = $2;

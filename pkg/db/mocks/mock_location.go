@@ -32,12 +32,12 @@ func (r *MockRepositoryService) GetLocation(ctx context.Context, id int64) (db.L
 }
 
 func (r *MockRepositoryService) GetLocationByLastUpdated(ctx context.Context, arg db.GetLocationByLastUpdatedParams) (db.Location, error) {
-	if len(r.GetLocationByLastUpdatedMockData) == 0 {
+	if len(r.getLocationByLastUpdatedMockData) == 0 {
 		return db.Location{}, ErrorNotFound()
 	}
 
-	response := r.GetLocationByLastUpdatedMockData[0]
-	r.GetLocationByLastUpdatedMockData = r.GetLocationByLastUpdatedMockData[1:]
+	response := r.getLocationByLastUpdatedMockData[0]
+	r.getLocationByLastUpdatedMockData = r.getLocationByLastUpdatedMockData[1:]
 	return response.Location, response.Error
 }
 
@@ -86,6 +86,21 @@ func (r *MockRepositoryService) UpdateLocationLastUpdated(ctx context.Context, a
 	return nil
 }
 
+func (r *MockRepositoryService) UpdateLocationPublish(ctx context.Context, arg db.UpdateLocationPublishParams) error {
+	r.updateLocationPublishMockData = append(r.updateLocationPublishMockData, arg)
+	return nil
+}
+
+func (r *MockRepositoryService) UpdateLocationsPublishByCredential(ctx context.Context, arg db.UpdateLocationsPublishByCredentialParams) error {
+	r.updateLocationsPublishByCredentialMockData = append(r.updateLocationsPublishByCredentialMockData, arg)
+	return nil
+}
+
+func (r *MockRepositoryService) UpdateLocationsPublishByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsPublishByPartyAndCountryCodeParams) error {
+	r.updateLocationsPublishByPartyAndCountryCodeMockData = append(r.updateLocationsPublishByPartyAndCountryCodeMockData, arg)
+	return nil
+}
+
 func (r *MockRepositoryService) GetCreateLocationMockData() (db.CreateLocationParams, error) {
 	if len(r.createLocationMockData) == 0 {
 		return db.CreateLocationParams{}, ErrorNotFound()
@@ -116,12 +131,42 @@ func (r *MockRepositoryService) GetUpdateLocationByUidMockData() (db.UpdateLocat
 	return response, nil
 }
 
+func (r *MockRepositoryService) GetUpdateLocationPublishMockData() (db.UpdateLocationPublishParams, error) {
+	if len(r.updateLocationPublishMockData) == 0 {
+		return db.UpdateLocationPublishParams{}, ErrorNotFound()
+	}
+
+	response := r.updateLocationPublishMockData[0]
+	r.updateLocationPublishMockData = r.updateLocationPublishMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateLocationsPublishByCredentialMockData() (db.UpdateLocationsPublishByCredentialParams, error) {
+	if len(r.updateLocationsPublishByCredentialMockData) == 0 {
+		return db.UpdateLocationsPublishByCredentialParams{}, ErrorNotFound()
+	}
+
+	response := r.updateLocationsPublishByCredentialMockData[0]
+	r.updateLocationsPublishByCredentialMockData = r.updateLocationsPublishByCredentialMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateLocationsPublishByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishByPartyAndCountryCodeParams, error) {
+	if len(r.updateLocationsPublishByPartyAndCountryCodeMockData) == 0 {
+		return db.UpdateLocationsPublishByPartyAndCountryCodeParams{}, ErrorNotFound()
+	}
+
+	response := r.updateLocationsPublishByPartyAndCountryCodeMockData[0]
+	r.updateLocationsPublishByPartyAndCountryCodeMockData = r.updateLocationsPublishByPartyAndCountryCodeMockData[1:]
+	return response, nil
+}
+
 func (r *MockRepositoryService) SetGetLocationMockData(response LocationMockData) {
 	r.getLocationMockData = append(r.getLocationMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetLocationByLastUpdatedMockData(response LocationMockData) {
-	r.GetLocationByLastUpdatedMockData = append(r.GetLocationByLastUpdatedMockData, response)
+	r.getLocationByLastUpdatedMockData = append(r.getLocationByLastUpdatedMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetLocationByUidMockData(response LocationMockData) {

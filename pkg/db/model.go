@@ -898,6 +898,7 @@ type Location struct {
 	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
+	Publish            sql.NullBool      `db:"publish" json:"publish"`
 }
 
 type LocationDirection struct {
@@ -1153,6 +1154,7 @@ type User struct {
 	IsAdmin           bool          `db:"is_admin" json:"isAdmin"`
 	IsRestricted      bool          `db:"is_restricted" json:"isRestricted"`
 	CircuitUserID     sql.NullInt64 `db:"circuit_user_id" json:"circuitUserID"`
+	LastActiveDate    sql.NullTime  `db:"last_active_date" json:"lastActiveDate"`
 }
 
 type Version struct {
