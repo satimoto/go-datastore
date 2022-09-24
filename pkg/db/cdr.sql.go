@@ -122,7 +122,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 
 const getCdrByLastUpdated = `-- name: GetCdrByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
-  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
+  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
   ORDER BY last_updated DESC
@@ -130,13 +130,13 @@ SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_d
 `
 
 type GetCdrByLastUpdatedParams struct {
-	CredentalID int64  `db:"credental_id" json:"credentalID"`
-	CountryCode string `db:"country_code" json:"countryCode"`
-	PartyID     string `db:"party_id" json:"partyID"`
+	CredentialID int64  `db:"credential_id" json:"credentialID"`
+	CountryCode  string `db:"country_code" json:"countryCode"`
+	PartyID      string `db:"party_id" json:"partyID"`
 }
 
 func (q *Queries) GetCdrByLastUpdated(ctx context.Context, arg GetCdrByLastUpdatedParams) (Cdr, error) {
-	row := q.db.QueryRowContext(ctx, getCdrByLastUpdated, arg.CredentalID, arg.CountryCode, arg.PartyID)
+	row := q.db.QueryRowContext(ctx, getCdrByLastUpdated, arg.CredentialID, arg.CountryCode, arg.PartyID)
 	var i Cdr
 	err := row.Scan(
 		&i.ID,

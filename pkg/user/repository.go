@@ -14,6 +14,7 @@ type UserRepository interface {
 	GetUserBySessionID(ctx context.Context, id int64) (db.User, error)
 	GetUserByTokenID(ctx context.Context, id int64) (db.User, error)
 	UpdateUser(ctx context.Context, arg db.UpdateUserParams) (db.User, error)
+	UpdateUserByPubkey(ctx context.Context, arg db.UpdateUserByPubkeyParams) (db.User, error)
 }
 
 func NewRepository(repositoryService *db.RepositoryService) UserRepository {

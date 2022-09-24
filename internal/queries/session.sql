@@ -34,7 +34,7 @@ SELECT * FROM sessions
 
 -- name: GetSessionByLastUpdated :one
 SELECT * FROM sessions
-  WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
+  WHERE (@credential_id::BIGINT = -1 OR @credential_id::BIGINT = credential_id) AND
     (@country_code::TEXT = '' OR @country_code::TEXT = country_code) AND
     (@party_id::TEXT = '' OR @party_id::TEXT = party_id)
   ORDER BY last_updated DESC

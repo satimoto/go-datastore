@@ -47,3 +47,9 @@ UPDATE users SET (
   ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
   RETURNING *;
+
+-- name: UpdateUserByPubkey :one
+UPDATE users SET 
+  last_active_date = $2
+  WHERE pubkey = $1
+  RETURNING *;

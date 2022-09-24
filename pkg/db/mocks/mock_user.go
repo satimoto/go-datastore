@@ -81,6 +81,11 @@ func (r *MockRepositoryService) UpdateUser(ctx context.Context, arg db.UpdateUse
 	return db.User{}, nil
 }
 
+func (r *MockRepositoryService) UpdateUserByPubkey(ctx context.Context, arg db.UpdateUserByPubkeyParams) (db.User, error) {
+	r.updateUserByPubkeyMockData = append(r.updateUserByPubkeyMockData, arg)
+	return db.User{}, nil
+}
+
 func (r *MockRepositoryService) GetCreateUserMockData() (db.CreateUserParams, error) {
 	if len(r.createUserMockData) == 0 {
 		return db.CreateUserParams{}, ErrorNotFound()
@@ -122,5 +127,15 @@ func (r *MockRepositoryService) GetUpdateUserMockData() (db.UpdateUserParams, er
 
 	response := r.updateUserMockData[0]
 	r.updateUserMockData = r.updateUserMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateUserByPubkeyMockData() (db.UpdateUserByPubkeyParams, error) {
+	if len(r.updateUserByPubkeyMockData) == 0 {
+		return db.UpdateUserByPubkeyParams{}, ErrorNotFound()
+	}
+
+	response := r.updateUserByPubkeyMockData[0]
+	r.updateUserByPubkeyMockData = r.updateUserByPubkeyMockData[1:]
 	return response, nil
 }
