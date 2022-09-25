@@ -15,18 +15,20 @@ INSERT INTO users (
     linking_pubkey,
     node_id,
     pubkey,
+    referral_code,
     circuit_user_id
-  ) VALUES ($1, $2, $3, $4, $5, $6)
-  RETURNING id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  RETURNING id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code
 `
 
 type CreateUserParams struct {
-	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
-	DeviceToken       string        `db:"device_token" json:"deviceToken"`
-	LinkingPubkey     string        `db:"linking_pubkey" json:"linkingPubkey"`
-	NodeID            sql.NullInt64 `db:"node_id" json:"nodeID"`
-	Pubkey            string        `db:"pubkey" json:"pubkey"`
-	CircuitUserID     sql.NullInt64 `db:"circuit_user_id" json:"circuitUserID"`
+	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
+	DeviceToken       string         `db:"device_token" json:"deviceToken"`
+	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
+	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
+	Pubkey            string         `db:"pubkey" json:"pubkey"`
+	ReferralCode      sql.NullString `db:"referral_code" json:"referralCode"`
+	CircuitUserID     sql.NullInt64  `db:"circuit_user_id" json:"circuitUserID"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -36,6 +38,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.LinkingPubkey,
 		arg.NodeID,
 		arg.Pubkey,
+		arg.ReferralCode,
 		arg.CircuitUserID,
 	)
 	var i User
@@ -50,12 +53,13 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date FROM users
+SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code FROM users
   WHERE id = $1
 `
 
@@ -73,12 +77,13 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
 
 const getUserByDeviceToken = `-- name: GetUserByDeviceToken :one
-SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date FROM users
+SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code FROM users
   WHERE device_token = $1
 `
 
@@ -96,12 +101,13 @@ func (q *Queries) GetUserByDeviceToken(ctx context.Context, deviceToken string) 
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
 
 const getUserByLinkingPubkey = `-- name: GetUserByLinkingPubkey :one
-SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date FROM users
+SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code FROM users
   WHERE linking_pubkey = $1
 `
 
@@ -119,12 +125,13 @@ func (q *Queries) GetUserByLinkingPubkey(ctx context.Context, linkingPubkey stri
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
 
 const getUserByPubkey = `-- name: GetUserByPubkey :one
-SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date FROM users
+SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code FROM users
   WHERE pubkey = $1
 `
 
@@ -142,12 +149,37 @@ func (q *Queries) GetUserByPubkey(ctx context.Context, pubkey string) (User, err
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
+	)
+	return i, err
+}
+
+const getUserByReferralCode = `-- name: GetUserByReferralCode :one
+SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code FROM users
+  WHERE referral_code = $1
+`
+
+func (q *Queries) GetUserByReferralCode(ctx context.Context, referralCode sql.NullString) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByReferralCode, referralCode)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.LinkingPubkey,
+		&i.Pubkey,
+		&i.DeviceToken,
+		&i.NodeID,
+		&i.CommissionPercent,
+		&i.IsAdmin,
+		&i.IsRestricted,
+		&i.CircuitUserID,
+		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
 
 const getUserBySessionID = `-- name: GetUserBySessionID :one
-SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id, u.commission_percent, u.is_admin, u.is_restricted, u.circuit_user_id, u.last_active_date FROM users u
+SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id, u.commission_percent, u.is_admin, u.is_restricted, u.circuit_user_id, u.last_active_date, u.referral_code FROM users u
   INNER JOIN sessions s ON s.user_id = u.id
   WHERE s.id = $1
 `
@@ -166,12 +198,13 @@ func (q *Queries) GetUserBySessionID(ctx context.Context, id int64) (User, error
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
 
 const getUserByTokenID = `-- name: GetUserByTokenID :one
-SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id, u.commission_percent, u.is_admin, u.is_restricted, u.circuit_user_id, u.last_active_date FROM users u
+SELECT u.id, u.linking_pubkey, u.pubkey, u.device_token, u.node_id, u.commission_percent, u.is_admin, u.is_restricted, u.circuit_user_id, u.last_active_date, u.referral_code FROM users u
   INNER JOIN tokens t ON t.user_id = u.id
   WHERE t.id = $1
 `
@@ -190,6 +223,7 @@ func (q *Queries) GetUserByTokenID(ctx context.Context, id int64) (User, error) 
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
@@ -202,21 +236,23 @@ UPDATE users SET (
     node_id,
     pubkey,
     is_restricted,
+    referral_code,
     circuit_user_id
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
   WHERE id = $1
-  RETURNING id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date
+  RETURNING id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code
 `
 
 type UpdateUserParams struct {
-	ID                int64         `db:"id" json:"id"`
-	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
-	DeviceToken       string        `db:"device_token" json:"deviceToken"`
-	LinkingPubkey     string        `db:"linking_pubkey" json:"linkingPubkey"`
-	NodeID            sql.NullInt64 `db:"node_id" json:"nodeID"`
-	Pubkey            string        `db:"pubkey" json:"pubkey"`
-	IsRestricted      bool          `db:"is_restricted" json:"isRestricted"`
-	CircuitUserID     sql.NullInt64 `db:"circuit_user_id" json:"circuitUserID"`
+	ID                int64          `db:"id" json:"id"`
+	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
+	DeviceToken       string         `db:"device_token" json:"deviceToken"`
+	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
+	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
+	Pubkey            string         `db:"pubkey" json:"pubkey"`
+	IsRestricted      bool           `db:"is_restricted" json:"isRestricted"`
+	ReferralCode      sql.NullString `db:"referral_code" json:"referralCode"`
+	CircuitUserID     sql.NullInt64  `db:"circuit_user_id" json:"circuitUserID"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -228,6 +264,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.NodeID,
 		arg.Pubkey,
 		arg.IsRestricted,
+		arg.ReferralCode,
 		arg.CircuitUserID,
 	)
 	var i User
@@ -242,6 +279,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }
@@ -250,7 +288,7 @@ const updateUserByPubkey = `-- name: UpdateUserByPubkey :one
 UPDATE users SET 
   last_active_date = $2
   WHERE pubkey = $1
-  RETURNING id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date
+  RETURNING id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is_admin, is_restricted, circuit_user_id, last_active_date, referral_code
 `
 
 type UpdateUserByPubkeyParams struct {
@@ -272,6 +310,7 @@ func (q *Queries) UpdateUserByPubkey(ctx context.Context, arg UpdateUserByPubkey
 		&i.IsRestricted,
 		&i.CircuitUserID,
 		&i.LastActiveDate,
+		&i.ReferralCode,
 	)
 	return i, err
 }

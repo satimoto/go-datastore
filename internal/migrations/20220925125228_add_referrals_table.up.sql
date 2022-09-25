@@ -1,3 +1,7 @@
+-- Users
+ALTER TABLE users
+    ADD COLUMN referral_code TEXT;
+
 -- Referrals
 CREATE TABLE IF NOT EXISTS referrals (
     id           BIGSERIAL PRIMARY KEY,

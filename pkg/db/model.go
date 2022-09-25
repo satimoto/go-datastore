@@ -1153,16 +1153,17 @@ type TokenAuthorizationEvse struct {
 }
 
 type User struct {
-	ID                int64         `db:"id" json:"id"`
-	LinkingPubkey     string        `db:"linking_pubkey" json:"linkingPubkey"`
-	Pubkey            string        `db:"pubkey" json:"pubkey"`
-	DeviceToken       string        `db:"device_token" json:"deviceToken"`
-	NodeID            sql.NullInt64 `db:"node_id" json:"nodeID"`
-	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
-	IsAdmin           bool          `db:"is_admin" json:"isAdmin"`
-	IsRestricted      bool          `db:"is_restricted" json:"isRestricted"`
-	CircuitUserID     sql.NullInt64 `db:"circuit_user_id" json:"circuitUserID"`
-	LastActiveDate    sql.NullTime  `db:"last_active_date" json:"lastActiveDate"`
+	ID                int64          `db:"id" json:"id"`
+	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
+	Pubkey            string         `db:"pubkey" json:"pubkey"`
+	DeviceToken       string         `db:"device_token" json:"deviceToken"`
+	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
+	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
+	IsAdmin           bool           `db:"is_admin" json:"isAdmin"`
+	IsRestricted      bool           `db:"is_restricted" json:"isRestricted"`
+	CircuitUserID     sql.NullInt64  `db:"circuit_user_id" json:"circuitUserID"`
+	LastActiveDate    sql.NullTime   `db:"last_active_date" json:"lastActiveDate"`
+	ReferralCode      sql.NullString `db:"referral_code" json:"referralCode"`
 }
 
 type Version struct {

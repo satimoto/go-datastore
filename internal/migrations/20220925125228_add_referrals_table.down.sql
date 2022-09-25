@@ -6,3 +6,7 @@ ALTER TABLE IF EXISTS referrals
     DROP CONSTRAINT IF EXISTS fk_referrals_user_id;
 
 DROP TABLE IF EXISTS referrals;
+
+-- Users
+ALTER TABLE users
+    DROP IF EXISTS referral_code;

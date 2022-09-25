@@ -215,6 +215,7 @@ type MockRepository interface {
 	SetGetUserByDeviceTokenMockData(response UserMockData)
 	SetGetUserByLinkingPubkeyMockData(response UserMockData)
 	SetGetUserByPubkeyMockData(response UserMockData)
+	SetGetUserByReferralCodeMockData(response UserMockData)
 	SetGetUserBySessionIDMockData(response UserMockData)
 	SetGetUserByTokenIDMockData(response UserMockData)
 	SetGetVersionMockData(response VersionMockData)
@@ -424,6 +425,7 @@ type MockRepositoryService struct {
 	getUserByDeviceTokenMockData                        []UserMockData
 	getUserByLinkingPubkeyMockData                      []UserMockData
 	getUserByPubkeyMockData                             []UserMockData
+	getUserByReferralCodeMockData                       []UserMockData
 	getUserBySessionIDMockData                          []UserMockData
 	getUserByTokenIDMockData                            []UserMockData
 	getVersionMockData                                  []VersionMockData
