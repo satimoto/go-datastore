@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -46,13 +47,23 @@ func (r *MockRepositoryService) GetUserByLinkingPubkey(ctx context.Context, link
 	return response.User, response.Error
 }
 
-func (r *MockRepositoryService) GetUserByPubkey(ctx context.Context, nodeKey string) (db.User, error) {
+func (r *MockRepositoryService) GetUserByPubkey(ctx context.Context, pubkey string) (db.User, error) {
 	if len(r.getUserByPubkeyMockData) == 0 {
 		return db.User{}, ErrorNotFound()
 	}
 
 	response := r.getUserByPubkeyMockData[0]
 	r.getUserByPubkeyMockData = r.getUserByPubkeyMockData[1:]
+	return response.User, response.Error
+}
+
+func (r *MockRepositoryService) GetUserByReferralCode(ctx context.Context, referralCode sql.NullString) (db.User, error) {
+	if len(r.getUserByReferralCodeMockData) == 0 {
+		return db.User{}, ErrorNotFound()
+	}
+
+	response := r.getUserByReferralCodeMockData[0]
+	r.getUserByReferralCodeMockData = r.getUserByReferralCodeMockData[1:]
 	return response.User, response.Error
 }
 
@@ -110,6 +121,10 @@ func (r *MockRepositoryService) SetGetUserByLinkingPubkeyMockData(response UserM
 
 func (r *MockRepositoryService) SetGetUserByPubkeyMockData(response UserMockData) {
 	r.getUserByPubkeyMockData = append(r.getUserByPubkeyMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetUserByReferralCodeMockData(response UserMockData) {
+	r.getUserByReferralCodeMockData = append(r.getUserByReferralCodeMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetUserBySessionIDMockData(response UserMockData) {
