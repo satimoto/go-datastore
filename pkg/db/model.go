@@ -985,6 +985,14 @@ type PsbtFundingStateChannelRequest struct {
 	ChannelRequestID   int64 `db:"channel_request_id" json:"channelRequestID"`
 }
 
+type Referral struct {
+	ID          int64     `db:"id" json:"id"`
+	PromotionID int64     `db:"promotion_id" json:"promotionID"`
+	UserID      int64     `db:"user_id" json:"userID"`
+	IpAddress   string    `db:"ip_address" json:"ipAddress"`
+	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
+}
+
 type RegularHour struct {
 	ID            int64  `db:"id" json:"id"`
 	OpeningTimeID int64  `db:"opening_time_id" json:"openingTimeID"`

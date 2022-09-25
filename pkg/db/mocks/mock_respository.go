@@ -44,6 +44,7 @@ type MockRepository interface {
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
 	GetCreatePromotionMockData() (db.CreatePromotionParams, error)
 	GetCreatePsbtFundingStateMockData() (db.CreatePsbtFundingStateParams, error)
+	GetCreateReferralMockData() (db.CreateReferralParams, error)
 	GetCreateRegularHourMockData() (db.CreateRegularHourParams, error)
 	GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error)
 	GetCreateSessionMockData() (db.CreateSessionParams, error)
@@ -194,6 +195,7 @@ type MockRepository interface {
 	SetGetPromotionByCodeMockData(response PromotionMockData)
 	SetGetPsbtFundingStateMockData(response PsbtFundingStateMockData)
 	SetGetUnfundedPsbtFundingStateMockData(response PsbtFundingStateMockData)
+	SetGetReferralByIpAddressMockData(response ReferralMockData)
 	SetGetSessionMockData(response SessionMockData)
 	SetGetSessionByAuthorizationIDMockData(response SessionMockData)
 	SetGetSessionByLastUpdatedMockData(response SessionMockData)
@@ -308,6 +310,7 @@ type MockRepositoryService struct {
 	createPriceComponentRoundingMockData                []db.CreatePriceComponentRoundingParams
 	createPromotionMockData                             []db.CreatePromotionParams
 	createPsbtFundingStateMockData                      []db.CreatePsbtFundingStateParams
+	createReferralMockData                              []db.CreateReferralParams
 	createRegularHourMockData                           []db.CreateRegularHourParams
 	createRoutingEventMockData                          []db.CreateRoutingEventParams
 	createSessionMockData                               []db.CreateSessionParams
@@ -401,6 +404,7 @@ type MockRepositoryService struct {
 	getPromotionByCodeMockData                          []PromotionMockData
 	getPsbtFundingStateMockData                         []PsbtFundingStateMockData
 	getUnfundedPsbtFundingStateMockData                 []PsbtFundingStateMockData
+	getReferralByIpAddressMockData                      []ReferralMockData
 	getSessionMockData                                  []SessionMockData
 	getSessionByAuthorizationIDMockData                 []SessionMockData
 	getSessionByLastUpdatedMockData                     []SessionMockData
