@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/satimoto/go-datastore/pkg/db"
@@ -40,6 +41,7 @@ type MockRepository interface {
 	GetCreateLocationMockData() (db.CreateLocationParams, error)
 	GetCreateNodeMockData() (db.CreateNodeParams, error)
 	GetCreateOpeningTimeMockData() (bool, error)
+	CreatePendingNotification() (db.CreatePendingNotificationParams, error)
 	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
 	GetCreatePromotionMockData() (db.CreatePromotionParams, error)
@@ -80,6 +82,8 @@ type MockRepository interface {
 	GetDeleteLocationDirectionsMockData() (int64, error)
 	GetDeleteLocationImagesMockData() (int64, error)
 	GetDeleteOpeningTimeMockData() (int64, error)
+	GetDeletePendingNotificationMockData() (int64, error)
+	GetDeletePendingNotificationByInvoiceRequestMockData() (int64, error)
 	GetDeletePriceComponentsMockData() (int64, error)
 	GetDeletePriceComponentRoundingsMockData() (int64, error)
 	GetDeleteRegularHoursMockData() (int64, error)
@@ -254,6 +258,7 @@ type MockRepository interface {
 	SetListNodesMockData(response NodesMockData)
 	SetListActiveNodesMockData(response NodesMockData)
 	SetListParkingRestrictionsMockData(response ParkingRestrictionsMockData)
+	SetListPendingNotificationsMockData(response PendingNotificationsMockData)
 	SetListPriceComponentsMockData(response PriceComponentsMockData)
 	SetListRegularHoursMockData(response RegularHoursMockData)
 	SetListRelatedLocationsMockData(response GeoLocationsMockData)
@@ -307,6 +312,7 @@ type MockRepositoryService struct {
 	createLocationMockData                              []db.CreateLocationParams
 	createOpeningTimeMockData                           []bool
 	createNodeMockData                                  []db.CreateNodeParams
+	createPendingNotificationMockData                   []db.CreatePendingNotificationParams
 	createPriceComponentMockData                        []db.CreatePriceComponentParams
 	createPriceComponentRoundingMockData                []db.CreatePriceComponentRoundingParams
 	createPromotionMockData                             []db.CreatePromotionParams
@@ -347,6 +353,8 @@ type MockRepositoryService struct {
 	deleteLocationDirectionsMockData                    []int64
 	deleteLocationImagesMockData                        []int64
 	deleteOpeningTimeMockData                           []int64
+	deletePendingNotificationMockData                   []int64
+	deletePendingNotificationByInvoiceRequestMockData   []sql.NullInt64
 	deletePriceComponentsMockData                       []int64
 	deletePriceComponentRoundingsMockData               []int64
 	deleteRegularHoursMockData                          []int64
@@ -462,6 +470,7 @@ type MockRepositoryService struct {
 	listNodesMockData                                   []NodesMockData
 	listActiveNodesMockData                             []NodesMockData
 	listParkingRestrictionsMockData                     []ParkingRestrictionsMockData
+	listPendingNotificationsMockData                    []PendingNotificationsMockData
 	listPriceComponentsMockData                         []PriceComponentsMockData
 	listUnfundedPsbtFundingStatesMockData               []PsbtFundingStatesMockData
 	listPsbtFundingStateChannelRequestsMockData         []ChannelRequestsMockData
