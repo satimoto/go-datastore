@@ -941,6 +941,15 @@ type ParkingRestriction struct {
 	Description string `db:"description" json:"description"`
 }
 
+type PendingNotification struct {
+	ID               int64         `db:"id" json:"id"`
+	UserID           int64         `db:"user_id" json:"userID"`
+	NodeID           int64         `db:"node_id" json:"nodeID"`
+	InvoiceRequestID sql.NullInt64 `db:"invoice_request_id" json:"invoiceRequestID"`
+	Type             string        `db:"type" json:"type"`
+	SendDate         time.Time     `db:"send_date" json:"sendDate"`
+}
+
 type PriceComponent struct {
 	ID                  int64           `db:"id" json:"id"`
 	ElementID           int64           `db:"element_id" json:"elementID"`
