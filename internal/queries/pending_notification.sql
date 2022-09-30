@@ -28,6 +28,10 @@ SELECT * FROM pending_notifications
   ORDER BY id 
   LIMIT 1000;
 
--- name: UpdatePendingNotification :exec
+-- name: UpdatePendingNotifications :exec
+UPDATE pending_notifications SET send_date = @send_date::TIMESTAMPTZ
+  WHERE id IN(@ids::BIGINT[]);
+
+-- name: UpdatePendingNotificationsByUser :exec
 UPDATE pending_notifications SET device_token = $2
   WHERE user_id = $1;

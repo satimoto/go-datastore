@@ -123,17 +123,32 @@ func (q *Queries) ListPendingNotifications(ctx context.Context, nodeID int64) ([
 	return items, nil
 }
 
-const updatePendingNotification = `-- name: UpdatePendingNotification :exec
+const updatePendingNotifications = `-- name: UpdatePendingNotifications :exec
+UPDATE pending_notifications SET send_date = $1::TIMESTAMPTZ
+  WHERE id IN($2::BIGINT[])
+`
+
+type UpdatePendingNotificationsParams struct {
+	SendDate time.Time `db:"send_date" json:"sendDate"`
+	Ids      []int64   `db:"ids" json:"ids"`
+}
+
+func (q *Queries) UpdatePendingNotifications(ctx context.Context, arg UpdatePendingNotificationsParams) error {
+	_, err := q.db.ExecContext(ctx, updatePendingNotifications, arg.SendDate, pq.Array(arg.Ids))
+	return err
+}
+
+const updatePendingNotificationsByUser = `-- name: UpdatePendingNotificationsByUser :exec
 UPDATE pending_notifications SET device_token = $2
   WHERE user_id = $1
 `
 
-type UpdatePendingNotificationParams struct {
+type UpdatePendingNotificationsByUserParams struct {
 	UserID      int64  `db:"user_id" json:"userID"`
 	DeviceToken string `db:"device_token" json:"deviceToken"`
 }
 
-func (q *Queries) UpdatePendingNotification(ctx context.Context, arg UpdatePendingNotificationParams) error {
-	_, err := q.db.ExecContext(ctx, updatePendingNotification, arg.UserID, arg.DeviceToken)
+func (q *Queries) UpdatePendingNotificationsByUser(ctx context.Context, arg UpdatePendingNotificationsByUserParams) error {
+	_, err := q.db.ExecContext(ctx, updatePendingNotificationsByUser, arg.UserID, arg.DeviceToken)
 	return err
 }

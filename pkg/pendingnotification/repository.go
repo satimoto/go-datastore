@@ -13,7 +13,8 @@ type PendingNotificationRepository interface {
 	DeletePendingNotificationByInvoiceRequest(ctx context.Context, invoiceRequestID sql.NullInt64) error
 	DeletePendingNotifications(ctx context.Context, ids []int64) error
 	ListPendingNotifications(ctx context.Context, nodeID int64) ([]db.PendingNotification, error)
-	UpdatePendingNotification(ctx context.Context, arg db.UpdatePendingNotificationParams) error 
+	UpdatePendingNotifications(ctx context.Context, arg db.UpdatePendingNotificationsParams) error 
+	UpdatePendingNotificationsByUser(ctx context.Context, arg db.UpdatePendingNotificationsByUserParams) error 
 }
 
 func NewRepository(repositoryService *db.RepositoryService) PendingNotificationRepository {
