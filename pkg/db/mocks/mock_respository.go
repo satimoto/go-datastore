@@ -144,7 +144,8 @@ type MockRepository interface {
 	GetUpdateLocationsPublishByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishByPartyAndCountryCodeParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
-	GetUpdatePendingNotificationMockData() (db.UpdatePendingNotificationParams, error)
+	GetUpdatePendingNotificationsMockData() (db.UpdatePendingNotificationsParams, error)
+	GetUpdatePendingNotificationsByUserMockData() (db.UpdatePendingNotificationsByUserParams, error)
 	GetUpdatePsbtFundingStateMockData() (db.UpdatePsbtFundingStateParams, error)
 	GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error)
 	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
@@ -540,7 +541,8 @@ type MockRepositoryService struct {
 	updateLocationsPublishByPartyAndCountryCodeMockData []db.UpdateLocationsPublishByPartyAndCountryCodeParams
 	updateNodeMockData                                  []db.UpdateNodeParams
 	updateOpeningTimeMockData                           []db.UpdateOpeningTimeParams
-	updatePendingNotificationMockData                   []db.UpdatePendingNotificationParams
+	updatePendingNotificationsMockData                  []db.UpdatePendingNotificationsParams
+	updatePendingNotificationsByUserMockData            []db.UpdatePendingNotificationsByUserParams
 	updatePsbtFundingStateMockData                      []db.UpdatePsbtFundingStateParams
 	updateUserMockData                                  []db.UpdateUserParams
 	updateUserByPubkeyMockData                          []db.UpdateUserByPubkeyParams

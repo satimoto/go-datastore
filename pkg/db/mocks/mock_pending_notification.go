@@ -47,8 +47,13 @@ func (r *MockRepositoryService) ListPendingNotifications(ctx context.Context, no
 	return response.PendingNotifications, response.Error
 }
 
-func (r *MockRepositoryService) UpdatePendingNotification(ctx context.Context, arg db.UpdatePendingNotificationParams) error {
-	r.updatePendingNotificationMockData = append(r.updatePendingNotificationMockData, arg)
+func (r *MockRepositoryService) UpdatePendingNotifications(ctx context.Context, arg db.UpdatePendingNotificationsParams) error {
+	r.updatePendingNotificationsMockData = append(r.updatePendingNotificationsMockData, arg)
+	return nil
+}
+
+func (r *MockRepositoryService) UpdatePendingNotificationsByUser(ctx context.Context, arg db.UpdatePendingNotificationsByUserParams) error {
+	r.updatePendingNotificationsByUserMockData = append(r.updatePendingNotificationsByUserMockData, arg)
 	return nil
 }
 
@@ -92,13 +97,23 @@ func (r *MockRepositoryService) GetDeletePendingNotificationsMockData() ([]int64
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdatePendingNotificationMockData() (db.UpdatePendingNotificationParams, error) {
-	if len(r.updatePendingNotificationMockData) == 0 {
-		return db.UpdatePendingNotificationParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdatePendingNotificationsMockData() (db.UpdatePendingNotificationsParams, error) {
+	if len(r.updatePendingNotificationsMockData) == 0 {
+		return db.UpdatePendingNotificationsParams{}, ErrorNotFound()
 	}
 
-	response := r.updatePendingNotificationMockData[0]
-	r.updatePendingNotificationMockData = r.updatePendingNotificationMockData[1:]
+	response := r.updatePendingNotificationsMockData[0]
+	r.updatePendingNotificationsMockData = r.updatePendingNotificationsMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdatePendingNotificationsByUserMockData() (db.UpdatePendingNotificationsByUserParams, error) {
+	if len(r.updatePendingNotificationsByUserMockData) == 0 {
+		return db.UpdatePendingNotificationsByUserParams{}, ErrorNotFound()
+	}
+
+	response := r.updatePendingNotificationsByUserMockData[0]
+	r.updatePendingNotificationsByUserMockData = r.updatePendingNotificationsByUserMockData[1:]
 	return response, nil
 }
 
