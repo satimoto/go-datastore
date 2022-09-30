@@ -32,6 +32,11 @@ func (r *MockRepositoryService) DeletePendingNotificationByInvoiceRequest(ctx co
 	return nil
 }
 
+func (r *MockRepositoryService) DeletePendingNotifications(ctx context.Context, ids []int64) error {
+	r.deletePendingNotificationsMockData = append(r.deletePendingNotificationsMockData, ids)
+	return nil
+}
+
 func (r *MockRepositoryService) ListPendingNotifications(ctx context.Context, nodeID int64) ([]db.PendingNotification, error) {
 	if len(r.listPendingNotificationsMockData) == 0 {
 		return []db.PendingNotification{}, nil
@@ -40,6 +45,11 @@ func (r *MockRepositoryService) ListPendingNotifications(ctx context.Context, no
 	response := r.listPendingNotificationsMockData[0]
 	r.listPendingNotificationsMockData = r.listPendingNotificationsMockData[1:]
 	return response.PendingNotifications, response.Error
+}
+
+func (r *MockRepositoryService) UpdatePendingNotification(ctx context.Context, arg db.UpdatePendingNotificationParams) error {
+	r.updatePendingNotificationMockData = append(r.updatePendingNotificationMockData, arg)
+	return nil
 }
 
 func (r *MockRepositoryService) GetCreatePendingNotificationMockData() (db.CreatePendingNotificationParams, error) {
@@ -69,6 +79,26 @@ func (r *MockRepositoryService) GetDeletePendingNotificationByInvoiceRequestMock
 
 	response := r.deletePendingNotificationByInvoiceRequestMockData[0]
 	r.deletePendingNotificationByInvoiceRequestMockData = r.deletePendingNotificationByInvoiceRequestMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetDeletePendingNotificationsMockData() ([]int64, error) {
+	if len(r.deletePendingNotificationsMockData) == 0 {
+		return []int64{}, ErrorNotFound()
+	}
+
+	response := r.deletePendingNotificationsMockData[0]
+	r.deletePendingNotificationsMockData = r.deletePendingNotificationsMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdatePendingNotificationMockData() (db.UpdatePendingNotificationParams, error) {
+	if len(r.updatePendingNotificationMockData) == 0 {
+		return db.UpdatePendingNotificationParams{}, ErrorNotFound()
+	}
+
+	response := r.updatePendingNotificationMockData[0]
+	r.updatePendingNotificationMockData = r.updatePendingNotificationMockData[1:]
 	return response, nil
 }
 

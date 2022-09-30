@@ -946,6 +946,7 @@ type PendingNotification struct {
 	UserID           int64         `db:"user_id" json:"userID"`
 	NodeID           int64         `db:"node_id" json:"nodeID"`
 	InvoiceRequestID sql.NullInt64 `db:"invoice_request_id" json:"invoiceRequestID"`
+	DeviceToken      string        `db:"device_token" json:"deviceToken"`
 	Type             string        `db:"type" json:"type"`
 	SendDate         time.Time     `db:"send_date" json:"sendDate"`
 }

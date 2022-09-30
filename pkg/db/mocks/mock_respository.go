@@ -84,6 +84,7 @@ type MockRepository interface {
 	GetDeleteOpeningTimeMockData() (int64, error)
 	GetDeletePendingNotificationMockData() (int64, error)
 	GetDeletePendingNotificationByInvoiceRequestMockData() (int64, error)
+	GetDeletePendingNotificationsMockData() ([]int64, error)
 	GetDeletePriceComponentsMockData() (int64, error)
 	GetDeletePriceComponentRoundingsMockData() (int64, error)
 	GetDeleteRegularHoursMockData() (int64, error)
@@ -143,6 +144,7 @@ type MockRepository interface {
 	GetUpdateLocationsPublishByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishByPartyAndCountryCodeParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
+	GetUpdatePendingNotificationMockData() (db.UpdatePendingNotificationParams, error)
 	GetUpdatePsbtFundingStateMockData() (db.UpdatePsbtFundingStateParams, error)
 	GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error)
 	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
@@ -355,6 +357,7 @@ type MockRepositoryService struct {
 	deleteOpeningTimeMockData                           []int64
 	deletePendingNotificationMockData                   []int64
 	deletePendingNotificationByInvoiceRequestMockData   []sql.NullInt64
+	deletePendingNotificationsMockData                  [][]int64
 	deletePriceComponentsMockData                       []int64
 	deletePriceComponentRoundingsMockData               []int64
 	deleteRegularHoursMockData                          []int64
@@ -537,6 +540,7 @@ type MockRepositoryService struct {
 	updateLocationsPublishByPartyAndCountryCodeMockData []db.UpdateLocationsPublishByPartyAndCountryCodeParams
 	updateNodeMockData                                  []db.UpdateNodeParams
 	updateOpeningTimeMockData                           []db.UpdateOpeningTimeParams
+	updatePendingNotificationMockData                   []db.UpdatePendingNotificationParams
 	updatePsbtFundingStateMockData                      []db.UpdatePsbtFundingStateParams
 	updateUserMockData                                  []db.UpdateUserParams
 	updateUserByPubkeyMockData                          []db.UpdateUserByPubkeyParams
