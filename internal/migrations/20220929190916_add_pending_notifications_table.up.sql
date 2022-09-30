@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS pending_notifications (
     user_id            BIGINT NOT NULL,
     node_id            BIGINT NOT NULL,
     invoice_request_id BIGINT,
+    device_token       TEXT NOT NULL,
     type               TEXT NOT NULL,
     send_date          TIMESTAMPTZ NOT NULL
 );

@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 const createPendingNotification = `-- name: CreatePendingNotification :one
@@ -14,16 +16,18 @@ INSERT INTO pending_notifications (
     user_id,
     node_id,
     invoice_request_id,
+    device_token,
     type,
     send_date
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, user_id, node_id, invoice_request_id, type, send_date
+  ) VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, user_id, node_id, invoice_request_id, device_token, type, send_date
 `
 
 type CreatePendingNotificationParams struct {
 	UserID           int64         `db:"user_id" json:"userID"`
 	NodeID           int64         `db:"node_id" json:"nodeID"`
 	InvoiceRequestID sql.NullInt64 `db:"invoice_request_id" json:"invoiceRequestID"`
+	DeviceToken      string        `db:"device_token" json:"deviceToken"`
 	Type             string        `db:"type" json:"type"`
 	SendDate         time.Time     `db:"send_date" json:"sendDate"`
 }
@@ -33,6 +37,7 @@ func (q *Queries) CreatePendingNotification(ctx context.Context, arg CreatePendi
 		arg.UserID,
 		arg.NodeID,
 		arg.InvoiceRequestID,
+		arg.DeviceToken,
 		arg.Type,
 		arg.SendDate,
 	)
@@ -42,6 +47,7 @@ func (q *Queries) CreatePendingNotification(ctx context.Context, arg CreatePendi
 		&i.UserID,
 		&i.NodeID,
 		&i.InvoiceRequestID,
+		&i.DeviceToken,
 		&i.Type,
 		&i.SendDate,
 	)
@@ -61,7 +67,7 @@ func (q *Queries) DeletePendingNotification(ctx context.Context, id int64) error
 const deletePendingNotificationByInvoiceRequest = `-- name: DeletePendingNotificationByInvoiceRequest :exec
 DELETE FROM pending_notifications
   WHERE invoice_request_id = $1
-  RETURNING id, user_id, node_id, invoice_request_id, type, send_date
+  RETURNING id, user_id, node_id, invoice_request_id, device_token, type, send_date
 `
 
 func (q *Queries) DeletePendingNotificationByInvoiceRequest(ctx context.Context, invoiceRequestID sql.NullInt64) error {
@@ -69,10 +75,21 @@ func (q *Queries) DeletePendingNotificationByInvoiceRequest(ctx context.Context,
 	return err
 }
 
+const deletePendingNotifications = `-- name: DeletePendingNotifications :exec
+DELETE FROM pending_notifications
+  WHERE id IN($1::BIGINT[])
+`
+
+func (q *Queries) DeletePendingNotifications(ctx context.Context, ids []int64) error {
+	_, err := q.db.ExecContext(ctx, deletePendingNotifications, pq.Array(ids))
+	return err
+}
+
 const listPendingNotifications = `-- name: ListPendingNotifications :many
-SELECT id, user_id, node_id, invoice_request_id, type, send_date FROM pending_notifications
+SELECT id, user_id, node_id, invoice_request_id, device_token, type, send_date FROM pending_notifications
   WHERE node_id = $1 AND send_date < NOW()
-  ORDER BY id
+  ORDER BY id 
+  LIMIT 1000
 `
 
 func (q *Queries) ListPendingNotifications(ctx context.Context, nodeID int64) ([]PendingNotification, error) {
@@ -89,6 +106,7 @@ func (q *Queries) ListPendingNotifications(ctx context.Context, nodeID int64) ([
 			&i.UserID,
 			&i.NodeID,
 			&i.InvoiceRequestID,
+			&i.DeviceToken,
 			&i.Type,
 			&i.SendDate,
 		); err != nil {
@@ -103,4 +121,19 @@ func (q *Queries) ListPendingNotifications(ctx context.Context, nodeID int64) ([
 		return nil, err
 	}
 	return items, nil
+}
+
+const updatePendingNotification = `-- name: UpdatePendingNotification :exec
+UPDATE pending_notifications SET device_token = $2
+  WHERE user_id = $1
+`
+
+type UpdatePendingNotificationParams struct {
+	UserID      int64  `db:"user_id" json:"userID"`
+	DeviceToken string `db:"device_token" json:"deviceToken"`
+}
+
+func (q *Queries) UpdatePendingNotification(ctx context.Context, arg UpdatePendingNotificationParams) error {
+	_, err := q.db.ExecContext(ctx, updatePendingNotification, arg.UserID, arg.DeviceToken)
+	return err
 }
