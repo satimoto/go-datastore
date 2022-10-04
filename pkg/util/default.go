@@ -11,7 +11,9 @@ func DefaultBool(i interface{}, fallback bool) bool {
 	case bool:
 		return t
 	case *bool:
-		return *t
+		if t != nil {
+			return *t
+		}
 	}
 
 	return fallback
@@ -26,7 +28,9 @@ func DefaultString(i interface{}, fallback string) string {
 	case string:
 		return t
 	case *string:
-		return *t
+		if t != nil {
+			return *t
+		}
 	}
 
 	return fallback
