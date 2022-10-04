@@ -119,7 +119,7 @@ type MockRepository interface {
 	GetUnsetTariffRestrictionWeekdaysMockData() (int64, error)
 	GetUpdateAuthenticationMockData() (db.UpdateAuthenticationParams, error)
 	GetUpdateBusinessDetailMockData() (db.UpdateBusinessDetailParams, error)
-	GetUpdateConnectorByUidMockData() (db.UpdateConnectorByUidParams, error)
+	GetUpdateConnectorByEvseMockData() (db.UpdateConnectorByEvseParams, error)
 	GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error)
 	GetUpdateChannelRequestHtlcByCircuitKeysMockData() (db.UpdateChannelRequestHtlcByCircuitKeyParams, error)
 	GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error)
@@ -170,7 +170,7 @@ type MockRepository interface {
 	SetGetChannelRequestHtlcByCircuitKeyMockData(response ChannelRequestHtlcMockData)
 	SetGetConnectorMockData(response ConnectorMockData)
 	SetGetConnectorByIdentifierMockData(response ConnectorMockData)
-	SetGetConnectorByUidMockData(response ConnectorMockData)
+	SetGetConnectorByEvseMockData(response ConnectorMockData)
 	SetGetCommandReservationMockData(response CommandReservationMockData)
 	SetGetCommandStartMockData(response CommandStartMockData)
 	SetGetCommandStopMockData(response CommandStopMockData)
@@ -385,7 +385,7 @@ type MockRepositoryService struct {
 	getChannelRequestHtlcByCircuitKeyMockData           []ChannelRequestHtlcMockData
 	getConnectorMockData                                []ConnectorMockData
 	getConnectorByIdentifierMockData                    []ConnectorMockData
-	getConnectorByUidMockData                           []ConnectorMockData
+	getConnectorByEvseMockData                          []ConnectorMockData
 	getCommandReservationMockData                       []CommandReservationMockData
 	getCommandStartMockData                             []CommandStartMockData
 	getCommandStopMockData                              []CommandStopMockData
@@ -519,7 +519,7 @@ type MockRepositoryService struct {
 	updateChannelRequestMockData                        []db.UpdateChannelRequestParams
 	updateChannelRequestHtlcByCircuitKeyMockData        []db.UpdateChannelRequestHtlcByCircuitKeyParams
 	updatePendingChannelRequestByPubkeyMockData         []db.UpdatePendingChannelRequestByPubkeyParams
-	updateConnectorByUidMockData                        []db.UpdateConnectorByUidParams
+	updateConnectorByEvseMockData                       []db.UpdateConnectorByEvseParams
 	updateCommandReservationMockData                    []db.UpdateCommandReservationParams
 	updateCommandStartMockData                          []db.UpdateCommandStartParams
 	updateCommandStopMockData                           []db.UpdateCommandStopParams

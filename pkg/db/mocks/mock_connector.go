@@ -47,13 +47,13 @@ func (r *MockRepositoryService) GetConnectorByIdentifier(ctx context.Context, id
 	return response.Connector, response.Error
 }
 
-func (r *MockRepositoryService) GetConnectorByUid(ctx context.Context, arg db.GetConnectorByUidParams) (db.Connector, error) {
-	if len(r.getConnectorByUidMockData) == 0 {
+func (r *MockRepositoryService) GetConnectorByEvse(ctx context.Context, arg db.GetConnectorByEvseParams) (db.Connector, error) {
+	if len(r.getConnectorByEvseMockData) == 0 {
 		return db.Connector{}, ErrorNotFound()
 	}
 
-	response := r.getConnectorByUidMockData[0]
-	r.getConnectorByUidMockData = r.getConnectorByUidMockData[1:]
+	response := r.getConnectorByEvseMockData[0]
+	r.getConnectorByEvseMockData = r.getConnectorByEvseMockData[1:]
 	return response.Connector, response.Error
 }
 
@@ -67,8 +67,8 @@ func (r *MockRepositoryService) ListConnectors(ctx context.Context, id int64) ([
 	return response.Connectors, response.Error
 }
 
-func (r *MockRepositoryService) UpdateConnectorByUid(ctx context.Context, arg db.UpdateConnectorByUidParams) (db.Connector, error) {
-	r.updateConnectorByUidMockData = append(r.updateConnectorByUidMockData, arg)
+func (r *MockRepositoryService) UpdateConnectorByEvse(ctx context.Context, arg db.UpdateConnectorByEvseParams) (db.Connector, error) {
+	r.updateConnectorByEvseMockData = append(r.updateConnectorByEvseMockData, arg)
 	return db.Connector{
 		EvseID:             arg.EvseID,
 		Uid:                arg.Uid,
@@ -105,13 +105,13 @@ func (r *MockRepositoryService) GetDeleteConnectorsMockData() (int64, error) {
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdateConnectorByUidMockData() (db.UpdateConnectorByUidParams, error) {
-	if len(r.updateConnectorByUidMockData) == 0 {
-		return db.UpdateConnectorByUidParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdateConnectorByEvseMockData() (db.UpdateConnectorByEvseParams, error) {
+	if len(r.updateConnectorByEvseMockData) == 0 {
+		return db.UpdateConnectorByEvseParams{}, ErrorNotFound()
 	}
 
-	response := r.updateConnectorByUidMockData[0]
-	r.updateConnectorByUidMockData = r.updateConnectorByUidMockData[1:]
+	response := r.updateConnectorByEvseMockData[0]
+	r.updateConnectorByEvseMockData = r.updateConnectorByEvseMockData[1:]
 	return response, nil
 }
 
@@ -122,8 +122,8 @@ func (r *MockRepositoryService) SetGetConnectorMockData(response ConnectorMockDa
 func (r *MockRepositoryService) SetGetConnectorByIdentifierMockData(response ConnectorMockData) {
 	r.getConnectorByIdentifierMockData = append(r.getConnectorByIdentifierMockData, response)
 }
-func (r *MockRepositoryService) SetGetConnectorByUidMockData(response ConnectorMockData) {
-	r.getConnectorByUidMockData = append(r.getConnectorByUidMockData, response)
+func (r *MockRepositoryService) SetGetConnectorByEvseMockData(response ConnectorMockData) {
+	r.getConnectorByEvseMockData = append(r.getConnectorByEvseMockData, response)
 }
 
 func (r *MockRepositoryService) SetListConnectorsMockData(response ConnectorsMockData) {
