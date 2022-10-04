@@ -19,7 +19,7 @@ INSERT INTO connectors (
 DELETE FROM connectors
   WHERE id = $1;
 
--- name: DeleteConnectorByUid :exec
+-- name: DeleteConnectorByEvse :exec
 DELETE FROM connectors
   WHERE evse_id = $1 AND uid = $2;
 
@@ -35,11 +35,10 @@ SELECT * FROM connectors
 SELECT * FROM connectors
   WHERE identifier = $1;
 
--- name: GetConnectorByUid :one
+-- name: GetConnectorByEvse :one
 SELECT * FROM connectors
-  WHERE (@evse_id::bigint IS NULL or evse_id = @evse_id::bigint) AND uid = @uid::string
-  LIMIT 1;
-
+  WHERE evse_id = $1 AND uid = $2;
+ 
 -- name: ListConnectors :many
 SELECT * FROM connectors
   WHERE evse_id = $1
@@ -61,7 +60,7 @@ UPDATE connectors SET (
   WHERE id = $1
   RETURNING *;
 
--- name: UpdateConnectorByUid :one
+-- name: UpdateConnectorByEvse :one
 UPDATE connectors SET (
     identifier,
     standard, 

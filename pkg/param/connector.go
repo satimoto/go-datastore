@@ -2,11 +2,11 @@ package param
 
 import "github.com/satimoto/go-datastore/pkg/db"
 
-func NewUpdateConnectorByUidParams(connector db.Connector) db.UpdateConnectorByUidParams {
-	return db.UpdateConnectorByUidParams{
+func NewUpdateConnectorByEvseParams(connector db.Connector) db.UpdateConnectorByEvseParams {
+	return db.UpdateConnectorByEvseParams{
 		EvseID:             connector.EvseID,
 		Uid:                connector.Uid,
-		Identifier:        connector.Identifier,
+		Identifier:         connector.Identifier,
 		Standard:           connector.Standard,
 		Format:             connector.Format,
 		PowerType:          connector.PowerType,

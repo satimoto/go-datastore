@@ -86,18 +86,18 @@ func (q *Queries) DeleteConnector(ctx context.Context, id int64) error {
 	return err
 }
 
-const deleteConnectorByUid = `-- name: DeleteConnectorByUid :exec
+const deleteConnectorByEvse = `-- name: DeleteConnectorByEvse :exec
 DELETE FROM connectors
   WHERE evse_id = $1 AND uid = $2
 `
 
-type DeleteConnectorByUidParams struct {
+type DeleteConnectorByEvseParams struct {
 	EvseID int64  `db:"evse_id" json:"evseID"`
 	Uid    string `db:"uid" json:"uid"`
 }
 
-func (q *Queries) DeleteConnectorByUid(ctx context.Context, arg DeleteConnectorByUidParams) error {
-	_, err := q.db.ExecContext(ctx, deleteConnectorByUid, arg.EvseID, arg.Uid)
+func (q *Queries) DeleteConnectorByEvse(ctx context.Context, arg DeleteConnectorByEvseParams) error {
+	_, err := q.db.ExecContext(ctx, deleteConnectorByEvse, arg.EvseID, arg.Uid)
 	return err
 }
 
@@ -137,13 +137,18 @@ func (q *Queries) GetConnector(ctx context.Context, id int64) (Connector, error)
 	return i, err
 }
 
-const getConnectorByIdentifier = `-- name: GetConnectorByIdentifier :one
+const getConnectorByEvse = `-- name: GetConnectorByEvse :one
 SELECT id, evse_id, uid, identifier, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
-  WHERE identifier = $1
+  WHERE evse_id = $1 AND uid = $2
 `
 
-func (q *Queries) GetConnectorByIdentifier(ctx context.Context, identifier sql.NullString) (Connector, error) {
-	row := q.db.QueryRowContext(ctx, getConnectorByIdentifier, identifier)
+type GetConnectorByEvseParams struct {
+	EvseID int64  `db:"evse_id" json:"evseID"`
+	Uid    string `db:"uid" json:"uid"`
+}
+
+func (q *Queries) GetConnectorByEvse(ctx context.Context, arg GetConnectorByEvseParams) (Connector, error) {
+	row := q.db.QueryRowContext(ctx, getConnectorByEvse, arg.EvseID, arg.Uid)
 	var i Connector
 	err := row.Scan(
 		&i.ID,
@@ -163,19 +168,13 @@ func (q *Queries) GetConnectorByIdentifier(ctx context.Context, identifier sql.N
 	return i, err
 }
 
-const getConnectorByUid = `-- name: GetConnectorByUid :one
+const getConnectorByIdentifier = `-- name: GetConnectorByIdentifier :one
 SELECT id, evse_id, uid, identifier, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated FROM connectors
-  WHERE ($1::bigint IS NULL or evse_id = $1::bigint) AND uid = $2::string
-  LIMIT 1
+  WHERE identifier = $1
 `
 
-type GetConnectorByUidParams struct {
-	EvseID int64  `db:"evse_id" json:"evseID"`
-	Uid    string `db:"uid" json:"uid"`
-}
-
-func (q *Queries) GetConnectorByUid(ctx context.Context, arg GetConnectorByUidParams) (Connector, error) {
-	row := q.db.QueryRowContext(ctx, getConnectorByUid, arg.EvseID, arg.Uid)
+func (q *Queries) GetConnectorByIdentifier(ctx context.Context, identifier sql.NullString) (Connector, error) {
+	row := q.db.QueryRowContext(ctx, getConnectorByIdentifier, identifier)
 	var i Connector
 	err := row.Scan(
 		&i.ID,
@@ -302,7 +301,7 @@ func (q *Queries) UpdateConnector(ctx context.Context, arg UpdateConnectorParams
 	return i, err
 }
 
-const updateConnectorByUid = `-- name: UpdateConnectorByUid :one
+const updateConnectorByEvse = `-- name: UpdateConnectorByEvse :one
 UPDATE connectors SET (
     identifier,
     standard, 
@@ -319,7 +318,7 @@ UPDATE connectors SET (
   RETURNING id, evse_id, uid, identifier, standard, format, power_type, voltage, amperage, wattage, tariff_id, terms_and_conditions, last_updated
 `
 
-type UpdateConnectorByUidParams struct {
+type UpdateConnectorByEvseParams struct {
 	EvseID             int64           `db:"evse_id" json:"evseID"`
 	Uid                string          `db:"uid" json:"uid"`
 	Identifier         sql.NullString  `db:"identifier" json:"identifier"`
@@ -334,8 +333,8 @@ type UpdateConnectorByUidParams struct {
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
 }
 
-func (q *Queries) UpdateConnectorByUid(ctx context.Context, arg UpdateConnectorByUidParams) (Connector, error) {
-	row := q.db.QueryRowContext(ctx, updateConnectorByUid,
+func (q *Queries) UpdateConnectorByEvse(ctx context.Context, arg UpdateConnectorByEvseParams) (Connector, error) {
+	row := q.db.QueryRowContext(ctx, updateConnectorByEvse,
 		arg.EvseID,
 		arg.Uid,
 		arg.Identifier,
