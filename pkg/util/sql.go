@@ -75,6 +75,16 @@ func SqlNullInt32(i interface{}) sql.NullInt32 {
 	return n
 }
 
+func SqlNullZeroInt64(i interface{}) sql.NullInt64 {
+	n := SqlNullInt64(i)
+
+	if n.Int64 == 0 {
+		n.Valid = false
+	}
+
+	return n
+}
+
 func SqlNullInt64(i interface{}) sql.NullInt64 {
 	n := sql.NullInt64{}
 
