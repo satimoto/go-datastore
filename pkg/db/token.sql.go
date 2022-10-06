@@ -191,8 +191,8 @@ func (q *Queries) GetTokenByUserID(ctx context.Context, arg GetTokenByUserIDPara
 const listTokens = `-- name: ListTokens :many
 SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE 
-    ($1::text = '' or last_updated > $1::text) and 
-    ($2::text = '' or last_updated < $2::text)
+    ($1::TEXT = '' or last_updated > ($1::TEXT)::TIMESTAMP) and 
+    ($2::TEXT = '' or last_updated < ($2::TEXT)::TIMESTAMP)
   ORDER BY id
   LIMIT $4::bigint
   OFFSET $3::bigint
