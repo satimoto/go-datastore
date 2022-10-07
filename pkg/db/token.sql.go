@@ -194,8 +194,8 @@ SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, w
     ($1::TEXT = '' or last_updated > ($1::TEXT)::TIMESTAMP) and 
     ($2::TEXT = '' or last_updated < ($2::TEXT)::TIMESTAMP)
   ORDER BY id
-  LIMIT $4::bigint
-  OFFSET $3::bigint
+  LIMIT $4::BIGINT
+  OFFSET $3::BIGINT
 `
 
 type ListTokensParams struct {

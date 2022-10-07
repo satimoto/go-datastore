@@ -426,6 +426,7 @@ const (
 	SessionStatusTypeCOMPLETED SessionStatusType = "COMPLETED"
 	SessionStatusTypeINVALID   SessionStatusType = "INVALID"
 	SessionStatusTypePENDING   SessionStatusType = "PENDING"
+	SessionStatusTypeINVOICED  SessionStatusType = "INVOICED"
 )
 
 func (e *SessionStatusType) Scan(src interface{}) error {
