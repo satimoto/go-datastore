@@ -9,6 +9,7 @@ import (
 
 type ConnectorRepository interface {
 	CreateConnector(ctx context.Context, arg db.CreateConnectorParams) (db.Connector, error)
+	GetConnector(ctx context.Context, id int64) (db.Connector, error)
 	GetConnectorByIdentifier(ctx context.Context, identifier sql.NullString) (db.Connector, error)
 	GetConnectorByEvse(ctx context.Context, arg db.GetConnectorByEvseParams) (db.Connector, error)
 	GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error)
