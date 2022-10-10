@@ -695,6 +695,7 @@ type Connector struct {
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
+	Publish            bool            `db:"publish" json:"publish"`
 }
 
 type CountryAccount struct {
