@@ -61,13 +61,13 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
-func (r *MockRepositoryService) ListSessionsByStatus(ctx context.Context, arg db.ListSessionsByStatusParams) ([]db.Session, error) {
-	if len(r.listSessionsByStatusMockData) == 0 {
+func (r *MockRepositoryService) ListInProgressSessions(ctx context.Context, nodeID int64) ([]db.Session, error) {
+	if len(r.listInProgressSessionsMockData) == 0 {
 		return []db.Session{}, nil
 	}
 
-	response := r.listSessionsByStatusMockData[0]
-	r.listSessionsByStatusMockData = r.listSessionsByStatusMockData[1:]
+	response := r.listInProgressSessionsMockData[0]
+	r.listInProgressSessionsMockData = r.listInProgressSessionsMockData[1:]
 	return response.Sessions, response.Error
 }
 
@@ -112,6 +112,6 @@ func (r *MockRepositoryService) SetGetSessionByUidMockData(response SessionMockD
 	r.getSessionByUidMockData = append(r.getSessionByUidMockData, response)
 }
 
-func (r *MockRepositoryService) SetListSessionsByStatusMockData(response SessionsMockData) {
-	r.listSessionsByStatusMockData = append(r.listSessionsByStatusMockData, response)
+func (r *MockRepositoryService) SetListInProgressSessionsMockData(response SessionsMockData) {
+	r.listInProgressSessionsMockData = append(r.listInProgressSessionsMockData, response)
 }

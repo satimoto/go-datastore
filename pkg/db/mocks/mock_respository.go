@@ -232,7 +232,7 @@ type MockRepository interface {
 	SetListCalibrationValuesMockData(response CalibrationValuesMockData)
 	SetListCapabilitiesMockData(response CapabilitiesMockData)
 	SetListCdrChargingPeriodsMockData(response ChargingPeriodsMockData)
-	SetListCdrsBySessionStatusMockData(response CdrsMockData)
+	SetListCdrsByCompletedSessionStatusMockData(response CdrsMockData)
 	SetListChannelRequestHtlcsMockData(response ChannelRequestHtlcsMockData)
 	SetListChargingPeriodDimensionsMockData(response ChargingPeriodDimensionsMockData)
 	SetListCredentialsMockData(response CredentialsMockData)
@@ -268,7 +268,7 @@ type MockRepository interface {
 	SetListRelatedLocationsMockData(response GeoLocationsMockData)
 	SetListSessionChargingPeriodsMockData(response ChargingPeriodsMockData)
 	SetListSessionInvoicesMockData(response SessionInvoicesMockData)
-	SetListSessionsByStatusMockData(response SessionsMockData)
+	SetListInProgressSessionsMockData(response SessionsMockData)
 	SetListUnsettledSessionInvoicesByUserIDMockData(response SessionInvoicesMockData)
 	SetListStatusSchedulesMockData(response StatusSchedulesMockData)
 	SetListTariffAltTextsMockData(response DisplayTextsMockData)
@@ -449,7 +449,7 @@ type MockRepositoryService struct {
 	listCalibrationValuesMockData                       []CalibrationValuesMockData
 	listCapabilitiesMockData                            []CapabilitiesMockData
 	listCdrChargingPeriodsMockData                      []ChargingPeriodsMockData
-	listCdrsBySessionStatusMockData                     []CdrsMockData
+	listCdrsByCompletedSessionStatusMockData            []CdrsMockData
 	listChannelRequestHtlcsMockData                     []ChannelRequestHtlcsMockData
 	listChargingPeriodDimensionsMockData                []ChargingPeriodDimensionsMockData
 	listCredentialsMockData                             []CredentialsMockData
@@ -485,7 +485,7 @@ type MockRepositoryService struct {
 	listRelatedLocationsMockData                        []GeoLocationsMockData
 	listSessionChargingPeriodsMockData                  []ChargingPeriodsMockData
 	listSessionInvoicesMockData                         []SessionInvoicesMockData
-	listSessionsByStatusMockData                        []SessionsMockData
+	listInProgressSessionsMockData                      []SessionsMockData
 	listUnsettledSessionInvoicesByUserIDMockData        []SessionInvoicesMockData
 	listStatusSchedulesMockData                         []StatusSchedulesMockData
 	listTariffAltTextsMockData                          []DisplayTextsMockData
