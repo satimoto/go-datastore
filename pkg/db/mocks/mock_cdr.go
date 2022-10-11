@@ -55,14 +55,13 @@ func (r *MockRepositoryService) GetCdrByUid(ctx context.Context, uid string) (db
 	return response.Cdr, response.Error
 }
 
-
-func (r *MockRepositoryService) ListCdrsBySessionStatus(ctx context.Context, arg db.ListCdrsBySessionStatusParams) ([]db.Cdr, error) {
-	if len(r.listCdrsBySessionStatusMockData) == 0 {
+func (r *MockRepositoryService) ListCdrsByCompletedSessionStatus(ctx context.Context, nodeID int64) ([]db.Cdr, error) {
+	if len(r.listCdrsByCompletedSessionStatusMockData) == 0 {
 		return []db.Cdr{}, nil
 	}
 
-	response := r.listCdrsBySessionStatusMockData[0]
-	r.listCdrsBySessionStatusMockData = r.listCdrsBySessionStatusMockData[1:]
+	response := r.listCdrsByCompletedSessionStatusMockData[0]
+	r.listCdrsByCompletedSessionStatusMockData = r.listCdrsByCompletedSessionStatusMockData[1:]
 	return response.Cdrs, response.Error
 }
 
@@ -84,6 +83,6 @@ func (r *MockRepositoryService) SetGetCdrByUidMockData(response CdrMockData) {
 	r.getCdrByUidMockData = append(r.getCdrByUidMockData, response)
 }
 
-func (r *MockRepositoryService) SetListCdrsBySessionStatusMockData(response CdrsMockData) {
-	r.listCdrsBySessionStatusMockData = append(r.listCdrsBySessionStatusMockData, response)
+func (r *MockRepositoryService) SetListCdrsByCompletedSessionStatusMockData(response CdrsMockData) {
+	r.listCdrsByCompletedSessionStatusMockData = append(r.listCdrsByCompletedSessionStatusMockData, response)
 }
