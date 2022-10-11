@@ -55,6 +55,17 @@ func (r *MockRepositoryService) GetCdrByUid(ctx context.Context, uid string) (db
 	return response.Cdr, response.Error
 }
 
+
+func (r *MockRepositoryService) ListCdrsBySessionStatus(ctx context.Context, statuses []db.SessionStatusType) ([]db.Cdr, error) {
+	if len(r.listCdrsBySessionStatusMockData) == 0 {
+		return []db.Cdr{}, nil
+	}
+
+	response := r.listCdrsBySessionStatusMockData[0]
+	r.listCdrsBySessionStatusMockData = r.listCdrsBySessionStatusMockData[1:]
+	return response.Cdrs, response.Error
+}
+
 func (r *MockRepositoryService) GetCreateCdrMockData() (db.CreateCdrParams, error) {
 	if len(r.createCdrMockData) == 0 {
 		return db.CreateCdrParams{}, ErrorNotFound()
@@ -71,4 +82,8 @@ func (r *MockRepositoryService) SetGetCdrByLastUpdatedMockData(response CdrMockD
 
 func (r *MockRepositoryService) SetGetCdrByUidMockData(response CdrMockData) {
 	r.getCdrByUidMockData = append(r.getCdrByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetListCdrsBySessionStatusMockData(response CdrsMockData) {
+	r.listCdrsBySessionStatusMockData = append(r.listCdrsBySessionStatusMockData, response)
 }

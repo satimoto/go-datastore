@@ -20,7 +20,7 @@ DELETE FROM pending_notifications
 
 -- name: DeletePendingNotifications :exec
 DELETE FROM pending_notifications
-  WHERE id IN(@ids::BIGINT[]);
+  WHERE id IN (@ids::BIGINT[]);
 
 -- name: ListPendingNotifications :many
 SELECT * FROM pending_notifications
@@ -30,7 +30,7 @@ SELECT * FROM pending_notifications
 
 -- name: UpdatePendingNotifications :exec
 UPDATE pending_notifications SET send_date = @send_date::TIMESTAMPTZ
-  WHERE id IN(@ids::BIGINT[]);
+  WHERE id IN (@ids::BIGINT[]);
 
 -- name: UpdatePendingNotificationsByUser :exec
 UPDATE pending_notifications SET device_token = $2

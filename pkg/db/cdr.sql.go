@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 const createCdr = `-- name: CreateCdr :one
@@ -202,4 +204,59 @@ func (q *Queries) GetCdrByUid(ctx context.Context, uid string) (Cdr, error) {
 		&i.LastUpdated,
 	)
 	return i, err
+}
+
+const listCdrsBySessionStatus = `-- name: ListCdrsBySessionStatus :many
+SELECT c.id, c.uid, c.credential_id, c.country_code, c.party_id, c.authorization_id, c.start_date_time, c.stop_date_time, c.auth_id, c.auth_method, c.user_id, c.token_id, c.location_id, c.evse_id, c.connector_id, c.meter_id, c.currency, c.calibration_id, c.total_cost, c.total_energy, c.total_time, c.total_parking_time, c.remark, c.last_updated FROM cdrs c
+  INNER JOIN sessions s ON s.authorization_id = cp.authorization_id
+  WHERE s.status in ($1::session_status_type[])
+  ORDER BY cp.id
+`
+
+func (q *Queries) ListCdrsBySessionStatus(ctx context.Context, statuses []SessionStatusType) ([]Cdr, error) {
+	rows, err := q.db.QueryContext(ctx, listCdrsBySessionStatus, pq.Array(statuses))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Cdr
+	for rows.Next() {
+		var i Cdr
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.CredentialID,
+			&i.CountryCode,
+			&i.PartyID,
+			&i.AuthorizationID,
+			&i.StartDateTime,
+			&i.StopDateTime,
+			&i.AuthID,
+			&i.AuthMethod,
+			&i.UserID,
+			&i.TokenID,
+			&i.LocationID,
+			&i.EvseID,
+			&i.ConnectorID,
+			&i.MeterID,
+			&i.Currency,
+			&i.CalibrationID,
+			&i.TotalCost,
+			&i.TotalEnergy,
+			&i.TotalTime,
+			&i.TotalParkingTime,
+			&i.Remark,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

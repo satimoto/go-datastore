@@ -61,6 +61,16 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
+func (r *MockRepositoryService) ListSessionsByStatus(ctx context.Context, statuses []db.SessionStatusType) ([]db.Session, error) {
+	if len(r.listSessionsByStatusMockData) == 0 {
+		return []db.Session{}, nil
+	}
+
+	response := r.listSessionsByStatusMockData[0]
+	r.listSessionsByStatusMockData = r.listSessionsByStatusMockData[1:]
+	return response.Sessions, response.Error
+}
+
 func (r *MockRepositoryService) UpdateSessionByUid(ctx context.Context, arg db.UpdateSessionByUidParams) (db.Session, error) {
 	r.updateSessionByUidMockData = append(r.updateSessionByUidMockData, arg)
 	return db.Session{}, nil
@@ -100,4 +110,8 @@ func (r *MockRepositoryService) SetGetSessionByLastUpdatedMockData(response Sess
 
 func (r *MockRepositoryService) SetGetSessionByUidMockData(response SessionMockData) {
 	r.getSessionByUidMockData = append(r.getSessionByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetListSessionsByStatusMockData(response SessionsMockData) {
+	r.listSessionsByStatusMockData = append(r.listSessionsByStatusMockData, response)
 }
