@@ -47,7 +47,7 @@ SELECT * FROM sessions
 -- name: ListSessionsByStatus :many
 SELECT s.* FROM sessions s
   INNER JOIN users u ON u.id = s.user_id
-  WHERE u.node_id = @node_id::BIGINT AND s.status IN (@statuses::session_status_type[])
+  WHERE u.node_id = @node_id::BIGINT AND s.status IN (@statuses::TEXT[])
   ORDER BY s.id;
 
 -- name: UpdateSessionByUid :one
