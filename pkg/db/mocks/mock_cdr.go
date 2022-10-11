@@ -56,7 +56,7 @@ func (r *MockRepositoryService) GetCdrByUid(ctx context.Context, uid string) (db
 }
 
 
-func (r *MockRepositoryService) ListCdrsBySessionStatus(ctx context.Context, statuses []db.SessionStatusType) ([]db.Cdr, error) {
+func (r *MockRepositoryService) ListCdrsBySessionStatus(ctx context.Context, arg db.ListCdrsBySessionStatusParams) ([]db.Cdr, error) {
 	if len(r.listCdrsBySessionStatusMockData) == 0 {
 		return []db.Cdr{}, nil
 	}

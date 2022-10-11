@@ -12,7 +12,7 @@ type CdrRepository interface {
 	GetCdrByLastUpdated(ctx context.Context, arg db.GetCdrByLastUpdatedParams) (db.Cdr, error)
 	GetCdrByUid(ctx context.Context, uid string) (db.Cdr, error)
 	ListCdrChargingPeriods(ctx context.Context, cdrID int64) ([]db.ChargingPeriod, error)
-	ListCdrsBySessionStatus(ctx context.Context, statuses []db.SessionStatusType) ([]db.Cdr, error)
+	ListCdrsBySessionStatus(ctx context.Context, arg db.ListCdrsBySessionStatusParams) ([]db.Cdr, error)
 	SetCdrChargingPeriod(ctx context.Context, arg db.SetCdrChargingPeriodParams) error
 }
 
