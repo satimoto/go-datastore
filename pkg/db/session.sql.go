@@ -263,12 +263,19 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 }
 
 const listSessionsByStatus = `-- name: ListSessionsByStatus :many
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id FROM sessions
-  WHERE status IN ($1::session_status_type[])
+SELECT s.id, s.uid, s.credential_id, s.country_code, s.party_id, s.authorization_id, s.start_datetime, s.end_datetime, s.kwh, s.auth_id, s.auth_method, s.user_id, s.token_id, s.location_id, s.evse_id, s.connector_id, s.meter_id, s.currency, s.total_cost, s.status, s.last_updated, s.invoice_request_id FROM sessions s
+  INNER JOIN users u ON u.id = s.user_id
+  WHERE u.node_id = $1::BIGINT AND s.status IN ($2::session_status_type[])
+  ORDER BY s.id
 `
 
-func (q *Queries) ListSessionsByStatus(ctx context.Context, statuses []SessionStatusType) ([]Session, error) {
-	rows, err := q.db.QueryContext(ctx, listSessionsByStatus, pq.Array(statuses))
+type ListSessionsByStatusParams struct {
+	NodeID   int64               `db:"node_id" json:"nodeID"`
+	Statuses []SessionStatusType `db:"statuses" json:"statuses"`
+}
+
+func (q *Queries) ListSessionsByStatus(ctx context.Context, arg ListSessionsByStatusParams) ([]Session, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionsByStatus, arg.NodeID, pq.Array(arg.Statuses))
 	if err != nil {
 		return nil, err
 	}
