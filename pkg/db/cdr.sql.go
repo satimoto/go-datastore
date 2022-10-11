@@ -210,13 +210,13 @@ const listCdrsBySessionStatus = `-- name: ListCdrsBySessionStatus :many
 SELECT c.id, c.uid, c.credential_id, c.country_code, c.party_id, c.authorization_id, c.start_date_time, c.stop_date_time, c.auth_id, c.auth_method, c.user_id, c.token_id, c.location_id, c.evse_id, c.connector_id, c.meter_id, c.currency, c.calibration_id, c.total_cost, c.total_energy, c.total_time, c.total_parking_time, c.remark, c.last_updated FROM cdrs c
   INNER JOIN sessions s ON s.authorization_id = c.authorization_id
   INNER JOIN users u ON u.id = s.user_id
-  WHERE u.node_id = $1::BIGINT AND s.status in ($2::session_status_type[])
+  WHERE u.node_id = $1::BIGINT AND s.status in ($2::TEXT[])
   ORDER BY c.id
 `
 
 type ListCdrsBySessionStatusParams struct {
-	NodeID   int64               `db:"node_id" json:"nodeID"`
-	Statuses []SessionStatusType `db:"statuses" json:"statuses"`
+	NodeID   int64    `db:"node_id" json:"nodeID"`
+	Statuses []string `db:"statuses" json:"statuses"`
 }
 
 func (q *Queries) ListCdrsBySessionStatus(ctx context.Context, arg ListCdrsBySessionStatusParams) ([]Cdr, error) {
