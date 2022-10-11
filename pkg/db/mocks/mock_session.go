@@ -61,7 +61,7 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
-func (r *MockRepositoryService) ListSessionsByStatus(ctx context.Context, statuses []db.SessionStatusType) ([]db.Session, error) {
+func (r *MockRepositoryService) ListSessionsByStatus(ctx context.Context, arg db.ListSessionsByStatusParams) ([]db.Session, error) {
 	if len(r.listSessionsByStatusMockData) == 0 {
 		return []db.Session{}, nil
 	}
