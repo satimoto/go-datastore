@@ -77,7 +77,7 @@ func (q *Queries) DeletePendingNotificationByInvoiceRequest(ctx context.Context,
 
 const deletePendingNotifications = `-- name: DeletePendingNotifications :exec
 DELETE FROM pending_notifications
-  WHERE id IN($1::BIGINT[])
+  WHERE id IN ($1::BIGINT[])
 `
 
 func (q *Queries) DeletePendingNotifications(ctx context.Context, ids []int64) error {
@@ -125,7 +125,7 @@ func (q *Queries) ListPendingNotifications(ctx context.Context, nodeID int64) ([
 
 const updatePendingNotifications = `-- name: UpdatePendingNotifications :exec
 UPDATE pending_notifications SET send_date = $1::TIMESTAMPTZ
-  WHERE id IN($2::BIGINT[])
+  WHERE id IN ($2::BIGINT[])
 `
 
 type UpdatePendingNotificationsParams struct {

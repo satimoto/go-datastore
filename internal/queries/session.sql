@@ -44,6 +44,10 @@ SELECT * FROM sessions
 SELECT * FROM sessions
   WHERE uid = $1;
 
+-- name: ListSessionsByStatus :many
+SELECT * FROM sessions
+  WHERE status IN (@statuses::session_status_type[]);
+
 -- name: UpdateSessionByUid :one
 UPDATE sessions SET (
     authorization_id,

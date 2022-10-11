@@ -37,3 +37,9 @@ SELECT * FROM cdrs
 -- name: GetCdrByUid :one
 SELECT * FROM cdrs
   WHERE uid = $1;
+
+-- name: ListCdrsBySessionStatus :many
+SELECT c.* FROM cdrs c
+  INNER JOIN sessions s ON s.authorization_id = cp.authorization_id
+  WHERE s.status in (@statuses::session_status_type[])
+  ORDER BY cp.id;

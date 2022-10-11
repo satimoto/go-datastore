@@ -7,6 +7,8 @@ import (
 	"context"
 	"database/sql"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 const createSession = `-- name: CreateSession :one
@@ -258,6 +260,57 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 		&i.InvoiceRequestID,
 	)
 	return i, err
+}
+
+const listSessionsByStatus = `-- name: ListSessionsByStatus :many
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id FROM sessions
+  WHERE status IN ($1::session_status_type[])
+`
+
+func (q *Queries) ListSessionsByStatus(ctx context.Context, statuses []SessionStatusType) ([]Session, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionsByStatus, pq.Array(statuses))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Session
+	for rows.Next() {
+		var i Session
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.CredentialID,
+			&i.CountryCode,
+			&i.PartyID,
+			&i.AuthorizationID,
+			&i.StartDatetime,
+			&i.EndDatetime,
+			&i.Kwh,
+			&i.AuthID,
+			&i.AuthMethod,
+			&i.UserID,
+			&i.TokenID,
+			&i.LocationID,
+			&i.EvseID,
+			&i.ConnectorID,
+			&i.MeterID,
+			&i.Currency,
+			&i.TotalCost,
+			&i.Status,
+			&i.LastUpdated,
+			&i.InvoiceRequestID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const updateSessionByUid = `-- name: UpdateSessionByUid :one
