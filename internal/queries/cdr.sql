@@ -40,7 +40,7 @@ SELECT * FROM cdrs
 
 -- name: ListCdrsBySessionStatus :many
 SELECT c.* FROM cdrs c
-  INNER JOIN sessions s ON s.authorization_id =cp.authorization_id
+  INNER JOIN sessions s ON s.authorization_id = c.authorization_id
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.node_id = @node_id::BIGINT AND s.status in (@statuses::session_status_type[])
   ORDER BY c.id;
