@@ -15,6 +15,7 @@ type TokenRepository interface {
 	GetTokenByUserID(ctx context.Context, arg db.GetTokenByUserIDParams) (db.Token, error)
 	ListCredentials(ctx context.Context) ([]db.Credential, error)
 	ListTokens(ctx context.Context, arg db.ListTokensParams) ([]db.Token, error)
+	ListRfidTokensByUserID(ctx context.Context, userID int64) ([]db.Token, error)
 	ListTokensByUserID(ctx context.Context, userID int64) ([]db.Token, error)
 	UpdateTokenByUid(ctx context.Context, arg db.UpdateTokenByUidParams) (db.Token, error)
 }

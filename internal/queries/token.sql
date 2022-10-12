@@ -48,6 +48,10 @@ SELECT * FROM tokens
 SELECT * FROM tokens
   WHERE user_id = $1;
 
+-- name: ListRfidTokensByUserID :many
+SELECT * FROM tokens
+  WHERE user_id = $1 AND type = 'RFID';
+
 -- name: UpdateTokenByUid :one
 UPDATE tokens SET (
     type,

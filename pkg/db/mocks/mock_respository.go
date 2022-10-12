@@ -275,6 +275,7 @@ type MockRepository interface {
 	SetListTariffRestrictionWeekdaysMockData(response WeekdaysMockData)
 	SetListTariffsByCdrMockData(response TariffsMockData)
 	SetListTokensMockData(response TokensMockData)
+	SetListRfidTokensByUserIDMockData(response TokensMockData)
 	SetListTokensByUserIDMockData(response TokensMockData)
 	SetListTokenAuthorizationConnectorsMockData(response ConnectorsMockData)
 	SetListTokenAuthorizationEvsesMockData(response EvsesMockData)
@@ -492,6 +493,7 @@ type MockRepositoryService struct {
 	listTariffRestrictionWeekdaysMockData               []WeekdaysMockData
 	listTariffsByCdrMockData                            []TariffsMockData
 	listTokensMockData                                  []TokensMockData
+	listRfidTokensByUserIDMockData                      []TokensMockData
 	listTokensByUserIDMockData                          []TokensMockData
 	listTokenAuthorizationConnectorsMockData            []ConnectorsMockData
 	listTokenAuthorizationEvsesMockData                 []EvsesMockData
