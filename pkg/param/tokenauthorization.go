@@ -3,20 +3,21 @@ package param
 import (
 	"github.com/google/uuid"
 	"github.com/satimoto/go-datastore/pkg/db"
-	"github.com/satimoto/go-datastore/pkg/util"
 )
 
 func NewCreateTokenAuthorizationParams(tokenID int64) db.CreateTokenAuthorizationParams {
 	return db.CreateTokenAuthorizationParams{
 		TokenID:         tokenID,
+		Authorized:      true,
 		AuthorizationID: uuid.NewString(),
 	}
 }
 
-func NewUpdateTokenAuthorizationParams(authorizationID string, countryCode *string, partyID *string) db.UpdateTokenAuthorizationByAuthorizationIDParams {
+func NewUpdateTokenAuthorizationParams(tokenAuthorization db.TokenAuthorization) db.UpdateTokenAuthorizationByAuthorizationIDParams {
 	return db.UpdateTokenAuthorizationByAuthorizationIDParams{
-		AuthorizationID: authorizationID,
-		CountryCode:     util.SqlNullString(countryCode),
-		PartyID:         util.SqlNullString(partyID),
+		AuthorizationID: tokenAuthorization.AuthorizationID,
+		Authorized: tokenAuthorization.Authorized,
+		CountryCode: tokenAuthorization.CountryCode,
+		PartyID: tokenAuthorization.PartyID,
 	}
 }
