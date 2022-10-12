@@ -76,6 +76,16 @@ func (r *MockRepositoryService) ListTokens(ctx context.Context, arg db.ListToken
 	return response.Tokens, response.Error
 }
 
+func (r *MockRepositoryService) ListRfidTokensByUserID(ctx context.Context, userID int64) ([]db.Token, error) {
+	if len(r.listRfidTokensByUserIDMockData) == 0 {
+		return []db.Token{}, nil
+	}
+
+	response := r.listRfidTokensByUserIDMockData[0]
+	r.listRfidTokensByUserIDMockData = r.listRfidTokensByUserIDMockData[1:]
+	return response.Tokens, response.Error
+}
+
 func (r *MockRepositoryService) ListTokensByUserID(ctx context.Context, userID int64) ([]db.Token, error) {
 	if len(r.listTokensByUserIDMockData) == 0 {
 		return []db.Token{}, nil
@@ -139,6 +149,10 @@ func (r *MockRepositoryService) SetGetTokenByUserIDMockData(response TokenMockDa
 
 func (r *MockRepositoryService) SetListTokensMockData(response TokensMockData) {
 	r.listTokensMockData = append(r.listTokensMockData, response)
+}
+
+func (r *MockRepositoryService) SetListRfidTokensByUserIDMockData(response TokensMockData) {
+	r.listRfidTokensByUserIDMockData = append(r.listRfidTokensByUserIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetListTokensByUserIDMockData(response TokensMockData) {
