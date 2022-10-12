@@ -1152,6 +1152,7 @@ type TokenAuthorization struct {
 	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
 	SigningKey      []byte         `db:"signing_key" json:"signingKey"`
+	Authorized      bool           `db:"authorized" json:"authorized"`
 }
 
 type TokenAuthorizationConnector struct {
