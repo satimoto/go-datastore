@@ -121,6 +121,45 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 	return i, err
 }
 
+const getCdrByAuthorizationID = `-- name: GetCdrByAuthorizationID :one
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated, is_flagged FROM cdrs
+  WHERE authorization_id = $1::string
+  LIMIT 1
+`
+
+func (q *Queries) GetCdrByAuthorizationID(ctx context.Context, authorizationID string) (Cdr, error) {
+	row := q.db.QueryRowContext(ctx, getCdrByAuthorizationID, authorizationID)
+	var i Cdr
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CredentialID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.AuthorizationID,
+		&i.StartDateTime,
+		&i.StopDateTime,
+		&i.AuthID,
+		&i.AuthMethod,
+		&i.UserID,
+		&i.TokenID,
+		&i.LocationID,
+		&i.EvseID,
+		&i.ConnectorID,
+		&i.MeterID,
+		&i.Currency,
+		&i.CalibrationID,
+		&i.TotalCost,
+		&i.TotalEnergy,
+		&i.TotalTime,
+		&i.TotalParkingTime,
+		&i.Remark,
+		&i.LastUpdated,
+		&i.IsFlagged,
+	)
+	return i, err
+}
+
 const getCdrByLastUpdated = `-- name: GetCdrByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated, is_flagged FROM cdrs
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND

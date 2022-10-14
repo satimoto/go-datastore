@@ -2,6 +2,7 @@ package session
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -20,7 +21,7 @@ type SessionRepository interface {
 	ListChargingPeriodDimensions(ctx context.Context, chargingPeriodID int64) ([]db.ChargingPeriodDimension, error)
 	ListSessionChargingPeriods(ctx context.Context, sessionID int64) ([]db.ChargingPeriod, error)
 	ListSessionInvoices(ctx context.Context, sessionID int64) ([]db.SessionInvoice, error)
-	ListInProgressSessionsByNodeID(ctx context.Context, nodeID int64) ([]db.Session, error)
+	ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error)
 	ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
 	ListUnsettledSessionInvoicesByUserID(ctx context.Context, userID int64) ([]db.SessionInvoice, error)
 	SetSessionChargingPeriod(ctx context.Context, arg db.SetSessionChargingPeriodParams) error

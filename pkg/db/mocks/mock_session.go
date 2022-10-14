@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -61,7 +62,7 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
-func (r *MockRepositoryService) ListInProgressSessionsByNodeID(ctx context.Context, nodeID int64) ([]db.Session, error) {
+func (r *MockRepositoryService) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error) {
 	if len(r.listInProgressSessionsByNodeIDMockData) == 0 {
 		return []db.Session{}, nil
 	}
@@ -71,7 +72,7 @@ func (r *MockRepositoryService) ListInProgressSessionsByNodeID(ctx context.Conte
 	return response.Sessions, response.Error
 }
 
-func (r *MockRepositoryService) ListInProgressSessionsByUserID(ctx context.Context, nodeID int64) ([]db.Session, error) {
+func (r *MockRepositoryService) ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error) {
 	if len(r.listInProgressSessionsByUserIDMockData) == 0 {
 		return []db.Session{}, nil
 	}
