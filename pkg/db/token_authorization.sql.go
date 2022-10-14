@@ -14,11 +14,12 @@ INSERT INTO token_authorizations (
     authorization_id,
     authorized,
     signing_key,
+    verification_key,
     country_code,
     party_id,
     location_id
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-  RETURNING id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+  RETURNING id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized, verification_key
 `
 
 type CreateTokenAuthorizationParams struct {
@@ -26,6 +27,7 @@ type CreateTokenAuthorizationParams struct {
 	AuthorizationID string         `db:"authorization_id" json:"authorizationID"`
 	Authorized      bool           `db:"authorized" json:"authorized"`
 	SigningKey      []byte         `db:"signing_key" json:"signingKey"`
+	VerificationKey []byte         `db:"verification_key" json:"verificationKey"`
 	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
@@ -37,6 +39,7 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 		arg.AuthorizationID,
 		arg.Authorized,
 		arg.SigningKey,
+		arg.VerificationKey,
 		arg.CountryCode,
 		arg.PartyID,
 		arg.LocationID,
@@ -51,12 +54,13 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 		&i.LocationID,
 		&i.SigningKey,
 		&i.Authorized,
+		&i.VerificationKey,
 	)
 	return i, err
 }
 
 const getTokenAuthorizationByAuthorizationID = `-- name: GetTokenAuthorizationByAuthorizationID :one
-SELECT id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized FROM token_authorizations
+SELECT id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized, verification_key FROM token_authorizations
   WHERE authorization_id = $1
 `
 
@@ -72,6 +76,7 @@ func (q *Queries) GetTokenAuthorizationByAuthorizationID(ctx context.Context, au
 		&i.LocationID,
 		&i.SigningKey,
 		&i.Authorized,
+		&i.VerificationKey,
 	)
 	return i, err
 }
@@ -83,7 +88,7 @@ UPDATE token_authorizations SET (
     party_id
   ) = ($2, $3, $4)
   WHERE authorization_id = $1
-  RETURNING id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized
+  RETURNING id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized, verification_key
 `
 
 type UpdateTokenAuthorizationByAuthorizationIDParams struct {
@@ -110,6 +115,7 @@ func (q *Queries) UpdateTokenAuthorizationByAuthorizationID(ctx context.Context,
 		&i.LocationID,
 		&i.SigningKey,
 		&i.Authorized,
+		&i.VerificationKey,
 	)
 	return i, err
 }
