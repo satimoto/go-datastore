@@ -4,8 +4,9 @@ INSERT INTO command_starts (
     token_id,
     authorization_id,
     location_id,
-    evse_uid
-  ) VALUES ($1, $2, $3, $4, $5)
+    evse_uid,
+    last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
 -- name: GetCommandStart :one
@@ -13,6 +14,9 @@ SELECT * FROM command_starts
   WHERE id = $1;
 
 -- name: UpdateCommandStart :one
-UPDATE command_starts SET status = $2
+UPDATE command_starts SET (
+    status,
+    last_updated
+  ) = ($2, $3)
   WHERE id = $1
   RETURNING *;
