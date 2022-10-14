@@ -44,11 +44,16 @@ SELECT * FROM sessions
 SELECT * FROM sessions
   WHERE uid = $1;
 
--- name: ListInProgressSessions :many
+-- name: ListInProgressSessionsByNodeID :many
 SELECT s.* FROM sessions s
   INNER JOIN users u ON u.id = s.user_id
-  WHERE u.node_id = @node_id::BIGINT AND s.status IN ('PENDING', 'ACTIVE')
+  WHERE u.node_id = $1 AND s.status IN ('PENDING', 'ACTIVE')
   ORDER BY s.id;
+
+-- name: ListInProgressSessionsByUserID :many
+SELECT * FROM sessions
+  WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
+  ORDER BY id;
 
 -- name: UpdateSessionByUid :one
 UPDATE sessions SET (
