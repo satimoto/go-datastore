@@ -119,6 +119,7 @@ type MockRepository interface {
 	GetUnsetTariffRestrictionWeekdaysMockData() (int64, error)
 	GetUpdateAuthenticationMockData() (db.UpdateAuthenticationParams, error)
 	GetUpdateBusinessDetailMockData() (db.UpdateBusinessDetailParams, error)
+	GetUpdateCdrIsFlaggedByUidMockData() (db.UpdateCdrIsFlaggedByUidParams, error)
 	GetUpdateConnectorByEvseMockData() (db.UpdateConnectorByEvseParams, error)
 	GetUpdateChannelRequestMockData() (db.UpdateChannelRequestParams, error)
 	GetUpdateChannelRequestHtlcByCircuitKeysMockData() (db.UpdateChannelRequestHtlcByCircuitKeyParams, error)
@@ -149,6 +150,7 @@ type MockRepository interface {
 	GetUpdatePsbtFundingStateMockData() (db.UpdatePsbtFundingStateParams, error)
 	GetUpdateRoutingEventMockData() (db.UpdateRoutingEventParams, error)
 	GetUpdateSessionByUidMockData() (db.UpdateSessionByUidParams, error)
+	GetUpdateSessionIsFlaggedByUidMockData() (db.UpdateSessionIsFlaggedByUidParams, error)
 	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
 	GetUpdateTariffByUidMockData() (db.UpdateTariffByUidParams, error)
 	GetUpdateTariffRestrictionMockData() (db.UpdateTariffRestrictionParams, error)
@@ -522,6 +524,7 @@ type MockRepositoryService struct {
 	unsetTariffRestrictionWeekdaysMockData              []int64
 	updateAuthenticationMockData                        []db.UpdateAuthenticationParams
 	updateBusinessDetailMockData                        []db.UpdateBusinessDetailParams
+	updateCdrIsFlaggedByUidMockData                     []db.UpdateCdrIsFlaggedByUidParams
 	updateChannelRequestMockData                        []db.UpdateChannelRequestParams
 	updateChannelRequestHtlcByCircuitKeyMockData        []db.UpdateChannelRequestHtlcByCircuitKeyParams
 	updatePendingChannelRequestByPubkeyMockData         []db.UpdatePendingChannelRequestByPubkeyParams
@@ -554,6 +557,7 @@ type MockRepositoryService struct {
 	updateUserByPubkeyMockData                          []db.UpdateUserByPubkeyParams
 	updateRoutingEventMockData                          []db.UpdateRoutingEventParams
 	updateSessionByUidMockData                          []db.UpdateSessionByUidParams
+	updateSessionIsFlaggedByUidMockData                 []db.UpdateSessionIsFlaggedByUidParams
 	updateSessionInvoiceMockData                        []db.UpdateSessionInvoiceParams
 	updateTariffByUidMockData                           []db.UpdateTariffByUidParams
 	updateTariffRestrictionMockData                     []db.UpdateTariffRestrictionParams

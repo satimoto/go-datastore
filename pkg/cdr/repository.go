@@ -14,6 +14,7 @@ type CdrRepository interface {
 	ListCdrChargingPeriods(ctx context.Context, cdrID int64) ([]db.ChargingPeriod, error)
 	ListCdrsByCompletedSessionStatus(ctx context.Context, nodeID int64) ([]db.Cdr, error)
 	SetCdrChargingPeriod(ctx context.Context, arg db.SetCdrChargingPeriodParams) error
+	UpdateCdrIsFlaggedByUid(ctx context.Context, arg db.UpdateCdrIsFlaggedByUidParams) error
 }
 
 func NewRepository(repositoryService *db.RepositoryService) CdrRepository {

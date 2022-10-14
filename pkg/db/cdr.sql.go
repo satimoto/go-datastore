@@ -35,7 +35,7 @@ INSERT INTO cdrs (
     remark,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
-  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated, is_flagged
 `
 
 type CreateCdrParams struct {
@@ -116,12 +116,13 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 		&i.TotalParkingTime,
 		&i.Remark,
 		&i.LastUpdated,
+		&i.IsFlagged,
 	)
 	return i, err
 }
 
 const getCdrByLastUpdated = `-- name: GetCdrByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated, is_flagged FROM cdrs
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -163,12 +164,13 @@ func (q *Queries) GetCdrByLastUpdated(ctx context.Context, arg GetCdrByLastUpdat
 		&i.TotalParkingTime,
 		&i.Remark,
 		&i.LastUpdated,
+		&i.IsFlagged,
 	)
 	return i, err
 }
 
 const getCdrByUid = `-- name: GetCdrByUid :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated FROM cdrs
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated, is_flagged FROM cdrs
   WHERE uid = $1
 `
 
@@ -200,12 +202,13 @@ func (q *Queries) GetCdrByUid(ctx context.Context, uid string) (Cdr, error) {
 		&i.TotalParkingTime,
 		&i.Remark,
 		&i.LastUpdated,
+		&i.IsFlagged,
 	)
 	return i, err
 }
 
 const listCdrsByCompletedSessionStatus = `-- name: ListCdrsByCompletedSessionStatus :many
-SELECT c.id, c.uid, c.credential_id, c.country_code, c.party_id, c.authorization_id, c.start_date_time, c.stop_date_time, c.auth_id, c.auth_method, c.user_id, c.token_id, c.location_id, c.evse_id, c.connector_id, c.meter_id, c.currency, c.calibration_id, c.total_cost, c.total_energy, c.total_time, c.total_parking_time, c.remark, c.last_updated FROM cdrs c
+SELECT c.id, c.uid, c.credential_id, c.country_code, c.party_id, c.authorization_id, c.start_date_time, c.stop_date_time, c.auth_id, c.auth_method, c.user_id, c.token_id, c.location_id, c.evse_id, c.connector_id, c.meter_id, c.currency, c.calibration_id, c.total_cost, c.total_energy, c.total_time, c.total_parking_time, c.remark, c.last_updated, c.is_flagged FROM cdrs c
   INNER JOIN sessions s ON s.authorization_id = c.authorization_id
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.node_id = $1::BIGINT AND s.status = 'COMPLETED'
@@ -246,6 +249,7 @@ func (q *Queries) ListCdrsByCompletedSessionStatus(ctx context.Context, nodeID i
 			&i.TotalParkingTime,
 			&i.Remark,
 			&i.LastUpdated,
+			&i.IsFlagged,
 		); err != nil {
 			return nil, err
 		}
@@ -258,4 +262,19 @@ func (q *Queries) ListCdrsByCompletedSessionStatus(ctx context.Context, nodeID i
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateCdrIsFlaggedByUid = `-- name: UpdateCdrIsFlaggedByUid :exec
+UPDATE cdrs SET is_flagged = $2
+  WHERE uid = $1
+`
+
+type UpdateCdrIsFlaggedByUidParams struct {
+	Uid       string `db:"uid" json:"uid"`
+	IsFlagged bool   `db:"is_flagged" json:"isFlagged"`
+}
+
+func (q *Queries) UpdateCdrIsFlaggedByUid(ctx context.Context, arg UpdateCdrIsFlaggedByUidParams) error {
+	_, err := q.db.ExecContext(ctx, updateCdrIsFlaggedByUid, arg.Uid, arg.IsFlagged)
+	return err
 }

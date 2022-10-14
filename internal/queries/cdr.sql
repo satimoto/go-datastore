@@ -44,3 +44,7 @@ SELECT c.* FROM cdrs c
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.node_id = @node_id::BIGINT AND s.status = 'COMPLETED'
   ORDER BY c.id;
+
+-- name: UpdateCdrIsFlaggedByUid :exec
+UPDATE cdrs SET is_flagged = $2
+  WHERE uid = $1;

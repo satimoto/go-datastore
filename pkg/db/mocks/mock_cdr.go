@@ -65,6 +65,11 @@ func (r *MockRepositoryService) ListCdrsByCompletedSessionStatus(ctx context.Con
 	return response.Cdrs, response.Error
 }
 
+func (r *MockRepositoryService) UpdateCdrIsFlaggedByUid(ctx context.Context, arg db.UpdateCdrIsFlaggedByUidParams) error {
+	r.updateCdrIsFlaggedByUidMockData = append(r.updateCdrIsFlaggedByUidMockData, arg)
+	return nil
+}
+
 func (r *MockRepositoryService) GetCreateCdrMockData() (db.CreateCdrParams, error) {
 	if len(r.createCdrMockData) == 0 {
 		return db.CreateCdrParams{}, ErrorNotFound()
@@ -72,6 +77,16 @@ func (r *MockRepositoryService) GetCreateCdrMockData() (db.CreateCdrParams, erro
 
 	response := r.createCdrMockData[0]
 	r.createCdrMockData = r.createCdrMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateCdrIsFlaggedByUidMockData() (db.UpdateCdrIsFlaggedByUidParams, error) {
+	if len(r.updateCdrIsFlaggedByUidMockData) == 0 {
+		return db.UpdateCdrIsFlaggedByUidParams{}, ErrorNotFound()
+	}
+
+	response := r.updateCdrIsFlaggedByUidMockData[0]
+	r.updateCdrIsFlaggedByUidMockData = r.updateCdrIsFlaggedByUidMockData[1:]
 	return response, nil
 }
 
