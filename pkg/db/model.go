@@ -597,6 +597,7 @@ type Cdr struct {
 	TotalParkingTime sql.NullFloat64 `db:"total_parking_time" json:"totalParkingTime"`
 	Remark           sql.NullString  `db:"remark" json:"remark"`
 	LastUpdated      time.Time       `db:"last_updated" json:"lastUpdated"`
+	IsFlagged        bool            `db:"is_flagged" json:"isFlagged"`
 }
 
 type CdrChargingPeriod struct {
@@ -1060,6 +1061,7 @@ type Session struct {
 	Status           SessionStatusType `db:"status" json:"status"`
 	LastUpdated      time.Time         `db:"last_updated" json:"lastUpdated"`
 	InvoiceRequestID sql.NullInt64     `db:"invoice_request_id" json:"invoiceRequestID"`
+	IsFlagged        bool              `db:"is_flagged" json:"isFlagged"`
 }
 
 type SessionChargingPeriod struct {

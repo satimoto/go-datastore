@@ -25,6 +25,7 @@ type SessionRepository interface {
 	SetSessionChargingPeriod(ctx context.Context, arg db.SetSessionChargingPeriodParams) error
 	UpdateSessionByUid(ctx context.Context, arg db.UpdateSessionByUidParams) (db.Session, error)
 	UpdateSessionInvoice(ctx context.Context, arg db.UpdateSessionInvoiceParams) (db.SessionInvoice, error)
+	UpdateSessionIsFlaggedByUid(ctx context.Context, arg db.UpdateSessionIsFlaggedByUidParams) error
 }
 
 func NewRepository(repositoryService *db.RepositoryService) SessionRepository {

@@ -76,6 +76,11 @@ func (r *MockRepositoryService) UpdateSessionByUid(ctx context.Context, arg db.U
 	return db.Session{}, nil
 }
 
+func (r *MockRepositoryService) UpdateSessionIsFlaggedByUid(ctx context.Context, arg db.UpdateSessionIsFlaggedByUidParams) error {
+	r.updateSessionIsFlaggedByUidMockData = append(r.updateSessionIsFlaggedByUidMockData, arg)
+	return nil
+}
+
 func (r *MockRepositoryService) GetCreateSessionMockData() (db.CreateSessionParams, error) {
 	if len(r.createSessionMockData) == 0 {
 		return db.CreateSessionParams{}, ErrorNotFound()
@@ -93,6 +98,16 @@ func (r *MockRepositoryService) GetUpdateSessionByUidMockData() (db.UpdateSessio
 
 	response := r.updateSessionByUidMockData[0]
 	r.updateSessionByUidMockData = r.updateSessionByUidMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateSessionIsFlaggedByUidMockData() (db.UpdateSessionIsFlaggedByUidParams, error) {
+	if len(r.updateSessionIsFlaggedByUidMockData) == 0 {
+		return db.UpdateSessionIsFlaggedByUidParams{}, ErrorNotFound()
+	}
+
+	response := r.updateSessionIsFlaggedByUidMockData[0]
+	r.updateSessionIsFlaggedByUidMockData = r.updateSessionIsFlaggedByUidMockData[1:]
 	return response, nil
 }
 
