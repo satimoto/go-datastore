@@ -4,10 +4,11 @@ INSERT INTO token_authorizations (
     authorization_id,
     authorized,
     signing_key,
+    verification_key,
     country_code,
     party_id,
     location_id
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   RETURNING *;
 
 -- name: GetTokenAuthorizationByAuthorizationID :one
