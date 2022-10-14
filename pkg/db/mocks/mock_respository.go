@@ -162,6 +162,7 @@ type MockRepository interface {
 	SetGetAuthenticationByChallengeMockData(response AuthenticationMockData)
 	SetGetBusinessDetailMockData(response BusinessDetailMockData)
 	SetGetCalibrationMockData(response CalibrationMockData)
+	SetGetCdrByAuthorizationIDMockData(response CdrMockData)
 	SetGetCdrByLastUpdatedMockData(response CdrMockData)
 	SetGetCdrByUidMockData(response CdrMockData)
 	SetGetChannelRequestMockData(response ChannelRequestMockData)
@@ -381,6 +382,7 @@ type MockRepositoryService struct {
 	getAuthenticationByChallengeMockData                []AuthenticationMockData
 	getBusinessDetailMockData                           []BusinessDetailMockData
 	getCalibrationMockData                              []CalibrationMockData
+	getCdrByAuthorizationIDMockData                     []CdrMockData
 	getCdrByLastUpdatedMockData                         []CdrMockData
 	getCdrByUidMockData                                 []CdrMockData
 	getChannelRequestMockData                           []ChannelRequestMockData
