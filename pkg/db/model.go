@@ -657,6 +657,7 @@ type CommandReservation struct {
 	ReservationID int64               `db:"reservation_id" json:"reservationID"`
 	LocationID    string              `db:"location_id" json:"locationID"`
 	EvseUid       sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated   time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type CommandStart struct {
@@ -666,12 +667,14 @@ type CommandStart struct {
 	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
 	LocationID      string              `db:"location_id" json:"locationID"`
 	EvseUid         sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated     time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type CommandStop struct {
-	ID        int64               `db:"id" json:"id"`
-	Status    CommandResponseType `db:"status" json:"status"`
-	SessionID string              `db:"session_id" json:"sessionID"`
+	ID          int64               `db:"id" json:"id"`
+	Status      CommandResponseType `db:"status" json:"status"`
+	SessionID   string              `db:"session_id" json:"sessionID"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type CommandUnlock struct {
@@ -680,6 +683,7 @@ type CommandUnlock struct {
 	LocationID  string              `db:"location_id" json:"locationID"`
 	EvseUid     string              `db:"evse_uid" json:"evseUid"`
 	ConnectorID string              `db:"connector_id" json:"connectorID"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type Connector struct {

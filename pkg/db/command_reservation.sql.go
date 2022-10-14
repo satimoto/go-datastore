@@ -15,17 +15,19 @@ INSERT INTO command_reservations (
     token_id,
     expiry_date,
     location_id,
-    evse_uid
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, status, token_id, expiry_date, reservation_id, location_id, evse_uid
+    evse_uid,
+    last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, status, token_id, expiry_date, reservation_id, location_id, evse_uid, last_updated
 `
 
 type CreateCommandReservationParams struct {
-	Status     CommandResponseType `db:"status" json:"status"`
-	TokenID    int64               `db:"token_id" json:"tokenID"`
-	ExpiryDate time.Time           `db:"expiry_date" json:"expiryDate"`
-	LocationID string              `db:"location_id" json:"locationID"`
-	EvseUid    sql.NullString      `db:"evse_uid" json:"evseUid"`
+	Status      CommandResponseType `db:"status" json:"status"`
+	TokenID     int64               `db:"token_id" json:"tokenID"`
+	ExpiryDate  time.Time           `db:"expiry_date" json:"expiryDate"`
+	LocationID  string              `db:"location_id" json:"locationID"`
+	EvseUid     sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateCommandReservation(ctx context.Context, arg CreateCommandReservationParams) (CommandReservation, error) {
@@ -35,6 +37,7 @@ func (q *Queries) CreateCommandReservation(ctx context.Context, arg CreateComman
 		arg.ExpiryDate,
 		arg.LocationID,
 		arg.EvseUid,
+		arg.LastUpdated,
 	)
 	var i CommandReservation
 	err := row.Scan(
@@ -45,12 +48,13 @@ func (q *Queries) CreateCommandReservation(ctx context.Context, arg CreateComman
 		&i.ReservationID,
 		&i.LocationID,
 		&i.EvseUid,
+		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const getCommandReservation = `-- name: GetCommandReservation :one
-SELECT id, status, token_id, expiry_date, reservation_id, location_id, evse_uid FROM command_reservations
+SELECT id, status, token_id, expiry_date, reservation_id, location_id, evse_uid, last_updated FROM command_reservations
   WHERE id = $1
 `
 
@@ -65,6 +69,7 @@ func (q *Queries) GetCommandReservation(ctx context.Context, id int64) (CommandR
 		&i.ReservationID,
 		&i.LocationID,
 		&i.EvseUid,
+		&i.LastUpdated,
 	)
 	return i, err
 }
@@ -73,17 +78,19 @@ const updateCommandReservation = `-- name: UpdateCommandReservation :one
 UPDATE command_reservations SET (
     status,
     expiry_date,
-    evse_uid
-  ) = ($2, $3, $4)
+    evse_uid,
+    last_updated
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
-  RETURNING id, status, token_id, expiry_date, reservation_id, location_id, evse_uid
+  RETURNING id, status, token_id, expiry_date, reservation_id, location_id, evse_uid, last_updated
 `
 
 type UpdateCommandReservationParams struct {
-	ID         int64               `db:"id" json:"id"`
-	Status     CommandResponseType `db:"status" json:"status"`
-	ExpiryDate time.Time           `db:"expiry_date" json:"expiryDate"`
-	EvseUid    sql.NullString      `db:"evse_uid" json:"evseUid"`
+	ID          int64               `db:"id" json:"id"`
+	Status      CommandResponseType `db:"status" json:"status"`
+	ExpiryDate  time.Time           `db:"expiry_date" json:"expiryDate"`
+	EvseUid     sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateCommandReservation(ctx context.Context, arg UpdateCommandReservationParams) (CommandReservation, error) {
@@ -92,6 +99,7 @@ func (q *Queries) UpdateCommandReservation(ctx context.Context, arg UpdateComman
 		arg.Status,
 		arg.ExpiryDate,
 		arg.EvseUid,
+		arg.LastUpdated,
 	)
 	var i CommandReservation
 	err := row.Scan(
@@ -102,6 +110,7 @@ func (q *Queries) UpdateCommandReservation(ctx context.Context, arg UpdateComman
 		&i.ReservationID,
 		&i.LocationID,
 		&i.EvseUid,
+		&i.LastUpdated,
 	)
 	return i, err
 }
