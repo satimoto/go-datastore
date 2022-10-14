@@ -265,15 +265,15 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 	return i, err
 }
 
-const listInProgressSessions = `-- name: ListInProgressSessions :many
+const listInProgressSessionsByNodeID = `-- name: ListInProgressSessionsByNodeID :many
 SELECT s.id, s.uid, s.credential_id, s.country_code, s.party_id, s.authorization_id, s.start_datetime, s.end_datetime, s.kwh, s.auth_id, s.auth_method, s.user_id, s.token_id, s.location_id, s.evse_id, s.connector_id, s.meter_id, s.currency, s.total_cost, s.status, s.last_updated, s.invoice_request_id, s.is_flagged FROM sessions s
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.node_id = $1::BIGINT AND s.status IN ('PENDING', 'ACTIVE')
   ORDER BY s.id
 `
 
-func (q *Queries) ListInProgressSessions(ctx context.Context, nodeID int64) ([]Session, error) {
-	rows, err := q.db.QueryContext(ctx, listInProgressSessions, nodeID)
+func (q *Queries) ListInProgressSessionsByNodeID(ctx context.Context, nodeID int64) ([]Session, error) {
+	rows, err := q.db.QueryContext(ctx, listInProgressSessionsByNodeID, nodeID)
 	if err != nil {
 		return nil, err
 	}
