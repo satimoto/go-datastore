@@ -158,6 +158,7 @@ type MockRepository interface {
 	GetUpdateTokenByUidMockData() (db.UpdateTokenByUidParams, error)
 	GetUpdateUserMockData() (db.UpdateUserParams, error)
 	GetUpdateUserByPubkeyMockData() (db.UpdateUserByPubkeyParams, error)
+	SetCountTokensMockData(response CountMockData)
 	SetGetAuthenticationByCodeMockData(response AuthenticationMockData)
 	SetGetAuthenticationByChallengeMockData(response AuthenticationMockData)
 	SetGetBusinessDetailMockData(response BusinessDetailMockData)
@@ -289,6 +290,7 @@ type MockRepository interface {
 }
 
 type MockRepositoryService struct {
+	countTokensMockData                                 []CountMockData
 	createAdditionalGeoLocationMockData                 []db.CreateAdditionalGeoLocationParams
 	createAuthenticationMockData                        []db.CreateAuthenticationParams
 	createBusinessDetailMockData                        []db.CreateBusinessDetailParams
