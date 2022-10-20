@@ -1,3 +1,9 @@
+-- name: CountTokens :one
+SELECT COUNT(*) FROM tokens
+  WHERE 
+    (@filter_date_from::TEXT = '' or last_updated > (@filter_date_from::TEXT)::TIMESTAMP) and 
+    (@filter_date_to::TEXT = '' or last_updated < (@filter_date_to::TEXT)::TIMESTAMP);
+
 -- name: CreateToken :one
 INSERT INTO tokens (
     uid, 

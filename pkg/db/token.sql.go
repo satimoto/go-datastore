@@ -9,6 +9,25 @@ import (
 	"time"
 )
 
+const countTokens = `-- name: CountTokens :one
+SELECT COUNT(*) FROM tokens
+  WHERE 
+    ($1::TEXT = '' or last_updated > ($1::TEXT)::TIMESTAMP) and 
+    ($2::TEXT = '' or last_updated < ($2::TEXT)::TIMESTAMP)
+`
+
+type CountTokensParams struct {
+	FilterDateFrom string `db:"filter_date_from" json:"filterDateFrom"`
+	FilterDateTo   string `db:"filter_date_to" json:"filterDateTo"`
+}
+
+func (q *Queries) CountTokens(ctx context.Context, arg CountTokensParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countTokens, arg.FilterDateFrom, arg.FilterDateTo)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createToken = `-- name: CreateToken :one
 INSERT INTO tokens (
     uid, 

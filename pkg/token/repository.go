@@ -7,6 +7,7 @@ import (
 )
 
 type TokenRepository interface {
+	CountTokens(ctx context.Context, arg db.CountTokensParams) (int64, error)
 	CreateToken(ctx context.Context, arg db.CreateTokenParams) (db.Token, error)
 	DeleteTokenByUid(ctx context.Context, uid string) error
 	GetToken(ctx context.Context, id int64) (db.Token, error)
