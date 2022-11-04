@@ -29,7 +29,7 @@ SELECT * FROM sessions
 
 -- name: GetSessionByAuthorizationID :one
 SELECT * FROM sessions
-  WHERE authorization_id = @authorization_id::string
+  WHERE authorization_id = @authorization_id::TEXT
   LIMIT 1;
 
 -- name: GetSessionByLastUpdated :one

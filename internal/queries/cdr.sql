@@ -28,7 +28,7 @@ INSERT INTO cdrs (
 
 -- name: GetCdrByAuthorizationID :one
 SELECT * FROM cdrs
-  WHERE authorization_id = @authorization_id::string
+  WHERE authorization_id = @authorization_id::TEXT
   LIMIT 1;
 
 -- name: GetCdrByLastUpdated :one

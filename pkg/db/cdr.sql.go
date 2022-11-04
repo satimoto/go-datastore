@@ -123,7 +123,7 @@ func (q *Queries) CreateCdr(ctx context.Context, arg CreateCdrParams) (Cdr, erro
 
 const getCdrByAuthorizationID = `-- name: GetCdrByAuthorizationID :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_date_time, stop_date_time, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, calibration_id, total_cost, total_energy, total_time, total_parking_time, remark, last_updated, is_flagged FROM cdrs
-  WHERE authorization_id = $1::string
+  WHERE authorization_id = $1::TEXT
   LIMIT 1
 `
 

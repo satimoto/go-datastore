@@ -148,7 +148,7 @@ func (q *Queries) GetSession(ctx context.Context, id int64) (Session, error) {
 
 const getSessionByAuthorizationID = `-- name: GetSessionByAuthorizationID :one
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
-  WHERE authorization_id = $1::string
+  WHERE authorization_id = $1::TEXT
   LIMIT 1
 `
 
