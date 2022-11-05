@@ -241,6 +241,7 @@ type MockRepository interface {
 	SetListChargingPeriodDimensionsMockData(response ChargingPeriodDimensionsMockData)
 	SetListCredentialsMockData(response CredentialsMockData)
 	SetListConnectorsMockData(response ConnectorsMockData)
+	SetListCountryAccountsMockData(response CountryAccountsMockData)
 	SetListElementsMockData(response ElementsMockData)
 	SetListElementRestrictionWeekdaysMockData(response WeekdaysMockData)
 	SetListEnergySourcesMockData(response EnergySourcesMockData)
@@ -260,6 +261,7 @@ type MockRepository interface {
 	SetListLocationFacilitiesMockData(response FacilitiesMockData)
 	SetListLocationImagesMockData(response ImagesMockData)
 	SetListLocationsMockData(response LocationsMockData)
+	SetListLocationsByCountryMockData(response LocationsMockData)
 	SetListLocationsByGeomMockData(response LocationsMockData)
 	SetListUnfundedPsbtFundingStatesMockData(response PsbtFundingStatesMockData)
 	SetListPsbtFundingStateChannelRequestsMockData(response ChannelRequestsMockData)
@@ -462,6 +464,7 @@ type MockRepositoryService struct {
 	listChargingPeriodDimensionsMockData                []ChargingPeriodDimensionsMockData
 	listCredentialsMockData                             []CredentialsMockData
 	listConnectorsMockData                              []ConnectorsMockData
+	listCountryAccountsMockData                         []CountryAccountsMockData
 	listElementsMockData                                []ElementsMockData
 	listElementRestrictionWeekdaysMockData              []WeekdaysMockData
 	listEnergySourcesMockData                           []EnergySourcesMockData
@@ -481,6 +484,7 @@ type MockRepositoryService struct {
 	listLocationFacilitiesMockData                      []FacilitiesMockData
 	listLocationImagesMockData                          []ImagesMockData
 	listLocationsMockData                               []LocationsMockData
+	listLocationsByCountryMockData                      []LocationsMockData
 	listLocationsByGeomMockData                         []LocationsMockData
 	listNodesMockData                                   []NodesMockData
 	listActiveNodesMockData                             []NodesMockData

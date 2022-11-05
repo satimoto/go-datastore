@@ -8,6 +8,7 @@ import (
 
 type CountryAccountRepository interface {
 	GetCountryAccountByCountry(ctx context.Context, country string) (db.CountryAccount, error)
+	ListCountryAccounts(ctx context.Context) ([]db.CountryAccount, error)
 }
 
 func NewRepository(repositoryService *db.RepositoryService) CountryAccountRepository {

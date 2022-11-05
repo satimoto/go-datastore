@@ -11,6 +11,11 @@ type CountryAccountMockData struct {
 	Error          error
 }
 
+type CountryAccountsMockData struct {
+	CountryAccounts []db.CountryAccount
+	Error           error
+}
+
 func (r *MockRepositoryService) CreateCountryAccount(ctx context.Context, arg db.CreateCountryAccountParams) (db.CountryAccount, error) {
 	r.createCountryAccountMockData = append(r.createCountryAccountMockData, arg)
 	return db.CountryAccount{}, nil
@@ -26,6 +31,16 @@ func (r *MockRepositoryService) GetCountryAccountByCountry(ctx context.Context, 
 	return response.CountryAccount, response.Error
 }
 
+func (r *MockRepositoryService) ListCountryAccounts(ctx context.Context) ([]db.CountryAccount, error) {
+	if len(r.listCountryAccountsMockData) == 0 {
+		return []db.CountryAccount{}, nil
+	}
+
+	response := r.listCountryAccountsMockData[0]
+	r.listCountryAccountsMockData = r.listCountryAccountsMockData[1:]
+	return response.CountryAccounts, response.Error
+}
+
 func (r *MockRepositoryService) GetCreateCountryAccountMockData() (db.CreateCountryAccountParams, error) {
 	if len(r.createCountryAccountMockData) == 0 {
 		return db.CreateCountryAccountParams{}, ErrorNotFound()
@@ -38,4 +53,8 @@ func (r *MockRepositoryService) GetCreateCountryAccountMockData() (db.CreateCoun
 
 func (r *MockRepositoryService) SetGetCountryAccountByCountryMockData(response CountryAccountMockData) {
 	r.getCountryAccountByCountryMockData = append(r.getCountryAccountByCountryMockData, response)
+}
+
+func (r *MockRepositoryService) SetListCountryAccountsMockData(response CountryAccountsMockData) {
+	r.listCountryAccountsMockData = append(r.listCountryAccountsMockData, response)
 }
