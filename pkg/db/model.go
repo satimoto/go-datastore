@@ -704,9 +704,12 @@ type Connector struct {
 }
 
 type CountryAccount struct {
-	ID         int64   `db:"id" json:"id"`
-	Country    string  `db:"country" json:"country"`
-	TaxPercent float64 `db:"tax_percent" json:"taxPercent"`
+	ID         int64           `db:"id" json:"id"`
+	Country    string          `db:"country" json:"country"`
+	TaxPercent float64         `db:"tax_percent" json:"taxPercent"`
+	Longitude  sql.NullFloat64 `db:"longitude" json:"longitude"`
+	Latitude   sql.NullFloat64 `db:"latitude" json:"latitude"`
+	Zoom       sql.NullFloat64 `db:"zoom" json:"zoom"`
 }
 
 type Credential struct {
@@ -906,6 +909,7 @@ type Location struct {
 	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
 	Publish            bool              `db:"publish" json:"publish"`
+	AddedDate          time.Time         `db:"added_date" json:"addedDate"`
 }
 
 type LocationDirection struct {

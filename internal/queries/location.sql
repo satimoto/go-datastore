@@ -56,6 +56,10 @@ SELECT * FROM locations
 SELECT * FROM locations
   ORDER BY name;
 
+-- name: ListLocationsByCountry :many
+SELECT * FROM locations
+  WHERE publish AND total_evses > 0 AND country = $1;
+
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
   WHERE publish AND total_evses > 0 AND 

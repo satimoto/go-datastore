@@ -61,6 +61,16 @@ func (r *MockRepositoryService) ListLocations(ctx context.Context) ([]db.Locatio
 	return response.Locations, response.Error
 }
 
+func (r *MockRepositoryService) ListLocationsByCountry(ctx context.Context, country string) ([]db.Location, error) {
+	if len(r.listLocationsByCountryMockData) == 0 {
+		return []db.Location{}, nil
+	}
+
+	response := r.listLocationsByCountryMockData[0]
+	r.listLocationsByCountryMockData = r.listLocationsByCountryMockData[1:]
+	return response.Locations, response.Error
+}
+
 func (r *MockRepositoryService) ListLocationsByGeom(ctx context.Context, arg db.ListLocationsByGeomParams) ([]db.Location, error) {
 	if len(r.listLocationsByGeomMockData) == 0 {
 		return []db.Location{}, nil
@@ -175,6 +185,10 @@ func (r *MockRepositoryService) SetGetLocationByUidMockData(response LocationMoc
 
 func (r *MockRepositoryService) SetListLocationsMockData(response LocationsMockData) {
 	r.listLocationsMockData = append(r.listLocationsMockData, response)
+}
+
+func (r *MockRepositoryService) SetListLocationsByCountryMockData(response LocationsMockData) {
+	r.listLocationsByCountryMockData = append(r.listLocationsByCountryMockData, response)
 }
 
 func (r *MockRepositoryService) SetListLocationsByGeomMockData(response LocationsMockData) {

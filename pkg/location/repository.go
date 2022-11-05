@@ -21,6 +21,7 @@ type LocationRepository interface {
 	ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
 	ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
 	ListFacilities(ctx context.Context) ([]db.Facility, error)
+	ListLocationsByCountry(ctx context.Context, country string) ([]db.Location, error)
 	ListLocationsByGeom(ctx context.Context, arg db.ListLocationsByGeomParams) ([]db.Location, error)
 	ListLocationDirections(ctx context.Context, locationID int64) ([]db.DisplayText, error)
 	ListLocationFacilities(ctx context.Context, locationID int64) ([]db.Facility, error)
