@@ -229,7 +229,7 @@ type UpdateTariffByUidParams struct {
 	TariffAltUrl             sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
 	EnergyMixID              sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
 	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
-	IsIntermediateCdrCapable sql.NullBool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsIntermediateCdrCapable bool           `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
