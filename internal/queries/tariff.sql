@@ -46,7 +46,8 @@ UPDATE tariffs SET (
     tariff_alt_url,
     energy_mix_id, 
     tariff_restriction_id,
+    is_intermediate_cdr_capable,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
   WHERE uid = $1 AND cdr_id IS NULL
   RETURNING *;
