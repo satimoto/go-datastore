@@ -1119,7 +1119,7 @@ type Tariff struct {
 	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
 	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
 	CdrID                    sql.NullInt64  `db:"cdr_id" json:"cdrID"`
-	IsIntermediateCdrCapable sql.NullBool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsIntermediateCdrCapable bool           `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 }
 
 type TariffAltText struct {
