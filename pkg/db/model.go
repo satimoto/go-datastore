@@ -1108,17 +1108,18 @@ type StatusSchedule struct {
 }
 
 type Tariff struct {
-	ID                  int64          `db:"id" json:"id"`
-	Uid                 string         `db:"uid" json:"uid"`
-	CredentialID        int64          `db:"credential_id" json:"credentialID"`
-	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID             sql.NullString `db:"party_id" json:"partyID"`
-	Currency            string         `db:"currency" json:"currency"`
-	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
-	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
-	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
+	ID                       int64          `db:"id" json:"id"`
+	Uid                      string         `db:"uid" json:"uid"`
+	CredentialID             int64          `db:"credential_id" json:"credentialID"`
+	CountryCode              sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString `db:"party_id" json:"partyID"`
+	Currency                 string         `db:"currency" json:"currency"`
+	TariffAltUrl             sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID              sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
+	CdrID                    sql.NullInt64  `db:"cdr_id" json:"cdrID"`
+	IsIntermediateCdrCapable sql.NullBool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 }
 
 type TariffAltText struct {
