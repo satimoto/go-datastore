@@ -15,9 +15,10 @@ SELECT * FROM token_authorizations
   WHERE authorization_id = $1;
 
 -- name: GetLastTokenAuthorizationByTokenID :one
-SELECT * FROM token_authorizations
-  WHERE token_id = $1 
-  ORDER BY id DESC
+SELECT ta.* FROM token_authorizations ta
+  LEFT JOIN sessions s ON s.authorization_id = ta.authorization_id
+  WHERE ta.token_id = $1 AND s.authorization_id is NULL
+  ORDER BY ta.id DESC
   LIMIT 1;
 
 -- name: UpdateTokenAuthorizationByAuthorizationID :one

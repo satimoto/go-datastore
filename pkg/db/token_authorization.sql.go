@@ -56,9 +56,10 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 }
 
 const getLastTokenAuthorizationByTokenID = `-- name: GetLastTokenAuthorizationByTokenID :one
-SELECT id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized FROM token_authorizations
-  WHERE token_id = $1 
-  ORDER BY id DESC
+SELECT ta.id, ta.token_id, ta.authorization_id, ta.country_code, ta.party_id, ta.location_id, ta.signing_key, ta.authorized FROM token_authorizations ta
+  LEFT JOIN sessions s ON s.authorization_id = ta.authorization_id
+  WHERE ta.token_id = $1 AND s.authorization_id is NULL
+  ORDER BY ta.id DESC
   LIMIT 1
 `
 
