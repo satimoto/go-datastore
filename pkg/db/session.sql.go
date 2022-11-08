@@ -384,8 +384,9 @@ UPDATE sessions SET (
     total_cost,
     status,
     invoice_request_id,
+    is_flagged,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   WHERE uid = $1
   RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged
 `
@@ -402,6 +403,7 @@ type UpdateSessionByUidParams struct {
 	TotalCost        sql.NullFloat64   `db:"total_cost" json:"totalCost"`
 	Status           SessionStatusType `db:"status" json:"status"`
 	InvoiceRequestID sql.NullInt64     `db:"invoice_request_id" json:"invoiceRequestID"`
+	IsFlagged        bool              `db:"is_flagged" json:"isFlagged"`
 	LastUpdated      time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -418,6 +420,7 @@ func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUid
 		arg.TotalCost,
 		arg.Status,
 		arg.InvoiceRequestID,
+		arg.IsFlagged,
 		arg.LastUpdated,
 	)
 	var i Session
