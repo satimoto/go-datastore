@@ -19,6 +19,7 @@ func NewUpdateSessionByUidParams(session db.Session) db.UpdateSessionByUidParams
 		TotalCost:        session.TotalCost,
 		Status:           session.Status,
 		InvoiceRequestID: session.InvoiceRequestID,
+		IsFlagged:        session.IsFlagged,
 		LastUpdated:      session.LastUpdated,
 	}
 }
