@@ -14,6 +14,12 @@ INSERT INTO token_authorizations (
 SELECT * FROM token_authorizations
   WHERE authorization_id = $1;
 
+-- name: GetLastTokenAuthorizationByTokenID :one
+SELECT * FROM token_authorizations
+  WHERE token_id = $1 
+  ORDER BY id DESC
+  LIMIT 1;
+
 -- name: UpdateTokenAuthorizationByAuthorizationID :one
 UPDATE token_authorizations SET (
     authorized,

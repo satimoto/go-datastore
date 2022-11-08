@@ -218,6 +218,7 @@ type MockRepository interface {
 	SetGetTariffByUidMockData(response TariffMockData)
 	SetGetTariffRestrictionMockData(response TariffRestrictionMockData)
 	SetGetTokenAuthorizationByAuthorizationIDMockData(response TokenAuthorizationMockData)
+	SetGetLastTokenAuthorizationByTokenIDMockData(response TokenAuthorizationMockData)
 	SetGetTokenMockData(response TokenMockData)
 	SetGetTokenByAuthIDMockData(response TokenMockData)
 	SetGetTokenByUidMockData(response TokenMockData)
@@ -441,6 +442,7 @@ type MockRepositoryService struct {
 	getTariffByUidMockData                              []TariffMockData
 	getTariffRestrictionMockData                        []TariffRestrictionMockData
 	getTokenAuthorizationByAuthorizationIDMockData      []TokenAuthorizationMockData
+	getLastTokenAuthorizationByTokenIDMockData          []TokenAuthorizationMockData
 	getTokenMockData                                    []TokenMockData
 	getTokenByAuthIDMockData                            []TokenMockData
 	getTokenByUidMockData                               []TokenMockData

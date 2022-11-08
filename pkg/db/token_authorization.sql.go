@@ -55,6 +55,29 @@ func (q *Queries) CreateTokenAuthorization(ctx context.Context, arg CreateTokenA
 	return i, err
 }
 
+const getLastTokenAuthorizationByTokenID = `-- name: GetLastTokenAuthorizationByTokenID :one
+SELECT id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized FROM token_authorizations
+  WHERE token_id = $1 
+  ORDER BY id DESC
+  LIMIT 1
+`
+
+func (q *Queries) GetLastTokenAuthorizationByTokenID(ctx context.Context, tokenID int64) (TokenAuthorization, error) {
+	row := q.db.QueryRowContext(ctx, getLastTokenAuthorizationByTokenID, tokenID)
+	var i TokenAuthorization
+	err := row.Scan(
+		&i.ID,
+		&i.TokenID,
+		&i.AuthorizationID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.LocationID,
+		&i.SigningKey,
+		&i.Authorized,
+	)
+	return i, err
+}
+
 const getTokenAuthorizationByAuthorizationID = `-- name: GetTokenAuthorizationByAuthorizationID :one
 SELECT id, token_id, authorization_id, country_code, party_id, location_id, signing_key, authorized FROM token_authorizations
   WHERE authorization_id = $1
