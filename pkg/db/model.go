@@ -342,7 +342,7 @@ type RoundingGranularity string
 const (
 	RoundingGranularityUNIT       RoundingGranularity = "UNIT"
 	RoundingGranularityTENTH      RoundingGranularity = "TENTH"
-	RoundingGranularityHUNDRETH   RoundingGranularity = "HUNDRETH"
+	RoundingGranularityHUNDREDTH  RoundingGranularity = "HUNDREDTH"
 	RoundingGranularityTHOUSANDTH RoundingGranularity = "THOUSANDTH"
 )
 
