@@ -861,6 +861,7 @@ type HtbTariff struct {
 	TimeMinDuration sql.NullInt32   `db:"time_min_duration" json:"timeMinDuration"`
 	EnergyPrice     sql.NullFloat64 `db:"energy_price" json:"energyPrice"`
 	FlatPrice       sql.NullFloat64 `db:"flat_price" json:"flatPrice"`
+	LastUpdated     time.Time       `db:"last_updated" json:"lastUpdated"`
 }
 
 type Image struct {

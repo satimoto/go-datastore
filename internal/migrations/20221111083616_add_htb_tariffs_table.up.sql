@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS htb_tariffs (
     time_price        FLOAT,
     time_min_duration INTEGER,
     energy_price      FLOAT,
-    flat_price        FLOAT
+    flat_price        FLOAT,
+    last_updated      TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ALTER TABLE htb_tariffs ADD CONSTRAINT uq_htb_tariffs_name UNIQUE (name);
