@@ -245,6 +245,50 @@ func (q *Queries) ListConnectors(ctx context.Context, evseID int64) ([]Connector
 	return items, nil
 }
 
+const listConnectorsByEvseID = `-- name: ListConnectorsByEvseID :many
+SELECT c.id, c.evse_id, c.uid, c.identifier, c.standard, c.format, c.power_type, c.voltage, c.amperage, c.wattage, c.tariff_id, c.terms_and_conditions, c.last_updated, c.publish FROM connectors c
+  INNER JOIN evses e ON c.evse_id = e.id
+  WHERE e.evse_id = $1
+`
+
+func (q *Queries) ListConnectorsByEvseID(ctx context.Context, evseID sql.NullString) ([]Connector, error) {
+	rows, err := q.db.QueryContext(ctx, listConnectorsByEvseID, evseID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Connector
+	for rows.Next() {
+		var i Connector
+		if err := rows.Scan(
+			&i.ID,
+			&i.EvseID,
+			&i.Uid,
+			&i.Identifier,
+			&i.Standard,
+			&i.Format,
+			&i.PowerType,
+			&i.Voltage,
+			&i.Amperage,
+			&i.Wattage,
+			&i.TariffID,
+			&i.TermsAndConditions,
+			&i.LastUpdated,
+			&i.Publish,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateConnector = `-- name: UpdateConnector :one
 UPDATE connectors SET (
     identifier,

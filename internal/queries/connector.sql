@@ -45,6 +45,11 @@ SELECT * FROM connectors
   WHERE evse_id = $1 AND publish = true
   ORDER BY id;
 
+-- name: ListConnectorsByEvseID :many
+SELECT c.* FROM connectors c
+  INNER JOIN evses e ON c.evse_id = e.id
+  WHERE e.evse_id = $1;
+
 -- name: UpdateConnector :one
 UPDATE connectors SET (
     identifier,
