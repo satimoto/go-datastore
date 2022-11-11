@@ -243,6 +243,7 @@ type MockRepository interface {
 	SetListChargingPeriodDimensionsMockData(response ChargingPeriodDimensionsMockData)
 	SetListCredentialsMockData(response CredentialsMockData)
 	SetListConnectorsMockData(response ConnectorsMockData)
+	SetListConnectorsByEvseIDMockData(response ConnectorsMockData)
 	SetListCountryAccountsMockData(response CountryAccountsMockData)
 	SetListElementsMockData(response ElementsMockData)
 	SetListElementRestrictionWeekdaysMockData(response WeekdaysMockData)
@@ -469,6 +470,7 @@ type MockRepositoryService struct {
 	listChargingPeriodDimensionsMockData                []ChargingPeriodDimensionsMockData
 	listCredentialsMockData                             []CredentialsMockData
 	listConnectorsMockData                              []ConnectorsMockData
+	listConnectorsByEvseIDMockData                      []ConnectorsMockData
 	listCountryAccountsMockData                         []CountryAccountsMockData
 	listElementsMockData                                []ElementsMockData
 	listElementRestrictionWeekdaysMockData              []WeekdaysMockData
