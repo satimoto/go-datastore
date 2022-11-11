@@ -191,6 +191,7 @@ type MockRepository interface {
 	SetGetEvseByIdentifierMockData(response EvseMockData)
 	SetGetEvseByUidMockData(response EvseMockData)
 	SetGetGeoLocationMockData(response GeoLocationMockData)
+	SetGetHtbTariffByNameMockData(response HtbTariffMockData)
 	SetGetImageMockData(response ImageMockData)
 	SetGetInvoiceRequestMockData(response InvoiceRequestMockData)
 	SetGetUnsettledInvoiceRequestMockData(response InvoiceRequestMockData)
@@ -257,6 +258,7 @@ type MockRepository interface {
 	SetListExceptionalOpeningPeriodsMockData(response ExceptionalPeriodsMockData)
 	SetListExceptionalClosingPeriodsMockData(response ExceptionalPeriodsMockData)
 	SetListFacilitiesMockData(response FacilitiesMockData)
+	SetListHtbTariffsMockData(response HtbTariffsMockData)
 	SetListInvoiceRequestsMockData(response FacilitiesMockData)
 	SetListLocationDirectionsMockData(response DisplayTextsMockData)
 	SetListLocationFacilitiesMockData(response FacilitiesMockData)
@@ -415,6 +417,7 @@ type MockRepositoryService struct {
 	getEvseByIdentifierMockData                         []EvseMockData
 	getEvseByUidMockData                                []EvseMockData
 	getGeoLocationMockData                              []GeoLocationMockData
+	getHtbTariffByNameMockData                          []HtbTariffMockData
 	getImageMockData                                    []ImageMockData
 	getInvoiceRequestMockData                           []InvoiceRequestMockData
 	getUnsettledInvoiceRequestMockData                  []InvoiceRequestMockData
@@ -481,6 +484,7 @@ type MockRepositoryService struct {
 	listExceptionalOpeningPeriodsMockData               []ExceptionalPeriodsMockData
 	listExceptionalClosingPeriodsMockData               []ExceptionalPeriodsMockData
 	listFacilitiesMockData                              []FacilitiesMockData
+	listHtbTariffsMockData                              []HtbTariffsMockData
 	listUnsettledInvoiceRequestsMockData                []InvoiceRequestsMockData
 	listLocationDirectionsMockData                      []DisplayTextsMockData
 	listLocationFacilitiesMockData                      []FacilitiesMockData
