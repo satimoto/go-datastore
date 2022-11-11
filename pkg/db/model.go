@@ -853,6 +853,16 @@ type GeoLocation struct {
 	LongitudeFloat float64 `db:"longitude_float" json:"longitudeFloat"`
 }
 
+type HtbTariff struct {
+	ID              int64           `db:"id" json:"id"`
+	Name            string          `db:"name" json:"name"`
+	Currency        string          `db:"currency" json:"currency"`
+	TimePrice       sql.NullFloat64 `db:"time_price" json:"timePrice"`
+	TimeMinDuration sql.NullInt32   `db:"time_min_duration" json:"timeMinDuration"`
+	EnergyPrice     sql.NullFloat64 `db:"energy_price" json:"energyPrice"`
+	FlatPrice       sql.NullFloat64 `db:"flat_price" json:"flatPrice"`
+}
+
 type Image struct {
 	ID        int64          `db:"id" json:"id"`
 	Url       string         `db:"url" json:"url"`
