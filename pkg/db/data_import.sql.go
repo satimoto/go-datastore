@@ -8,7 +8,7 @@ import (
 )
 
 const getHtbTariffByName = `-- name: GetHtbTariffByName :one
-SELECT id, name, currency, time_price, time_min_duration, energy_price, flat_price FROM htb_tariffs
+SELECT id, name, currency, time_price, time_min_duration, energy_price, flat_price, last_updated FROM htb_tariffs
   WHERE name = $1
 `
 
@@ -23,12 +23,13 @@ func (q *Queries) GetHtbTariffByName(ctx context.Context, name string) (HtbTarif
 		&i.TimeMinDuration,
 		&i.EnergyPrice,
 		&i.FlatPrice,
+		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const listHtbTariffs = `-- name: ListHtbTariffs :many
-SELECT id, name, currency, time_price, time_min_duration, energy_price, flat_price FROM htb_tariffs
+SELECT id, name, currency, time_price, time_min_duration, energy_price, flat_price, last_updated FROM htb_tariffs
 `
 
 func (q *Queries) ListHtbTariffs(ctx context.Context) ([]HtbTariff, error) {
@@ -48,6 +49,7 @@ func (q *Queries) ListHtbTariffs(ctx context.Context) ([]HtbTariff, error) {
 			&i.TimeMinDuration,
 			&i.EnergyPrice,
 			&i.FlatPrice,
+			&i.LastUpdated,
 		); err != nil {
 			return nil, err
 		}
