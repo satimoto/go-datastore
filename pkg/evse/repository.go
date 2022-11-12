@@ -16,6 +16,7 @@ type EvseRepository interface {
 	DeleteEvseImages(ctx context.Context, evseID int64) error
 	DeleteStatusSchedules(ctx context.Context, evseID int64) error
 	GetEvse(ctx context.Context, id int64) (db.Evse, error)
+	GetEvseByEvseID(ctx context.Context, evseID sql.NullString) (db.Evse, error)
 	GetEvseByIdentifier(ctx context.Context, identifier sql.NullString) (db.Evse, error)
 	GetEvseByUid(ctx context.Context, uid string) (db.Evse, error)
 	GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error)

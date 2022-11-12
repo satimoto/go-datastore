@@ -188,6 +188,7 @@ type MockRepository interface {
 	SetGetEmailSubscriptionByEmailMockData(response EmailSubscriptionMockData)
 	SetGetEnergyMixMockData(response EnergyMixMockData)
 	SetGetEvseMockData(response EvseMockData)
+	SetGetEvseByEvseIDMockData(response EvseMockData)
 	SetGetEvseByIdentifierMockData(response EvseMockData)
 	SetGetEvseByUidMockData(response EvseMockData)
 	SetGetGeoLocationMockData(response GeoLocationMockData)
@@ -415,6 +416,7 @@ type MockRepositoryService struct {
 	getEmailSubscriptionByEmailMockData                 []EmailSubscriptionMockData
 	getEnergyMixMockData                                []EnergyMixMockData
 	getEvseMockData                                     []EvseMockData
+	getEvseByEvseIDMockData                             []EvseMockData
 	getEvseByIdentifierMockData                         []EvseMockData
 	getEvseByUidMockData                                []EvseMockData
 	getGeoLocationMockData                              []GeoLocationMockData
