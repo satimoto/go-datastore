@@ -31,6 +31,10 @@ SELECT * FROM evses
 SELECT * FROM evses
   WHERE identifier = $1;
 
+-- name: GetEvseByEvseID :one
+SELECT * FROM evses
+  WHERE evse_id = $1;
+
 -- name: GetEvseByUid :one
 SELECT * FROM evses
   WHERE uid = $1;
