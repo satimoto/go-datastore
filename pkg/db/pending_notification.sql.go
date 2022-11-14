@@ -24,12 +24,12 @@ INSERT INTO pending_notifications (
 `
 
 type CreatePendingNotificationParams struct {
-	UserID           int64         `db:"user_id" json:"userID"`
-	NodeID           int64         `db:"node_id" json:"nodeID"`
-	InvoiceRequestID sql.NullInt64 `db:"invoice_request_id" json:"invoiceRequestID"`
-	DeviceToken      string        `db:"device_token" json:"deviceToken"`
-	Type             string        `db:"type" json:"type"`
-	SendDate         time.Time     `db:"send_date" json:"sendDate"`
+	UserID           int64          `db:"user_id" json:"userID"`
+	NodeID           int64          `db:"node_id" json:"nodeID"`
+	InvoiceRequestID sql.NullInt64  `db:"invoice_request_id" json:"invoiceRequestID"`
+	DeviceToken      sql.NullString `db:"device_token" json:"deviceToken"`
+	Type             string         `db:"type" json:"type"`
+	SendDate         time.Time      `db:"send_date" json:"sendDate"`
 }
 
 func (q *Queries) CreatePendingNotification(ctx context.Context, arg CreatePendingNotificationParams) (PendingNotification, error) {
@@ -144,8 +144,8 @@ UPDATE pending_notifications SET device_token = $2
 `
 
 type UpdatePendingNotificationsByUserParams struct {
-	UserID      int64  `db:"user_id" json:"userID"`
-	DeviceToken string `db:"device_token" json:"deviceToken"`
+	UserID      int64          `db:"user_id" json:"userID"`
+	DeviceToken sql.NullString `db:"device_token" json:"deviceToken"`
 }
 
 func (q *Queries) UpdatePendingNotificationsByUser(ctx context.Context, arg UpdatePendingNotificationsByUserParams) error {
