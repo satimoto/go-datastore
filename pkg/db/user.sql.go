@@ -23,7 +23,7 @@ INSERT INTO users (
 
 type CreateUserParams struct {
 	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
-	DeviceToken       string         `db:"device_token" json:"deviceToken"`
+	DeviceToken       sql.NullString `db:"device_token" json:"deviceToken"`
 	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
 	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
 	Pubkey            string         `db:"pubkey" json:"pubkey"`
@@ -87,7 +87,7 @@ SELECT id, linking_pubkey, pubkey, device_token, node_id, commission_percent, is
   WHERE device_token = $1
 `
 
-func (q *Queries) GetUserByDeviceToken(ctx context.Context, deviceToken string) (User, error) {
+func (q *Queries) GetUserByDeviceToken(ctx context.Context, deviceToken sql.NullString) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUserByDeviceToken, deviceToken)
 	var i User
 	err := row.Scan(
@@ -246,7 +246,7 @@ UPDATE users SET (
 type UpdateUserParams struct {
 	ID                int64          `db:"id" json:"id"`
 	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
-	DeviceToken       string         `db:"device_token" json:"deviceToken"`
+	DeviceToken       sql.NullString `db:"device_token" json:"deviceToken"`
 	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
 	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
 	Pubkey            string         `db:"pubkey" json:"pubkey"`

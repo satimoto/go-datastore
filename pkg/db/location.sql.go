@@ -608,35 +608,6 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 	return i, err
 }
 
-const updateLocationAvailability = `-- name: UpdateLocationAvailability :exec
-UPDATE locations SET (
-    available_evses, 
-    total_evses, 
-    is_remote_capable, 
-    is_rfid_capable
-  ) = ($2, $3, $4, $5)
-  WHERE id = $1
-`
-
-type UpdateLocationAvailabilityParams struct {
-	ID              int64 `db:"id" json:"id"`
-	AvailableEvses  int32 `db:"available_evses" json:"availableEvses"`
-	TotalEvses      int32 `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable bool  `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable   bool  `db:"is_rfid_capable" json:"isRfidCapable"`
-}
-
-func (q *Queries) UpdateLocationAvailability(ctx context.Context, arg UpdateLocationAvailabilityParams) error {
-	_, err := q.db.ExecContext(ctx, updateLocationAvailability,
-		arg.ID,
-		arg.AvailableEvses,
-		arg.TotalEvses,
-		arg.IsRemoteCapable,
-		arg.IsRfidCapable,
-	)
-	return err
-}
-
 const updateLocationByUid = `-- name: UpdateLocationByUid :one
 UPDATE locations SET (
     country_code,
@@ -752,17 +723,34 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 }
 
 const updateLocationLastUpdated = `-- name: UpdateLocationLastUpdated :exec
-UPDATE locations SET last_updated = $2
+UPDATE locations SET (
+    available_evses, 
+    total_evses, 
+    is_remote_capable, 
+    is_rfid_capable,
+    last_updated
+  ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
 `
 
 type UpdateLocationLastUpdatedParams struct {
-	ID          int64     `db:"id" json:"id"`
-	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
+	ID              int64     `db:"id" json:"id"`
+	AvailableEvses  int32     `db:"available_evses" json:"availableEvses"`
+	TotalEvses      int32     `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable bool      `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable   bool      `db:"is_rfid_capable" json:"isRfidCapable"`
+	LastUpdated     time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateLocationLastUpdated(ctx context.Context, arg UpdateLocationLastUpdatedParams) error {
-	_, err := q.db.ExecContext(ctx, updateLocationLastUpdated, arg.ID, arg.LastUpdated)
+	_, err := q.db.ExecContext(ctx, updateLocationLastUpdated,
+		arg.ID,
+		arg.AvailableEvses,
+		arg.TotalEvses,
+		arg.IsRemoteCapable,
+		arg.IsRfidCapable,
+		arg.LastUpdated,
+	)
 	return err
 }
 

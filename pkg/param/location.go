@@ -32,8 +32,8 @@ func NewUpdateLocationByUidParams(location db.Location) db.UpdateLocationByUidPa
 	}
 }
 
-func NewUpdateLocationAvailabilityParams(locationID int64) db.UpdateLocationAvailabilityParams {
-	return db.UpdateLocationAvailabilityParams{
+func UpdateLocationLastUpdated(locationID int64) db.UpdateLocationLastUpdatedParams {
+	return db.UpdateLocationLastUpdatedParams{
 		ID:              locationID,
 		AvailableEvses:  0,
 		TotalEvses:      0,

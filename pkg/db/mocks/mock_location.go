@@ -81,11 +81,6 @@ func (r *MockRepositoryService) ListLocationsByGeom(ctx context.Context, arg db.
 	return response.Locations, response.Error
 }
 
-func (r *MockRepositoryService) UpdateLocationAvailability(ctx context.Context, arg db.UpdateLocationAvailabilityParams) error {
-	r.updateLocationAvailabilityMockData = append(r.updateLocationAvailabilityMockData, arg)
-	return nil
-}
-
 func (r *MockRepositoryService) UpdateLocationByUid(ctx context.Context, arg db.UpdateLocationByUidParams) (db.Location, error) {
 	r.updateLocationByUidMockData = append(r.updateLocationByUidMockData, arg)
 	return db.Location{}, nil
@@ -118,16 +113,6 @@ func (r *MockRepositoryService) GetCreateLocationMockData() (db.CreateLocationPa
 
 	response := r.createLocationMockData[0]
 	r.createLocationMockData = r.createLocationMockData[1:]
-	return response, nil
-}
-
-func (r *MockRepositoryService) GetUpdateLocationAvailabilityMockData() (db.UpdateLocationAvailabilityParams, error) {
-	if len(r.updateLocationAvailabilityMockData) == 0 {
-		return db.UpdateLocationAvailabilityParams{}, ErrorNotFound()
-	}
-
-	response := r.updateLocationAvailabilityMockData[0]
-	r.updateLocationAvailabilityMockData = r.updateLocationAvailabilityMockData[1:]
 	return response, nil
 }
 

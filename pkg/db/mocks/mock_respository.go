@@ -137,7 +137,6 @@ type MockRepository interface {
 	GetUpdateGeoLocationMockData() (db.UpdateGeoLocationParams, error)
 	GetUpdateImageMockData() (db.UpdateImageParams, error)
 	GetUpdateInvoiceRequestMockData() (db.UpdateInvoiceRequestParams, error)
-	GetUpdateLocationAvailabilityMockData() (db.UpdateLocationAvailabilityParams, error)
 	GetUpdateLocationByUidMockData() (db.UpdateLocationByUidParams, error)
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
 	GetUpdateLocationPublishMockData() (db.UpdateLocationPublishParams, error)
@@ -562,7 +561,6 @@ type MockRepositoryService struct {
 	updateGeoLocationMockData                           []db.UpdateGeoLocationParams
 	updateImageMockData                                 []db.UpdateImageParams
 	updateInvoiceRequestMockData                        []db.UpdateInvoiceRequestParams
-	updateLocationAvailabilityMockData                  []db.UpdateLocationAvailabilityParams
 	updateLocationByUidMockData                         []db.UpdateLocationByUidParams
 	updateLocationLastUpdatedMockData                   []db.UpdateLocationLastUpdatedParams
 	updateLocationPublishMockData                       []db.UpdateLocationPublishParams
