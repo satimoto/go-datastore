@@ -23,7 +23,7 @@ type SessionRepository interface {
 	ListSessionInvoices(ctx context.Context, sessionID int64) ([]db.SessionInvoice, error)
 	ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error)
 	ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
-	ListUnsettledSessionInvoicesByUserID(ctx context.Context, userID int64) ([]db.SessionInvoice, error)
+	ListSessionInvoicesByUserID(ctx context.Context, arg db.ListSessionInvoicesByUserIDParams) ([]db.SessionInvoice, error)
 	SetSessionChargingPeriod(ctx context.Context, arg db.SetSessionChargingPeriodParams) error
 	UpdateSessionByUid(ctx context.Context, arg db.UpdateSessionByUidParams) (db.Session, error)
 	UpdateSessionInvoice(ctx context.Context, arg db.UpdateSessionInvoiceParams) (db.SessionInvoice, error)
