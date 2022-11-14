@@ -27,7 +27,7 @@ func (r *MockRepositoryService) GetUser(ctx context.Context, id int64) (db.User,
 	return response.User, response.Error
 }
 
-func (r *MockRepositoryService) GetUserByDeviceToken(ctx context.Context, deviceToken string) (db.User, error) {
+func (r *MockRepositoryService) GetUserByDeviceToken(ctx context.Context, deviceToken sql.NullString) (db.User, error) {
 	if len(r.getUserByDeviceTokenMockData) == 0 {
 		return db.User{}, ErrorNotFound()
 	}
