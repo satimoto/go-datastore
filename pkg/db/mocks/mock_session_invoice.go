@@ -51,13 +51,13 @@ func (r *MockRepositoryService) ListSessionInvoices(ctx context.Context, session
 	return response.SessionInvoices, response.Error
 }
 
-func (r *MockRepositoryService) ListUnsettledSessionInvoicesByUserID(ctx context.Context, id int64) ([]db.SessionInvoice, error) {
-	if len(r.listUnsettledSessionInvoicesByUserIDMockData) == 0 {
+func (r *MockRepositoryService) ListSessionInvoicesByUserID(ctx context.Context, arg db.ListSessionInvoicesByUserIDParams) ([]db.SessionInvoice, error) {
+	if len(r.listSessionInvoicesByUserIDMockData) == 0 {
 		return []db.SessionInvoice{}, nil
 	}
 
-	response := r.listUnsettledSessionInvoicesByUserIDMockData[0]
-	r.listUnsettledSessionInvoicesByUserIDMockData = r.listUnsettledSessionInvoicesByUserIDMockData[1:]
+	response := r.listSessionInvoicesByUserIDMockData[0]
+	r.listSessionInvoicesByUserIDMockData = r.listSessionInvoicesByUserIDMockData[1:]
 	return response.SessionInvoices, response.Error
 }
 
@@ -98,6 +98,6 @@ func (r *MockRepositoryService) SetListSessionInvoicesMockData(response SessionI
 	r.listSessionInvoicesMockData = append(r.listSessionInvoicesMockData, response)
 }
 
-func (r *MockRepositoryService) SetListUnsettledSessionInvoicesByUserIDMockData(response SessionInvoicesMockData) {
-	r.listUnsettledSessionInvoicesByUserIDMockData = append(r.listUnsettledSessionInvoicesByUserIDMockData, response)
+func (r *MockRepositoryService) SetListSessionInvoicesByUserIDMockData(response SessionInvoicesMockData) {
+	r.listSessionInvoicesByUserIDMockData = append(r.listSessionInvoicesByUserIDMockData, response)
 }

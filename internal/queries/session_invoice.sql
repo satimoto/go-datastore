@@ -34,11 +34,11 @@ SELECT * FROM session_invoices
   WHERE session_id = $1
   ORDER BY id;
 
--- name: ListUnsettledSessionInvoicesByUserID :many
+-- name: ListSessionInvoicesByUserID :many
 SELECT si.* FROM session_invoices si
   INNER JOIN sessions s ON s.id = si.session_id
   INNER JOIN users u ON u.id = s.user_id
-  WHERE u.id = $1 AND si.is_settled != true
+  WHERE u.id = $1 AND si.is_settled = $2 AND si.is_expired = $3
   ORDER BY si.id;
 
 -- name: UpdateSessionInvoice :one

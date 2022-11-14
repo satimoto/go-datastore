@@ -212,16 +212,22 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]S
 	return items, nil
 }
 
-const listUnsettledSessionInvoicesByUserID = `-- name: ListUnsettledSessionInvoicesByUserID :many
+const listSessionInvoicesByUserID = `-- name: ListSessionInvoicesByUserID :many
 SELECT si.id, si.session_id, si.user_id, si.currency, si.currency_rate, si.currency_rate_msat, si.price_fiat, si.price_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated, si.total_fiat, si.total_msat, si.signature FROM session_invoices si
   INNER JOIN sessions s ON s.id = si.session_id
   INNER JOIN users u ON u.id = s.user_id
-  WHERE u.id = $1 AND si.is_settled != true
+  WHERE u.id = $1 AND si.is_settled = $2 AND si.is_expired = $3
   ORDER BY si.id
 `
 
-func (q *Queries) ListUnsettledSessionInvoicesByUserID(ctx context.Context, id int64) ([]SessionInvoice, error) {
-	rows, err := q.db.QueryContext(ctx, listUnsettledSessionInvoicesByUserID, id)
+type ListSessionInvoicesByUserIDParams struct {
+	ID        int64 `db:"id" json:"id"`
+	IsSettled bool  `db:"is_settled" json:"isSettled"`
+	IsExpired bool  `db:"is_expired" json:"isExpired"`
+}
+
+func (q *Queries) ListSessionInvoicesByUserID(ctx context.Context, arg ListSessionInvoicesByUserIDParams) ([]SessionInvoice, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionInvoicesByUserID, arg.ID, arg.IsSettled, arg.IsExpired)
 	if err != nil {
 		return nil, err
 	}
