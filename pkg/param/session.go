@@ -36,9 +36,11 @@ func NewCreateSessionInvoiceParams(session db.Session) db.CreateSessionInvoicePa
 
 func NewUpdateSessionInvoiceParams(sessionInvoice db.SessionInvoice) db.UpdateSessionInvoiceParams {
 	return db.UpdateSessionInvoiceParams{
-		ID:          sessionInvoice.ID,
-		IsSettled:   sessionInvoice.IsSettled,
-		IsExpired:   sessionInvoice.IsExpired,
-		LastUpdated: time.Now(),
+		ID:             sessionInvoice.ID,
+		PaymentRequest: sessionInvoice.PaymentRequest,
+		Signature:      sessionInvoice.Signature,
+		IsSettled:      sessionInvoice.IsSettled,
+		IsExpired:      sessionInvoice.IsExpired,
+		LastUpdated:    time.Now(),
 	}
 }

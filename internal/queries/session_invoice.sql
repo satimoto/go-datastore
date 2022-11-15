@@ -43,9 +43,11 @@ SELECT si.* FROM session_invoices si
 
 -- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (
+    payment_request,
+    signature,
     is_settled,
     is_expired,
     last_updated
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
   RETURNING *;

@@ -271,24 +271,30 @@ func (q *Queries) ListSessionInvoicesByUserID(ctx context.Context, arg ListSessi
 
 const updateSessionInvoice = `-- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (
+    payment_request,
+    signature,
     is_settled,
     is_expired,
     last_updated
-  ) = ($2, $3, $4)
+  ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
   RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature
 `
 
 type UpdateSessionInvoiceParams struct {
-	ID          int64     `db:"id" json:"id"`
-	IsSettled   bool      `db:"is_settled" json:"isSettled"`
-	IsExpired   bool      `db:"is_expired" json:"isExpired"`
-	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
+	ID             int64     `db:"id" json:"id"`
+	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
+	Signature      []byte    `db:"signature" json:"signature"`
+	IsSettled      bool      `db:"is_settled" json:"isSettled"`
+	IsExpired      bool      `db:"is_expired" json:"isExpired"`
+	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInvoiceParams) (SessionInvoice, error) {
 	row := q.db.QueryRowContext(ctx, updateSessionInvoice,
 		arg.ID,
+		arg.PaymentRequest,
+		arg.Signature,
 		arg.IsSettled,
 		arg.IsExpired,
 		arg.LastUpdated,
