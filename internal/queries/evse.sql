@@ -44,6 +44,11 @@ SELECT * FROM evses
   WHERE location_id = $1
   ORDER BY id;
 
+-- name: ListEvsesLikeEvseID :many
+SELECT * FROM evses
+  WHERE evse_id like $1
+  ORDER BY id;
+
 -- name: ListActiveEvses :many
 SELECT * FROM evses
   WHERE location_id = $1 AND status != 'REMOVED'
