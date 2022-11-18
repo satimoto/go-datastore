@@ -72,6 +72,16 @@ func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64)
 	return response.Evses, response.Error
 }
 
+func (r *MockRepositoryService) ListEvsesLikeEvseID(ctx context.Context, evseID sql.NullString) ([]db.Evse, error) {
+	if len(r.listEvsesLikeEvseIDMockData) == 0 {
+		return []db.Evse{}, nil
+	}
+
+	response := r.listEvsesLikeEvseIDMockData[0]
+	r.listEvsesLikeEvseIDMockData = r.listEvsesLikeEvseIDMockData[1:]
+	return response.Evses, response.Error
+}
+
 func (r *MockRepositoryService) ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error) {
 	if len(r.listActiveEvsesMockData) == 0 {
 		return []db.Evse{}, nil
@@ -152,6 +162,10 @@ func (r *MockRepositoryService) SetGetEvseByUidMockData(response EvseMockData) {
 
 func (r *MockRepositoryService) SetListEvsesMockData(response EvsesMockData) {
 	r.listEvsesMockData = append(r.listEvsesMockData, response)
+}
+
+func (r *MockRepositoryService) SetListEvsesLikeEvseIDMockData(response EvsesMockData) {
+	r.listEvsesLikeEvseIDMockData = append(r.listEvsesLikeEvseIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetListActiveEvsesMockData(response EvsesMockData) {

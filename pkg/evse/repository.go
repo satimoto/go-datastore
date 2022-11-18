@@ -23,6 +23,7 @@ type EvseRepository interface {
 	ListCapabilities(ctx context.Context) ([]db.Capability, error)
 	ListConnectors(ctx context.Context, evseID int64) ([]db.Connector, error)
 	ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
+	ListEvsesLikeEvseID(ctx context.Context, evseID sql.NullString) ([]db.Evse, error)
 	ListEvseStatusPeriods(ctx context.Context, evseID int64) ([]db.EvseStatusPeriod, error)
 	ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
 	ListEvseCapabilities(ctx context.Context, evseID int64) ([]db.Capability, error)
