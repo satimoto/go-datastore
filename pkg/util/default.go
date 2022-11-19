@@ -1,6 +1,9 @@
 package util
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 func DefaultBool(i interface{}, fallback bool) bool {
 	switch t := i.(type) {
@@ -28,6 +31,23 @@ func DefaultString(i interface{}, fallback string) string {
 	case string:
 		return t
 	case *string:
+		if t != nil {
+			return *t
+		}
+	}
+
+	return fallback
+}
+
+func DefaultTime(i interface{}, fallback time.Time) time.Time {
+	switch t := i.(type) {
+	case sql.NullTime:
+		if t.Valid {
+			return t.Time
+		}
+	case time.Time:
+		return t
+	case *time.Time:
 		if t != nil {
 			return *t
 		}
