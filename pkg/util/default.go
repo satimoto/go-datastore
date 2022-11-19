@@ -22,6 +22,23 @@ func DefaultBool(i interface{}, fallback bool) bool {
 	return fallback
 }
 
+func DefaultFloat(i interface{}, fallback float64) float64 {
+	switch t := i.(type) {
+	case sql.NullFloat64:
+		if t.Valid {
+			return t.Float64
+		}
+	case float64:
+		return t
+	case *float64:
+		if t != nil {
+			return *t
+		}
+	}
+
+	return fallback
+}
+
 func DefaultString(i interface{}, fallback string) string {
 	switch t := i.(type) {
 	case sql.NullString:
