@@ -262,3 +262,28 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 	)
 	return i, err
 }
+
+const updateTariffCapabilities = `-- name: UpdateTariffCapabilities :exec
+UPDATE tariffs SET is_intermediate_cdr_capable = $1::BOOLEAN
+  WHERE cdr_id IS NULL AND 
+    ($2::TEXT = '' OR $2::TEXT = uid) AND
+    ($3::TEXT = '' OR $3::TEXT = country_code) AND
+    ($4::TEXT = '' OR $4::TEXT = party_id)
+`
+
+type UpdateTariffCapabilitiesParams struct {
+	IsIntermediateCdrCapable bool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	Uid                      string `db:"uid" json:"uid"`
+	CountryCode              string `db:"country_code" json:"countryCode"`
+	PartyID                  string `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) UpdateTariffCapabilities(ctx context.Context, arg UpdateTariffCapabilitiesParams) error {
+	_, err := q.db.ExecContext(ctx, updateTariffCapabilities,
+		arg.IsIntermediateCdrCapable,
+		arg.Uid,
+		arg.CountryCode,
+		arg.PartyID,
+	)
+	return err
+}
