@@ -25,6 +25,7 @@ type TariffRepository interface {
 	ListTariffRestrictionWeekdays(ctx context.Context, tariffRestrictionID int64) ([]db.Weekday, error)
 	SetTariffAltText(ctx context.Context, arg db.SetTariffAltTextParams) error
 	UpdateTariffByUid(ctx context.Context, arg db.UpdateTariffByUidParams) (db.Tariff, error)
+	UpdateTariffCapabilities(ctx context.Context, arg db.UpdateTariffCapabilitiesParams) error
 }
 
 func NewRepository(repositoryService *db.RepositoryService) TariffRepository {

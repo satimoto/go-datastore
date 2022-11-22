@@ -51,3 +51,10 @@ UPDATE tariffs SET (
   ) = ($2, $3, $4, $5, $6, $7, $8, $9)
   WHERE uid = $1 AND cdr_id IS NULL
   RETURNING *;
+
+-- name: UpdateTariffCapabilities :exec
+UPDATE tariffs SET is_intermediate_cdr_capable = @is_intermediate_cdr_capable::BOOLEAN
+  WHERE cdr_id IS NULL AND 
+    (@uid::TEXT = '' OR @uid::TEXT = uid) AND
+    (@country_code::TEXT = '' OR @country_code::TEXT = country_code) AND
+    (@party_id::TEXT = '' OR @party_id::TEXT = party_id);

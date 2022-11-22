@@ -152,6 +152,7 @@ type MockRepository interface {
 	GetUpdateSessionIsFlaggedByUidMockData() (db.UpdateSessionIsFlaggedByUidParams, error)
 	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
 	GetUpdateTariffByUidMockData() (db.UpdateTariffByUidParams, error)
+	GetUpdateTariffCapabilitiesMockData() (db.UpdateTariffCapabilitiesParams, error)
 	GetUpdateTariffRestrictionMockData() (db.UpdateTariffRestrictionParams, error)
 	GetUpdateTokenAuthorizationByAuthorizationIDMockData() (db.UpdateTokenAuthorizationByAuthorizationIDParams, error)
 	GetUpdateTokenByUidMockData() (db.UpdateTokenByUidParams, error)
@@ -580,6 +581,7 @@ type MockRepositoryService struct {
 	updateSessionIsFlaggedByUidMockData                 []db.UpdateSessionIsFlaggedByUidParams
 	updateSessionInvoiceMockData                        []db.UpdateSessionInvoiceParams
 	updateTariffByUidMockData                           []db.UpdateTariffByUidParams
+	updateTariffCapabilitiesMockData                    []db.UpdateTariffCapabilitiesParams
 	updateTariffRestrictionMockData                     []db.UpdateTariffRestrictionParams
 	updateTokenByUidMockData                            []db.UpdateTokenByUidParams
 	updateTokenAuthorizationByAuthorizationIDMockData   []db.UpdateTokenAuthorizationByAuthorizationIDParams
