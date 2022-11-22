@@ -9,8 +9,9 @@ INSERT INTO tariffs (
     tariff_alt_url, 
     energy_mix_id, 
     tariff_restriction_id,
+    is_intermediate_cdr_capable,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   RETURNING *;
 
 -- name: DeleteTariffByUid :exec
