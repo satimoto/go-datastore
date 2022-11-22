@@ -20,22 +20,24 @@ INSERT INTO tariffs (
     tariff_alt_url, 
     energy_mix_id, 
     tariff_restriction_id,
+    is_intermediate_cdr_capable,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
   RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable
 `
 
 type CreateTariffParams struct {
-	Uid                 string         `db:"uid" json:"uid"`
-	CredentialID        int64          `db:"credential_id" json:"credentialID"`
-	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID             sql.NullString `db:"party_id" json:"partyID"`
-	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
-	Currency            string         `db:"currency" json:"currency"`
-	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
-	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                      string         `db:"uid" json:"uid"`
+	CredentialID             int64          `db:"credential_id" json:"credentialID"`
+	CountryCode              sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString `db:"party_id" json:"partyID"`
+	CdrID                    sql.NullInt64  `db:"cdr_id" json:"cdrID"`
+	Currency                 string         `db:"currency" json:"currency"`
+	TariffAltUrl             sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID              sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	IsIntermediateCdrCapable bool           `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tariff, error) {
@@ -49,6 +51,7 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
 		arg.TariffRestrictionID,
+		arg.IsIntermediateCdrCapable,
 		arg.LastUpdated,
 	)
 	var i Tariff
