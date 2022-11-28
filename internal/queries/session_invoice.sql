@@ -31,6 +31,11 @@ SELECT * FROM session_invoices
 
 -- name: ListSessionInvoices :many
 SELECT * FROM session_invoices
+  WHERE is_expired = $1 AND is_settled = $2
+  ORDER BY id;
+
+-- name: ListSessionInvoicesBySessionID :many
+SELECT * FROM session_invoices
   WHERE session_id = $1
   ORDER BY id;
 
