@@ -34,7 +34,7 @@ SELECT * FROM invoice_requests
 
 -- name: ListUnsettledInvoiceRequests :many
 SELECT * FROM invoice_requests
-  WHERE user_id = $1 AND is_settled AND payment_request IS NULL AND
+  WHERE user_id = $1 AND is_settled = false AND payment_request IS NULL AND
     (release_date IS NULL OR NOW() > release_date)
   ORDER BY id;
 
