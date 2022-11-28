@@ -165,12 +165,66 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
 SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature FROM session_invoices
+  WHERE is_expired = $1 AND is_settled = $2
+  ORDER BY id
+`
+
+type ListSessionInvoicesParams struct {
+	IsExpired bool `db:"is_expired" json:"isExpired"`
+	IsSettled bool `db:"is_settled" json:"isSettled"`
+}
+
+func (q *Queries) ListSessionInvoices(ctx context.Context, arg ListSessionInvoicesParams) ([]SessionInvoice, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionInvoices, arg.IsExpired, arg.IsSettled)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SessionInvoice
+	for rows.Next() {
+		var i SessionInvoice
+		if err := rows.Scan(
+			&i.ID,
+			&i.SessionID,
+			&i.UserID,
+			&i.Currency,
+			&i.CurrencyRate,
+			&i.CurrencyRateMsat,
+			&i.PriceFiat,
+			&i.PriceMsat,
+			&i.CommissionFiat,
+			&i.CommissionMsat,
+			&i.TaxFiat,
+			&i.TaxMsat,
+			&i.PaymentRequest,
+			&i.IsSettled,
+			&i.IsExpired,
+			&i.LastUpdated,
+			&i.TotalFiat,
+			&i.TotalMsat,
+			&i.Signature,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listSessionInvoicesBySessionID = `-- name: ListSessionInvoicesBySessionID :many
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
 
-func (q *Queries) ListSessionInvoices(ctx context.Context, sessionID int64) ([]SessionInvoice, error) {
-	rows, err := q.db.QueryContext(ctx, listSessionInvoices, sessionID)
+func (q *Queries) ListSessionInvoicesBySessionID(ctx context.Context, sessionID int64) ([]SessionInvoice, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionInvoicesBySessionID, sessionID)
 	if err != nil {
 		return nil, err
 	}
