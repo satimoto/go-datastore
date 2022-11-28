@@ -165,7 +165,7 @@ func (q *Queries) GetUnsettledInvoiceRequest(ctx context.Context, arg GetUnsettl
 
 const listUnsettledInvoiceRequests = `-- name: ListUnsettledInvoiceRequests :many
 SELECT id, user_id, promotion_id, total_msat, is_settled, payment_request, currency, memo, total_fiat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, release_date FROM invoice_requests
-  WHERE user_id = $1 AND is_settled AND payment_request IS NULL AND
+  WHERE user_id = $1 AND is_settled = false AND payment_request IS NULL AND
     (release_date IS NULL OR NOW() > release_date)
   ORDER BY id
 `
