@@ -27,9 +27,13 @@ INSERT INTO session_invoices (
     signature,
     is_settled,
     is_expired,
+    estimated_energy,
+    estimated_time,
+    metered_energy,
+    metered_time,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-  RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
+  RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature, estimated_energy, estimated_time, metered_energy, metered_time
 `
 
 type CreateSessionInvoiceParams struct {
@@ -50,6 +54,10 @@ type CreateSessionInvoiceParams struct {
 	Signature        []byte    `db:"signature" json:"signature"`
 	IsSettled        bool      `db:"is_settled" json:"isSettled"`
 	IsExpired        bool      `db:"is_expired" json:"isExpired"`
+	EstimatedEnergy  float64   `db:"estimated_energy" json:"estimatedEnergy"`
+	EstimatedTime    float64   `db:"estimated_time" json:"estimatedTime"`
+	MeteredEnergy    float64   `db:"metered_energy" json:"meteredEnergy"`
+	MeteredTime      float64   `db:"metered_time" json:"meteredTime"`
 	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -72,6 +80,10 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		arg.Signature,
 		arg.IsSettled,
 		arg.IsExpired,
+		arg.EstimatedEnergy,
+		arg.EstimatedTime,
+		arg.MeteredEnergy,
+		arg.MeteredTime,
 		arg.LastUpdated,
 	)
 	var i SessionInvoice
@@ -95,12 +107,16 @@ func (q *Queries) CreateSessionInvoice(ctx context.Context, arg CreateSessionInv
 		&i.TotalFiat,
 		&i.TotalMsat,
 		&i.Signature,
+		&i.EstimatedEnergy,
+		&i.EstimatedTime,
+		&i.MeteredEnergy,
+		&i.MeteredTime,
 	)
 	return i, err
 }
 
 const getSessionInvoice = `-- name: GetSessionInvoice :one
-SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature FROM session_invoices
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature, estimated_energy, estimated_time, metered_energy, metered_time FROM session_invoices
   WHERE id = $1
 `
 
@@ -127,12 +143,16 @@ func (q *Queries) GetSessionInvoice(ctx context.Context, id int64) (SessionInvoi
 		&i.TotalFiat,
 		&i.TotalMsat,
 		&i.Signature,
+		&i.EstimatedEnergy,
+		&i.EstimatedTime,
+		&i.MeteredEnergy,
+		&i.MeteredTime,
 	)
 	return i, err
 }
 
 const getSessionInvoiceByPaymentRequest = `-- name: GetSessionInvoiceByPaymentRequest :one
-SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature FROM session_invoices
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature, estimated_energy, estimated_time, metered_energy, metered_time FROM session_invoices
   WHERE payment_request = $1
 `
 
@@ -159,12 +179,16 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 		&i.TotalFiat,
 		&i.TotalMsat,
 		&i.Signature,
+		&i.EstimatedEnergy,
+		&i.EstimatedTime,
+		&i.MeteredEnergy,
+		&i.MeteredTime,
 	)
 	return i, err
 }
 
 const listSessionInvoices = `-- name: ListSessionInvoices :many
-SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature FROM session_invoices
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature, estimated_energy, estimated_time, metered_energy, metered_time FROM session_invoices
   WHERE is_expired = $1 AND is_settled = $2
   ORDER BY id
 `
@@ -203,6 +227,10 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, arg ListSessionInvoic
 			&i.TotalFiat,
 			&i.TotalMsat,
 			&i.Signature,
+			&i.EstimatedEnergy,
+			&i.EstimatedTime,
+			&i.MeteredEnergy,
+			&i.MeteredTime,
 		); err != nil {
 			return nil, err
 		}
@@ -218,7 +246,7 @@ func (q *Queries) ListSessionInvoices(ctx context.Context, arg ListSessionInvoic
 }
 
 const listSessionInvoicesBySessionID = `-- name: ListSessionInvoicesBySessionID :many
-SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature FROM session_invoices
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature, estimated_energy, estimated_time, metered_energy, metered_time FROM session_invoices
   WHERE session_id = $1
   ORDER BY id
 `
@@ -252,6 +280,10 @@ func (q *Queries) ListSessionInvoicesBySessionID(ctx context.Context, sessionID 
 			&i.TotalFiat,
 			&i.TotalMsat,
 			&i.Signature,
+			&i.EstimatedEnergy,
+			&i.EstimatedTime,
+			&i.MeteredEnergy,
+			&i.MeteredTime,
 		); err != nil {
 			return nil, err
 		}
@@ -267,7 +299,7 @@ func (q *Queries) ListSessionInvoicesBySessionID(ctx context.Context, sessionID 
 }
 
 const listSessionInvoicesByUserID = `-- name: ListSessionInvoicesByUserID :many
-SELECT si.id, si.session_id, si.user_id, si.currency, si.currency_rate, si.currency_rate_msat, si.price_fiat, si.price_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated, si.total_fiat, si.total_msat, si.signature FROM session_invoices si
+SELECT si.id, si.session_id, si.user_id, si.currency, si.currency_rate, si.currency_rate_msat, si.price_fiat, si.price_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated, si.total_fiat, si.total_msat, si.signature, si.estimated_energy, si.estimated_time, si.metered_energy, si.metered_time FROM session_invoices si
   INNER JOIN sessions s ON s.id = si.session_id
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.id = $1 AND si.is_settled = $2 AND si.is_expired = $3
@@ -309,6 +341,10 @@ func (q *Queries) ListSessionInvoicesByUserID(ctx context.Context, arg ListSessi
 			&i.TotalFiat,
 			&i.TotalMsat,
 			&i.Signature,
+			&i.EstimatedEnergy,
+			&i.EstimatedTime,
+			&i.MeteredEnergy,
+			&i.MeteredTime,
 		); err != nil {
 			return nil, err
 		}
@@ -332,7 +368,7 @@ UPDATE session_invoices SET (
     last_updated
   ) = ($2, $3, $4, $5, $6)
   WHERE id = $1
-  RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature
+  RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, signature, estimated_energy, estimated_time, metered_energy, metered_time
 `
 
 type UpdateSessionInvoiceParams struct {
@@ -374,6 +410,10 @@ func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInv
 		&i.TotalFiat,
 		&i.TotalMsat,
 		&i.Signature,
+		&i.EstimatedEnergy,
+		&i.EstimatedTime,
+		&i.MeteredEnergy,
+		&i.MeteredTime,
 	)
 	return i, err
 }

@@ -7,3 +7,9 @@ SELECT l.country, l.uid, c.* FROM locations l
 SELECT DISTINCT l.country FROM locations l
   WHERE country_code = 'NL' AND party_id = 'CPI'
   ORDER BY country ASC;
+
+-- Count published by country
+SELECT l.country, COUNT(l.country) AS cc FROM locations l
+  WHERE l.publish
+  GROUP BY country
+  ORDER BY cc DESC;

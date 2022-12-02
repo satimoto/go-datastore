@@ -1108,6 +1108,10 @@ type SessionInvoice struct {
 	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
 	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
 	Signature        []byte    `db:"signature" json:"signature"`
+	EstimatedEnergy  float64   `db:"estimated_energy" json:"estimatedEnergy"`
+	EstimatedTime    float64   `db:"estimated_time" json:"estimatedTime"`
+	MeteredEnergy    float64   `db:"metered_energy" json:"meteredEnergy"`
+	MeteredTime      float64   `db:"metered_time" json:"meteredTime"`
 }
 
 type StatusSchedule struct {
