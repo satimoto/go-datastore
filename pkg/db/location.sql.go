@@ -424,7 +424,10 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
 SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
   WHERE publish AND total_evses > 0 AND 
-    is_remote_capable = $1::BOOLEAN AND is_rfid_capable = $2::BOOLEAN AND
+    (
+      ($1::BOOLEAN = true AND is_remote_capable = true) OR 
+      ($2::BOOLEAN = true AND is_rfid_capable = true)
+    ) AND
     ST_Intersects(geom, ST_MakeEnvelope($3::FLOAT, $4::FLOAT, $5::FLOAT, $6::FLOAT, 4326)) AND
     ($7::INT = 0 OR last_updated > NOW() - '1 second'::INTERVAL * $7::INT)
   LIMIT 500
