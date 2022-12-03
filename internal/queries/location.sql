@@ -63,7 +63,10 @@ SELECT * FROM locations
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
   WHERE publish AND total_evses > 0 AND 
-    is_remote_capable = @is_remote_capable::BOOLEAN AND is_rfid_capable = @is_rfid_capable::BOOLEAN AND
+    (
+      (@is_remote_capable::BOOLEAN = true AND is_remote_capable = true) OR 
+      (@is_rfid_capable::BOOLEAN = true AND is_rfid_capable = true)
+    ) AND
     ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
     (@interval::INT = 0 OR last_updated > NOW() - '1 second'::INTERVAL * @interval::INT)
   LIMIT 500;
