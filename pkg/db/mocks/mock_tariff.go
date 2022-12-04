@@ -64,6 +64,16 @@ func (r *MockRepositoryService) GetTariffByUid(ctx context.Context, uid string) 
 	return response.Tariff, response.Error
 }
 
+func (r *MockRepositoryService) GetTariffLikeUid(ctx context.Context, uid string) (db.Tariff, error) {
+	if len(r.getTariffLikeUidMockData) == 0 {
+		return db.Tariff{}, ErrorNotFound()
+	}
+
+	response := r.getTariffLikeUidMockData[0]
+	r.getTariffLikeUidMockData = r.getTariffLikeUidMockData[1:]
+	return response.Tariff, response.Error
+}
+
 func (r *MockRepositoryService) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]db.Tariff, error) {
 	if len(r.listTariffsByCdrMockData) == 0 {
 		return []db.Tariff{}, nil
@@ -130,6 +140,10 @@ func (r *MockRepositoryService) SetGetTariffMockData(response TariffMockData) {
 
 func (r *MockRepositoryService) SetGetTariffByUidMockData(response TariffMockData) {
 	r.getTariffByUidMockData = append(r.getTariffByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetTariffLikeUidMockData(response TariffMockData) {
+	r.getTariffLikeUidMockData = append(r.getTariffLikeUidMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetTariffByLastUpdatedMockData(response TariffMockData) {

@@ -167,6 +167,32 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 	return i, err
 }
 
+const getTariffLikeUid = `-- name: GetTariffLikeUid :one
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
+  WHERE uid like $1
+  LIMIT 1
+`
+
+func (q *Queries) GetTariffLikeUid(ctx context.Context, uid string) (Tariff, error) {
+	row := q.db.QueryRowContext(ctx, getTariffLikeUid, uid)
+	var i Tariff
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CredentialID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.Currency,
+		&i.TariffAltUrl,
+		&i.EnergyMixID,
+		&i.TariffRestrictionID,
+		&i.LastUpdated,
+		&i.CdrID,
+		&i.IsIntermediateCdrCapable,
+	)
+	return i, err
+}
+
 const listTariffsByCdr = `-- name: ListTariffsByCdr :many
 SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
   WHERE cdr_id = $1

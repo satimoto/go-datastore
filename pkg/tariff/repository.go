@@ -16,6 +16,7 @@ type TariffRepository interface {
 	GetTariff(ctx context.Context, id int64) (db.Tariff, error)
 	GetTariffByLastUpdated(ctx context.Context, arg db.GetTariffByLastUpdatedParams) (db.Tariff, error)
 	GetTariffByUid(ctx context.Context, uid string) (db.Tariff, error)
+	GetTariffLikeUid(ctx context.Context, uid string) (db.Tariff, error)
 	GetTariffRestriction(ctx context.Context, id int64) (db.TariffRestriction, error)
 	ListElements(ctx context.Context, tariffID int64) ([]db.Element, error)
 	ListElementRestrictionWeekdays(ctx context.Context, elementRestrictionID int64) ([]db.Weekday, error)
