@@ -34,6 +34,11 @@ SELECT * FROM tariffs
 SELECT * FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL;
 
+-- name: GetTariffLikeUid :one
+SELECT * FROM tariffs
+  WHERE uid like $1
+  LIMIT 1;
+
 -- name: ListTariffsByCdr :many
 SELECT * FROM tariffs
   WHERE cdr_id = $1
