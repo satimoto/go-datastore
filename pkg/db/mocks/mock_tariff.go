@@ -89,11 +89,6 @@ func (r *MockRepositoryService) UpdateTariffByUid(ctx context.Context, arg db.Up
 	return db.Tariff{}, nil
 }
 
-func (r *MockRepositoryService) UpdateTariffCapabilities(ctx context.Context, arg db.UpdateTariffCapabilitiesParams) error {
-	r.updateTariffCapabilitiesMockData = append(r.updateTariffCapabilitiesMockData, arg)
-	return nil
-}
-
 func (r *MockRepositoryService) GetCreateTariffMockData() (db.CreateTariffParams, error) {
 	if len(r.createTariffMockData) == 0 {
 		return db.CreateTariffParams{}, ErrorNotFound()
@@ -121,16 +116,6 @@ func (r *MockRepositoryService) GetUpdateTariffByUidMockData() (db.UpdateTariffB
 
 	response := r.updateTariffByUidMockData[0]
 	r.updateTariffByUidMockData = r.updateTariffByUidMockData[1:]
-	return response, nil
-}
-
-func (r *MockRepositoryService) GetUpdateTariffCapabilitiesMockData() (db.UpdateTariffCapabilitiesParams, error) {
-	if len(r.updateTariffCapabilitiesMockData) == 0 {
-		return db.UpdateTariffCapabilitiesParams{}, ErrorNotFound()
-	}
-
-	response := r.updateTariffCapabilitiesMockData[0]
-	r.updateTariffCapabilitiesMockData = r.updateTariffCapabilitiesMockData[1:]
 	return response, nil
 }
 

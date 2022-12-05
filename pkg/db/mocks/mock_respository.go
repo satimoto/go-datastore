@@ -41,6 +41,7 @@ type MockRepository interface {
 	GetCreateLocationMockData() (db.CreateLocationParams, error)
 	GetCreateNodeMockData() (db.CreateNodeParams, error)
 	GetCreateOpeningTimeMockData() (bool, error)
+	GetCreatePartyMockData() (db.CreatePartyParams, error)
 	CreatePendingNotification() (db.CreatePendingNotificationParams, error)
 	GetCreatePriceComponentMockData() (db.CreatePriceComponentParams, error)
 	GetCreatePriceComponentRoundingMockData() (db.CreatePriceComponentRoundingParams, error)
@@ -144,6 +145,8 @@ type MockRepository interface {
 	GetUpdateLocationsPublishByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishByPartyAndCountryCodeParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
+	GetUpdatePartyMockData() (db.UpdatePartyParams, error)
+	GetUpdatePartyByCredentialMockData() (db.UpdatePartyByCredentialParams, error)
 	GetUpdatePendingNotificationsMockData() (db.UpdatePendingNotificationsParams, error)
 	GetUpdatePendingNotificationsByUserMockData() (db.UpdatePendingNotificationsByUserParams, error)
 	GetUpdatePsbtFundingStateMockData() (db.UpdatePsbtFundingStateParams, error)
@@ -152,7 +155,6 @@ type MockRepository interface {
 	GetUpdateSessionIsFlaggedByUidMockData() (db.UpdateSessionIsFlaggedByUidParams, error)
 	GetUpdateSessionInvoiceMockData() (db.UpdateSessionInvoiceParams, error)
 	GetUpdateTariffByUidMockData() (db.UpdateTariffByUidParams, error)
-	GetUpdateTariffCapabilitiesMockData() (db.UpdateTariffCapabilitiesParams, error)
 	GetUpdateTariffRestrictionMockData() (db.UpdateTariffRestrictionParams, error)
 	GetUpdateTokenAuthorizationByAuthorizationIDMockData() (db.UpdateTokenAuthorizationByAuthorizationIDParams, error)
 	GetUpdateTokenByUidMockData() (db.UpdateTokenByUidParams, error)
@@ -203,6 +205,8 @@ type MockRepository interface {
 	SetGetNodeByPubkeyMockData(response NodeMockData)
 	SetGetNodeByUserIDMockData(response NodeMockData)
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
+	SetGetPartyMockData(response PartyMockData)
+	SetGetPartyByCredentialMockData(response PartyMockData)
 	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
 	SetGetPromotionMockData(response PromotionMockData)
 	SetGetPromotionByCodeMockData(response PromotionMockData)
@@ -334,6 +338,7 @@ type MockRepositoryService struct {
 	createLocationMockData                              []db.CreateLocationParams
 	createOpeningTimeMockData                           []bool
 	createNodeMockData                                  []db.CreateNodeParams
+	createPartyMockData                                 []db.CreatePartyParams
 	createPendingNotificationMockData                   []db.CreatePendingNotificationParams
 	createPriceComponentMockData                        []db.CreatePriceComponentParams
 	createPriceComponentRoundingMockData                []db.CreatePriceComponentRoundingParams
@@ -434,6 +439,8 @@ type MockRepositoryService struct {
 	getNodeByPubkeyMockData                             []NodeMockData
 	getNodeByUserIDMockData                             []NodeMockData
 	getOpeningTimeMockData                              []OpeningTimeMockData
+	getPartyMockData                                    []PartyMockData
+	getPartyByCredentialMockData                        []PartyMockData
 	getPriceComponentRoundingMockData                   []PriceComponentRoundingMockData
 	getPromotionMockData                                []PromotionMockData
 	getPromotionByCodeMockData                          []PromotionMockData
@@ -575,6 +582,8 @@ type MockRepositoryService struct {
 	updateLocationsPublishByPartyAndCountryCodeMockData []db.UpdateLocationsPublishByPartyAndCountryCodeParams
 	updateNodeMockData                                  []db.UpdateNodeParams
 	updateOpeningTimeMockData                           []db.UpdateOpeningTimeParams
+	updatePartyMockData                                 []db.UpdatePartyParams
+	updatePartyByCredentialMockData                     []db.UpdatePartyByCredentialParams
 	updatePendingNotificationsMockData                  []db.UpdatePendingNotificationsParams
 	updatePendingNotificationsByUserMockData            []db.UpdatePendingNotificationsByUserParams
 	updatePsbtFundingStateMockData                      []db.UpdatePsbtFundingStateParams
@@ -585,7 +594,6 @@ type MockRepositoryService struct {
 	updateSessionIsFlaggedByUidMockData                 []db.UpdateSessionIsFlaggedByUidParams
 	updateSessionInvoiceMockData                        []db.UpdateSessionInvoiceParams
 	updateTariffByUidMockData                           []db.UpdateTariffByUidParams
-	updateTariffCapabilitiesMockData                    []db.UpdateTariffCapabilitiesParams
 	updateTariffRestrictionMockData                     []db.UpdateTariffRestrictionParams
 	updateTokenByUidMockData                            []db.UpdateTokenByUidParams
 	updateTokenAuthorizationByAuthorizationIDMockData   []db.UpdateTokenAuthorizationByAuthorizationIDParams
