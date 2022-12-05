@@ -894,33 +894,34 @@ type InvoiceRequest struct {
 }
 
 type Location struct {
-	ID                 int64             `db:"id" json:"id"`
-	Uid                string            `db:"uid" json:"uid"`
-	CredentialID       int64             `db:"credential_id" json:"credentialID"`
-	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
-	Type               LocationType      `db:"type" json:"type"`
-	Name               sql.NullString    `db:"name" json:"name"`
-	Address            string            `db:"address" json:"address"`
-	City               string            `db:"city" json:"city"`
-	PostalCode         string            `db:"postal_code" json:"postalCode"`
-	Country            string            `db:"country" json:"country"`
-	Geom               geom.Geometry4326 `db:"geom" json:"geom"`
-	GeoLocationID      int64             `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32             `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32             `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool              `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool              `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64     `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64     `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString    `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
-	Publish            bool              `db:"publish" json:"publish"`
-	AddedDate          time.Time         `db:"added_date" json:"addedDate"`
+	ID                       int64             `db:"id" json:"id"`
+	Uid                      string            `db:"uid" json:"uid"`
+	CredentialID             int64             `db:"credential_id" json:"credentialID"`
+	CountryCode              sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString    `db:"party_id" json:"partyID"`
+	Type                     LocationType      `db:"type" json:"type"`
+	Name                     sql.NullString    `db:"name" json:"name"`
+	Address                  string            `db:"address" json:"address"`
+	City                     string            `db:"city" json:"city"`
+	PostalCode               string            `db:"postal_code" json:"postalCode"`
+	Country                  string            `db:"country" json:"country"`
+	Geom                     geom.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID            int64             `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses           int32             `db:"available_evses" json:"availableEvses"`
+	TotalEvses               int32             `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
+	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
+	TimeZone                 sql.NullString    `db:"time_zone" json:"timeZone"`
+	OpeningTimeID            sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
+	Publish                  bool              `db:"publish" json:"publish"`
+	AddedDate                time.Time         `db:"added_date" json:"addedDate"`
+	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 }
 
 type LocationDirection struct {
@@ -961,6 +962,16 @@ type ParkingRestriction struct {
 	ID          int64  `db:"id" json:"id"`
 	Text        string `db:"text" json:"text"`
 	Description string `db:"description" json:"description"`
+}
+
+type Party struct {
+	ID                       int64  `db:"id" json:"id"`
+	CredentialID             int64  `db:"credential_id" json:"credentialID"`
+	CountryCode              string `db:"country_code" json:"countryCode"`
+	PartyID                  string `db:"party_id" json:"partyID"`
+	IsIntermediateCdrCapable bool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	PublishLocation          bool   `db:"publish_location" json:"publishLocation"`
+	PublishNullTariff        bool   `db:"publish_null_tariff" json:"publishNullTariff"`
 }
 
 type PendingNotification struct {
@@ -1123,18 +1134,17 @@ type StatusSchedule struct {
 }
 
 type Tariff struct {
-	ID                       int64          `db:"id" json:"id"`
-	Uid                      string         `db:"uid" json:"uid"`
-	CredentialID             int64          `db:"credential_id" json:"credentialID"`
-	CountryCode              sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID                  sql.NullString `db:"party_id" json:"partyID"`
-	Currency                 string         `db:"currency" json:"currency"`
-	TariffAltUrl             sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID              sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
-	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
-	CdrID                    sql.NullInt64  `db:"cdr_id" json:"cdrID"`
-	IsIntermediateCdrCapable bool           `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	ID                  int64          `db:"id" json:"id"`
+	Uid                 string         `db:"uid" json:"uid"`
+	CredentialID        int64          `db:"credential_id" json:"credentialID"`
+	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID             sql.NullString `db:"party_id" json:"partyID"`
+	Currency            string         `db:"currency" json:"currency"`
+	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
+	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
 }
 
 type TariffAltText struct {

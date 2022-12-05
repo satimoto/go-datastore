@@ -20,24 +20,22 @@ INSERT INTO tariffs (
     tariff_alt_url, 
     energy_mix_id, 
     tariff_restriction_id,
-    is_intermediate_cdr_capable,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-  RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type CreateTariffParams struct {
-	Uid                      string         `db:"uid" json:"uid"`
-	CredentialID             int64          `db:"credential_id" json:"credentialID"`
-	CountryCode              sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID                  sql.NullString `db:"party_id" json:"partyID"`
-	CdrID                    sql.NullInt64  `db:"cdr_id" json:"cdrID"`
-	Currency                 string         `db:"currency" json:"currency"`
-	TariffAltUrl             sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID              sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
-	IsIntermediateCdrCapable bool           `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
-	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                 string         `db:"uid" json:"uid"`
+	CredentialID        int64          `db:"credential_id" json:"credentialID"`
+	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID             sql.NullString `db:"party_id" json:"partyID"`
+	CdrID               sql.NullInt64  `db:"cdr_id" json:"cdrID"`
+	Currency            string         `db:"currency" json:"currency"`
+	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tariff, error) {
@@ -51,7 +49,6 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
 		arg.TariffRestrictionID,
-		arg.IsIntermediateCdrCapable,
 		arg.LastUpdated,
 	)
 	var i Tariff
@@ -67,7 +64,6 @@ func (q *Queries) CreateTariff(ctx context.Context, arg CreateTariffParams) (Tar
 		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
-		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
@@ -83,7 +79,7 @@ func (q *Queries) DeleteTariffByUid(ctx context.Context, uid string) error {
 }
 
 const getTariff = `-- name: GetTariff :one
-SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE id = $1
 `
 
@@ -102,13 +98,12 @@ func (q *Queries) GetTariff(ctx context.Context, id int64) (Tariff, error) {
 		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
-		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const getTariffByLastUpdated = `-- name: GetTariffByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -137,13 +132,12 @@ func (q *Queries) GetTariffByLastUpdated(ctx context.Context, arg GetTariffByLas
 		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
-		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const getTariffByUid = `-- name: GetTariffByUid :one
-SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL
 `
 
@@ -162,13 +156,12 @@ func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error
 		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
-		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const getTariffLikeUid = `-- name: GetTariffLikeUid :one
-SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE uid like $1
   LIMIT 1
 `
@@ -188,13 +181,12 @@ func (q *Queries) GetTariffLikeUid(ctx context.Context, uid string) (Tariff, err
 		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
-		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const listTariffsByCdr = `-- name: ListTariffsByCdr :many
-SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable FROM tariffs
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
   WHERE cdr_id = $1
   ORDER BY id
 `
@@ -220,7 +212,6 @@ func (q *Queries) ListTariffsByCdr(ctx context.Context, cdrID sql.NullInt64) ([]
 			&i.TariffRestrictionID,
 			&i.LastUpdated,
 			&i.CdrID,
-			&i.IsIntermediateCdrCapable,
 		); err != nil {
 			return nil, err
 		}
@@ -243,23 +234,21 @@ UPDATE tariffs SET (
     tariff_alt_url,
     energy_mix_id, 
     tariff_restriction_id,
-    is_intermediate_cdr_capable,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE uid = $1 AND cdr_id IS NULL
-  RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id, is_intermediate_cdr_capable
+  RETURNING id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id
 `
 
 type UpdateTariffByUidParams struct {
-	Uid                      string         `db:"uid" json:"uid"`
-	CountryCode              sql.NullString `db:"country_code" json:"countryCode"`
-	PartyID                  sql.NullString `db:"party_id" json:"partyID"`
-	Currency                 string         `db:"currency" json:"currency"`
-	TariffAltUrl             sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
-	EnergyMixID              sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
-	TariffRestrictionID      sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
-	IsIntermediateCdrCapable bool           `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
-	LastUpdated              time.Time      `db:"last_updated" json:"lastUpdated"`
+	Uid                 string         `db:"uid" json:"uid"`
+	CountryCode         sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID             sql.NullString `db:"party_id" json:"partyID"`
+	Currency            string         `db:"currency" json:"currency"`
+	TariffAltUrl        sql.NullString `db:"tariff_alt_url" json:"tariffAltUrl"`
+	EnergyMixID         sql.NullInt64  `db:"energy_mix_id" json:"energyMixID"`
+	TariffRestrictionID sql.NullInt64  `db:"tariff_restriction_id" json:"tariffRestrictionID"`
+	LastUpdated         time.Time      `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidParams) (Tariff, error) {
@@ -271,7 +260,6 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 		arg.TariffAltUrl,
 		arg.EnergyMixID,
 		arg.TariffRestrictionID,
-		arg.IsIntermediateCdrCapable,
 		arg.LastUpdated,
 	)
 	var i Tariff
@@ -287,32 +275,6 @@ func (q *Queries) UpdateTariffByUid(ctx context.Context, arg UpdateTariffByUidPa
 		&i.TariffRestrictionID,
 		&i.LastUpdated,
 		&i.CdrID,
-		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
-}
-
-const updateTariffCapabilities = `-- name: UpdateTariffCapabilities :exec
-UPDATE tariffs SET is_intermediate_cdr_capable = $1::BOOLEAN
-  WHERE cdr_id IS NULL AND 
-    ($2::TEXT = '' OR $2::TEXT = uid) AND
-    ($3::TEXT = '' OR $3::TEXT = country_code) AND
-    ($4::TEXT = '' OR $4::TEXT = party_id)
-`
-
-type UpdateTariffCapabilitiesParams struct {
-	IsIntermediateCdrCapable bool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
-	Uid                      string `db:"uid" json:"uid"`
-	CountryCode              string `db:"country_code" json:"countryCode"`
-	PartyID                  string `db:"party_id" json:"partyID"`
-}
-
-func (q *Queries) UpdateTariffCapabilities(ctx context.Context, arg UpdateTariffCapabilitiesParams) error {
-	_, err := q.db.ExecContext(ctx, updateTariffCapabilities,
-		arg.IsIntermediateCdrCapable,
-		arg.Uid,
-		arg.CountryCode,
-		arg.PartyID,
-	)
-	return err
 }

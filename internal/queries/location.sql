@@ -14,6 +14,7 @@ INSERT INTO locations (
     geo_location_id, 
     available_evses,
     total_evses,
+    is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
     operator_id, 
@@ -24,7 +25,7 @@ INSERT INTO locations (
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
   RETURNING *;
 
 -- name: DeleteLocation :exec
@@ -85,6 +86,7 @@ UPDATE locations SET (
     geo_location_id, 
     available_evses,
     total_evses,
+    is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
     operator_id, 
@@ -95,7 +97,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
   WHERE id = $1
   RETURNING *;
 
@@ -113,6 +115,7 @@ UPDATE locations SET (
     geo_location_id, 
     available_evses,
     total_evses,
+    is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
     operator_id, 
@@ -123,7 +126,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
   WHERE uid = $1
   RETURNING *;
 
@@ -131,10 +134,11 @@ UPDATE locations SET (
 UPDATE locations SET (
     available_evses, 
     total_evses, 
+    is_intermediate_cdr_capable,
     is_remote_capable, 
     is_rfid_capable,
     last_updated
-  ) = ($2, $3, $4, $5, $6)
+  ) = ($2, $3, $4, $5, $6, $7)
   WHERE id = $1;
 
 -- name: UpdateLocationPublish :exec

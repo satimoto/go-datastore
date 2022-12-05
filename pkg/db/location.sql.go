@@ -27,6 +27,7 @@ INSERT INTO locations (
     geo_location_id, 
     available_evses,
     total_evses,
+    is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
     operator_id, 
@@ -37,35 +38,36 @@ INSERT INTO locations (
     charging_when_closed, 
     energy_mix_id, 
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable
 `
 
 type CreateLocationParams struct {
-	Uid                string            `db:"uid" json:"uid"`
-	CredentialID       int64             `db:"credential_id" json:"credentialID"`
-	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
-	Type               LocationType      `db:"type" json:"type"`
-	Name               sql.NullString    `db:"name" json:"name"`
-	Address            string            `db:"address" json:"address"`
-	City               string            `db:"city" json:"city"`
-	PostalCode         string            `db:"postal_code" json:"postalCode"`
-	Country            string            `db:"country" json:"country"`
-	Geom               geom.Geometry4326 `db:"geom" json:"geom"`
-	GeoLocationID      int64             `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32             `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32             `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool              `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool              `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64     `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64     `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString    `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
+	Uid                      string            `db:"uid" json:"uid"`
+	CredentialID             int64             `db:"credential_id" json:"credentialID"`
+	CountryCode              sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString    `db:"party_id" json:"partyID"`
+	Type                     LocationType      `db:"type" json:"type"`
+	Name                     sql.NullString    `db:"name" json:"name"`
+	Address                  string            `db:"address" json:"address"`
+	City                     string            `db:"city" json:"city"`
+	PostalCode               string            `db:"postal_code" json:"postalCode"`
+	Country                  string            `db:"country" json:"country"`
+	Geom                     geom.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID            int64             `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses           int32             `db:"available_evses" json:"availableEvses"`
+	TotalEvses               int32             `db:"total_evses" json:"totalEvses"`
+	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
+	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
+	TimeZone                 sql.NullString    `db:"time_zone" json:"timeZone"`
+	OpeningTimeID            sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) (Location, error) {
@@ -84,6 +86,7 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 		arg.GeoLocationID,
 		arg.AvailableEvses,
 		arg.TotalEvses,
+		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
 		arg.OperatorID,
@@ -124,6 +127,7 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
@@ -141,7 +145,7 @@ func (q *Queries) DeleteLocation(ctx context.Context, id int64) error {
 const deleteLocationByUid = `-- name: DeleteLocationByUid :one
 DELETE FROM locations
   WHERE uid = $1
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable
 `
 
 func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location, error) {
@@ -175,12 +179,13 @@ func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const getLocation = `-- name: GetLocation :one
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable FROM locations
   WHERE id = $1
 `
 
@@ -215,12 +220,13 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const getLocationByLastUpdated = `-- name: GetLocationByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable FROM locations
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -265,12 +271,13 @@ func (q *Queries) GetLocationByLastUpdated(ctx context.Context, arg GetLocationB
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const getLocationByUid = `-- name: GetLocationByUid :one
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable FROM locations
   WHERE uid = $1
 `
 
@@ -305,12 +312,13 @@ func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, e
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
 
 const listLocations = `-- name: ListLocations :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable FROM locations
   ORDER BY name
 `
 
@@ -351,6 +359,7 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 			&i.LastUpdated,
 			&i.Publish,
 			&i.AddedDate,
+			&i.IsIntermediateCdrCapable,
 		); err != nil {
 			return nil, err
 		}
@@ -366,7 +375,7 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 }
 
 const listLocationsByCountry = `-- name: ListLocationsByCountry :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable FROM locations
   WHERE publish AND total_evses > 0 AND country = $1
 `
 
@@ -407,6 +416,7 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 			&i.LastUpdated,
 			&i.Publish,
 			&i.AddedDate,
+			&i.IsIntermediateCdrCapable,
 		); err != nil {
 			return nil, err
 		}
@@ -422,7 +432,7 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 }
 
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable FROM locations
   WHERE publish AND total_evses > 0 AND 
     (
       ($1::BOOLEAN = true AND is_remote_capable = true) OR 
@@ -488,6 +498,7 @@ func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGe
 			&i.LastUpdated,
 			&i.Publish,
 			&i.AddedDate,
+			&i.IsIntermediateCdrCapable,
 		); err != nil {
 			return nil, err
 		}
@@ -516,6 +527,7 @@ UPDATE locations SET (
     geo_location_id, 
     available_evses,
     total_evses,
+    is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
     operator_id, 
@@ -526,35 +538,36 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
   WHERE id = $1
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable
 `
 
 type UpdateLocationParams struct {
-	ID                 int64             `db:"id" json:"id"`
-	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
-	Type               LocationType      `db:"type" json:"type"`
-	Name               sql.NullString    `db:"name" json:"name"`
-	Address            string            `db:"address" json:"address"`
-	City               string            `db:"city" json:"city"`
-	PostalCode         string            `db:"postal_code" json:"postalCode"`
-	Country            string            `db:"country" json:"country"`
-	Geom               geom.Geometry4326 `db:"geom" json:"geom"`
-	GeoLocationID      int64             `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32             `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32             `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool              `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool              `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64     `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64     `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString    `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
+	ID                       int64             `db:"id" json:"id"`
+	CountryCode              sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString    `db:"party_id" json:"partyID"`
+	Type                     LocationType      `db:"type" json:"type"`
+	Name                     sql.NullString    `db:"name" json:"name"`
+	Address                  string            `db:"address" json:"address"`
+	City                     string            `db:"city" json:"city"`
+	PostalCode               string            `db:"postal_code" json:"postalCode"`
+	Country                  string            `db:"country" json:"country"`
+	Geom                     geom.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID            int64             `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses           int32             `db:"available_evses" json:"availableEvses"`
+	TotalEvses               int32             `db:"total_evses" json:"totalEvses"`
+	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
+	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
+	TimeZone                 sql.NullString    `db:"time_zone" json:"timeZone"`
+	OpeningTimeID            sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) (Location, error) {
@@ -572,6 +585,7 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 		arg.GeoLocationID,
 		arg.AvailableEvses,
 		arg.TotalEvses,
+		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
 		arg.OperatorID,
@@ -612,6 +626,7 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
@@ -630,6 +645,7 @@ UPDATE locations SET (
     geo_location_id, 
     available_evses,
     total_evses,
+    is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
     operator_id, 
@@ -640,35 +656,36 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
   WHERE uid = $1
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable
 `
 
 type UpdateLocationByUidParams struct {
-	Uid                string            `db:"uid" json:"uid"`
-	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
-	Type               LocationType      `db:"type" json:"type"`
-	Name               sql.NullString    `db:"name" json:"name"`
-	Address            string            `db:"address" json:"address"`
-	City               string            `db:"city" json:"city"`
-	PostalCode         string            `db:"postal_code" json:"postalCode"`
-	Country            string            `db:"country" json:"country"`
-	Geom               geom.Geometry4326 `db:"geom" json:"geom"`
-	GeoLocationID      int64             `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32             `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32             `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool              `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool              `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64     `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64     `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString    `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
+	Uid                      string            `db:"uid" json:"uid"`
+	CountryCode              sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString    `db:"party_id" json:"partyID"`
+	Type                     LocationType      `db:"type" json:"type"`
+	Name                     sql.NullString    `db:"name" json:"name"`
+	Address                  string            `db:"address" json:"address"`
+	City                     string            `db:"city" json:"city"`
+	PostalCode               string            `db:"postal_code" json:"postalCode"`
+	Country                  string            `db:"country" json:"country"`
+	Geom                     geom.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID            int64             `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses           int32             `db:"available_evses" json:"availableEvses"`
+	TotalEvses               int32             `db:"total_evses" json:"totalEvses"`
+	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
+	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
+	TimeZone                 sql.NullString    `db:"time_zone" json:"timeZone"`
+	OpeningTimeID            sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByUidParams) (Location, error) {
@@ -686,6 +703,7 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 		arg.GeoLocationID,
 		arg.AvailableEvses,
 		arg.TotalEvses,
+		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
 		arg.OperatorID,
@@ -726,6 +744,7 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 		&i.LastUpdated,
 		&i.Publish,
 		&i.AddedDate,
+		&i.IsIntermediateCdrCapable,
 	)
 	return i, err
 }
@@ -734,20 +753,22 @@ const updateLocationLastUpdated = `-- name: UpdateLocationLastUpdated :exec
 UPDATE locations SET (
     available_evses, 
     total_evses, 
+    is_intermediate_cdr_capable,
     is_remote_capable, 
     is_rfid_capable,
     last_updated
-  ) = ($2, $3, $4, $5, $6)
+  ) = ($2, $3, $4, $5, $6, $7)
   WHERE id = $1
 `
 
 type UpdateLocationLastUpdatedParams struct {
-	ID              int64     `db:"id" json:"id"`
-	AvailableEvses  int32     `db:"available_evses" json:"availableEvses"`
-	TotalEvses      int32     `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable bool      `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable   bool      `db:"is_rfid_capable" json:"isRfidCapable"`
-	LastUpdated     time.Time `db:"last_updated" json:"lastUpdated"`
+	ID                       int64     `db:"id" json:"id"`
+	AvailableEvses           int32     `db:"available_evses" json:"availableEvses"`
+	TotalEvses               int32     `db:"total_evses" json:"totalEvses"`
+	IsIntermediateCdrCapable bool      `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsRemoteCapable          bool      `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable            bool      `db:"is_rfid_capable" json:"isRfidCapable"`
+	LastUpdated              time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateLocationLastUpdated(ctx context.Context, arg UpdateLocationLastUpdatedParams) error {
@@ -755,6 +776,7 @@ func (q *Queries) UpdateLocationLastUpdated(ctx context.Context, arg UpdateLocat
 		arg.ID,
 		arg.AvailableEvses,
 		arg.TotalEvses,
+		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
 		arg.LastUpdated,
