@@ -37,8 +37,9 @@ INSERT INTO locations (
     opening_time_id,
     charging_when_closed, 
     energy_mix_id, 
+    publish,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
   RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, publish, added_date, is_intermediate_cdr_capable
 `
 
@@ -67,6 +68,7 @@ type CreateLocationParams struct {
 	OpeningTimeID            sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
 	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
+	Publish                  bool              `db:"publish" json:"publish"`
 	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -96,6 +98,7 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 		arg.OpeningTimeID,
 		arg.ChargingWhenClosed,
 		arg.EnergyMixID,
+		arg.Publish,
 		arg.LastUpdated,
 	)
 	var i Location
