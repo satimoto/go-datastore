@@ -73,6 +73,7 @@ INSERT INTO parties (credential_id, country_code, party_id, is_intermediate_cdr_
     (34, "DE", "WIT", false, false, false), 
     (34, "DK", "SPA", false, false, false), 
     (34, "EE", "ALX", false, false, false), 
+    (34, "FR", "007", false, false, false), 
     (34, "FR", "55C", false, false, false), 
     (34, "FR", "C01", true, true, false), 
     (34, "FR", "CG0", false, false, false), 
