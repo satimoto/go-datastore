@@ -39,6 +39,23 @@ func DefaultFloat(i interface{}, fallback float64) float64 {
 	return fallback
 }
 
+func DefaultInt(i interface{}, fallback int64) int64 {
+	switch t := i.(type) {
+	case sql.NullInt64:
+		if t.Valid {
+			return t.Int64
+		}
+	case int64:
+		return t
+	case *int64:
+		if t != nil {
+			return *t
+		}
+	}
+
+	return fallback
+}
+
 func DefaultString(i interface{}, fallback string) string {
 	switch t := i.(type) {
 	case sql.NullString:
