@@ -65,6 +65,7 @@ SELECT * FROM locations
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
   WHERE is_published AND total_evses > 0 AND 
+    (@is_intermediate_cdr_capable::BOOLEAN = true OR is_intermediate_cdr_capable = false) AND 
     (
       (@is_remote_capable::BOOLEAN = true AND is_remote_capable = true) OR 
       (@is_rfid_capable::BOOLEAN = true AND is_rfid_capable = true)
