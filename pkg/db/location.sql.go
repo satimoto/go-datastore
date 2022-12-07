@@ -437,7 +437,7 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
 SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
   WHERE is_published AND total_evses > 0 AND 
-    ($1::BOOLEAN = true OR is_intermediate_cdr_capable = false) AND 
+    ($1::BOOLEAN = true OR is_intermediate_cdr_capable = true) AND 
     (
       ($2::BOOLEAN = true AND is_remote_capable = true) OR 
       ($3::BOOLEAN = true AND is_rfid_capable = true)
@@ -448,19 +448,19 @@ SELECT id, uid, credential_id, country_code, party_id, type, name, address, city
 `
 
 type ListLocationsByGeomParams struct {
-	IsIntermediateCdrCapable bool    `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
-	IsRemoteCapable          bool    `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable            bool    `db:"is_rfid_capable" json:"isRfidCapable"`
-	XMin                     float64 `db:"x_min" json:"xMin"`
-	YMin                     float64 `db:"y_min" json:"yMin"`
-	XMax                     float64 `db:"x_max" json:"xMax"`
-	YMax                     float64 `db:"y_max" json:"yMax"`
-	Interval                 int32   `db:"interval" json:"interval"`
+	IsExperimental  bool    `db:"is_experimental" json:"isExperimental"`
+	IsRemoteCapable bool    `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable   bool    `db:"is_rfid_capable" json:"isRfidCapable"`
+	XMin            float64 `db:"x_min" json:"xMin"`
+	YMin            float64 `db:"y_min" json:"yMin"`
+	XMax            float64 `db:"x_max" json:"xMax"`
+	YMax            float64 `db:"y_max" json:"yMax"`
+	Interval        int32   `db:"interval" json:"interval"`
 }
 
 func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGeomParams) ([]Location, error) {
 	rows, err := q.db.QueryContext(ctx, listLocationsByGeom,
-		arg.IsIntermediateCdrCapable,
+		arg.IsExperimental,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
 		arg.XMin,
