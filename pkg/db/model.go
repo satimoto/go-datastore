@@ -700,7 +700,8 @@ type Connector struct {
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
-	Publish            bool            `db:"publish" json:"publish"`
+	IsPublished        bool            `db:"is_published" json:"isPublished"`
+	IsRemoved          bool            `db:"is_removed" json:"isRemoved"`
 }
 
 type CountryAccount struct {
@@ -919,7 +920,7 @@ type Location struct {
 	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
 	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
 	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
-	Publish                  bool              `db:"publish" json:"publish"`
+	IsPublished              bool              `db:"is_published" json:"isPublished"`
 	AddedDate                time.Time         `db:"added_date" json:"addedDate"`
 	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 }

@@ -33,9 +33,9 @@ type LocationRepository interface {
 	UnsetLocationFacilities(ctx context.Context, locationID int64) error
 	UpdateLocationByUid(ctx context.Context, arg db.UpdateLocationByUidParams) (db.Location, error)
 	UpdateLocationLastUpdated(ctx context.Context, arg db.UpdateLocationLastUpdatedParams) error
-	UpdateLocationPublish(ctx context.Context, arg db.UpdateLocationPublishParams) error
-	UpdateLocationsPublishByCredential(ctx context.Context, arg db.UpdateLocationsPublishByCredentialParams) error
-	UpdateLocationsPublishByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsPublishByPartyAndCountryCodeParams) error
+	UpdateLocationPublished(ctx context.Context, arg db.UpdateLocationPublishedParams) error
+	UpdateLocationsPublishedByCredential(ctx context.Context, arg db.UpdateLocationsPublishedByCredentialParams) error
+	UpdateLocationsPublishedByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsPublishedByPartyAndCountryCodeParams) error
 }
 
 func NewRepository(repositoryService *db.RepositoryService) LocationRepository {
