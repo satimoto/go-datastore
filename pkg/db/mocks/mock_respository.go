@@ -140,9 +140,9 @@ type MockRepository interface {
 	GetUpdateInvoiceRequestMockData() (db.UpdateInvoiceRequestParams, error)
 	GetUpdateLocationByUidMockData() (db.UpdateLocationByUidParams, error)
 	GetUpdateLocationLastUpdatedMockData() (db.UpdateLocationLastUpdatedParams, error)
-	GetUpdateLocationPublishMockData() (db.UpdateLocationPublishParams, error)
-	GetUpdateLocationsPublishByCredentialMockData() (db.UpdateLocationsPublishByCredentialParams, error)
-	GetUpdateLocationsPublishByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishByPartyAndCountryCodeParams, error)
+	GetUpdateLocationPublishedMockData() (db.UpdateLocationPublishedParams, error)
+	GetUpdateLocationsPublishedByCredentialMockData() (db.UpdateLocationsPublishedByCredentialParams, error)
+	GetUpdateLocationsPublishedByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishedByPartyAndCountryCodeParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
 	GetUpdatePartyMockData() (db.UpdatePartyParams, error)
@@ -577,9 +577,9 @@ type MockRepositoryService struct {
 	updateInvoiceRequestMockData                        []db.UpdateInvoiceRequestParams
 	updateLocationByUidMockData                         []db.UpdateLocationByUidParams
 	updateLocationLastUpdatedMockData                   []db.UpdateLocationLastUpdatedParams
-	updateLocationPublishMockData                       []db.UpdateLocationPublishParams
-	updateLocationsPublishByCredentialMockData          []db.UpdateLocationsPublishByCredentialParams
-	updateLocationsPublishByPartyAndCountryCodeMockData []db.UpdateLocationsPublishByPartyAndCountryCodeParams
+	updateLocationPublishedMockData                       []db.UpdateLocationPublishedParams
+	updateLocationsPublishedByCredentialMockData          []db.UpdateLocationsPublishedByCredentialParams
+	updateLocationsPublishedByPartyAndCountryCodeMockData []db.UpdateLocationsPublishedByPartyAndCountryCodeParams
 	updateNodeMockData                                  []db.UpdateNodeParams
 	updateOpeningTimeMockData                           []db.UpdateOpeningTimeParams
 	updatePartyMockData                                 []db.UpdatePartyParams

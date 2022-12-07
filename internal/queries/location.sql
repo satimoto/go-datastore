@@ -24,7 +24,7 @@ INSERT INTO locations (
     opening_time_id,
     charging_when_closed, 
     energy_mix_id, 
-    publish,
+    is_published,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
   RETURNING *;
@@ -60,11 +60,11 @@ SELECT * FROM locations
 
 -- name: ListLocationsByCountry :many
 SELECT * FROM locations
-  WHERE publish AND total_evses > 0 AND country = $1;
+  WHERE is_published AND total_evses > 0 AND country = $1;
 
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
-  WHERE publish AND total_evses > 0 AND 
+  WHERE is_published AND total_evses > 0 AND 
     (
       (@is_remote_capable::BOOLEAN = true AND is_remote_capable = true) OR 
       (@is_rfid_capable::BOOLEAN = true AND is_rfid_capable = true)
@@ -142,14 +142,14 @@ UPDATE locations SET (
   ) = ($2, $3, $4, $5, $6, $7)
   WHERE id = $1;
 
--- name: UpdateLocationPublish :exec
-UPDATE locations SET publish = $2
+-- name: UpdateLocationPublished :exec
+UPDATE locations SET is_published = $2
   WHERE id = $1;
 
--- name: UpdateLocationsPublishByCredential :exec
-UPDATE locations SET publish = $2
+-- name: UpdateLocationsPublishedByCredential :exec
+UPDATE locations SET is_published = $2
   WHERE credential_id = $1;
 
--- name: UpdateLocationsPublishByPartyAndCountryCode :exec
-UPDATE locations SET publish = $3
+-- name: UpdateLocationsPublishedByPartyAndCountryCode :exec
+UPDATE locations SET is_published = $3
   WHERE party_id = $1 AND country_code = $2;

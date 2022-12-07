@@ -11,7 +11,7 @@ INSERT INTO connectors (
     wattage, 
     tariff_id, 
     terms_and_conditions, 
-    publish,
+    is_published,
     last_updated)
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   RETURNING *;
@@ -42,7 +42,7 @@ SELECT * FROM connectors
  
 -- name: ListConnectors :many
 SELECT * FROM connectors
-  WHERE evse_id = $1 AND publish = true
+  WHERE evse_id = $1 AND is_published = true AND is_removed = false
   ORDER BY id;
 
 -- name: ListConnectorsByEvseID :many
@@ -61,9 +61,10 @@ UPDATE connectors SET (
     wattage, 
     tariff_id, 
     terms_and_conditions, 
-    publish,
+    is_published,
+    is_removed,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   WHERE id = $1
   RETURNING *;
 
@@ -78,8 +79,9 @@ UPDATE connectors SET (
     wattage, 
     tariff_id, 
     terms_and_conditions, 
-    publish,
+    is_published,
+    is_removed,
     last_updated
-  ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+  ) = ($3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
   WHERE evse_id = $1 AND uid = $2
   RETURNING *;

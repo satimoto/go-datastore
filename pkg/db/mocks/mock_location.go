@@ -91,18 +91,18 @@ func (r *MockRepositoryService) UpdateLocationLastUpdated(ctx context.Context, a
 	return nil
 }
 
-func (r *MockRepositoryService) UpdateLocationPublish(ctx context.Context, arg db.UpdateLocationPublishParams) error {
-	r.updateLocationPublishMockData = append(r.updateLocationPublishMockData, arg)
+func (r *MockRepositoryService) UpdateLocationPublished(ctx context.Context, arg db.UpdateLocationPublishedParams) error {
+	r.updateLocationPublishedMockData = append(r.updateLocationPublishedMockData, arg)
 	return nil
 }
 
-func (r *MockRepositoryService) UpdateLocationsPublishByCredential(ctx context.Context, arg db.UpdateLocationsPublishByCredentialParams) error {
-	r.updateLocationsPublishByCredentialMockData = append(r.updateLocationsPublishByCredentialMockData, arg)
+func (r *MockRepositoryService) UpdateLocationsPublishedByCredential(ctx context.Context, arg db.UpdateLocationsPublishedByCredentialParams) error {
+	r.updateLocationsPublishedByCredentialMockData = append(r.updateLocationsPublishedByCredentialMockData, arg)
 	return nil
 }
 
-func (r *MockRepositoryService) UpdateLocationsPublishByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsPublishByPartyAndCountryCodeParams) error {
-	r.updateLocationsPublishByPartyAndCountryCodeMockData = append(r.updateLocationsPublishByPartyAndCountryCodeMockData, arg)
+func (r *MockRepositoryService) UpdateLocationsPublishedByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsPublishedByPartyAndCountryCodeParams) error {
+	r.updateLocationsPublishedByPartyAndCountryCodeMockData = append(r.updateLocationsPublishedByPartyAndCountryCodeMockData, arg)
 	return nil
 }
 
@@ -126,33 +126,33 @@ func (r *MockRepositoryService) GetUpdateLocationByUidMockData() (db.UpdateLocat
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdateLocationPublishMockData() (db.UpdateLocationPublishParams, error) {
-	if len(r.updateLocationPublishMockData) == 0 {
-		return db.UpdateLocationPublishParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdateLocationPublishedMockData() (db.UpdateLocationPublishedParams, error) {
+	if len(r.updateLocationPublishedMockData) == 0 {
+		return db.UpdateLocationPublishedParams{}, ErrorNotFound()
 	}
 
-	response := r.updateLocationPublishMockData[0]
-	r.updateLocationPublishMockData = r.updateLocationPublishMockData[1:]
+	response := r.updateLocationPublishedMockData[0]
+	r.updateLocationPublishedMockData = r.updateLocationPublishedMockData[1:]
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdateLocationsPublishByCredentialMockData() (db.UpdateLocationsPublishByCredentialParams, error) {
-	if len(r.updateLocationsPublishByCredentialMockData) == 0 {
-		return db.UpdateLocationsPublishByCredentialParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdateLocationsPublishedByCredentialMockData() (db.UpdateLocationsPublishedByCredentialParams, error) {
+	if len(r.updateLocationsPublishedByCredentialMockData) == 0 {
+		return db.UpdateLocationsPublishedByCredentialParams{}, ErrorNotFound()
 	}
 
-	response := r.updateLocationsPublishByCredentialMockData[0]
-	r.updateLocationsPublishByCredentialMockData = r.updateLocationsPublishByCredentialMockData[1:]
+	response := r.updateLocationsPublishedByCredentialMockData[0]
+	r.updateLocationsPublishedByCredentialMockData = r.updateLocationsPublishedByCredentialMockData[1:]
 	return response, nil
 }
 
-func (r *MockRepositoryService) GetUpdateLocationsPublishByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishByPartyAndCountryCodeParams, error) {
-	if len(r.updateLocationsPublishByPartyAndCountryCodeMockData) == 0 {
-		return db.UpdateLocationsPublishByPartyAndCountryCodeParams{}, ErrorNotFound()
+func (r *MockRepositoryService) GetUpdateLocationsPublishedByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishedByPartyAndCountryCodeParams, error) {
+	if len(r.updateLocationsPublishedByPartyAndCountryCodeMockData) == 0 {
+		return db.UpdateLocationsPublishedByPartyAndCountryCodeParams{}, ErrorNotFound()
 	}
 
-	response := r.updateLocationsPublishByPartyAndCountryCodeMockData[0]
-	r.updateLocationsPublishByPartyAndCountryCodeMockData = r.updateLocationsPublishByPartyAndCountryCodeMockData[1:]
+	response := r.updateLocationsPublishedByPartyAndCountryCodeMockData[0]
+	r.updateLocationsPublishedByPartyAndCountryCodeMockData = r.updateLocationsPublishedByPartyAndCountryCodeMockData[1:]
 	return response, nil
 }
 

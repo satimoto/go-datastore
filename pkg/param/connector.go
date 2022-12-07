@@ -15,7 +15,8 @@ func NewUpdateConnectorByEvseParams(connector db.Connector) db.UpdateConnectorBy
 		Wattage:            connector.Wattage,
 		TariffID:           connector.TariffID,
 		TermsAndConditions: connector.TermsAndConditions,
-		Publish:            connector.Publish,
+		IsPublished:        connector.IsPublished,
+		IsRemoved:          connector.IsRemoved,
 		LastUpdated:        connector.LastUpdated,
 	}
 }
