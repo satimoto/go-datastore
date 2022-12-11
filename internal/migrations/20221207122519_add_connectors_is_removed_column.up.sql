@@ -9,4 +9,4 @@ ALTER TABLE connectors
 ALTER TABLE connectors
     ADD COLUMN is_removed BOOLEAN NOT NULL DEFAULT false;
 
-UPDATE connectors SET is_removed = is_published;
+UPDATE connectors SET is_removed = not is_published;
