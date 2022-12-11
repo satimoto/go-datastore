@@ -72,26 +72,6 @@ func (q *Queries) GetCommandStart(ctx context.Context, id int64) (CommandStart, 
 	return i, err
 }
 
-const getCommandStartByAuthorizationID = `-- name: GetCommandStartByAuthorizationID :one
-SELECT id, status, token_id, authorization_id, location_id, evse_uid, last_updated FROM command_starts
-  WHERE authorization_id = $1
-`
-
-func (q *Queries) GetCommandStartByAuthorizationID(ctx context.Context, authorizationID sql.NullString) (CommandStart, error) {
-	row := q.db.QueryRowContext(ctx, getCommandStartByAuthorizationID, authorizationID)
-	var i CommandStart
-	err := row.Scan(
-		&i.ID,
-		&i.Status,
-		&i.TokenID,
-		&i.AuthorizationID,
-		&i.LocationID,
-		&i.EvseUid,
-		&i.LastUpdated,
-	)
-	return i, err
-}
-
 const updateCommandStart = `-- name: UpdateCommandStart :one
 UPDATE command_starts SET (
     status,
@@ -109,6 +89,36 @@ type UpdateCommandStartParams struct {
 
 func (q *Queries) UpdateCommandStart(ctx context.Context, arg UpdateCommandStartParams) (CommandStart, error) {
 	row := q.db.QueryRowContext(ctx, updateCommandStart, arg.ID, arg.Status, arg.LastUpdated)
+	var i CommandStart
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.TokenID,
+		&i.AuthorizationID,
+		&i.LocationID,
+		&i.EvseUid,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
+const updateCommandStartByAuthorizationID = `-- name: UpdateCommandStartByAuthorizationID :one
+UPDATE command_starts SET (
+    status,
+    last_updated
+  ) = ($2, $3)
+  WHERE authorization_id = $1
+  RETURNING id, status, token_id, authorization_id, location_id, evse_uid, last_updated
+`
+
+type UpdateCommandStartByAuthorizationIDParams struct {
+	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
+	Status          CommandResponseType `db:"status" json:"status"`
+	LastUpdated     time.Time           `db:"last_updated" json:"lastUpdated"`
+}
+
+func (q *Queries) UpdateCommandStartByAuthorizationID(ctx context.Context, arg UpdateCommandStartByAuthorizationIDParams) (CommandStart, error) {
+	row := q.db.QueryRowContext(ctx, updateCommandStartByAuthorizationID, arg.AuthorizationID, arg.Status, arg.LastUpdated)
 	var i CommandStart
 	err := row.Scan(
 		&i.ID,

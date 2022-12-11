@@ -13,14 +13,18 @@ INSERT INTO command_starts (
 SELECT * FROM command_starts
   WHERE id = $1;
 
--- name: GetCommandStartByAuthorizationID :one
-SELECT * FROM command_starts
-  WHERE authorization_id = $1;
-
 -- name: UpdateCommandStart :one
 UPDATE command_starts SET (
     status,
     last_updated
   ) = ($2, $3)
   WHERE id = $1
+  RETURNING *;
+
+-- name: UpdateCommandStartByAuthorizationID :one
+UPDATE command_starts SET (
+    status,
+    last_updated
+  ) = ($2, $3)
+  WHERE authorization_id = $1
   RETURNING *;
