@@ -127,7 +127,9 @@ type MockRepository interface {
 	GetUpdatePendingChannelRequestByPubkeyMockData() (db.UpdatePendingChannelRequestByPubkeyParams, error)
 	GetUpdateCommandReservationMockData() (db.UpdateCommandReservationParams, error)
 	GetUpdateCommandStartMockData() (db.UpdateCommandStartParams, error)
+	GetUpdateCommandStartByAuthorizationIDMockData() (db.UpdateCommandStartByAuthorizationIDParams, error)
 	GetUpdateCommandStopMockData() (db.UpdateCommandStopParams, error)
+	GetUpdateCommandStopBySessionIDMockData() (db.UpdateCommandStopBySessionIDParams, error)
 	GetUpdateCommandUnlockMockData() (db.UpdateCommandUnlockParams, error)
 	GetUpdateCredentialMockData() (db.UpdateCredentialParams, error)
 	GetUpdateElementRestrictionMockData() (db.UpdateElementRestrictionParams, error)
@@ -179,9 +181,7 @@ type MockRepository interface {
 	SetGetConnectorByEvseMockData(response ConnectorMockData)
 	SetGetCommandReservationMockData(response CommandReservationMockData)
 	SetGetCommandStartMockData(response CommandStartMockData)
-	SetGetCommandStartByAuthorizationIDMockData(response CommandStartMockData)
 	SetGetCommandStopMockData(response CommandStopMockData)
-	SetGetCommandStopBySessionIDMockData(response CommandStopMockData)
 	SetGetCommandUnlockMockData(response CommandUnlockMockData)
 	SetGetCountryAccountByCountryMockData(response CountryAccountMockData)
 	SetGetCredentialMockData(response CredentialMockData)
@@ -415,9 +415,7 @@ type MockRepositoryService struct {
 	getConnectorByEvseMockData                            []ConnectorMockData
 	getCommandReservationMockData                         []CommandReservationMockData
 	getCommandStartMockData                               []CommandStartMockData
-	getCommandStartByAuthorizationIDMockData              []CommandStartMockData
 	getCommandStopMockData                                []CommandStopMockData
-	getCommandStopBySessionIDMockData                     []CommandStopMockData
 	getCommandUnlockMockData                              []CommandUnlockMockData
 	getCountryAccountByCountryMockData                    []CountryAccountMockData
 	getCredentialMockData                                 []CredentialMockData
@@ -568,7 +566,9 @@ type MockRepositoryService struct {
 	updateConnectorByEvseMockData                         []db.UpdateConnectorByEvseParams
 	updateCommandReservationMockData                      []db.UpdateCommandReservationParams
 	updateCommandStartMockData                            []db.UpdateCommandStartParams
+	updateCommandStartByAuthorizationIDMockData           []db.UpdateCommandStartByAuthorizationIDParams
 	updateCommandStopMockData                             []db.UpdateCommandStopParams
+	updateCommandStopBySessionIDMockData                  []db.UpdateCommandStopBySessionIDParams
 	updateCommandUnlockMockData                           []db.UpdateCommandUnlockParams
 	updateCredentialMockData                              []db.UpdateCredentialParams
 	updateElementRestrictionMockData                      []db.UpdateElementRestrictionParams

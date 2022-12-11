@@ -10,14 +10,18 @@ INSERT INTO command_stops (
 SELECT * FROM command_stops
   WHERE id = $1;
 
--- name: GetCommandStopBySessionID :one
-SELECT * FROM command_stops
-  WHERE session_id = $1 AND status = 'REQUESTED';
-
 -- name: UpdateCommandStop :one
 UPDATE command_stops SET (
     status,
     last_updated
   ) = ($2, $3)
   WHERE id = $1
+  RETURNING *;
+
+-- name: UpdateCommandStopBySessionID :one
+UPDATE command_stops SET (
+    status,
+    last_updated
+  ) = ($2, $3)
+  WHERE session_id = $1 AND status = 'REQUESTED'
   RETURNING *;

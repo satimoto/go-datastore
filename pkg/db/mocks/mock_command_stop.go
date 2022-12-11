@@ -31,18 +31,13 @@ func (r *MockRepositoryService) GetCommandStop(ctx context.Context, id int64) (d
 	return response.CommandStop, response.Error
 }
 
-func (r *MockRepositoryService) GetCommandStopBySessionID(ctx context.Context, sessionID string) (db.CommandStop, error) {
-	if len(r.getCommandStopBySessionIDMockData) == 0 {
-		return db.CommandStop{}, ErrorNotFound()
-	}
-
-	response := r.getCommandStopBySessionIDMockData[0]
-	r.getCommandStopBySessionIDMockData = r.getCommandStopBySessionIDMockData[1:]
-	return response.CommandStop, response.Error
-}
-
 func (r *MockRepositoryService) UpdateCommandStop(ctx context.Context, arg db.UpdateCommandStopParams) (db.CommandStop, error) {
 	r.updateCommandStopMockData = append(r.updateCommandStopMockData, arg)
+	return db.CommandStop{}, nil
+}
+
+func (r *MockRepositoryService) UpdateCommandStopBySessionID(ctx context.Context, arg db.UpdateCommandStopBySessionIDParams) (db.CommandStop, error) {
+	r.updateCommandStopBySessionIDMockData = append(r.updateCommandStopBySessionIDMockData, arg)
 	return db.CommandStop{}, nil
 }
 
@@ -66,10 +61,16 @@ func (r *MockRepositoryService) GetUpdateCommandStopMockData() (db.UpdateCommand
 	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetCommandStopMockData(response CommandStopMockData) {
-	r.getCommandStopMockData = append(r.getCommandStopMockData, response)
+func (r *MockRepositoryService) GetUpdateCommandStopBySessionIDMockData() (db.UpdateCommandStopBySessionIDParams, error) {
+	if len(r.updateCommandStopBySessionIDMockData) == 0 {
+		return db.UpdateCommandStopBySessionIDParams{}, ErrorNotFound()
+	}
+
+	response := r.updateCommandStopBySessionIDMockData[0]
+	r.updateCommandStopBySessionIDMockData = r.updateCommandStopBySessionIDMockData[1:]
+	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetCommandStopBySessionIDMockData(response CommandStopMockData) {
-	r.getCommandStopBySessionIDMockData = append(r.getCommandStopBySessionIDMockData, response)
+func (r *MockRepositoryService) SetGetCommandStopMockData(response CommandStopMockData) {
+	r.getCommandStopMockData = append(r.getCommandStopMockData, response)
 }
