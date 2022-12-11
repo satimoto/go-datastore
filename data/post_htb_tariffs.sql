@@ -106,6 +106,11 @@ INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_p
 INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM183', 'CHF', 0.0929, 720, 0.3714, NULL);
 INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM184', 'CHF', 0.0929, 240, 0.4178, NULL);
 INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM185', 'CHF', 0.1393, 120, 0.4178, NULL);
+INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM232', 'CHF', 0.3125, 240, 0.5625, NULL);
+INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM233', 'CHF', 0.125, 60, 0.625, NULL);
+INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM230', 'CHF', 0.3125, 240, 0.68, NULL);
+INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM231', 'CHF', 0.125, 60, 0.68, NULL);
+INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('COM234', 'CHF', 0.125, 60, 0.73, NULL);
 INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('MC_T_100 EUR', 'EUR', 0.0166, NULL, NULL, NULL);
 INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('MC_T_250 EUR', 'EUR', 0.0417, NULL, NULL, NULL);
 INSERT INTO htb_tariffs (name, currency, time_price, time_min_duration, energy_price, flat_price) VALUES ('MC_T_350 EUR', 'EUR', 0.0583, NULL, NULL, NULL);

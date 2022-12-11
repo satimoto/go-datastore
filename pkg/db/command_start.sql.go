@@ -72,6 +72,26 @@ func (q *Queries) GetCommandStart(ctx context.Context, id int64) (CommandStart, 
 	return i, err
 }
 
+const getCommandStartByAuthorizationID = `-- name: GetCommandStartByAuthorizationID :one
+SELECT id, status, token_id, authorization_id, location_id, evse_uid, last_updated FROM command_starts
+  WHERE authorization_id = $1
+`
+
+func (q *Queries) GetCommandStartByAuthorizationID(ctx context.Context, authorizationID sql.NullString) (CommandStart, error) {
+	row := q.db.QueryRowContext(ctx, getCommandStartByAuthorizationID, authorizationID)
+	var i CommandStart
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.TokenID,
+		&i.AuthorizationID,
+		&i.LocationID,
+		&i.EvseUid,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const updateCommandStart = `-- name: UpdateCommandStart :one
 UPDATE command_starts SET (
     status,

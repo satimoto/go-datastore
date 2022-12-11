@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -13,6 +14,7 @@ type CommandRepository interface {
 	CreateCommandUnlock(ctx context.Context, arg db.CreateCommandUnlockParams) (db.CommandUnlock, error)
 	GetCommandReservation(ctx context.Context, id int64) (db.CommandReservation, error)
 	GetCommandStart(ctx context.Context, id int64) (db.CommandStart, error)
+	GetCommandStartByAuthorizationID(ctx context.Context, authorizationID sql.NullString) (db.CommandStart, error)
 	GetCommandStop(ctx context.Context, id int64) (db.CommandStop, error)
 	GetCommandUnlock(ctx context.Context, id int64) (db.CommandUnlock, error)
 	UpdateCommandReservation(ctx context.Context, arg db.UpdateCommandReservationParams) (db.CommandReservation, error)
