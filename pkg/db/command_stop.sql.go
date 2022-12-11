@@ -52,6 +52,23 @@ func (q *Queries) GetCommandStop(ctx context.Context, id int64) (CommandStop, er
 	return i, err
 }
 
+const getCommandStopBySessionID = `-- name: GetCommandStopBySessionID :one
+SELECT id, status, session_id, last_updated FROM command_stops
+  WHERE session_id = $1 AND status = 'REQUESTED'
+`
+
+func (q *Queries) GetCommandStopBySessionID(ctx context.Context, sessionID string) (CommandStop, error) {
+	row := q.db.QueryRowContext(ctx, getCommandStopBySessionID, sessionID)
+	var i CommandStop
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.SessionID,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const updateCommandStop = `-- name: UpdateCommandStop :one
 UPDATE command_stops SET (
     status,
