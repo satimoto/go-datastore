@@ -181,6 +181,7 @@ type MockRepository interface {
 	SetGetCommandStartMockData(response CommandStartMockData)
 	SetGetCommandStartByAuthorizationIDMockData(response CommandStartMockData)
 	SetGetCommandStopMockData(response CommandStopMockData)
+	SetGetCommandStopBySessionIDMockData(response CommandStopMockData)
 	SetGetCommandUnlockMockData(response CommandUnlockMockData)
 	SetGetCountryAccountByCountryMockData(response CountryAccountMockData)
 	SetGetCredentialMockData(response CredentialMockData)
@@ -416,6 +417,7 @@ type MockRepositoryService struct {
 	getCommandStartMockData                               []CommandStartMockData
 	getCommandStartByAuthorizationIDMockData              []CommandStartMockData
 	getCommandStopMockData                                []CommandStopMockData
+	getCommandStopBySessionIDMockData                     []CommandStopMockData
 	getCommandUnlockMockData                              []CommandUnlockMockData
 	getCountryAccountByCountryMockData                    []CountryAccountMockData
 	getCredentialMockData                                 []CredentialMockData

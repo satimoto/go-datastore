@@ -31,6 +31,16 @@ func (r *MockRepositoryService) GetCommandStop(ctx context.Context, id int64) (d
 	return response.CommandStop, response.Error
 }
 
+func (r *MockRepositoryService) GetCommandStopBySessionID(ctx context.Context, sessionID string) (db.CommandStop, error) {
+	if len(r.getCommandStopBySessionIDMockData) == 0 {
+		return db.CommandStop{}, ErrorNotFound()
+	}
+
+	response := r.getCommandStopBySessionIDMockData[0]
+	r.getCommandStopBySessionIDMockData = r.getCommandStopBySessionIDMockData[1:]
+	return response.CommandStop, response.Error
+}
+
 func (r *MockRepositoryService) UpdateCommandStop(ctx context.Context, arg db.UpdateCommandStopParams) (db.CommandStop, error) {
 	r.updateCommandStopMockData = append(r.updateCommandStopMockData, arg)
 	return db.CommandStop{}, nil
@@ -58,4 +68,8 @@ func (r *MockRepositoryService) GetUpdateCommandStopMockData() (db.UpdateCommand
 
 func (r *MockRepositoryService) SetGetCommandStopMockData(response CommandStopMockData) {
 	r.getCommandStopMockData = append(r.getCommandStopMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetCommandStopBySessionIDMockData(response CommandStopMockData) {
+	r.getCommandStopBySessionIDMockData = append(r.getCommandStopBySessionIDMockData, response)
 }
