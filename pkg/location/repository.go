@@ -36,6 +36,8 @@ type LocationRepository interface {
 	UpdateLocationPublished(ctx context.Context, arg db.UpdateLocationPublishedParams) error
 	UpdateLocationsPublishedByCredential(ctx context.Context, arg db.UpdateLocationsPublishedByCredentialParams) error
 	UpdateLocationsPublishedByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsPublishedByPartyAndCountryCodeParams) error
+	UpdateLocationsRemovedByCredential(ctx context.Context, arg db.UpdateLocationsRemovedByCredentialParams) error
+	UpdateLocationsRemovedByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsRemovedByPartyAndCountryCodeParams) error
 }
 
 func NewRepository(repositoryService *db.RepositoryService) LocationRepository {

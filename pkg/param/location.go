@@ -22,6 +22,7 @@ func NewUpdateLocationByUidParams(location db.Location) db.UpdateLocationByUidPa
 		IsIntermediateCdrCapable: location.IsIntermediateCdrCapable,
 		IsRemoteCapable:          location.IsRemoteCapable,
 		IsRfidCapable:            location.IsRfidCapable,
+		IsRemoved:                location.IsRemoved,
 		OperatorID:               location.OperatorID,
 		SuboperatorID:            location.SuboperatorID,
 		OwnerID:                  location.OwnerID,
@@ -41,6 +42,7 @@ func NewUpdateLocationLastUpdatedParams(location db.Location) db.UpdateLocationL
 		IsIntermediateCdrCapable: location.IsIntermediateCdrCapable,
 		IsRemoteCapable:          location.IsRemoteCapable,
 		IsRfidCapable:            location.IsRfidCapable,
+		IsRemoved:                location.IsRemoved,
 		LastUpdated:              location.LastUpdated,
 	}
 }

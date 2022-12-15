@@ -60,11 +60,11 @@ SELECT * FROM locations
 
 -- name: ListLocationsByCountry :many
 SELECT * FROM locations
-  WHERE is_published AND total_evses > 0 AND country = $1;
+  WHERE is_published = true AND is_removed = false AND total_evses > 0 AND country = $1;
 
 -- name: ListLocationsByGeom :many
 SELECT * FROM locations
-  WHERE is_published AND total_evses > 0 AND 
+  WHERE is_published = true AND is_removed = false AND total_evses > 0 AND 
     (@is_experimental::BOOLEAN = true OR is_intermediate_cdr_capable = true) AND 
     (
       (@is_remote_capable::BOOLEAN = true AND is_remote_capable = true) OR 
@@ -91,6 +91,7 @@ UPDATE locations SET (
     is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
+    is_removed,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -99,7 +100,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
   WHERE id = $1
   RETURNING *;
 
@@ -120,6 +121,7 @@ UPDATE locations SET (
     is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
+    is_removed,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -128,7 +130,7 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
   WHERE uid = $1
   RETURNING *;
 
@@ -139,8 +141,9 @@ UPDATE locations SET (
     is_intermediate_cdr_capable,
     is_remote_capable, 
     is_rfid_capable,
+    is_removed,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1;
 
 -- name: UpdateLocationPublished :exec
@@ -153,4 +156,12 @@ UPDATE locations SET is_published = $2
 
 -- name: UpdateLocationsPublishedByPartyAndCountryCode :exec
 UPDATE locations SET is_published = $3
+  WHERE party_id = $1 AND country_code = $2;
+
+-- name: UpdateLocationsRemovedByCredential :exec
+UPDATE locations SET is_removed = $2
+  WHERE credential_id = $1;
+
+-- name: UpdateLocationsRemovedByPartyAndCountryCode :exec
+UPDATE locations SET is_removed = $3
   WHERE party_id = $1 AND country_code = $2;

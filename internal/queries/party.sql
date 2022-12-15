@@ -17,6 +17,10 @@ SELECT * FROM parties
 SELECT * FROM parties
   WHERE credential_id = $1 AND country_code = $2 AND party_id = $3;
 
+-- name: ListPartiesByCredentialID :many
+SELECT * FROM parties
+  WHERE credential_id = $1;
+
 -- name: UpdateParty :one
 UPDATE parties SET (
     is_intermediate_cdr_capable,

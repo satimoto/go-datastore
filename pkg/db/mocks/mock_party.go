@@ -11,6 +11,11 @@ type PartyMockData struct {
 	Error error
 }
 
+type PartiesMockData struct {
+	Parties []db.Party
+	Error   error
+}
+
 func (r *MockRepositoryService) CreateParty(ctx context.Context, arg db.CreatePartyParams) (db.Party, error) {
 	r.createPartyMockData = append(r.createPartyMockData, arg)
 	return db.Party{}, nil
@@ -34,6 +39,16 @@ func (r *MockRepositoryService) GetPartyByCredential(ctx context.Context, arg db
 	response := r.getPartyByCredentialMockData[0]
 	r.getPartyByCredentialMockData = r.getPartyByCredentialMockData[1:]
 	return response.Party, response.Error
+}
+
+func (r *MockRepositoryService) ListPartiesByCredentialID(ctx context.Context, country string) ([]db.Party, error) {
+	if len(r.listPartiesByCredentialIDMockData) == 0 {
+		return []db.Party{}, nil
+	}
+
+	response := r.listPartiesByCredentialIDMockData[0]
+	r.listPartiesByCredentialIDMockData = r.listPartiesByCredentialIDMockData[1:]
+	return response.Parties, response.Error
 }
 
 func (r *MockRepositoryService) UpdateParty(ctx context.Context, arg db.UpdatePartyParams) (db.Party, error) {
@@ -62,6 +77,10 @@ func (r *MockRepositoryService) SetGetPartyMockData(response PartyMockData) {
 
 func (r *MockRepositoryService) SetGetPartyByCredentialMockData(response PartyMockData) {
 	r.getPartyMockData = append(r.getPartyByCredentialMockData, response)
+}
+
+func (r *MockRepositoryService) SetListPartiesByCredentialIDMockData(response PartiesMockData) {
+	r.listPartiesByCredentialIDMockData = append(r.listPartiesByCredentialIDMockData, response)
 }
 
 func (r *MockRepositoryService) GetUpdatePartyMockData() (db.UpdatePartyParams, error) {

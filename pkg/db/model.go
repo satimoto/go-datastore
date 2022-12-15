@@ -923,6 +923,7 @@ type Location struct {
 	IsPublished              bool              `db:"is_published" json:"isPublished"`
 	AddedDate                time.Time         `db:"added_date" json:"addedDate"`
 	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsRemoved                bool              `db:"is_removed" json:"isRemoved"`
 }
 
 type LocationDirection struct {

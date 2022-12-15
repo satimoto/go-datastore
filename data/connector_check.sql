@@ -68,7 +68,6 @@ SELECT l.id, l.uid, ec.e_count FROM locations l
     ON l.id = ec.location_id
 	WHERE l.is_published AND ec.e_count is null
 
-
 UPDATE locations l SET is_published = false 
   FROM locations lj 
   LEFT JOIN (SELECT e.location_id, COUNT(e.location_id) AS e_count
@@ -77,3 +76,9 @@ UPDATE locations l SET is_published = false
     ON lj.id = ec.location_id
 	WHERE l.id = lj.id AND lj.is_published AND ec.e_count is null
 
+-- Select per operator location and evse uid
+SELECT DISTINCT ON (l.country_code, l.party_id) l.country_code, l.party_id, l.uid AS l_uid, e.uid AS e_uid, e.status, e.is_remote_capable, c.is_published FROM locations l
+  LEFT JOIN evses e ON e.location_id = l.id
+  LEFT JOIN connectors c ON c.evse_id = e.id
+  WHERE l.is_published AND l.is_remote_capable AND 
+    e.is_remote_capable AND e.status = 'AVAILABLE' AND e.is_remote_capable AND c.is_published;

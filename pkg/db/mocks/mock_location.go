@@ -106,6 +106,16 @@ func (r *MockRepositoryService) UpdateLocationsPublishedByPartyAndCountryCode(ct
 	return nil
 }
 
+func (r *MockRepositoryService) UpdateLocationsRemovedByCredential(ctx context.Context, arg db.UpdateLocationsRemovedByCredentialParams) error {
+	r.updateLocationsRemovedByCredentialMockData = append(r.updateLocationsRemovedByCredentialMockData, arg)
+	return nil
+}
+
+func (r *MockRepositoryService) UpdateLocationsRemovedByPartyAndCountryCode(ctx context.Context, arg db.UpdateLocationsRemovedByPartyAndCountryCodeParams) error {
+	r.updateLocationsRemovedByPartyAndCountryCodeMockData = append(r.updateLocationsRemovedByPartyAndCountryCodeMockData, arg)
+	return nil
+}
+
 func (r *MockRepositoryService) GetCreateLocationMockData() (db.CreateLocationParams, error) {
 	if len(r.createLocationMockData) == 0 {
 		return db.CreateLocationParams{}, ErrorNotFound()
@@ -153,6 +163,26 @@ func (r *MockRepositoryService) GetUpdateLocationsPublishedByPartyAndCountryCode
 
 	response := r.updateLocationsPublishedByPartyAndCountryCodeMockData[0]
 	r.updateLocationsPublishedByPartyAndCountryCodeMockData = r.updateLocationsPublishedByPartyAndCountryCodeMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateLocationsRemovedByCredentialMockData() (db.UpdateLocationsRemovedByCredentialParams, error) {
+	if len(r.updateLocationsRemovedByCredentialMockData) == 0 {
+		return db.UpdateLocationsRemovedByCredentialParams{}, ErrorNotFound()
+	}
+
+	response := r.updateLocationsRemovedByCredentialMockData[0]
+	r.updateLocationsRemovedByCredentialMockData = r.updateLocationsRemovedByCredentialMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateLocationsRemovedByPartyAndCountryCodeMockData() (db.UpdateLocationsRemovedByPartyAndCountryCodeParams, error) {
+	if len(r.updateLocationsRemovedByPartyAndCountryCodeMockData) == 0 {
+		return db.UpdateLocationsRemovedByPartyAndCountryCodeParams{}, ErrorNotFound()
+	}
+
+	response := r.updateLocationsRemovedByPartyAndCountryCodeMockData[0]
+	r.updateLocationsRemovedByPartyAndCountryCodeMockData = r.updateLocationsRemovedByPartyAndCountryCodeMockData[1:]
 	return response, nil
 }
 
