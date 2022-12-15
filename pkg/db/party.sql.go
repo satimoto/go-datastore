@@ -96,6 +96,42 @@ func (q *Queries) GetPartyByCredential(ctx context.Context, arg GetPartyByCreden
 	return i, err
 }
 
+const listPartiesByCredentialID = `-- name: ListPartiesByCredentialID :many
+SELECT id, credential_id, country_code, party_id, is_intermediate_cdr_capable, publish_location, publish_null_tariff FROM parties
+  WHERE credential_id = $1
+`
+
+func (q *Queries) ListPartiesByCredentialID(ctx context.Context, credentialID int64) ([]Party, error) {
+	rows, err := q.db.QueryContext(ctx, listPartiesByCredentialID, credentialID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Party
+	for rows.Next() {
+		var i Party
+		if err := rows.Scan(
+			&i.ID,
+			&i.CredentialID,
+			&i.CountryCode,
+			&i.PartyID,
+			&i.IsIntermediateCdrCapable,
+			&i.PublishLocation,
+			&i.PublishNullTariff,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateParty = `-- name: UpdateParty :one
 UPDATE parties SET (
     is_intermediate_cdr_capable,

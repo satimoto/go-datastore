@@ -40,7 +40,7 @@ INSERT INTO locations (
     is_published,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed
 `
 
 type CreateLocationParams struct {
@@ -131,6 +131,7 @@ func (q *Queries) CreateLocation(ctx context.Context, arg CreateLocationParams) 
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
@@ -148,7 +149,7 @@ func (q *Queries) DeleteLocation(ctx context.Context, id int64) error {
 const deleteLocationByUid = `-- name: DeleteLocationByUid :one
 DELETE FROM locations
   WHERE uid = $1
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed
 `
 
 func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location, error) {
@@ -183,12 +184,13 @@ func (q *Queries) DeleteLocationByUid(ctx context.Context, uid string) (Location
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
 
 const getLocation = `-- name: GetLocation :one
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
   WHERE id = $1
 `
 
@@ -224,12 +226,13 @@ func (q *Queries) GetLocation(ctx context.Context, id int64) (Location, error) {
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
 
 const getLocationByLastUpdated = `-- name: GetLocationByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -275,12 +278,13 @@ func (q *Queries) GetLocationByLastUpdated(ctx context.Context, arg GetLocationB
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
 
 const getLocationByUid = `-- name: GetLocationByUid :one
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
   WHERE uid = $1
 `
 
@@ -316,12 +320,13 @@ func (q *Queries) GetLocationByUid(ctx context.Context, uid string) (Location, e
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
 
 const listLocations = `-- name: ListLocations :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
   ORDER BY name
 `
 
@@ -363,6 +368,7 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 			&i.IsPublished,
 			&i.AddedDate,
 			&i.IsIntermediateCdrCapable,
+			&i.IsRemoved,
 		); err != nil {
 			return nil, err
 		}
@@ -378,8 +384,8 @@ func (q *Queries) ListLocations(ctx context.Context) ([]Location, error) {
 }
 
 const listLocationsByCountry = `-- name: ListLocationsByCountry :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
-  WHERE is_published AND total_evses > 0 AND country = $1
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
+  WHERE is_published = true AND is_removed = false AND total_evses > 0 AND country = $1
 `
 
 func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([]Location, error) {
@@ -420,6 +426,7 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 			&i.IsPublished,
 			&i.AddedDate,
 			&i.IsIntermediateCdrCapable,
+			&i.IsRemoved,
 		); err != nil {
 			return nil, err
 		}
@@ -435,8 +442,8 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 }
 
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable FROM locations
-  WHERE is_published AND total_evses > 0 AND 
+SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
+  WHERE is_published = true AND is_removed = false AND total_evses > 0 AND 
     ($1::BOOLEAN = true OR is_intermediate_cdr_capable = true) AND 
     (
       ($2::BOOLEAN = true AND is_remote_capable = true) OR 
@@ -505,6 +512,7 @@ func (q *Queries) ListLocationsByGeom(ctx context.Context, arg ListLocationsByGe
 			&i.IsPublished,
 			&i.AddedDate,
 			&i.IsIntermediateCdrCapable,
+			&i.IsRemoved,
 		); err != nil {
 			return nil, err
 		}
@@ -536,6 +544,7 @@ UPDATE locations SET (
     is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
+    is_removed,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -544,9 +553,9 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
   WHERE id = $1
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed
 `
 
 type UpdateLocationParams struct {
@@ -566,6 +575,7 @@ type UpdateLocationParams struct {
 	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
 	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	IsRemoved                bool              `db:"is_removed" json:"isRemoved"`
 	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
 	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
@@ -594,6 +604,7 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
+		arg.IsRemoved,
 		arg.OperatorID,
 		arg.SuboperatorID,
 		arg.OwnerID,
@@ -633,6 +644,7 @@ func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) 
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
@@ -654,6 +666,7 @@ UPDATE locations SET (
     is_intermediate_cdr_capable,
     is_remote_capable,
     is_rfid_capable,
+    is_removed,
     operator_id, 
     suboperator_id, 
     owner_id, 
@@ -662,9 +675,9 @@ UPDATE locations SET (
     charging_when_closed,
     energy_mix_id, 
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
   WHERE uid = $1
-  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable
+  RETURNING id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed
 `
 
 type UpdateLocationByUidParams struct {
@@ -684,6 +697,7 @@ type UpdateLocationByUidParams struct {
 	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
 	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	IsRemoved                bool              `db:"is_removed" json:"isRemoved"`
 	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
 	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
 	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
@@ -712,6 +726,7 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
+		arg.IsRemoved,
 		arg.OperatorID,
 		arg.SuboperatorID,
 		arg.OwnerID,
@@ -751,6 +766,7 @@ func (q *Queries) UpdateLocationByUid(ctx context.Context, arg UpdateLocationByU
 		&i.IsPublished,
 		&i.AddedDate,
 		&i.IsIntermediateCdrCapable,
+		&i.IsRemoved,
 	)
 	return i, err
 }
@@ -762,8 +778,9 @@ UPDATE locations SET (
     is_intermediate_cdr_capable,
     is_remote_capable, 
     is_rfid_capable,
+    is_removed,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7)
+  ) = ($2, $3, $4, $5, $6, $7, $8)
   WHERE id = $1
 `
 
@@ -774,6 +791,7 @@ type UpdateLocationLastUpdatedParams struct {
 	IsIntermediateCdrCapable bool      `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
 	IsRemoteCapable          bool      `db:"is_remote_capable" json:"isRemoteCapable"`
 	IsRfidCapable            bool      `db:"is_rfid_capable" json:"isRfidCapable"`
+	IsRemoved                bool      `db:"is_removed" json:"isRemoved"`
 	LastUpdated              time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
@@ -785,6 +803,7 @@ func (q *Queries) UpdateLocationLastUpdated(ctx context.Context, arg UpdateLocat
 		arg.IsIntermediateCdrCapable,
 		arg.IsRemoteCapable,
 		arg.IsRfidCapable,
+		arg.IsRemoved,
 		arg.LastUpdated,
 	)
 	return err
@@ -833,5 +852,36 @@ type UpdateLocationsPublishedByPartyAndCountryCodeParams struct {
 
 func (q *Queries) UpdateLocationsPublishedByPartyAndCountryCode(ctx context.Context, arg UpdateLocationsPublishedByPartyAndCountryCodeParams) error {
 	_, err := q.db.ExecContext(ctx, updateLocationsPublishedByPartyAndCountryCode, arg.PartyID, arg.CountryCode, arg.IsPublished)
+	return err
+}
+
+const updateLocationsRemovedByCredential = `-- name: UpdateLocationsRemovedByCredential :exec
+UPDATE locations SET is_removed = $2
+  WHERE credential_id = $1
+`
+
+type UpdateLocationsRemovedByCredentialParams struct {
+	CredentialID int64 `db:"credential_id" json:"credentialID"`
+	IsRemoved    bool  `db:"is_removed" json:"isRemoved"`
+}
+
+func (q *Queries) UpdateLocationsRemovedByCredential(ctx context.Context, arg UpdateLocationsRemovedByCredentialParams) error {
+	_, err := q.db.ExecContext(ctx, updateLocationsRemovedByCredential, arg.CredentialID, arg.IsRemoved)
+	return err
+}
+
+const updateLocationsRemovedByPartyAndCountryCode = `-- name: UpdateLocationsRemovedByPartyAndCountryCode :exec
+UPDATE locations SET is_removed = $3
+  WHERE party_id = $1 AND country_code = $2
+`
+
+type UpdateLocationsRemovedByPartyAndCountryCodeParams struct {
+	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
+	IsRemoved   bool           `db:"is_removed" json:"isRemoved"`
+}
+
+func (q *Queries) UpdateLocationsRemovedByPartyAndCountryCode(ctx context.Context, arg UpdateLocationsRemovedByPartyAndCountryCodeParams) error {
+	_, err := q.db.ExecContext(ctx, updateLocationsRemovedByPartyAndCountryCode, arg.PartyID, arg.CountryCode, arg.IsRemoved)
 	return err
 }

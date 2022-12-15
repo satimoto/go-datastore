@@ -145,6 +145,8 @@ type MockRepository interface {
 	GetUpdateLocationPublishedMockData() (db.UpdateLocationPublishedParams, error)
 	GetUpdateLocationsPublishedByCredentialMockData() (db.UpdateLocationsPublishedByCredentialParams, error)
 	GetUpdateLocationsPublishedByPartyAndCountryCodeMockData() (db.UpdateLocationsPublishedByPartyAndCountryCodeParams, error)
+	GetUpdateLocationsRemovedByCredentialMockData() (db.UpdateLocationsRemovedByCredentialParams, error)
+	GetUpdateLocationsRemovedByPartyAndCountryCodeMockData() (db.UpdateLocationsRemovedByPartyAndCountryCodeParams, error)
 	GetUpdateNodeMockData() (db.UpdateNodeParams, error)
 	GetUpdateOpeningTimeMockData() (db.UpdateOpeningTimeParams, error)
 	GetUpdatePartyMockData() (db.UpdatePartyParams, error)
@@ -281,6 +283,7 @@ type MockRepository interface {
 	SetListNodesMockData(response NodesMockData)
 	SetListActiveNodesMockData(response NodesMockData)
 	SetListParkingRestrictionsMockData(response ParkingRestrictionsMockData)
+	SetListPartiesByCredentialIDMockData(response PartiesMockData)
 	SetListPendingNotificationsMockData(response PendingNotificationsMockData)
 	SetListPriceComponentsMockData(response PriceComponentsMockData)
 	SetListRegularHoursMockData(response RegularHoursMockData)
@@ -513,6 +516,7 @@ type MockRepositoryService struct {
 	listNodesMockData                                     []NodesMockData
 	listActiveNodesMockData                               []NodesMockData
 	listParkingRestrictionsMockData                       []ParkingRestrictionsMockData
+	listPartiesByCredentialIDMockData                     []PartiesMockData
 	listPendingNotificationsMockData                      []PendingNotificationsMockData
 	listPriceComponentsMockData                           []PriceComponentsMockData
 	listUnfundedPsbtFundingStatesMockData                 []PsbtFundingStatesMockData
@@ -584,6 +588,8 @@ type MockRepositoryService struct {
 	updateLocationPublishedMockData                       []db.UpdateLocationPublishedParams
 	updateLocationsPublishedByCredentialMockData          []db.UpdateLocationsPublishedByCredentialParams
 	updateLocationsPublishedByPartyAndCountryCodeMockData []db.UpdateLocationsPublishedByPartyAndCountryCodeParams
+	updateLocationsRemovedByCredentialMockData            []db.UpdateLocationsRemovedByCredentialParams
+	updateLocationsRemovedByPartyAndCountryCodeMockData   []db.UpdateLocationsRemovedByPartyAndCountryCodeParams
 	updateNodeMockData                                    []db.UpdateNodeParams
 	updateOpeningTimeMockData                             []db.UpdateOpeningTimeParams
 	updatePartyMockData                                   []db.UpdatePartyParams
