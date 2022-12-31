@@ -41,7 +41,7 @@ func (r *MockRepositoryService) GetPartyByCredential(ctx context.Context, arg db
 	return response.Party, response.Error
 }
 
-func (r *MockRepositoryService) ListPartiesByCredentialID(ctx context.Context, country string) ([]db.Party, error) {
+func (r *MockRepositoryService) ListPartiesByCredentialID(ctx context.Context, credentialID int64) ([]db.Party, error) {
 	if len(r.listPartiesByCredentialIDMockData) == 0 {
 		return []db.Party{}, nil
 	}
