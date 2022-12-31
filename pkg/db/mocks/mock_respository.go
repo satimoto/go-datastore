@@ -40,6 +40,7 @@ type MockRepository interface {
 	GetCreateInvoiceRequestMockData() (db.CreateInvoiceRequestParams, error)
 	GetCreateLocationMockData() (db.CreateLocationParams, error)
 	GetCreateNodeMockData() (db.CreateNodeParams, error)
+	GetCreateNodeScidMockData() (db.CreateNodeScidParams, error)
 	GetCreateOpeningTimeMockData() (bool, error)
 	GetCreatePartyMockData() (db.CreatePartyParams, error)
 	CreatePendingNotification() (db.CreatePendingNotificationParams, error)
@@ -82,6 +83,7 @@ type MockRepository interface {
 	GetDeleteInvoiceRequestMockData() (int64, error)
 	GetDeleteLocationDirectionsMockData() (int64, error)
 	GetDeleteLocationImagesMockData() (int64, error)
+	GetDeleteNodeScidMockData() (int64, error)
 	GetDeleteOpeningTimeMockData() (int64, error)
 	GetDeletePendingNotificationMockData() (int64, error)
 	GetDeletePendingNotificationByInvoiceRequestMockData() (int64, error)
@@ -164,6 +166,7 @@ type MockRepository interface {
 	GetUpdateTokenByUidMockData() (db.UpdateTokenByUidParams, error)
 	GetUpdateUserMockData() (db.UpdateUserParams, error)
 	GetUpdateUserByPubkeyMockData() (db.UpdateUserByPubkeyParams, error)
+	SetCountNodeScidsMockData(response CountMockData)
 	SetCountTokensMockData(response CountMockData)
 	SetGetAuthenticationByCodeMockData(response AuthenticationMockData)
 	SetGetAuthenticationByChallengeMockData(response AuthenticationMockData)
@@ -208,6 +211,7 @@ type MockRepository interface {
 	SetGetNodeMockData(response NodeMockData)
 	SetGetNodeByPubkeyMockData(response NodeMockData)
 	SetGetNodeByUserIDMockData(response NodeMockData)
+	SetGetNodeScidMockData(response NodeScidMockData)
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
 	SetGetPartyMockData(response PartyMockData)
 	SetGetPartyByCredentialMockData(response PartyMockData)
@@ -309,6 +313,7 @@ type MockRepository interface {
 }
 
 type MockRepositoryService struct {
+	countNodeScidsMockData                                []CountMockData
 	countTokensMockData                                   []CountMockData
 	createAdditionalGeoLocationMockData                   []db.CreateAdditionalGeoLocationParams
 	createAuthenticationMockData                          []db.CreateAuthenticationParams
@@ -343,6 +348,7 @@ type MockRepositoryService struct {
 	createLocationMockData                                []db.CreateLocationParams
 	createOpeningTimeMockData                             []bool
 	createNodeMockData                                    []db.CreateNodeParams
+	createNodeScidMockData                                []db.CreateNodeScidParams
 	createPartyMockData                                   []db.CreatePartyParams
 	createPendingNotificationMockData                     []db.CreatePendingNotificationParams
 	createPriceComponentMockData                          []db.CreatePriceComponentParams
@@ -384,6 +390,7 @@ type MockRepositoryService struct {
 	deleteInvoiceRequestMockData                          []int64
 	deleteLocationDirectionsMockData                      []int64
 	deleteLocationImagesMockData                          []int64
+	deleteNodeScidMockData                                []int64
 	deleteOpeningTimeMockData                             []int64
 	deletePendingNotificationMockData                     []int64
 	deletePendingNotificationByInvoiceRequestMockData     []sql.NullInt64
@@ -443,6 +450,7 @@ type MockRepositoryService struct {
 	getNodeMockData                                       []NodeMockData
 	getNodeByPubkeyMockData                               []NodeMockData
 	getNodeByUserIDMockData                               []NodeMockData
+	getNodeScidMockData                                   []NodeScidMockData
 	getOpeningTimeMockData                                []OpeningTimeMockData
 	getPartyMockData                                      []PartyMockData
 	getPartyByCredentialMockData                          []PartyMockData

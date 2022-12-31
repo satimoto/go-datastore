@@ -23,17 +23,17 @@ SELECT l.country, l.uid, l.country_code, l.party_id, l.is_published, l.added_dat
 
 -- Set not removed unpublished locations to published
 SELECT l.country, l.uid, e.status, c.* FROM locations l
+  LEFT JOIN parties p ON l.country_code = p.country_code AND l.party_id = p.party_id
   LEFT JOIN evses e ON e.location_id = l.id
   LEFT JOIN connectors c ON c.evse_id = e.id
-  WHERE l.party_id not in ('V51', 'IPK', 'V75', 'TCB') AND e.status != 'REMOVED' AND 
-    tariff_id is not null AND c.is_published and l.is_published = false;
+  WHERE p.publish_location AND e.status != 'REMOVED' AND 
+    tariff_id is not null AND c.is_published AND c.is_removed = false and l.is_published = false and l.is_removed = false;
 
 UPDATE locations l SET is_published = true
-  FROM evses e, connectors c
-  WHERE e.location_id = l.id AND c.evse_id = e.id AND 
-    l.party_id not in ('V51', 'IPK', 'V75', 'TCB') AND e.status != 'REMOVED' AND 
-    tariff_id is not null AND c.is_published AND l.is_published = false;
-
+  FROM evses e, connectors c, parties p
+  WHERE e.location_id = l.id AND c.evse_id = e.id AND l.country_code = p.country_code AND l.party_id = p.party_id AND 
+    p.publish_location AND e.status != 'REMOVED' AND 
+    tariff_id is not null AND c.is_published AND c.is_removed = false and l.is_published = false and l.is_removed = false;
 
 -- Set not removed unpublished connectors to published
 SELECT l.country, l.uid, e.status, c.* FROM locations l
@@ -76,9 +76,15 @@ UPDATE locations l SET is_published = false
     ON lj.id = ec.location_id
 	WHERE l.id = lj.id AND lj.is_published AND ec.e_count is null
 
+-- Set location to unpublished by parties
+UPDATE locations l SET is_published = false 
+  FROM parties p
+  WHERE p.country_code = l.country_code AND p.party_id = l.party_id AND 
+    p.publish_location = false
+
 -- Select per operator location and evse uid
 SELECT DISTINCT ON (l.country_code, l.party_id) l.country_code, l.party_id, l.uid AS l_uid, e.uid AS e_uid, e.status, e.is_remote_capable, c.is_published FROM locations l
   LEFT JOIN evses e ON e.location_id = l.id
   LEFT JOIN connectors c ON c.evse_id = e.id
-  WHERE l.is_published AND l.is_remote_capable AND 
+  WHERE l.is_published AND l.is_removed = false AND l.is_remote_capable AND 
     e.is_remote_capable AND e.status = 'AVAILABLE' AND e.is_remote_capable AND c.is_published;

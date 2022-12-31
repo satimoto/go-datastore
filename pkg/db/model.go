@@ -955,6 +955,12 @@ type Node struct {
 	IsActive   bool   `db:"is_active" json:"isActive"`
 }
 
+type NodeScid struct {
+	ID     int64  `db:"id" json:"id"`
+	NodeID int64  `db:"node_id" json:"nodeID"`
+	Scid   []byte `db:"scid" json:"scid"`
+}
+
 type OpeningTime struct {
 	ID              int64 `db:"id" json:"id"`
 	Twentyfourseven bool  `db:"twentyfourseven" json:"twentyfourseven"`
