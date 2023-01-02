@@ -1126,11 +1126,11 @@ type SessionInvoice struct {
 	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
 	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
 	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
-	Signature        []byte    `db:"signature" json:"signature"`
 	EstimatedEnergy  float64   `db:"estimated_energy" json:"estimatedEnergy"`
 	EstimatedTime    float64   `db:"estimated_time" json:"estimatedTime"`
 	MeteredEnergy    float64   `db:"metered_energy" json:"meteredEnergy"`
 	MeteredTime      float64   `db:"metered_time" json:"meteredTime"`
+	Signature        string    `db:"signature" json:"signature"`
 }
 
 type StatusSchedule struct {
@@ -1195,7 +1195,6 @@ type TokenAuthorization struct {
 	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
-	SigningKey      []byte         `db:"signing_key" json:"signingKey"`
 	Authorized      bool           `db:"authorized" json:"authorized"`
 }
 
