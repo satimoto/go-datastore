@@ -187,6 +187,42 @@ func (q *Queries) GetSessionInvoiceByPaymentRequest(ctx context.Context, payment
 	return i, err
 }
 
+const getUnsettledSessionInvoiceBySession = `-- name: GetUnsettledSessionInvoiceBySession :one
+SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, estimated_energy, estimated_time, metered_energy, metered_time, signature FROM session_invoices
+  WHERE session_id = $1 AND is_settled = false
+`
+
+func (q *Queries) GetUnsettledSessionInvoiceBySession(ctx context.Context, sessionID int64) (SessionInvoice, error) {
+	row := q.db.QueryRowContext(ctx, getUnsettledSessionInvoiceBySession, sessionID)
+	var i SessionInvoice
+	err := row.Scan(
+		&i.ID,
+		&i.SessionID,
+		&i.UserID,
+		&i.Currency,
+		&i.CurrencyRate,
+		&i.CurrencyRateMsat,
+		&i.PriceFiat,
+		&i.PriceMsat,
+		&i.CommissionFiat,
+		&i.CommissionMsat,
+		&i.TaxFiat,
+		&i.TaxMsat,
+		&i.PaymentRequest,
+		&i.IsSettled,
+		&i.IsExpired,
+		&i.LastUpdated,
+		&i.TotalFiat,
+		&i.TotalMsat,
+		&i.EstimatedEnergy,
+		&i.EstimatedTime,
+		&i.MeteredEnergy,
+		&i.MeteredTime,
+		&i.Signature,
+	)
+	return i, err
+}
+
 const listSessionInvoices = `-- name: ListSessionInvoices :many
 SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, estimated_energy, estimated_time, metered_energy, metered_time, signature FROM session_invoices
   WHERE is_expired = $1 AND is_settled = $2
@@ -361,32 +397,77 @@ func (q *Queries) ListSessionInvoicesByUserID(ctx context.Context, arg ListSessi
 
 const updateSessionInvoice = `-- name: UpdateSessionInvoice :one
 UPDATE session_invoices SET (
+    currency,
+    currency_rate,
+    currency_rate_msat,
+    price_fiat,
+    price_msat,
+    commission_fiat,
+    commission_msat,
+    tax_fiat,
+    tax_msat,
+    total_fiat,
+    total_msat,
     payment_request,
     signature,
     is_settled,
     is_expired,
+    estimated_energy,
+    estimated_time,
+    metered_energy,
+    metered_time,
     last_updated
-  ) = ($2, $3, $4, $5, $6)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
   WHERE id = $1
   RETURNING id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, estimated_energy, estimated_time, metered_energy, metered_time, signature
 `
 
 type UpdateSessionInvoiceParams struct {
-	ID             int64     `db:"id" json:"id"`
-	PaymentRequest string    `db:"payment_request" json:"paymentRequest"`
-	Signature      string    `db:"signature" json:"signature"`
-	IsSettled      bool      `db:"is_settled" json:"isSettled"`
-	IsExpired      bool      `db:"is_expired" json:"isExpired"`
-	LastUpdated    time.Time `db:"last_updated" json:"lastUpdated"`
+	ID               int64     `db:"id" json:"id"`
+	Currency         string    `db:"currency" json:"currency"`
+	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
+	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`
+	PriceFiat        float64   `db:"price_fiat" json:"priceFiat"`
+	PriceMsat        int64     `db:"price_msat" json:"priceMsat"`
+	CommissionFiat   float64   `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat   int64     `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat          float64   `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat          int64     `db:"tax_msat" json:"taxMsat"`
+	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
+	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
+	PaymentRequest   string    `db:"payment_request" json:"paymentRequest"`
+	Signature        string    `db:"signature" json:"signature"`
+	IsSettled        bool      `db:"is_settled" json:"isSettled"`
+	IsExpired        bool      `db:"is_expired" json:"isExpired"`
+	EstimatedEnergy  float64   `db:"estimated_energy" json:"estimatedEnergy"`
+	EstimatedTime    float64   `db:"estimated_time" json:"estimatedTime"`
+	MeteredEnergy    float64   `db:"metered_energy" json:"meteredEnergy"`
+	MeteredTime      float64   `db:"metered_time" json:"meteredTime"`
+	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateSessionInvoice(ctx context.Context, arg UpdateSessionInvoiceParams) (SessionInvoice, error) {
 	row := q.db.QueryRowContext(ctx, updateSessionInvoice,
 		arg.ID,
+		arg.Currency,
+		arg.CurrencyRate,
+		arg.CurrencyRateMsat,
+		arg.PriceFiat,
+		arg.PriceMsat,
+		arg.CommissionFiat,
+		arg.CommissionMsat,
+		arg.TaxFiat,
+		arg.TaxMsat,
+		arg.TotalFiat,
+		arg.TotalMsat,
 		arg.PaymentRequest,
 		arg.Signature,
 		arg.IsSettled,
 		arg.IsExpired,
+		arg.EstimatedEnergy,
+		arg.EstimatedTime,
+		arg.MeteredEnergy,
+		arg.MeteredTime,
 		arg.LastUpdated,
 	)
 	var i SessionInvoice

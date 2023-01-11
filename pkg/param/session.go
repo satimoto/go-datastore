@@ -36,11 +36,26 @@ func NewCreateSessionInvoiceParams(session db.Session) db.CreateSessionInvoicePa
 
 func NewUpdateSessionInvoiceParams(sessionInvoice db.SessionInvoice) db.UpdateSessionInvoiceParams {
 	return db.UpdateSessionInvoiceParams{
-		ID:             sessionInvoice.ID,
-		PaymentRequest: sessionInvoice.PaymentRequest,
-		Signature:      sessionInvoice.Signature,
-		IsSettled:      sessionInvoice.IsSettled,
-		IsExpired:      sessionInvoice.IsExpired,
-		LastUpdated:    time.Now(),
+		ID:               sessionInvoice.ID,
+		Currency:         sessionInvoice.Currency,
+		CurrencyRate:     sessionInvoice.CurrencyRate,
+		CurrencyRateMsat: sessionInvoice.CurrencyRateMsat,
+		PriceFiat:        sessionInvoice.PriceFiat,
+		PriceMsat:        sessionInvoice.PriceMsat,
+		CommissionFiat:   sessionInvoice.CommissionFiat,
+		CommissionMsat:   sessionInvoice.CommissionMsat,
+		TaxFiat:          sessionInvoice.TaxFiat,
+		TaxMsat:          sessionInvoice.TaxMsat,
+		TotalFiat:        sessionInvoice.TotalFiat,
+		TotalMsat:        sessionInvoice.TotalMsat,
+		PaymentRequest:   sessionInvoice.PaymentRequest,
+		Signature:        sessionInvoice.Signature,
+		IsSettled:        sessionInvoice.IsSettled,
+		IsExpired:        sessionInvoice.IsExpired,
+		EstimatedEnergy:  sessionInvoice.EstimatedEnergy,
+		EstimatedTime:    sessionInvoice.EstimatedTime,
+		MeteredEnergy:    sessionInvoice.MeteredEnergy,
+		MeteredTime:      sessionInvoice.MeteredTime,
+		LastUpdated:      time.Now(),
 	}
 }

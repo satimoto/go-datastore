@@ -227,6 +227,7 @@ type MockRepository interface {
 	SetGetSessionByUidMockData(response SessionMockData)
 	SetGetSessionInvoiceMockData(response SessionInvoiceMockData)
 	SetGetSessionInvoiceByPaymentRequestMockData(response SessionInvoiceMockData)
+	SetGetUnsettledSessionInvoiceBySessionMockData(response SessionInvoiceMockData)
 	SetGetTariffMockData(response TariffMockData)
 	SetGetTariffByLastUpdatedMockData(response TariffMockData)
 	SetGetTariffByUidMockData(response TariffMockData)
@@ -466,6 +467,7 @@ type MockRepositoryService struct {
 	getSessionByUidMockData                               []SessionMockData
 	getSessionInvoiceMockData                             []SessionInvoiceMockData
 	getSessionInvoiceByPaymentRequestMockData             []SessionInvoiceMockData
+	getUnsettledSessionInvoiceBySessionMockData           []SessionInvoiceMockData
 	getTariffByLastUpdatedMockData                        []TariffMockData
 	getTariffMockData                                     []TariffMockData
 	getTariffByUidMockData                                []TariffMockData
