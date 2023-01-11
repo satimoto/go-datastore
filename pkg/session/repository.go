@@ -17,6 +17,7 @@ type SessionRepository interface {
 	GetSessionByUid(ctx context.Context, uid string) (db.Session, error)
 	GetSessionInvoice(ctx context.Context, id int64) (db.SessionInvoice, error)
 	GetSessionInvoiceByPaymentRequest(ctx context.Context, paymentRequest string) (db.SessionInvoice, error)
+	GetUnsettledSessionInvoiceBySession(ctx context.Context, sessionID int64) (db.SessionInvoice, error)
 	GetUserBySessionID(ctx context.Context, id int64) (db.User, error)
 	ListChargingPeriodDimensions(ctx context.Context, chargingPeriodID int64) ([]db.ChargingPeriodDimension, error)
 	ListSessionChargingPeriods(ctx context.Context, sessionID int64) ([]db.ChargingPeriod, error)
