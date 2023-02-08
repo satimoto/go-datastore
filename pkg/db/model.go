@@ -726,6 +726,15 @@ type Credential struct {
 	VersionID        sql.NullInt64  `db:"version_id" json:"versionID"`
 }
 
+type Currency struct {
+	ID          int64          `db:"id" json:"id"`
+	Name        string         `db:"name" json:"name"`
+	Code        string         `db:"code" json:"code"`
+	NumericCode int32          `db:"numeric_code" json:"numericCode"`
+	Decimals    int32          `db:"decimals" json:"decimals"`
+	Symbol      sql.NullString `db:"symbol" json:"symbol"`
+}
+
 type DisplayText struct {
 	ID       int64  `db:"id" json:"id"`
 	Language string `db:"language" json:"language"`

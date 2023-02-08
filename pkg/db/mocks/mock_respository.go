@@ -25,6 +25,7 @@ type MockRepository interface {
 	GetCreateCommandUnlockMockData() (db.CreateCommandUnlockParams, error)
 	GetCreateCountryAccountMockData() (db.CreateCountryAccountParams, error)
 	GetCreateCredentialMockData() (db.CreateCredentialParams, error)
+	GetCreateCurrencyMockData() (db.CreateCurrencyParams, error)
 	GetCreateDisplayTextMockData() (db.CreateDisplayTextParams, error)
 	GetCreateElementMockData() (db.CreateElementParams, error)
 	GetCreateElementRestrictionMockData() (db.CreateElementRestrictionParams, error)
@@ -192,6 +193,7 @@ type MockRepository interface {
 	SetGetCredentialMockData(response CredentialMockData)
 	SetGetCredentialByPartyAndCountryCodeMockData(response CredentialMockData)
 	SetGetCredentialByServerTokenMockData(response CredentialMockData)
+	SetGetCurrencyByCodeMockData(response CurrencyMockData)
 	SetGetDisplayTextMockData(response DisplayTextMockData)
 	SetGetElementRestrictionMockData(response ElementRestrictionMockData)
 	SetGetEmailSubscriptionByEmailMockData(response EmailSubscriptionMockData)
@@ -333,6 +335,7 @@ type MockRepositoryService struct {
 	createCommandUnlockMockData                           []db.CreateCommandUnlockParams
 	createCountryAccountMockData                          []db.CreateCountryAccountParams
 	createCredentialMockData                              []db.CreateCredentialParams
+	createCurrencyMockData                                []db.CreateCurrencyParams
 	createDisplayTextMockData                             []db.CreateDisplayTextParams
 	createElementMockData                                 []db.CreateElementParams
 	createElementRestrictionMockData                      []db.CreateElementRestrictionParams
@@ -432,6 +435,7 @@ type MockRepositoryService struct {
 	getCredentialMockData                                 []CredentialMockData
 	getCredentialByPartyAndCountryCodeMockData            []CredentialMockData
 	getCredentialByServerTokenMockData                    []CredentialMockData
+	getCurrencyByCodeMockData                             []CurrencyMockData
 	getDisplayTextMockData                                []DisplayTextMockData
 	getElementRestrictionMockData                         []ElementRestrictionMockData
 	getEmailSubscriptionByEmailMockData                   []EmailSubscriptionMockData
