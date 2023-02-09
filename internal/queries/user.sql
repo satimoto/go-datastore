@@ -49,8 +49,12 @@ UPDATE users SET (
     pubkey,
     is_restricted,
     referral_code,
-    circuit_user_id
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+    circuit_user_id,
+    name,
+    address,
+    postal_code,
+    city
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   WHERE id = $1
   RETURNING *;
 
