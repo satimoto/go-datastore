@@ -1229,6 +1229,10 @@ type User struct {
 	CircuitUserID     sql.NullInt64  `db:"circuit_user_id" json:"circuitUserID"`
 	LastActiveDate    sql.NullTime   `db:"last_active_date" json:"lastActiveDate"`
 	ReferralCode      sql.NullString `db:"referral_code" json:"referralCode"`
+	Name              sql.NullString `db:"name" json:"name"`
+	Address           sql.NullString `db:"address" json:"address"`
+	PostalCode        sql.NullString `db:"postal_code" json:"postalCode"`
+	City              sql.NullString `db:"city" json:"city"`
 }
 
 type Version struct {
