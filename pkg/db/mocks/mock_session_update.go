@@ -21,13 +21,13 @@ func (r *MockRepositoryService) CreateSessionUpdate(ctx context.Context, arg db.
 	return db.SessionUpdate{}, nil
 }
 
-func (r *MockRepositoryService) ListSessionUpdates(ctx context.Context, sessionID int64) ([]db.SessionUpdate, error) {
-	if len(r.listSessionUpdatesMockData) == 0 {
+func (r *MockRepositoryService) ListSessionUpdatesBySessionID(ctx context.Context, sessionID int64) ([]db.SessionUpdate, error) {
+	if len(r.listSessionUpdatesBySessionIDMockData) == 0 {
 		return []db.SessionUpdate{}, nil
 	}
 
-	response := r.listSessionUpdatesMockData[0]
-	r.listSessionUpdatesMockData = r.listSessionUpdatesMockData[1:]
+	response := r.listSessionUpdatesBySessionIDMockData[0]
+	r.listSessionUpdatesBySessionIDMockData = r.listSessionUpdatesBySessionIDMockData[1:]
 	return response.SessionUpdates, response.Error
 }
 
@@ -41,6 +41,6 @@ func (r *MockRepositoryService) GetCreateSessionUpdateMockData() (db.CreateSessi
 	return response, nil
 }
 
-func (r *MockRepositoryService) SetListSessionUpdatesMockData(response SessionUpdatesMockData) {
-	r.listSessionUpdatesMockData = append(r.listSessionUpdatesMockData, response)
+func (r *MockRepositoryService) SetListSessionUpdatesBySessionIDMockData(response SessionUpdatesMockData) {
+	r.listSessionUpdatesBySessionIDMockData = append(r.listSessionUpdatesBySessionIDMockData, response)
 }

@@ -303,7 +303,7 @@ type MockRepository interface {
 	SetListSessionInvoicesMockData(response SessionInvoicesMockData)
 	SetListSessionInvoicesBySessionIDMockData(response SessionInvoicesMockData)
 	SetListSessionInvoicesByUserIDMockData(response SessionInvoicesMockData)
-	SetListSessionUpdatesMockData(response SessionUpdatesMockData)
+	SetListSessionUpdatesBySessionIDMockData(response SessionUpdatesMockData)
 	SetListStatusSchedulesMockData(response StatusSchedulesMockData)
 	SetListTariffAltTextsMockData(response DisplayTextsMockData)
 	SetListTariffRestrictionWeekdaysMockData(response WeekdaysMockData)
@@ -367,7 +367,7 @@ type MockRepositoryService struct {
 	createRoutingEventMockData                            []db.CreateRoutingEventParams
 	createSessionMockData                                 []db.CreateSessionParams
 	createSessionInvoiceMockData                          []db.CreateSessionInvoiceParams
-	createSessionUpdateMockData                          []db.CreateSessionUpdateParams
+	createSessionUpdateMockData                           []db.CreateSessionUpdateParams
 	createStatusScheduleMockData                          []db.CreateStatusScheduleParams
 	createTariffMockData                                  []db.CreateTariffParams
 	createTariffRestrictionMockData                       []db.CreateTariffRestrictionParams
@@ -548,7 +548,7 @@ type MockRepositoryService struct {
 	listSessionInvoicesMockData                           []SessionInvoicesMockData
 	listSessionInvoicesBySessionIDMockData                []SessionInvoicesMockData
 	listSessionInvoicesByUserIDMockData                   []SessionInvoicesMockData
-	listSessionUpdatesMockData                            []SessionUpdatesMockData
+	listSessionUpdatesBySessionIDMockData                 []SessionUpdatesMockData
 	listStatusSchedulesMockData                           []StatusSchedulesMockData
 	listTariffAltTextsMockData                            []DisplayTextsMockData
 	listTariffRestrictionWeekdaysMockData                 []WeekdaysMockData

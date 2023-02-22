@@ -9,7 +9,7 @@ INSERT INTO session_updates (
   ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
--- name: ListSessionUpdates :many
-SELECT * FROM session_invoices
+-- name: ListSessionUpdatesBySessionID :many
+SELECT * FROM session_updates
   WHERE session_id = $1
   ORDER BY id;
