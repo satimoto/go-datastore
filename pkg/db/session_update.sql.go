@@ -52,45 +52,29 @@ func (q *Queries) CreateSessionUpdate(ctx context.Context, arg CreateSessionUpda
 	return i, err
 }
 
-const listSessionUpdates = `-- name: ListSessionUpdates :many
-SELECT id, session_id, user_id, currency, currency_rate, currency_rate_msat, price_fiat, price_msat, commission_fiat, commission_msat, tax_fiat, tax_msat, payment_request, is_settled, is_expired, last_updated, total_fiat, total_msat, estimated_energy, estimated_time, metered_energy, metered_time, signature FROM session_invoices
+const listSessionUpdatesBySessionID = `-- name: ListSessionUpdatesBySessionID :many
+SELECT id, session_id, user_id, kwh, total_cost, status, last_updated FROM session_updates
   WHERE session_id = $1
   ORDER BY id
 `
 
-func (q *Queries) ListSessionUpdates(ctx context.Context, sessionID int64) ([]SessionInvoice, error) {
-	rows, err := q.db.QueryContext(ctx, listSessionUpdates, sessionID)
+func (q *Queries) ListSessionUpdatesBySessionID(ctx context.Context, sessionID int64) ([]SessionUpdate, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionUpdatesBySessionID, sessionID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []SessionInvoice
+	var items []SessionUpdate
 	for rows.Next() {
-		var i SessionInvoice
+		var i SessionUpdate
 		if err := rows.Scan(
 			&i.ID,
 			&i.SessionID,
 			&i.UserID,
-			&i.Currency,
-			&i.CurrencyRate,
-			&i.CurrencyRateMsat,
-			&i.PriceFiat,
-			&i.PriceMsat,
-			&i.CommissionFiat,
-			&i.CommissionMsat,
-			&i.TaxFiat,
-			&i.TaxMsat,
-			&i.PaymentRequest,
-			&i.IsSettled,
-			&i.IsExpired,
+			&i.Kwh,
+			&i.TotalCost,
+			&i.Status,
 			&i.LastUpdated,
-			&i.TotalFiat,
-			&i.TotalMsat,
-			&i.EstimatedEnergy,
-			&i.EstimatedTime,
-			&i.MeteredEnergy,
-			&i.MeteredTime,
-			&i.Signature,
 		); err != nil {
 			return nil, err
 		}
