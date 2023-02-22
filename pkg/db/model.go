@@ -1142,6 +1142,16 @@ type SessionInvoice struct {
 	Signature        string    `db:"signature" json:"signature"`
 }
 
+type SessionUpdate struct {
+	ID          int64             `db:"id" json:"id"`
+	SessionID   int64             `db:"session_id" json:"sessionID"`
+	UserID      int64             `db:"user_id" json:"userID"`
+	Kwh         float64           `db:"kwh" json:"kwh"`
+	TotalCost   sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status      SessionStatusType `db:"status" json:"status"`
+	LastUpdated time.Time         `db:"last_updated" json:"lastUpdated"`
+}
+
 type StatusSchedule struct {
 	ID          int64        `db:"id" json:"id"`
 	EvseID      int64        `db:"evse_id" json:"evseID"`

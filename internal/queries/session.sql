@@ -53,7 +53,12 @@ SELECT s.* FROM sessions s
 -- name: ListInProgressSessionsByUserID :many
 SELECT * FROM sessions
   WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
-  ORDER BY id;
+  ORDER BY id DESC;
+
+-- name: ListCompletedSessionsByUserID :many
+SELECT * FROM sessions
+  WHERE user_id = $1 AND status = 'COMPLETED'
+  ORDER BY id DESC;
 
 -- name: UpdateSessionByUid :one
 UPDATE sessions SET (

@@ -62,6 +62,16 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
+func (r *MockRepositoryService) ListCompletedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error) {
+	if len(r.listCompletedSessionsByUserIDMockData) == 0 {
+		return []db.Session{}, nil
+	}
+
+	response := r.listCompletedSessionsByUserIDMockData[0]
+	r.listCompletedSessionsByUserIDMockData = r.listCompletedSessionsByUserIDMockData[1:]
+	return response.Sessions, response.Error
+}
+
 func (r *MockRepositoryService) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error) {
 	if len(r.listInProgressSessionsByNodeIDMockData) == 0 {
 		return []db.Session{}, nil
@@ -136,6 +146,10 @@ func (r *MockRepositoryService) SetGetSessionByLastUpdatedMockData(response Sess
 
 func (r *MockRepositoryService) SetGetSessionByUidMockData(response SessionMockData) {
 	r.getSessionByUidMockData = append(r.getSessionByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetListCompletedSessionsByUserIDMockData(response SessionsMockData) {
+	r.listCompletedSessionsByUserIDMockData = append(r.listCompletedSessionsByUserIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetListInProgressSessionsByNodeIDMockData(response SessionsMockData) {

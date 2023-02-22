@@ -10,6 +10,7 @@ import (
 type SessionRepository interface {
 	CreateSession(ctx context.Context, arg db.CreateSessionParams) (db.Session, error)
 	CreateSessionInvoice(ctx context.Context, arg db.CreateSessionInvoiceParams) (db.SessionInvoice, error)
+	CreateSessionUpdate(ctx context.Context, arg db.CreateSessionUpdateParams) (db.SessionUpdate, error)
 	DeleteSessionChargingPeriods(ctx context.Context, sessionID int64) error
 	GetSessionByAuthorizationID(ctx context.Context, authorizationID string) (db.Session, error)
 	GetSessionByLastUpdated(ctx context.Context, arg db.GetSessionByLastUpdatedParams) (db.Session, error)
@@ -20,12 +21,14 @@ type SessionRepository interface {
 	GetUnsettledSessionInvoiceBySession(ctx context.Context, sessionID int64) (db.SessionInvoice, error)
 	GetUserBySessionID(ctx context.Context, id int64) (db.User, error)
 	ListChargingPeriodDimensions(ctx context.Context, chargingPeriodID int64) ([]db.ChargingPeriodDimension, error)
+	ListCompletedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
+	ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error)
+	ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
 	ListSessionChargingPeriods(ctx context.Context, sessionID int64) ([]db.ChargingPeriod, error)
 	ListSessionInvoices(ctx context.Context, arg db.ListSessionInvoicesParams) ([]db.SessionInvoice, error)
 	ListSessionInvoicesBySessionID(ctx context.Context, sessionID int64) ([]db.SessionInvoice, error)
-	ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error)
-	ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
 	ListSessionInvoicesByUserID(ctx context.Context, arg db.ListSessionInvoicesByUserIDParams) ([]db.SessionInvoice, error)
+	ListSessionUpdates(ctx context.Context, sessionID int64) ([]db.SessionInvoice, error)
 	SetSessionChargingPeriod(ctx context.Context, arg db.SetSessionChargingPeriodParams) error
 	UpdateSessionByUid(ctx context.Context, arg db.UpdateSessionByUidParams) (db.Session, error)
 	UpdateSessionInvoice(ctx context.Context, arg db.UpdateSessionInvoiceParams) (db.SessionInvoice, error)
