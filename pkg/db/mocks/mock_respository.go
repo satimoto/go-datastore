@@ -54,6 +54,7 @@ type MockRepository interface {
 	GetCreateRoutingEventMockData() (db.CreateRoutingEventParams, error)
 	GetCreateSessionMockData() (db.CreateSessionParams, error)
 	GetCreateSessionInvoiceMockData() (db.CreateSessionInvoiceParams, error)
+	GetCreateSessionUpdateMockData() (db.CreateSessionUpdateParams, error)
 	GetCreateStatusScheduleMockData() (db.CreateStatusScheduleParams, error)
 	GetCreateTariffMockData() (db.CreateTariffParams, error)
 	GetCreateTariffRestrictionMockData() (db.CreateTariffRestrictionParams, error)
@@ -296,11 +297,13 @@ type MockRepository interface {
 	SetListRegularHoursMockData(response RegularHoursMockData)
 	SetListRelatedLocationsMockData(response GeoLocationsMockData)
 	SetListSessionChargingPeriodsMockData(response ChargingPeriodsMockData)
-	SetListSessionInvoicesMockData(response SessionInvoicesMockData)
-	SetListSessionInvoicesBySessionIDMockData(response SessionInvoicesMockData)
+	SetListCompletedSessionsByUserIDMockData(response SessionsMockData)
 	SetListInProgressSessionsByNodeIDMockData(response SessionsMockData)
 	SetListInProgressSessionsByUserIDMockData(response SessionsMockData)
+	SetListSessionInvoicesMockData(response SessionInvoicesMockData)
+	SetListSessionInvoicesBySessionIDMockData(response SessionInvoicesMockData)
 	SetListSessionInvoicesByUserIDMockData(response SessionInvoicesMockData)
+	SetListSessionUpdatesMockData(response SessionUpdatesMockData)
 	SetListStatusSchedulesMockData(response StatusSchedulesMockData)
 	SetListTariffAltTextsMockData(response DisplayTextsMockData)
 	SetListTariffRestrictionWeekdaysMockData(response WeekdaysMockData)
@@ -364,6 +367,7 @@ type MockRepositoryService struct {
 	createRoutingEventMockData                            []db.CreateRoutingEventParams
 	createSessionMockData                                 []db.CreateSessionParams
 	createSessionInvoiceMockData                          []db.CreateSessionInvoiceParams
+	createSessionUpdateMockData                          []db.CreateSessionUpdateParams
 	createStatusScheduleMockData                          []db.CreateStatusScheduleParams
 	createTariffMockData                                  []db.CreateTariffParams
 	createTariffRestrictionMockData                       []db.CreateTariffRestrictionParams
@@ -538,11 +542,13 @@ type MockRepositoryService struct {
 	listRegularHoursMockData                              []RegularHoursMockData
 	listRelatedLocationsMockData                          []GeoLocationsMockData
 	listSessionChargingPeriodsMockData                    []ChargingPeriodsMockData
-	listSessionInvoicesMockData                           []SessionInvoicesMockData
-	listSessionInvoicesBySessionIDMockData                []SessionInvoicesMockData
+	listCompletedSessionsByUserIDMockData                 []SessionsMockData
 	listInProgressSessionsByNodeIDMockData                []SessionsMockData
 	listInProgressSessionsByUserIDMockData                []SessionsMockData
+	listSessionInvoicesMockData                           []SessionInvoicesMockData
+	listSessionInvoicesBySessionIDMockData                []SessionInvoicesMockData
 	listSessionInvoicesByUserIDMockData                   []SessionInvoicesMockData
+	listSessionUpdatesMockData                            []SessionUpdatesMockData
 	listStatusSchedulesMockData                           []StatusSchedulesMockData
 	listTariffAltTextsMockData                            []DisplayTextsMockData
 	listTariffRestrictionWeekdaysMockData                 []WeekdaysMockData

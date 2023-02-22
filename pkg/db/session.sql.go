@@ -265,6 +265,59 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 	return i, err
 }
 
+const listCompletedSessionsByUserID = `-- name: ListCompletedSessionsByUserID :many
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+  WHERE user_id = $1 AND status = 'COMPLETED'
+  ORDER BY id DESC
+`
+
+func (q *Queries) ListCompletedSessionsByUserID(ctx context.Context, userID int64) ([]Session, error) {
+	rows, err := q.db.QueryContext(ctx, listCompletedSessionsByUserID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Session
+	for rows.Next() {
+		var i Session
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.CredentialID,
+			&i.CountryCode,
+			&i.PartyID,
+			&i.AuthorizationID,
+			&i.StartDatetime,
+			&i.EndDatetime,
+			&i.Kwh,
+			&i.AuthID,
+			&i.AuthMethod,
+			&i.UserID,
+			&i.TokenID,
+			&i.LocationID,
+			&i.EvseID,
+			&i.ConnectorID,
+			&i.MeterID,
+			&i.Currency,
+			&i.TotalCost,
+			&i.Status,
+			&i.LastUpdated,
+			&i.InvoiceRequestID,
+			&i.IsFlagged,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listInProgressSessionsByNodeID = `-- name: ListInProgressSessionsByNodeID :many
 SELECT s.id, s.uid, s.credential_id, s.country_code, s.party_id, s.authorization_id, s.start_datetime, s.end_datetime, s.kwh, s.auth_id, s.auth_method, s.user_id, s.token_id, s.location_id, s.evse_id, s.connector_id, s.meter_id, s.currency, s.total_cost, s.status, s.last_updated, s.invoice_request_id, s.is_flagged FROM sessions s
   INNER JOIN users u ON u.id = s.user_id
@@ -322,7 +375,7 @@ func (q *Queries) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql
 const listInProgressSessionsByUserID = `-- name: ListInProgressSessionsByUserID :many
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
   WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
-  ORDER BY id
+  ORDER BY id DESC
 `
 
 func (q *Queries) ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]Session, error) {
