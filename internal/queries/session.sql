@@ -55,9 +55,9 @@ SELECT * FROM sessions
   WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
   ORDER BY id DESC;
 
--- name: ListCompletedSessionsByUserID :many
+-- name: ListInvoicedSessionsByUserID :many
 SELECT * FROM sessions
-  WHERE user_id = $1 AND status = 'COMPLETED'
+  WHERE user_id = $1 AND status = 'INVOICED'
   ORDER BY id DESC;
 
 -- name: UpdateSessionByUid :one

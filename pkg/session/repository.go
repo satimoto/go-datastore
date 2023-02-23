@@ -21,7 +21,7 @@ type SessionRepository interface {
 	GetUnsettledSessionInvoiceBySession(ctx context.Context, sessionID int64) (db.SessionInvoice, error)
 	GetUserBySessionID(ctx context.Context, id int64) (db.User, error)
 	ListChargingPeriodDimensions(ctx context.Context, chargingPeriodID int64) ([]db.ChargingPeriodDimension, error)
-	ListCompletedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
+	ListInvoicedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
 	ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error)
 	ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
 	ListSessionChargingPeriods(ctx context.Context, sessionID int64) ([]db.ChargingPeriod, error)
