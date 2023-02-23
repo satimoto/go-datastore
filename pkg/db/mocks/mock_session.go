@@ -62,13 +62,13 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
-func (r *MockRepositoryService) ListCompletedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error) {
-	if len(r.listCompletedSessionsByUserIDMockData) == 0 {
+func (r *MockRepositoryService) ListInvoicedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error) {
+	if len(r.listInvoicedSessionsByUserIDMockData) == 0 {
 		return []db.Session{}, nil
 	}
 
-	response := r.listCompletedSessionsByUserIDMockData[0]
-	r.listCompletedSessionsByUserIDMockData = r.listCompletedSessionsByUserIDMockData[1:]
+	response := r.listInvoicedSessionsByUserIDMockData[0]
+	r.listInvoicedSessionsByUserIDMockData = r.listInvoicedSessionsByUserIDMockData[1:]
 	return response.Sessions, response.Error
 }
 
@@ -148,8 +148,8 @@ func (r *MockRepositoryService) SetGetSessionByUidMockData(response SessionMockD
 	r.getSessionByUidMockData = append(r.getSessionByUidMockData, response)
 }
 
-func (r *MockRepositoryService) SetListCompletedSessionsByUserIDMockData(response SessionsMockData) {
-	r.listCompletedSessionsByUserIDMockData = append(r.listCompletedSessionsByUserIDMockData, response)
+func (r *MockRepositoryService) SetListInvoicedSessionsByUserIDMockData(response SessionsMockData) {
+	r.listInvoicedSessionsByUserIDMockData = append(r.listInvoicedSessionsByUserIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetListInProgressSessionsByNodeIDMockData(response SessionsMockData) {

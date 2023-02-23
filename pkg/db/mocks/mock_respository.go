@@ -297,7 +297,7 @@ type MockRepository interface {
 	SetListRegularHoursMockData(response RegularHoursMockData)
 	SetListRelatedLocationsMockData(response GeoLocationsMockData)
 	SetListSessionChargingPeriodsMockData(response ChargingPeriodsMockData)
-	SetListCompletedSessionsByUserIDMockData(response SessionsMockData)
+	SetListInvoicedSessionsByUserIDMockData(response SessionsMockData)
 	SetListInProgressSessionsByNodeIDMockData(response SessionsMockData)
 	SetListInProgressSessionsByUserIDMockData(response SessionsMockData)
 	SetListSessionInvoicesMockData(response SessionInvoicesMockData)
@@ -542,7 +542,7 @@ type MockRepositoryService struct {
 	listRegularHoursMockData                              []RegularHoursMockData
 	listRelatedLocationsMockData                          []GeoLocationsMockData
 	listSessionChargingPeriodsMockData                    []ChargingPeriodsMockData
-	listCompletedSessionsByUserIDMockData                 []SessionsMockData
+	listInvoicedSessionsByUserIDMockData                  []SessionsMockData
 	listInProgressSessionsByNodeIDMockData                []SessionsMockData
 	listInProgressSessionsByUserIDMockData                []SessionsMockData
 	listSessionInvoicesMockData                           []SessionInvoicesMockData
