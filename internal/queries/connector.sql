@@ -50,6 +50,12 @@ SELECT c.* FROM connectors c
   INNER JOIN evses e ON c.evse_id = e.id
   WHERE e.evse_id = $1;
 
+-- name: ListConnectorsByPartyAndCountryCode :many
+SELECT c.* FROM connectors c
+  INNER JOIN evses e ON c.evse_id = e.id
+  INNER JOIN locations l ON e.location_id = l.id
+  WHERE l.country_code = $1 AND l.party_id = $2;
+
 -- name: UpdateConnector :one
 UPDATE connectors SET (
     identifier,
