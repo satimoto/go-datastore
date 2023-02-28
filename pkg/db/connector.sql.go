@@ -295,6 +295,57 @@ func (q *Queries) ListConnectorsByEvseID(ctx context.Context, evseID sql.NullStr
 	return items, nil
 }
 
+const listConnectorsByPartyAndCountryCode = `-- name: ListConnectorsByPartyAndCountryCode :many
+SELECT c.id, c.evse_id, c.uid, c.identifier, c.standard, c.format, c.power_type, c.voltage, c.amperage, c.wattage, c.tariff_id, c.terms_and_conditions, c.last_updated, c.is_published, c.is_removed FROM connectors c
+  INNER JOIN evses e ON c.evse_id = e.id
+  INNER JOIN locations l ON e.location_id = l.id
+  WHERE l.country_code = $1 AND l.party_id = $2
+`
+
+type ListConnectorsByPartyAndCountryCodeParams struct {
+	CountryCode sql.NullString `db:"country_code" json:"countryCode"`
+	PartyID     sql.NullString `db:"party_id" json:"partyID"`
+}
+
+func (q *Queries) ListConnectorsByPartyAndCountryCode(ctx context.Context, arg ListConnectorsByPartyAndCountryCodeParams) ([]Connector, error) {
+	rows, err := q.db.QueryContext(ctx, listConnectorsByPartyAndCountryCode, arg.CountryCode, arg.PartyID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Connector
+	for rows.Next() {
+		var i Connector
+		if err := rows.Scan(
+			&i.ID,
+			&i.EvseID,
+			&i.Uid,
+			&i.Identifier,
+			&i.Standard,
+			&i.Format,
+			&i.PowerType,
+			&i.Voltage,
+			&i.Amperage,
+			&i.Wattage,
+			&i.TariffID,
+			&i.TermsAndConditions,
+			&i.LastUpdated,
+			&i.IsPublished,
+			&i.IsRemoved,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateConnector = `-- name: UpdateConnector :one
 UPDATE connectors SET (
     identifier,

@@ -16,6 +16,7 @@ type ConnectorRepository interface {
 	GetEvse(ctx context.Context, id int64) (db.Evse, error)
 	ListConnectors(ctx context.Context, evseID int64) ([]db.Connector, error)
 	ListConnectorsByEvseID(ctx context.Context, evseID sql.NullString) ([]db.Connector, error)
+	ListConnectorsByPartyAndCountryCode(ctx context.Context, arg db.ListConnectorsByPartyAndCountryCodeParams) ([]db.Connector, error)
 	UpdateConnectorByEvse(ctx context.Context, arg db.UpdateConnectorByEvseParams) (db.Connector, error)
 	UpdateEvseLastUpdated(ctx context.Context, arg db.UpdateEvseLastUpdatedParams) error
 	UpdateLocationLastUpdated(ctx context.Context, arg db.UpdateLocationLastUpdatedParams) error

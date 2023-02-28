@@ -77,6 +77,16 @@ func (r *MockRepositoryService) ListConnectorsByEvseID(ctx context.Context, ebse
 	return response.Connectors, response.Error
 }
 
+func (r *MockRepositoryService) ListConnectorsByPartyAndCountryCode(ctx context.Context, arg db.ListConnectorsByPartyAndCountryCodeParams) ([]db.Connector, error) {
+	if len(r.listConnectorsByPartyAndCountryCodeMockData) == 0 {
+		return []db.Connector{}, nil
+	}
+
+	response := r.listConnectorsByPartyAndCountryCodeMockData[0]
+	r.listConnectorsByPartyAndCountryCodeMockData = r.listConnectorsByPartyAndCountryCodeMockData[1:]
+	return response.Connectors, response.Error
+}
+
 func (r *MockRepositoryService) UpdateConnectorByEvse(ctx context.Context, arg db.UpdateConnectorByEvseParams) (db.Connector, error) {
 	r.updateConnectorByEvseMockData = append(r.updateConnectorByEvseMockData, arg)
 	return db.Connector{
@@ -142,4 +152,8 @@ func (r *MockRepositoryService) SetListConnectorsMockData(response ConnectorsMoc
 
 func (r *MockRepositoryService) SetListConnectorsByEvseIDMockData(response ConnectorsMockData) {
 	r.listConnectorsByEvseIDMockData = append(r.listConnectorsByEvseIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetListConnectorsByPartyAndCountryCodeMockData(response ConnectorsMockData) {
+	r.listConnectorsByPartyAndCountryCodeMockData = append(r.listConnectorsByPartyAndCountryCodeMockData, response)
 }
