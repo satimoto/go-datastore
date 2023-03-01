@@ -1001,6 +1001,32 @@ type PendingNotification struct {
 	SendDate         time.Time      `db:"send_date" json:"sendDate"`
 }
 
+type Poi struct {
+	ID             int64             `db:"id" json:"id"`
+	Uid            string            `db:"uid" json:"uid"`
+	Source         string            `db:"source" json:"source"`
+	Name           string            `db:"name" json:"name"`
+	Geom           geom.Geometry4326 `db:"geom" json:"geom"`
+	Description    sql.NullString    `db:"description" json:"description"`
+	Address        sql.NullString    `db:"address" json:"address"`
+	City           sql.NullString    `db:"city" json:"city"`
+	PostalCode     sql.NullString    `db:"postal_code" json:"postalCode"`
+	TagKey         string            `db:"tag_key" json:"tagKey"`
+	TagValue       string            `db:"tag_value" json:"tagValue"`
+	PaymentOnChain bool              `db:"payment_on_chain" json:"paymentOnChain"`
+	PaymentLn      bool              `db:"payment_ln" json:"paymentLn"`
+	PaymentLnTap   bool              `db:"payment_ln_tap" json:"paymentLnTap"`
+	OpeningTimes   sql.NullString    `db:"opening_times" json:"openingTimes"`
+	Phone          sql.NullString    `db:"phone" json:"phone"`
+	Website        sql.NullString    `db:"website" json:"website"`
+	LastUpdated    time.Time         `db:"last_updated" json:"lastUpdated"`
+}
+
+type PoiTag struct {
+	PoiID int64 `db:"poi_id" json:"poiID"`
+	TagID int64 `db:"tag_id" json:"tagID"`
+}
+
 type PriceComponent struct {
 	ID                  int64           `db:"id" json:"id"`
 	ElementID           int64           `db:"element_id" json:"elementID"`
@@ -1158,6 +1184,12 @@ type StatusSchedule struct {
 	PeriodBegin time.Time    `db:"period_begin" json:"periodBegin"`
 	PeriodEnd   sql.NullTime `db:"period_end" json:"periodEnd"`
 	Status      EvseStatus   `db:"status" json:"status"`
+}
+
+type Tag struct {
+	ID    int64  `db:"id" json:"id"`
+	Key   string `db:"key" json:"key"`
+	Value string `db:"value" json:"value"`
 }
 
 type Tariff struct {
