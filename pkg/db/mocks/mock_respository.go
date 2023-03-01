@@ -224,7 +224,7 @@ type MockRepository interface {
 	SetGetOpeningTimeMockData(response OpeningTimeMockData)
 	SetGetPartyMockData(response PartyMockData)
 	SetGetPartyByCredentialMockData(response PartyMockData)
-	SetGetPoiMockData(response PoiMockData)
+	SetGetPoiByUidMockData(response PoiMockData)
 	SetGetPoiByLastUpdatedMockData(response PoiMockData)
 	SetGetPriceComponentRoundingMockData(response PriceComponentRoundingMockData)
 	SetGetPromotionMockData(response PromotionMockData)
@@ -478,7 +478,7 @@ type MockRepositoryService struct {
 	getOpeningTimeMockData                                []OpeningTimeMockData
 	getPartyMockData                                      []PartyMockData
 	getPartyByCredentialMockData                          []PartyMockData
-	getPoiMockData                                        []PoiMockData
+	getPoiByUidMockData                                   []PoiMockData
 	getPoiByLastUpdatedMockData                           []PoiMockData
 	getPriceComponentRoundingMockData                     []PriceComponentRoundingMockData
 	getPromotionMockData                                  []PromotionMockData

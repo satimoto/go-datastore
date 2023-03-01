@@ -26,16 +26,6 @@ func (r *MockRepositoryService) DeletePoiByUid(ctx context.Context, uid string) 
 	return nil
 }
 
-func (r *MockRepositoryService) GetPoi(ctx context.Context, id int64) (db.Poi, error) {
-	if len(r.getPoiMockData) == 0 {
-		return db.Poi{}, ErrorNotFound()
-	}
-
-	response := r.getPoiMockData[0]
-	r.getPoiMockData = r.getPoiMockData[1:]
-	return response.Poi, response.Error
-}
-
 func (r *MockRepositoryService) GetPoiByLastUpdated(ctx context.Context) (db.Poi, error) {
 	if len(r.getPoiByLastUpdatedMockData) == 0 {
 		return db.Poi{}, ErrorNotFound()
@@ -43,6 +33,16 @@ func (r *MockRepositoryService) GetPoiByLastUpdated(ctx context.Context) (db.Poi
 
 	response := r.getPoiByLastUpdatedMockData[0]
 	r.getPoiByLastUpdatedMockData = r.getPoiByLastUpdatedMockData[1:]
+	return response.Poi, response.Error
+}
+
+func (r *MockRepositoryService) GetPoiByUid(ctx context.Context, uid string) (db.Poi, error) {
+	if len(r.getPoiByUidMockData) == 0 {
+		return db.Poi{}, ErrorNotFound()
+	}
+
+	response := r.getPoiByUidMockData[0]
+	r.getPoiByUidMockData = r.getPoiByUidMockData[1:]
 	return response.Poi, response.Error
 }
 
@@ -91,12 +91,12 @@ func (r *MockRepositoryService) GetUpdatePoiByUidMockData() (db.UpdatePoiByUidPa
 	return response, nil
 }
 
-func (r *MockRepositoryService) SetGetPoiMockData(response PoiMockData) {
-	r.getPoiMockData = append(r.getPoiMockData, response)
-}
-
 func (r *MockRepositoryService) SetGetPoiByLastUpdatedMockData(response PoiMockData) {
 	r.getPoiByLastUpdatedMockData = append(r.getPoiByLastUpdatedMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetPoiByUidMockData(response PoiMockData) {
+	r.getPoiByUidMockData = append(r.getPoiByUidMockData, response)
 }
 
 func (r *MockRepositoryService) SetListPoisByGeomMockData(response PoisMockData) {
