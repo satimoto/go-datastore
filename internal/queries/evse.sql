@@ -31,6 +31,10 @@ SELECT * FROM evses
 SELECT * FROM evses
   WHERE identifier = $1;
 
+-- name: GetEvseByEvseID :one
+SELECT * FROM evses
+  WHERE evse_id = $1;
+
 -- name: GetEvseByUid :one
 SELECT * FROM evses
   WHERE uid = $1;
@@ -38,6 +42,11 @@ SELECT * FROM evses
 -- name: ListEvses :many
 SELECT * FROM evses
   WHERE location_id = $1
+  ORDER BY id;
+
+-- name: ListEvsesLikeEvseID :many
+SELECT * FROM evses
+  WHERE evse_id like $1
   ORDER BY id;
 
 -- name: ListActiveEvses :many

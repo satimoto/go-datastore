@@ -6,6 +6,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createCommandStart = `-- name: CreateCommandStart :one
@@ -14,9 +15,10 @@ INSERT INTO command_starts (
     token_id,
     authorization_id,
     location_id,
-    evse_uid
-  ) VALUES ($1, $2, $3, $4, $5)
-  RETURNING id, status, token_id, authorization_id, location_id, evse_uid
+    evse_uid,
+    last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING id, status, token_id, authorization_id, location_id, evse_uid, last_updated
 `
 
 type CreateCommandStartParams struct {
@@ -25,6 +27,7 @@ type CreateCommandStartParams struct {
 	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
 	LocationID      string              `db:"location_id" json:"locationID"`
 	EvseUid         sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated     time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStartParams) (CommandStart, error) {
@@ -34,6 +37,7 @@ func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStart
 		arg.AuthorizationID,
 		arg.LocationID,
 		arg.EvseUid,
+		arg.LastUpdated,
 	)
 	var i CommandStart
 	err := row.Scan(
@@ -43,12 +47,13 @@ func (q *Queries) CreateCommandStart(ctx context.Context, arg CreateCommandStart
 		&i.AuthorizationID,
 		&i.LocationID,
 		&i.EvseUid,
+		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const getCommandStart = `-- name: GetCommandStart :one
-SELECT id, status, token_id, authorization_id, location_id, evse_uid FROM command_starts
+SELECT id, status, token_id, authorization_id, location_id, evse_uid, last_updated FROM command_starts
   WHERE id = $1
 `
 
@@ -62,23 +67,28 @@ func (q *Queries) GetCommandStart(ctx context.Context, id int64) (CommandStart, 
 		&i.AuthorizationID,
 		&i.LocationID,
 		&i.EvseUid,
+		&i.LastUpdated,
 	)
 	return i, err
 }
 
 const updateCommandStart = `-- name: UpdateCommandStart :one
-UPDATE command_starts SET status = $2
+UPDATE command_starts SET (
+    status,
+    last_updated
+  ) = ($2, $3)
   WHERE id = $1
-  RETURNING id, status, token_id, authorization_id, location_id, evse_uid
+  RETURNING id, status, token_id, authorization_id, location_id, evse_uid, last_updated
 `
 
 type UpdateCommandStartParams struct {
-	ID     int64               `db:"id" json:"id"`
-	Status CommandResponseType `db:"status" json:"status"`
+	ID          int64               `db:"id" json:"id"`
+	Status      CommandResponseType `db:"status" json:"status"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 func (q *Queries) UpdateCommandStart(ctx context.Context, arg UpdateCommandStartParams) (CommandStart, error) {
-	row := q.db.QueryRowContext(ctx, updateCommandStart, arg.ID, arg.Status)
+	row := q.db.QueryRowContext(ctx, updateCommandStart, arg.ID, arg.Status, arg.LastUpdated)
 	var i CommandStart
 	err := row.Scan(
 		&i.ID,
@@ -87,6 +97,37 @@ func (q *Queries) UpdateCommandStart(ctx context.Context, arg UpdateCommandStart
 		&i.AuthorizationID,
 		&i.LocationID,
 		&i.EvseUid,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
+const updateCommandStartByAuthorizationID = `-- name: UpdateCommandStartByAuthorizationID :one
+UPDATE command_starts SET (
+    status,
+    last_updated
+  ) = ($2, $3)
+  WHERE authorization_id = $1
+  RETURNING id, status, token_id, authorization_id, location_id, evse_uid, last_updated
+`
+
+type UpdateCommandStartByAuthorizationIDParams struct {
+	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
+	Status          CommandResponseType `db:"status" json:"status"`
+	LastUpdated     time.Time           `db:"last_updated" json:"lastUpdated"`
+}
+
+func (q *Queries) UpdateCommandStartByAuthorizationID(ctx context.Context, arg UpdateCommandStartByAuthorizationIDParams) (CommandStart, error) {
+	row := q.db.QueryRowContext(ctx, updateCommandStartByAuthorizationID, arg.AuthorizationID, arg.Status, arg.LastUpdated)
+	var i CommandStart
+	err := row.Scan(
+		&i.ID,
+		&i.Status,
+		&i.TokenID,
+		&i.AuthorizationID,
+		&i.LocationID,
+		&i.EvseUid,
+		&i.LastUpdated,
 	)
 	return i, err
 }

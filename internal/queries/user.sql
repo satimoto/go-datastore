@@ -5,8 +5,9 @@ INSERT INTO users (
     linking_pubkey,
     node_id,
     pubkey,
-    referrer_id
-  ) VALUES ($1, $2, $3, $4, $5, $6)
+    referral_code,
+    circuit_user_id
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7)
   RETURNING *;
 
 -- name: GetUser :one
@@ -21,6 +22,14 @@ SELECT * FROM users
 SELECT * FROM users
   WHERE linking_pubkey = $1;
 
+-- name: GetUserByPubkey :one
+SELECT * FROM users
+  WHERE pubkey = $1;
+
+-- name: GetUserByReferralCode :one
+SELECT * FROM users
+  WHERE referral_code = $1;
+
 -- name: GetUserBySessionID :one
 SELECT u.* FROM users u
   INNER JOIN sessions s ON s.user_id = u.id
@@ -31,10 +40,6 @@ SELECT u.* FROM users u
   INNER JOIN tokens t ON t.user_id = u.id
   WHERE t.id = $1;
 
--- name: GetUserByPubkey :one
-SELECT * FROM users
-  WHERE pubkey = $1;
-
 -- name: UpdateUser :one
 UPDATE users SET (
     commission_percent,
@@ -43,7 +48,18 @@ UPDATE users SET (
     node_id,
     pubkey,
     is_restricted,
-    referrer_id
-  ) = ($2, $3, $4, $5, $6, $7, $8)
+    referral_code,
+    circuit_user_id,
+    name,
+    address,
+    postal_code,
+    city
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
   WHERE id = $1
+  RETURNING *;
+
+-- name: UpdateUserByPubkey :one
+UPDATE users SET 
+  last_active_date = $2
+  WHERE pubkey = $1
   RETURNING *;

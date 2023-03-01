@@ -6,6 +6,11 @@ import (
 	"github.com/satimoto/go-datastore/pkg/db"
 )
 
+type CountMockData struct {
+	Count int64
+	Error error
+}
+
 type TokenMockData struct {
 	Token db.Token
 	Error error
@@ -14,6 +19,16 @@ type TokenMockData struct {
 type TokensMockData struct {
 	Tokens []db.Token
 	Error  error
+}
+
+func (r *MockRepositoryService) CountTokens(ctx context.Context, arg db.CountTokensParams) (int64, error) {
+	if len(r.countTokensMockData) == 0 {
+		return 0, nil
+	}
+
+	response := r.countTokensMockData[0]
+	r.countTokensMockData = r.countTokensMockData[1:]
+	return response.Count, response.Error
 }
 
 func (r *MockRepositoryService) CreateToken(ctx context.Context, arg db.CreateTokenParams) (db.Token, error) {
@@ -76,6 +91,16 @@ func (r *MockRepositoryService) ListTokens(ctx context.Context, arg db.ListToken
 	return response.Tokens, response.Error
 }
 
+func (r *MockRepositoryService) ListRfidTokensByUserID(ctx context.Context, userID int64) ([]db.Token, error) {
+	if len(r.listRfidTokensByUserIDMockData) == 0 {
+		return []db.Token{}, nil
+	}
+
+	response := r.listRfidTokensByUserIDMockData[0]
+	r.listRfidTokensByUserIDMockData = r.listRfidTokensByUserIDMockData[1:]
+	return response.Tokens, response.Error
+}
+
 func (r *MockRepositoryService) ListTokensByUserID(ctx context.Context, userID int64) ([]db.Token, error) {
 	if len(r.listTokensByUserIDMockData) == 0 {
 		return []db.Token{}, nil
@@ -89,6 +114,10 @@ func (r *MockRepositoryService) ListTokensByUserID(ctx context.Context, userID i
 func (r *MockRepositoryService) UpdateTokenByUid(ctx context.Context, arg db.UpdateTokenByUidParams) (db.Token, error) {
 	r.updateTokenByUidMockData = append(r.updateTokenByUidMockData, arg)
 	return db.Token{}, nil
+}
+
+func (r *MockRepositoryService) SetCountTokensMockData(response CountMockData) {
+	r.countTokensMockData = append(r.countTokensMockData, response)
 }
 
 func (r *MockRepositoryService) GetCreateTokenMockData() (db.CreateTokenParams, error) {
@@ -139,6 +168,10 @@ func (r *MockRepositoryService) SetGetTokenByUserIDMockData(response TokenMockDa
 
 func (r *MockRepositoryService) SetListTokensMockData(response TokensMockData) {
 	r.listTokensMockData = append(r.listTokensMockData, response)
+}
+
+func (r *MockRepositoryService) SetListRfidTokensByUserIDMockData(response TokensMockData) {
+	r.listRfidTokensByUserIDMockData = append(r.listRfidTokensByUserIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetListTokensByUserIDMockData(response TokensMockData) {

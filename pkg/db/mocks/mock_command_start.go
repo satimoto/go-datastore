@@ -30,8 +30,14 @@ func (r *MockRepositoryService) GetCommandStart(ctx context.Context, id int64) (
 	r.getCommandStartMockData = r.getCommandStartMockData[1:]
 	return response.CommandStart, response.Error
 }
+
 func (r *MockRepositoryService) UpdateCommandStart(ctx context.Context, arg db.UpdateCommandStartParams) (db.CommandStart, error) {
 	r.updateCommandStartMockData = append(r.updateCommandStartMockData, arg)
+	return db.CommandStart{}, nil
+}
+
+func (r *MockRepositoryService) UpdateCommandStartByAuthorizationID(ctx context.Context, arg db.UpdateCommandStartByAuthorizationIDParams) (db.CommandStart, error) {
+	r.updateCommandStartByAuthorizationIDMockData = append(r.updateCommandStartByAuthorizationIDMockData, arg)
 	return db.CommandStart{}, nil
 }
 
@@ -52,6 +58,16 @@ func (r *MockRepositoryService) GetUpdateCommandStartMockData() (db.UpdateComman
 
 	response := r.updateCommandStartMockData[0]
 	r.updateCommandStartMockData = r.updateCommandStartMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) GetUpdateCommandStartByAuthorizationIDMockData() (db.UpdateCommandStartByAuthorizationIDParams, error) {
+	if len(r.updateCommandStartByAuthorizationIDMockData) == 0 {
+		return db.UpdateCommandStartByAuthorizationIDParams{}, ErrorNotFound()
+	}
+
+	response := r.updateCommandStartByAuthorizationIDMockData[0]
+	r.updateCommandStartByAuthorizationIDMockData = r.updateCommandStartByAuthorizationIDMockData[1:]
 	return response, nil
 }
 

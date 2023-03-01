@@ -16,12 +16,14 @@ type EvseRepository interface {
 	DeleteEvseImages(ctx context.Context, evseID int64) error
 	DeleteStatusSchedules(ctx context.Context, evseID int64) error
 	GetEvse(ctx context.Context, id int64) (db.Evse, error)
+	GetEvseByEvseID(ctx context.Context, evseID sql.NullString) (db.Evse, error)
 	GetEvseByIdentifier(ctx context.Context, identifier sql.NullString) (db.Evse, error)
 	GetEvseByUid(ctx context.Context, uid string) (db.Evse, error)
 	GetGeoLocation(ctx context.Context, id int64) (db.GeoLocation, error)
 	ListCapabilities(ctx context.Context) ([]db.Capability, error)
 	ListConnectors(ctx context.Context, evseID int64) ([]db.Connector, error)
 	ListEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
+	ListEvsesLikeEvseID(ctx context.Context, evseID sql.NullString) ([]db.Evse, error)
 	ListEvseStatusPeriods(ctx context.Context, evseID int64) ([]db.EvseStatusPeriod, error)
 	ListActiveEvses(ctx context.Context, locationID int64) ([]db.Evse, error)
 	ListEvseCapabilities(ctx context.Context, evseID int64) ([]db.Capability, error)
@@ -38,7 +40,6 @@ type EvseRepository interface {
 	UnsetEvseParkingRestrictions(ctx context.Context, evseID int64) error
 	UpdateEvseByUid(ctx context.Context, arg db.UpdateEvseByUidParams) (db.Evse, error)
 	UpdateEvseLastUpdated(ctx context.Context, arg db.UpdateEvseLastUpdatedParams) error
-	UpdateLocationAvailability(ctx context.Context, arg db.UpdateLocationAvailabilityParams) error
 	UpdateLocationLastUpdated(ctx context.Context, arg db.UpdateLocationLastUpdatedParams) error
 }
 

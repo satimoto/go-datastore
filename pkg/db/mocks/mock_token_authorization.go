@@ -31,6 +31,16 @@ func (r *MockRepositoryService) GetTokenAuthorizationByAuthorizationID(ctx conte
 	return response.TokenAuthorization, response.Error
 }
 
+func (r *MockRepositoryService) GetLastTokenAuthorizationByTokenID(ctx context.Context, tokenID int64) (db.TokenAuthorization, error) {
+	if len(r.getLastTokenAuthorizationByTokenIDMockData) == 0 {
+		return db.TokenAuthorization{}, ErrorNotFound()
+	}
+
+	response := r.getLastTokenAuthorizationByTokenIDMockData[0]
+	r.getLastTokenAuthorizationByTokenIDMockData = r.getLastTokenAuthorizationByTokenIDMockData[1:]
+	return response.TokenAuthorization, response.Error
+}
+
 func (r *MockRepositoryService) UpdateTokenAuthorizationByAuthorizationID(ctx context.Context, arg db.UpdateTokenAuthorizationByAuthorizationIDParams) (db.TokenAuthorization, error) {
 	r.updateTokenAuthorizationByAuthorizationIDMockData = append(r.updateTokenAuthorizationByAuthorizationIDMockData, arg)
 	return db.TokenAuthorization{}, nil
@@ -58,4 +68,8 @@ func (r *MockRepositoryService) GetUpdateTokenAuthorizationByAuthorizationIDMock
 
 func (r *MockRepositoryService) SetGetTokenAuthorizationByAuthorizationIDMockData(response TokenAuthorizationMockData) {
 	r.getTokenAuthorizationByAuthorizationIDMockData = append(r.getTokenAuthorizationByAuthorizationIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetGetLastTokenAuthorizationByTokenIDMockData(response TokenAuthorizationMockData) {
+	r.getLastTokenAuthorizationByTokenIDMockData = append(r.getLastTokenAuthorizationByTokenIDMockData, response)
 }

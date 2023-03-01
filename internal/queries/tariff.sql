@@ -23,7 +23,7 @@ SELECT * FROM tariffs
 
 -- name: GetTariffByLastUpdated :one
 SELECT * FROM tariffs
-  WHERE (@credental_id::BIGINT = -1 OR @credental_id::BIGINT = credental_id) AND
+  WHERE (@credential_id::BIGINT = -1 OR @credential_id::BIGINT = credential_id) AND
     (@country_code::TEXT = '' OR @country_code::TEXT = country_code) AND
     (@party_id::TEXT = '' OR @party_id::TEXT = party_id)
   ORDER BY last_updated DESC
@@ -32,6 +32,11 @@ SELECT * FROM tariffs
 -- name: GetTariffByUid :one
 SELECT * FROM tariffs
   WHERE uid = $1 AND cdr_id IS NULL;
+
+-- name: GetTariffLikeUid :one
+SELECT * FROM tariffs
+  WHERE uid like $1
+  LIMIT 1;
 
 -- name: ListTariffsByCdr :many
 SELECT * FROM tariffs

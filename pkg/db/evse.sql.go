@@ -124,6 +124,32 @@ func (q *Queries) GetEvse(ctx context.Context, id int64) (Evse, error) {
 	return i, err
 }
 
+const getEvseByEvseID = `-- name: GetEvseByEvseID :one
+SELECT id, location_id, uid, evse_id, identifier, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
+  WHERE evse_id = $1
+`
+
+func (q *Queries) GetEvseByEvseID(ctx context.Context, evseID sql.NullString) (Evse, error) {
+	row := q.db.QueryRowContext(ctx, getEvseByEvseID, evseID)
+	var i Evse
+	err := row.Scan(
+		&i.ID,
+		&i.LocationID,
+		&i.Uid,
+		&i.EvseID,
+		&i.Identifier,
+		&i.Status,
+		&i.FloorLevel,
+		&i.Geom,
+		&i.GeoLocationID,
+		&i.IsRemoteCapable,
+		&i.IsRfidCapable,
+		&i.PhysicalReference,
+		&i.LastUpdated,
+	)
+	return i, err
+}
+
 const getEvseByIdentifier = `-- name: GetEvseByIdentifier :one
 SELECT id, location_id, uid, evse_id, identifier, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
   WHERE identifier = $1
@@ -227,6 +253,49 @@ SELECT id, location_id, uid, evse_id, identifier, status, floor_level, geom, geo
 
 func (q *Queries) ListEvses(ctx context.Context, locationID int64) ([]Evse, error) {
 	rows, err := q.db.QueryContext(ctx, listEvses, locationID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Evse
+	for rows.Next() {
+		var i Evse
+		if err := rows.Scan(
+			&i.ID,
+			&i.LocationID,
+			&i.Uid,
+			&i.EvseID,
+			&i.Identifier,
+			&i.Status,
+			&i.FloorLevel,
+			&i.Geom,
+			&i.GeoLocationID,
+			&i.IsRemoteCapable,
+			&i.IsRfidCapable,
+			&i.PhysicalReference,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listEvsesLikeEvseID = `-- name: ListEvsesLikeEvseID :many
+SELECT id, location_id, uid, evse_id, identifier, status, floor_level, geom, geo_location_id, is_remote_capable, is_rfid_capable, physical_reference, last_updated FROM evses
+  WHERE evse_id like $1
+  ORDER BY id
+`
+
+func (q *Queries) ListEvsesLikeEvseID(ctx context.Context, evseID sql.NullString) ([]Evse, error) {
+	rows, err := q.db.QueryContext(ctx, listEvsesLikeEvseID, evseID)
 	if err != nil {
 		return nil, err
 	}

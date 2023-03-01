@@ -9,6 +9,25 @@ import (
 	"time"
 )
 
+const countTokens = `-- name: CountTokens :one
+SELECT COUNT(*) FROM tokens
+  WHERE 
+    ($1::TEXT = '' or last_updated > ($1::TEXT)::TIMESTAMP) and 
+    ($2::TEXT = '' or last_updated < ($2::TEXT)::TIMESTAMP)
+`
+
+type CountTokensParams struct {
+	FilterDateFrom string `db:"filter_date_from" json:"filterDateFrom"`
+	FilterDateTo   string `db:"filter_date_to" json:"filterDateTo"`
+}
+
+func (q *Queries) CountTokens(ctx context.Context, arg CountTokensParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countTokens, arg.FilterDateFrom, arg.FilterDateTo)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createToken = `-- name: CreateToken :one
 INSERT INTO tokens (
     uid, 
@@ -188,14 +207,55 @@ func (q *Queries) GetTokenByUserID(ctx context.Context, arg GetTokenByUserIDPara
 	return i, err
 }
 
+const listRfidTokensByUserID = `-- name: ListRfidTokensByUserID :many
+SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
+  WHERE user_id = $1 AND type = 'RFID'
+`
+
+func (q *Queries) ListRfidTokensByUserID(ctx context.Context, userID int64) ([]Token, error) {
+	rows, err := q.db.QueryContext(ctx, listRfidTokensByUserID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Token
+	for rows.Next() {
+		var i Token
+		if err := rows.Scan(
+			&i.ID,
+			&i.Uid,
+			&i.UserID,
+			&i.Type,
+			&i.AuthID,
+			&i.VisualNumber,
+			&i.Issuer,
+			&i.Allowed,
+			&i.Valid,
+			&i.Whitelist,
+			&i.Language,
+			&i.LastUpdated,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const listTokens = `-- name: ListTokens :many
 SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
   WHERE 
-    ($1::text = '' or last_updated > $1::text) and 
-    ($2::text = '' or last_updated < $2::text)
+    ($1::TEXT = '' or last_updated > ($1::TEXT)::TIMESTAMP) and 
+    ($2::TEXT = '' or last_updated < ($2::TEXT)::TIMESTAMP)
   ORDER BY id
-  LIMIT $4::bigint
-  OFFSET $3::bigint
+  LIMIT $4::BIGINT
+  OFFSET $3::BIGINT
 `
 
 type ListTokensParams struct {

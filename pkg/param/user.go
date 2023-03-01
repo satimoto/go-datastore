@@ -11,6 +11,11 @@ func NewUpdateUserParams(user db.User) db.UpdateUserParams {
 		NodeID:            user.NodeID,
 		Pubkey:            user.Pubkey,
 		IsRestricted:      user.IsRestricted,
-		ReferrerID:        user.ReferrerID,
+		ReferralCode:      user.ReferralCode,
+		CircuitUserID:     user.CircuitUserID,
+		Name:              user.Name,
+		Address:           user.Address,
+		PostalCode:        user.PostalCode,
+		City:              user.City,
 	}
 }

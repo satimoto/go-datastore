@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -61,9 +62,44 @@ func (r *MockRepositoryService) GetSessionByUid(ctx context.Context, uid string)
 	return response.Session, response.Error
 }
 
+func (r *MockRepositoryService) ListInvoicedSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error) {
+	if len(r.listInvoicedSessionsByUserIDMockData) == 0 {
+		return []db.Session{}, nil
+	}
+
+	response := r.listInvoicedSessionsByUserIDMockData[0]
+	r.listInvoicedSessionsByUserIDMockData = r.listInvoicedSessionsByUserIDMockData[1:]
+	return response.Sessions, response.Error
+}
+
+func (r *MockRepositoryService) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql.NullInt64) ([]db.Session, error) {
+	if len(r.listInProgressSessionsByNodeIDMockData) == 0 {
+		return []db.Session{}, nil
+	}
+
+	response := r.listInProgressSessionsByNodeIDMockData[0]
+	r.listInProgressSessionsByNodeIDMockData = r.listInProgressSessionsByNodeIDMockData[1:]
+	return response.Sessions, response.Error
+}
+
+func (r *MockRepositoryService) ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error) {
+	if len(r.listInProgressSessionsByUserIDMockData) == 0 {
+		return []db.Session{}, nil
+	}
+
+	response := r.listInProgressSessionsByUserIDMockData[0]
+	r.listInProgressSessionsByUserIDMockData = r.listInProgressSessionsByUserIDMockData[1:]
+	return response.Sessions, response.Error
+}
+
 func (r *MockRepositoryService) UpdateSessionByUid(ctx context.Context, arg db.UpdateSessionByUidParams) (db.Session, error) {
 	r.updateSessionByUidMockData = append(r.updateSessionByUidMockData, arg)
 	return db.Session{}, nil
+}
+
+func (r *MockRepositoryService) UpdateSessionIsFlaggedByUid(ctx context.Context, arg db.UpdateSessionIsFlaggedByUidParams) error {
+	r.updateSessionIsFlaggedByUidMockData = append(r.updateSessionIsFlaggedByUidMockData, arg)
+	return nil
 }
 
 func (r *MockRepositoryService) GetCreateSessionMockData() (db.CreateSessionParams, error) {
@@ -86,6 +122,16 @@ func (r *MockRepositoryService) GetUpdateSessionByUidMockData() (db.UpdateSessio
 	return response, nil
 }
 
+func (r *MockRepositoryService) GetUpdateSessionIsFlaggedByUidMockData() (db.UpdateSessionIsFlaggedByUidParams, error) {
+	if len(r.updateSessionIsFlaggedByUidMockData) == 0 {
+		return db.UpdateSessionIsFlaggedByUidParams{}, ErrorNotFound()
+	}
+
+	response := r.updateSessionIsFlaggedByUidMockData[0]
+	r.updateSessionIsFlaggedByUidMockData = r.updateSessionIsFlaggedByUidMockData[1:]
+	return response, nil
+}
+
 func (r *MockRepositoryService) SetGetSessionMockData(response SessionMockData) {
 	r.getSessionMockData = append(r.getSessionMockData, response)
 }
@@ -100,4 +146,16 @@ func (r *MockRepositoryService) SetGetSessionByLastUpdatedMockData(response Sess
 
 func (r *MockRepositoryService) SetGetSessionByUidMockData(response SessionMockData) {
 	r.getSessionByUidMockData = append(r.getSessionByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetListInvoicedSessionsByUserIDMockData(response SessionsMockData) {
+	r.listInvoicedSessionsByUserIDMockData = append(r.listInvoicedSessionsByUserIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetListInProgressSessionsByNodeIDMockData(response SessionsMockData) {
+	r.listInProgressSessionsByNodeIDMockData = append(r.listInProgressSessionsByNodeIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetListInProgressSessionsByUserIDMockData(response SessionsMockData) {
+	r.listInProgressSessionsByUserIDMockData = append(r.listInProgressSessionsByUserIDMockData, response)
 }
