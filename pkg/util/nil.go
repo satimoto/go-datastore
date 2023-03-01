@@ -83,8 +83,10 @@ func NilInt16(i interface{}) *int16 {
 			return &val
 		}
 	case *int:
-		val := int16(*t)
-		return &val
+		if t != nil {
+			val := int16(*t)
+			return &val
+		}
 	}
 
 	return nil
@@ -108,8 +110,10 @@ func NilInt32(i interface{}) *int32 {
 			return &val
 		}
 	case *int:
-		val := int32(*t)
-		return &val
+		if t != nil {
+			val := int32(*t)
+			return &val
+		}
 	}
 
 	return nil
@@ -133,8 +137,10 @@ func NilInt64(i interface{}) *int64 {
 			return &val
 		}
 	case *int:
-		val := int64(*t)
-		return &val
+		if t != nil {
+			val := int64(*t)
+			return &val
+		}
 	}
 
 	return nil

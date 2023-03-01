@@ -104,7 +104,7 @@ func (q *Queries) GetTariff(ctx context.Context, id int64) (Tariff, error) {
 
 const getTariffByLastUpdated = `-- name: GetTariffByLastUpdated :one
 SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
-  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credental_id) AND
+  WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
   ORDER BY last_updated DESC
@@ -112,13 +112,13 @@ SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url,
 `
 
 type GetTariffByLastUpdatedParams struct {
-	CredentalID int64  `db:"credental_id" json:"credentalID"`
-	CountryCode string `db:"country_code" json:"countryCode"`
-	PartyID     string `db:"party_id" json:"partyID"`
+	CredentialID int64  `db:"credential_id" json:"credentialID"`
+	CountryCode  string `db:"country_code" json:"countryCode"`
+	PartyID      string `db:"party_id" json:"partyID"`
 }
 
 func (q *Queries) GetTariffByLastUpdated(ctx context.Context, arg GetTariffByLastUpdatedParams) (Tariff, error) {
-	row := q.db.QueryRowContext(ctx, getTariffByLastUpdated, arg.CredentalID, arg.CountryCode, arg.PartyID)
+	row := q.db.QueryRowContext(ctx, getTariffByLastUpdated, arg.CredentialID, arg.CountryCode, arg.PartyID)
 	var i Tariff
 	err := row.Scan(
 		&i.ID,
@@ -143,6 +143,31 @@ SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url,
 
 func (q *Queries) GetTariffByUid(ctx context.Context, uid string) (Tariff, error) {
 	row := q.db.QueryRowContext(ctx, getTariffByUid, uid)
+	var i Tariff
+	err := row.Scan(
+		&i.ID,
+		&i.Uid,
+		&i.CredentialID,
+		&i.CountryCode,
+		&i.PartyID,
+		&i.Currency,
+		&i.TariffAltUrl,
+		&i.EnergyMixID,
+		&i.TariffRestrictionID,
+		&i.LastUpdated,
+		&i.CdrID,
+	)
+	return i, err
+}
+
+const getTariffLikeUid = `-- name: GetTariffLikeUid :one
+SELECT id, uid, credential_id, country_code, party_id, currency, tariff_alt_url, energy_mix_id, tariff_restriction_id, last_updated, cdr_id FROM tariffs
+  WHERE uid like $1
+  LIMIT 1
+`
+
+func (q *Queries) GetTariffLikeUid(ctx context.Context, uid string) (Tariff, error) {
+	row := q.db.QueryRowContext(ctx, getTariffLikeUid, uid)
 	var i Tariff
 	err := row.Scan(
 		&i.ID,

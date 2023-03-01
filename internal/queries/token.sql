@@ -1,3 +1,9 @@
+-- name: CountTokens :one
+SELECT COUNT(*) FROM tokens
+  WHERE 
+    (@filter_date_from::TEXT = '' or last_updated > (@filter_date_from::TEXT)::TIMESTAMP) and 
+    (@filter_date_to::TEXT = '' or last_updated < (@filter_date_to::TEXT)::TIMESTAMP);
+
 -- name: CreateToken :one
 INSERT INTO tokens (
     uid, 
@@ -38,15 +44,19 @@ SELECT * FROM tokens
 -- name: ListTokens :many
 SELECT * FROM tokens
   WHERE 
-    (@filter_date_from::text = '' or last_updated > @filter_date_from::text) and 
-    (@filter_date_to::text = '' or last_updated < @filter_date_to::text)
+    (@filter_date_from::TEXT = '' or last_updated > (@filter_date_from::TEXT)::TIMESTAMP) and 
+    (@filter_date_to::TEXT = '' or last_updated < (@filter_date_to::TEXT)::TIMESTAMP)
   ORDER BY id
-  LIMIT @filter_limit::bigint
-  OFFSET @filter_offset::bigint;
+  LIMIT @filter_limit::BIGINT
+  OFFSET @filter_offset::BIGINT;
 
 -- name: ListTokensByUserID :many
 SELECT * FROM tokens
   WHERE user_id = $1;
+
+-- name: ListRfidTokensByUserID :many
+SELECT * FROM tokens
+  WHERE user_id = $1 AND type = 'RFID';
 
 -- name: UpdateTokenByUid :one
 UPDATE tokens SET (

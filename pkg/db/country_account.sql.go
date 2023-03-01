@@ -5,36 +5,98 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createCountryAccount = `-- name: CreateCountryAccount :one
 INSERT INTO country_accounts (
     country,
-    tax_percent
-  ) VALUES ($1, $2)
-  RETURNING id, country, tax_percent
+    tax_percent,
+    longitude,
+    latitude,
+    zoom
+  ) VALUES ($1, $2, $3, $4, $5)
+  RETURNING id, country, tax_percent, longitude, latitude, zoom
 `
 
 type CreateCountryAccountParams struct {
-	Country    string  `db:"country" json:"country"`
-	TaxPercent float64 `db:"tax_percent" json:"taxPercent"`
+	Country    string          `db:"country" json:"country"`
+	TaxPercent float64         `db:"tax_percent" json:"taxPercent"`
+	Longitude  sql.NullFloat64 `db:"longitude" json:"longitude"`
+	Latitude   sql.NullFloat64 `db:"latitude" json:"latitude"`
+	Zoom       sql.NullFloat64 `db:"zoom" json:"zoom"`
 }
 
 func (q *Queries) CreateCountryAccount(ctx context.Context, arg CreateCountryAccountParams) (CountryAccount, error) {
-	row := q.db.QueryRowContext(ctx, createCountryAccount, arg.Country, arg.TaxPercent)
+	row := q.db.QueryRowContext(ctx, createCountryAccount,
+		arg.Country,
+		arg.TaxPercent,
+		arg.Longitude,
+		arg.Latitude,
+		arg.Zoom,
+	)
 	var i CountryAccount
-	err := row.Scan(&i.ID, &i.Country, &i.TaxPercent)
+	err := row.Scan(
+		&i.ID,
+		&i.Country,
+		&i.TaxPercent,
+		&i.Longitude,
+		&i.Latitude,
+		&i.Zoom,
+	)
 	return i, err
 }
 
 const getCountryAccountByCountry = `-- name: GetCountryAccountByCountry :one
-SELECT id, country, tax_percent FROM country_accounts
+SELECT id, country, tax_percent, longitude, latitude, zoom FROM country_accounts
   WHERE country = $1
 `
 
 func (q *Queries) GetCountryAccountByCountry(ctx context.Context, country string) (CountryAccount, error) {
 	row := q.db.QueryRowContext(ctx, getCountryAccountByCountry, country)
 	var i CountryAccount
-	err := row.Scan(&i.ID, &i.Country, &i.TaxPercent)
+	err := row.Scan(
+		&i.ID,
+		&i.Country,
+		&i.TaxPercent,
+		&i.Longitude,
+		&i.Latitude,
+		&i.Zoom,
+	)
 	return i, err
+}
+
+const listCountryAccounts = `-- name: ListCountryAccounts :many
+SELECT id, country, tax_percent, longitude, latitude, zoom FROM country_accounts
+  ORDER BY country
+`
+
+func (q *Queries) ListCountryAccounts(ctx context.Context) ([]CountryAccount, error) {
+	rows, err := q.db.QueryContext(ctx, listCountryAccounts)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []CountryAccount
+	for rows.Next() {
+		var i CountryAccount
+		if err := rows.Scan(
+			&i.ID,
+			&i.Country,
+			&i.TaxPercent,
+			&i.Longitude,
+			&i.Latitude,
+			&i.Zoom,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

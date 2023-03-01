@@ -32,6 +32,16 @@ func (r *MockRepositoryService) GetEvse(ctx context.Context, id int64) (db.Evse,
 	return response.Evse, response.Error
 }
 
+func (r *MockRepositoryService) GetEvseByEvseID(ctx context.Context, evseID sql.NullString) (db.Evse, error) {
+	if len(r.getEvseByEvseIDMockData) == 0 {
+		return db.Evse{}, ErrorNotFound()
+	}
+
+	response := r.getEvseByEvseIDMockData[0]
+	r.getEvseByEvseIDMockData = r.getEvseByEvseIDMockData[1:]
+	return response.Evse, response.Error
+}
+
 func (r *MockRepositoryService) GetEvseByIdentifier(ctx context.Context, identifier sql.NullString) (db.Evse, error) {
 	if len(r.getEvseByIdentifierMockData) == 0 {
 		return db.Evse{}, ErrorNotFound()
@@ -59,6 +69,16 @@ func (r *MockRepositoryService) ListEvses(ctx context.Context, locationID int64)
 
 	response := r.listEvsesMockData[0]
 	r.listEvsesMockData = r.listEvsesMockData[1:]
+	return response.Evses, response.Error
+}
+
+func (r *MockRepositoryService) ListEvsesLikeEvseID(ctx context.Context, evseID sql.NullString) ([]db.Evse, error) {
+	if len(r.listEvsesLikeEvseIDMockData) == 0 {
+		return []db.Evse{}, nil
+	}
+
+	response := r.listEvsesLikeEvseIDMockData[0]
+	r.listEvsesLikeEvseIDMockData = r.listEvsesLikeEvseIDMockData[1:]
 	return response.Evses, response.Error
 }
 
@@ -128,6 +148,10 @@ func (r *MockRepositoryService) SetGetEvseMockData(response EvseMockData) {
 	r.getEvseMockData = append(r.getEvseMockData, response)
 }
 
+func (r *MockRepositoryService) SetGetEvseByEvseIDMockData(response EvseMockData) {
+	r.getEvseByEvseIDMockData = append(r.getEvseByEvseIDMockData, response)
+}
+
 func (r *MockRepositoryService) SetGetEvseByIdentifierMockData(response EvseMockData) {
 	r.getEvseByIdentifierMockData = append(r.getEvseByIdentifierMockData, response)
 }
@@ -138,6 +162,10 @@ func (r *MockRepositoryService) SetGetEvseByUidMockData(response EvseMockData) {
 
 func (r *MockRepositoryService) SetListEvsesMockData(response EvsesMockData) {
 	r.listEvsesMockData = append(r.listEvsesMockData, response)
+}
+
+func (r *MockRepositoryService) SetListEvsesLikeEvseIDMockData(response EvsesMockData) {
+	r.listEvsesLikeEvseIDMockData = append(r.listEvsesLikeEvseIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetListActiveEvsesMockData(response EvsesMockData) {

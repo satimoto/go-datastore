@@ -35,6 +35,16 @@ func (r *MockRepositoryService) CreateCdr(ctx context.Context, arg db.CreateCdrP
 	}, nil
 }
 
+func (r *MockRepositoryService) GetCdrByAuthorizationID(ctx context.Context, authorizationID string) (db.Cdr, error) {
+	if len(r.getCdrByAuthorizationIDMockData) == 0 {
+		return db.Cdr{}, ErrorNotFound()
+	}
+
+	response := r.getCdrByAuthorizationIDMockData[0]
+	r.getCdrByAuthorizationIDMockData = r.getCdrByAuthorizationIDMockData[1:]
+	return response.Cdr, response.Error
+}
+
 func (r *MockRepositoryService) GetCdrByLastUpdated(ctx context.Context, arg db.GetCdrByLastUpdatedParams) (db.Cdr, error) {
 	if len(r.getCdrByLastUpdatedMockData) == 0 {
 		return db.Cdr{}, ErrorNotFound()
@@ -55,6 +65,21 @@ func (r *MockRepositoryService) GetCdrByUid(ctx context.Context, uid string) (db
 	return response.Cdr, response.Error
 }
 
+func (r *MockRepositoryService) ListCdrsByCompletedSessionStatus(ctx context.Context, nodeID int64) ([]db.Cdr, error) {
+	if len(r.listCdrsByCompletedSessionStatusMockData) == 0 {
+		return []db.Cdr{}, nil
+	}
+
+	response := r.listCdrsByCompletedSessionStatusMockData[0]
+	r.listCdrsByCompletedSessionStatusMockData = r.listCdrsByCompletedSessionStatusMockData[1:]
+	return response.Cdrs, response.Error
+}
+
+func (r *MockRepositoryService) UpdateCdrIsFlaggedByUid(ctx context.Context, arg db.UpdateCdrIsFlaggedByUidParams) error {
+	r.updateCdrIsFlaggedByUidMockData = append(r.updateCdrIsFlaggedByUidMockData, arg)
+	return nil
+}
+
 func (r *MockRepositoryService) GetCreateCdrMockData() (db.CreateCdrParams, error) {
 	if len(r.createCdrMockData) == 0 {
 		return db.CreateCdrParams{}, ErrorNotFound()
@@ -65,10 +90,28 @@ func (r *MockRepositoryService) GetCreateCdrMockData() (db.CreateCdrParams, erro
 	return response, nil
 }
 
+func (r *MockRepositoryService) GetUpdateCdrIsFlaggedByUidMockData() (db.UpdateCdrIsFlaggedByUidParams, error) {
+	if len(r.updateCdrIsFlaggedByUidMockData) == 0 {
+		return db.UpdateCdrIsFlaggedByUidParams{}, ErrorNotFound()
+	}
+
+	response := r.updateCdrIsFlaggedByUidMockData[0]
+	r.updateCdrIsFlaggedByUidMockData = r.updateCdrIsFlaggedByUidMockData[1:]
+	return response, nil
+}
+
+func (r *MockRepositoryService) SetGetCdrByAuthorizationIDMockData(response CdrMockData) {
+	r.getCdrByAuthorizationIDMockData = append(r.getCdrByAuthorizationIDMockData, response)
+}
+
 func (r *MockRepositoryService) SetGetCdrByLastUpdatedMockData(response CdrMockData) {
 	r.getCdrByLastUpdatedMockData = append(r.getCdrByLastUpdatedMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetCdrByUidMockData(response CdrMockData) {
 	r.getCdrByUidMockData = append(r.getCdrByUidMockData, response)
+}
+
+func (r *MockRepositoryService) SetListCdrsByCompletedSessionStatusMockData(response CdrsMockData) {
+	r.listCdrsByCompletedSessionStatusMockData = append(r.listCdrsByCompletedSessionStatusMockData, response)
 }

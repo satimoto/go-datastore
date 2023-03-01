@@ -342,7 +342,7 @@ type RoundingGranularity string
 const (
 	RoundingGranularityUNIT       RoundingGranularity = "UNIT"
 	RoundingGranularityTENTH      RoundingGranularity = "TENTH"
-	RoundingGranularityHUNDRETH   RoundingGranularity = "HUNDRETH"
+	RoundingGranularityHUNDREDTH  RoundingGranularity = "HUNDREDTH"
 	RoundingGranularityTHOUSANDTH RoundingGranularity = "THOUSANDTH"
 )
 
@@ -426,6 +426,7 @@ const (
 	SessionStatusTypeCOMPLETED SessionStatusType = "COMPLETED"
 	SessionStatusTypeINVALID   SessionStatusType = "INVALID"
 	SessionStatusTypePENDING   SessionStatusType = "PENDING"
+	SessionStatusTypeINVOICED  SessionStatusType = "INVOICED"
 )
 
 func (e *SessionStatusType) Scan(src interface{}) error {
@@ -596,6 +597,7 @@ type Cdr struct {
 	TotalParkingTime sql.NullFloat64 `db:"total_parking_time" json:"totalParkingTime"`
 	Remark           sql.NullString  `db:"remark" json:"remark"`
 	LastUpdated      time.Time       `db:"last_updated" json:"lastUpdated"`
+	IsFlagged        bool            `db:"is_flagged" json:"isFlagged"`
 }
 
 type CdrChargingPeriod struct {
@@ -655,6 +657,7 @@ type CommandReservation struct {
 	ReservationID int64               `db:"reservation_id" json:"reservationID"`
 	LocationID    string              `db:"location_id" json:"locationID"`
 	EvseUid       sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated   time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type CommandStart struct {
@@ -664,12 +667,14 @@ type CommandStart struct {
 	AuthorizationID sql.NullString      `db:"authorization_id" json:"authorizationID"`
 	LocationID      string              `db:"location_id" json:"locationID"`
 	EvseUid         sql.NullString      `db:"evse_uid" json:"evseUid"`
+	LastUpdated     time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type CommandStop struct {
-	ID        int64               `db:"id" json:"id"`
-	Status    CommandResponseType `db:"status" json:"status"`
-	SessionID string              `db:"session_id" json:"sessionID"`
+	ID          int64               `db:"id" json:"id"`
+	Status      CommandResponseType `db:"status" json:"status"`
+	SessionID   string              `db:"session_id" json:"sessionID"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type CommandUnlock struct {
@@ -678,6 +683,7 @@ type CommandUnlock struct {
 	LocationID  string              `db:"location_id" json:"locationID"`
 	EvseUid     string              `db:"evse_uid" json:"evseUid"`
 	ConnectorID string              `db:"connector_id" json:"connectorID"`
+	LastUpdated time.Time           `db:"last_updated" json:"lastUpdated"`
 }
 
 type Connector struct {
@@ -694,12 +700,17 @@ type Connector struct {
 	TariffID           sql.NullString  `db:"tariff_id" json:"tariffID"`
 	TermsAndConditions sql.NullString  `db:"terms_and_conditions" json:"termsAndConditions"`
 	LastUpdated        time.Time       `db:"last_updated" json:"lastUpdated"`
+	IsPublished        bool            `db:"is_published" json:"isPublished"`
+	IsRemoved          bool            `db:"is_removed" json:"isRemoved"`
 }
 
 type CountryAccount struct {
-	ID         int64   `db:"id" json:"id"`
-	Country    string  `db:"country" json:"country"`
-	TaxPercent float64 `db:"tax_percent" json:"taxPercent"`
+	ID         int64           `db:"id" json:"id"`
+	Country    string          `db:"country" json:"country"`
+	TaxPercent float64         `db:"tax_percent" json:"taxPercent"`
+	Longitude  sql.NullFloat64 `db:"longitude" json:"longitude"`
+	Latitude   sql.NullFloat64 `db:"latitude" json:"latitude"`
+	Zoom       sql.NullFloat64 `db:"zoom" json:"zoom"`
 }
 
 type Credential struct {
@@ -713,6 +724,15 @@ type Credential struct {
 	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
 	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
 	VersionID        sql.NullInt64  `db:"version_id" json:"versionID"`
+}
+
+type Currency struct {
+	ID          int64          `db:"id" json:"id"`
+	Name        string         `db:"name" json:"name"`
+	Code        string         `db:"code" json:"code"`
+	NumericCode int32          `db:"numeric_code" json:"numericCode"`
+	Decimals    int32          `db:"decimals" json:"decimals"`
+	Symbol      sql.NullString `db:"symbol" json:"symbol"`
 }
 
 type DisplayText struct {
@@ -843,6 +863,17 @@ type GeoLocation struct {
 	LongitudeFloat float64 `db:"longitude_float" json:"longitudeFloat"`
 }
 
+type HtbTariff struct {
+	ID              int64           `db:"id" json:"id"`
+	Name            string          `db:"name" json:"name"`
+	Currency        string          `db:"currency" json:"currency"`
+	TimePrice       sql.NullFloat64 `db:"time_price" json:"timePrice"`
+	TimeMinDuration sql.NullInt32   `db:"time_min_duration" json:"timeMinDuration"`
+	EnergyPrice     sql.NullFloat64 `db:"energy_price" json:"energyPrice"`
+	FlatPrice       sql.NullFloat64 `db:"flat_price" json:"flatPrice"`
+	LastUpdated     time.Time       `db:"last_updated" json:"lastUpdated"`
+}
+
 type Image struct {
 	ID        int64          `db:"id" json:"id"`
 	Url       string         `db:"url" json:"url"`
@@ -853,32 +884,55 @@ type Image struct {
 	Height    sql.NullInt32  `db:"height" json:"height"`
 }
 
+type InvoiceRequest struct {
+	ID             int64           `db:"id" json:"id"`
+	UserID         int64           `db:"user_id" json:"userID"`
+	PromotionID    int64           `db:"promotion_id" json:"promotionID"`
+	TotalMsat      int64           `db:"total_msat" json:"totalMsat"`
+	IsSettled      bool            `db:"is_settled" json:"isSettled"`
+	PaymentRequest sql.NullString  `db:"payment_request" json:"paymentRequest"`
+	Currency       string          `db:"currency" json:"currency"`
+	Memo           string          `db:"memo" json:"memo"`
+	TotalFiat      float64         `db:"total_fiat" json:"totalFiat"`
+	PriceFiat      sql.NullFloat64 `db:"price_fiat" json:"priceFiat"`
+	PriceMsat      sql.NullInt64   `db:"price_msat" json:"priceMsat"`
+	CommissionFiat sql.NullFloat64 `db:"commission_fiat" json:"commissionFiat"`
+	CommissionMsat sql.NullInt64   `db:"commission_msat" json:"commissionMsat"`
+	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
+	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
+	ReleaseDate    sql.NullTime    `db:"release_date" json:"releaseDate"`
+}
+
 type Location struct {
-	ID                 int64             `db:"id" json:"id"`
-	Uid                string            `db:"uid" json:"uid"`
-	CredentialID       int64             `db:"credential_id" json:"credentialID"`
-	CountryCode        sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID            sql.NullString    `db:"party_id" json:"partyID"`
-	Type               LocationType      `db:"type" json:"type"`
-	Name               sql.NullString    `db:"name" json:"name"`
-	Address            string            `db:"address" json:"address"`
-	City               string            `db:"city" json:"city"`
-	PostalCode         string            `db:"postal_code" json:"postalCode"`
-	Country            string            `db:"country" json:"country"`
-	Geom               geom.Geometry4326 `db:"geom" json:"geom"`
-	GeoLocationID      int64             `db:"geo_location_id" json:"geoLocationID"`
-	AvailableEvses     int32             `db:"available_evses" json:"availableEvses"`
-	TotalEvses         int32             `db:"total_evses" json:"totalEvses"`
-	IsRemoteCapable    bool              `db:"is_remote_capable" json:"isRemoteCapable"`
-	IsRfidCapable      bool              `db:"is_rfid_capable" json:"isRfidCapable"`
-	OperatorID         sql.NullInt64     `db:"operator_id" json:"operatorID"`
-	SuboperatorID      sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
-	OwnerID            sql.NullInt64     `db:"owner_id" json:"ownerID"`
-	TimeZone           sql.NullString    `db:"time_zone" json:"timeZone"`
-	OpeningTimeID      sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
-	ChargingWhenClosed bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
-	EnergyMixID        sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
-	LastUpdated        time.Time         `db:"last_updated" json:"lastUpdated"`
+	ID                       int64             `db:"id" json:"id"`
+	Uid                      string            `db:"uid" json:"uid"`
+	CredentialID             int64             `db:"credential_id" json:"credentialID"`
+	CountryCode              sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID                  sql.NullString    `db:"party_id" json:"partyID"`
+	Type                     LocationType      `db:"type" json:"type"`
+	Name                     sql.NullString    `db:"name" json:"name"`
+	Address                  string            `db:"address" json:"address"`
+	City                     string            `db:"city" json:"city"`
+	PostalCode               string            `db:"postal_code" json:"postalCode"`
+	Country                  string            `db:"country" json:"country"`
+	Geom                     geom.Geometry4326 `db:"geom" json:"geom"`
+	GeoLocationID            int64             `db:"geo_location_id" json:"geoLocationID"`
+	AvailableEvses           int32             `db:"available_evses" json:"availableEvses"`
+	TotalEvses               int32             `db:"total_evses" json:"totalEvses"`
+	IsRemoteCapable          bool              `db:"is_remote_capable" json:"isRemoteCapable"`
+	IsRfidCapable            bool              `db:"is_rfid_capable" json:"isRfidCapable"`
+	OperatorID               sql.NullInt64     `db:"operator_id" json:"operatorID"`
+	SuboperatorID            sql.NullInt64     `db:"suboperator_id" json:"suboperatorID"`
+	OwnerID                  sql.NullInt64     `db:"owner_id" json:"ownerID"`
+	TimeZone                 sql.NullString    `db:"time_zone" json:"timeZone"`
+	OpeningTimeID            sql.NullInt64     `db:"opening_time_id" json:"openingTimeID"`
+	ChargingWhenClosed       bool              `db:"charging_when_closed" json:"chargingWhenClosed"`
+	EnergyMixID              sql.NullInt64     `db:"energy_mix_id" json:"energyMixID"`
+	LastUpdated              time.Time         `db:"last_updated" json:"lastUpdated"`
+	IsPublished              bool              `db:"is_published" json:"isPublished"`
+	AddedDate                time.Time         `db:"added_date" json:"addedDate"`
+	IsIntermediateCdrCapable bool              `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	IsRemoved                bool              `db:"is_removed" json:"isRemoved"`
 }
 
 type LocationDirection struct {
@@ -910,6 +964,12 @@ type Node struct {
 	IsActive   bool   `db:"is_active" json:"isActive"`
 }
 
+type NodeScid struct {
+	ID     int64  `db:"id" json:"id"`
+	NodeID int64  `db:"node_id" json:"nodeID"`
+	Scid   []byte `db:"scid" json:"scid"`
+}
+
 type OpeningTime struct {
 	ID              int64 `db:"id" json:"id"`
 	Twentyfourseven bool  `db:"twentyfourseven" json:"twentyfourseven"`
@@ -919,6 +979,26 @@ type ParkingRestriction struct {
 	ID          int64  `db:"id" json:"id"`
 	Text        string `db:"text" json:"text"`
 	Description string `db:"description" json:"description"`
+}
+
+type Party struct {
+	ID                       int64  `db:"id" json:"id"`
+	CredentialID             int64  `db:"credential_id" json:"credentialID"`
+	CountryCode              string `db:"country_code" json:"countryCode"`
+	PartyID                  string `db:"party_id" json:"partyID"`
+	IsIntermediateCdrCapable bool   `db:"is_intermediate_cdr_capable" json:"isIntermediateCdrCapable"`
+	PublishLocation          bool   `db:"publish_location" json:"publishLocation"`
+	PublishNullTariff        bool   `db:"publish_null_tariff" json:"publishNullTariff"`
+}
+
+type PendingNotification struct {
+	ID               int64          `db:"id" json:"id"`
+	UserID           int64          `db:"user_id" json:"userID"`
+	NodeID           int64          `db:"node_id" json:"nodeID"`
+	InvoiceRequestID sql.NullInt64  `db:"invoice_request_id" json:"invoiceRequestID"`
+	DeviceToken      sql.NullString `db:"device_token" json:"deviceToken"`
+	Type             string         `db:"type" json:"type"`
+	SendDate         time.Time      `db:"send_date" json:"sendDate"`
 }
 
 type PriceComponent struct {
@@ -939,6 +1019,15 @@ type PriceComponentRounding struct {
 	Rule        RoundingRule        `db:"rule" json:"rule"`
 }
 
+type Promotion struct {
+	ID          int64        `db:"id" json:"id"`
+	Code        string       `db:"code" json:"code"`
+	Description string       `db:"description" json:"description"`
+	IsActive    bool         `db:"is_active" json:"isActive"`
+	StartDate   sql.NullTime `db:"start_date" json:"startDate"`
+	EndDate     sql.NullTime `db:"end_date" json:"endDate"`
+}
+
 type PsbtFundingState struct {
 	ID         int64     `db:"id" json:"id"`
 	NodeID     int64     `db:"node_id" json:"nodeID"`
@@ -954,6 +1043,14 @@ type PsbtFundingState struct {
 type PsbtFundingStateChannelRequest struct {
 	PsbtFundingStateID int64 `db:"psbt_funding_state_id" json:"psbtFundingStateID"`
 	ChannelRequestID   int64 `db:"channel_request_id" json:"channelRequestID"`
+}
+
+type Referral struct {
+	ID          int64     `db:"id" json:"id"`
+	PromotionID int64     `db:"promotion_id" json:"promotionID"`
+	UserID      int64     `db:"user_id" json:"userID"`
+	IpAddress   string    `db:"ip_address" json:"ipAddress"`
+	LastUpdated time.Time `db:"last_updated" json:"lastUpdated"`
 }
 
 type RegularHour struct {
@@ -989,27 +1086,29 @@ type RoutingEvent struct {
 }
 
 type Session struct {
-	ID              int64             `db:"id" json:"id"`
-	Uid             string            `db:"uid" json:"uid"`
-	CredentialID    int64             `db:"credential_id" json:"credentialID"`
-	CountryCode     sql.NullString    `db:"country_code" json:"countryCode"`
-	PartyID         sql.NullString    `db:"party_id" json:"partyID"`
-	AuthorizationID sql.NullString    `db:"authorization_id" json:"authorizationID"`
-	StartDatetime   time.Time         `db:"start_datetime" json:"startDatetime"`
-	EndDatetime     sql.NullTime      `db:"end_datetime" json:"endDatetime"`
-	Kwh             float64           `db:"kwh" json:"kwh"`
-	AuthID          string            `db:"auth_id" json:"authID"`
-	AuthMethod      AuthMethodType    `db:"auth_method" json:"authMethod"`
-	UserID          int64             `db:"user_id" json:"userID"`
-	TokenID         int64             `db:"token_id" json:"tokenID"`
-	LocationID      int64             `db:"location_id" json:"locationID"`
-	EvseID          int64             `db:"evse_id" json:"evseID"`
-	ConnectorID     int64             `db:"connector_id" json:"connectorID"`
-	MeterID         sql.NullString    `db:"meter_id" json:"meterID"`
-	Currency        string            `db:"currency" json:"currency"`
-	TotalCost       sql.NullFloat64   `db:"total_cost" json:"totalCost"`
-	Status          SessionStatusType `db:"status" json:"status"`
-	LastUpdated     time.Time         `db:"last_updated" json:"lastUpdated"`
+	ID               int64             `db:"id" json:"id"`
+	Uid              string            `db:"uid" json:"uid"`
+	CredentialID     int64             `db:"credential_id" json:"credentialID"`
+	CountryCode      sql.NullString    `db:"country_code" json:"countryCode"`
+	PartyID          sql.NullString    `db:"party_id" json:"partyID"`
+	AuthorizationID  sql.NullString    `db:"authorization_id" json:"authorizationID"`
+	StartDatetime    time.Time         `db:"start_datetime" json:"startDatetime"`
+	EndDatetime      sql.NullTime      `db:"end_datetime" json:"endDatetime"`
+	Kwh              float64           `db:"kwh" json:"kwh"`
+	AuthID           string            `db:"auth_id" json:"authID"`
+	AuthMethod       AuthMethodType    `db:"auth_method" json:"authMethod"`
+	UserID           int64             `db:"user_id" json:"userID"`
+	TokenID          int64             `db:"token_id" json:"tokenID"`
+	LocationID       int64             `db:"location_id" json:"locationID"`
+	EvseID           int64             `db:"evse_id" json:"evseID"`
+	ConnectorID      int64             `db:"connector_id" json:"connectorID"`
+	MeterID          sql.NullString    `db:"meter_id" json:"meterID"`
+	Currency         string            `db:"currency" json:"currency"`
+	TotalCost        sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status           SessionStatusType `db:"status" json:"status"`
+	LastUpdated      time.Time         `db:"last_updated" json:"lastUpdated"`
+	InvoiceRequestID sql.NullInt64     `db:"invoice_request_id" json:"invoiceRequestID"`
+	IsFlagged        bool              `db:"is_flagged" json:"isFlagged"`
 }
 
 type SessionChargingPeriod struct {
@@ -1024,8 +1123,8 @@ type SessionInvoice struct {
 	Currency         string    `db:"currency" json:"currency"`
 	CurrencyRate     int64     `db:"currency_rate" json:"currencyRate"`
 	CurrencyRateMsat int64     `db:"currency_rate_msat" json:"currencyRateMsat"`
-	AmountFiat       float64   `db:"amount_fiat" json:"amountFiat"`
-	AmountMsat       int64     `db:"amount_msat" json:"amountMsat"`
+	PriceFiat        float64   `db:"price_fiat" json:"priceFiat"`
+	PriceMsat        int64     `db:"price_msat" json:"priceMsat"`
 	CommissionFiat   float64   `db:"commission_fiat" json:"commissionFiat"`
 	CommissionMsat   int64     `db:"commission_msat" json:"commissionMsat"`
 	TaxFiat          float64   `db:"tax_fiat" json:"taxFiat"`
@@ -1034,6 +1133,23 @@ type SessionInvoice struct {
 	IsSettled        bool      `db:"is_settled" json:"isSettled"`
 	IsExpired        bool      `db:"is_expired" json:"isExpired"`
 	LastUpdated      time.Time `db:"last_updated" json:"lastUpdated"`
+	TotalFiat        float64   `db:"total_fiat" json:"totalFiat"`
+	TotalMsat        int64     `db:"total_msat" json:"totalMsat"`
+	EstimatedEnergy  float64   `db:"estimated_energy" json:"estimatedEnergy"`
+	EstimatedTime    float64   `db:"estimated_time" json:"estimatedTime"`
+	MeteredEnergy    float64   `db:"metered_energy" json:"meteredEnergy"`
+	MeteredTime      float64   `db:"metered_time" json:"meteredTime"`
+	Signature        string    `db:"signature" json:"signature"`
+}
+
+type SessionUpdate struct {
+	ID          int64             `db:"id" json:"id"`
+	SessionID   int64             `db:"session_id" json:"sessionID"`
+	UserID      int64             `db:"user_id" json:"userID"`
+	Kwh         float64           `db:"kwh" json:"kwh"`
+	TotalCost   sql.NullFloat64   `db:"total_cost" json:"totalCost"`
+	Status      SessionStatusType `db:"status" json:"status"`
+	LastUpdated time.Time         `db:"last_updated" json:"lastUpdated"`
 }
 
 type StatusSchedule struct {
@@ -1098,6 +1214,7 @@ type TokenAuthorization struct {
 	CountryCode     sql.NullString `db:"country_code" json:"countryCode"`
 	PartyID         sql.NullString `db:"party_id" json:"partyID"`
 	LocationID      sql.NullString `db:"location_id" json:"locationID"`
+	Authorized      bool           `db:"authorized" json:"authorized"`
 }
 
 type TokenAuthorizationConnector struct {
@@ -1111,15 +1228,21 @@ type TokenAuthorizationEvse struct {
 }
 
 type User struct {
-	ID                int64         `db:"id" json:"id"`
-	LinkingPubkey     string        `db:"linking_pubkey" json:"linkingPubkey"`
-	Pubkey            string        `db:"pubkey" json:"pubkey"`
-	DeviceToken       string        `db:"device_token" json:"deviceToken"`
-	NodeID            sql.NullInt64 `db:"node_id" json:"nodeID"`
-	CommissionPercent float64       `db:"commission_percent" json:"commissionPercent"`
-	IsAdmin           bool          `db:"is_admin" json:"isAdmin"`
-	IsRestricted      bool          `db:"is_restricted" json:"isRestricted"`
-	ReferrerID        sql.NullInt64 `db:"referrer_id" json:"referrerID"`
+	ID                int64          `db:"id" json:"id"`
+	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
+	Pubkey            string         `db:"pubkey" json:"pubkey"`
+	DeviceToken       sql.NullString `db:"device_token" json:"deviceToken"`
+	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
+	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
+	IsAdmin           bool           `db:"is_admin" json:"isAdmin"`
+	IsRestricted      bool           `db:"is_restricted" json:"isRestricted"`
+	CircuitUserID     sql.NullInt64  `db:"circuit_user_id" json:"circuitUserID"`
+	LastActiveDate    sql.NullTime   `db:"last_active_date" json:"lastActiveDate"`
+	ReferralCode      sql.NullString `db:"referral_code" json:"referralCode"`
+	Name              sql.NullString `db:"name" json:"name"`
+	Address           sql.NullString `db:"address" json:"address"`
+	PostalCode        sql.NullString `db:"postal_code" json:"postalCode"`
+	City              sql.NullString `db:"city" json:"city"`
 }
 
 type Version struct {

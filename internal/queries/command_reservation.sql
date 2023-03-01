@@ -4,8 +4,9 @@ INSERT INTO command_reservations (
     token_id,
     expiry_date,
     location_id,
-    evse_uid
-  ) VALUES ($1, $2, $3, $4, $5)
+    evse_uid,
+    last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6)
   RETURNING *;
 
 -- name: GetCommandReservation :one
@@ -16,7 +17,8 @@ SELECT * FROM command_reservations
 UPDATE command_reservations SET (
     status,
     expiry_date,
-    evse_uid
-  ) = ($2, $3, $4)
+    evse_uid,
+    last_updated
+  ) = ($2, $3, $4, $5)
   WHERE id = $1
   RETURNING *;

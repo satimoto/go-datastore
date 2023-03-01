@@ -17,7 +17,9 @@ type CommandRepository interface {
 	GetCommandUnlock(ctx context.Context, id int64) (db.CommandUnlock, error)
 	UpdateCommandReservation(ctx context.Context, arg db.UpdateCommandReservationParams) (db.CommandReservation, error)
 	UpdateCommandStart(ctx context.Context, arg db.UpdateCommandStartParams) (db.CommandStart, error)
+	UpdateCommandStartByAuthorizationID(ctx context.Context, arg db.UpdateCommandStartByAuthorizationIDParams) (db.CommandStart, error)
 	UpdateCommandStop(ctx context.Context, arg db.UpdateCommandStopParams) (db.CommandStop, error)
+	UpdateCommandStopBySessionID(ctx context.Context, arg db.UpdateCommandStopBySessionIDParams) (db.CommandStop, error)
 	UpdateCommandUnlock(ctx context.Context, arg db.UpdateCommandUnlockParams) (db.CommandUnlock, error)
 }
 
