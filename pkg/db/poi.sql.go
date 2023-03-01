@@ -108,13 +108,14 @@ func (q *Queries) DeletePoiByUid(ctx context.Context, uid string) error {
 	return err
 }
 
-const getPoi = `-- name: GetPoi :one
+const getPoiByLastUpdated = `-- name: GetPoiByLastUpdated :one
 SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated FROM pois
-  WHERE id = $1
+  ORDER BY last_updated DESC
+  LIMIT 1
 `
 
-func (q *Queries) GetPoi(ctx context.Context, id int64) (Poi, error) {
-	row := q.db.QueryRowContext(ctx, getPoi, id)
+func (q *Queries) GetPoiByLastUpdated(ctx context.Context) (Poi, error) {
+	row := q.db.QueryRowContext(ctx, getPoiByLastUpdated)
 	var i Poi
 	err := row.Scan(
 		&i.ID,
@@ -139,14 +140,13 @@ func (q *Queries) GetPoi(ctx context.Context, id int64) (Poi, error) {
 	return i, err
 }
 
-const getPoiByLastUpdated = `-- name: GetPoiByLastUpdated :one
+const getPoiByUid = `-- name: GetPoiByUid :one
 SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated FROM pois
-  ORDER BY last_updated DESC
-  LIMIT 1
+  WHERE uid = $1
 `
 
-func (q *Queries) GetPoiByLastUpdated(ctx context.Context) (Poi, error) {
-	row := q.db.QueryRowContext(ctx, getPoiByLastUpdated)
+func (q *Queries) GetPoiByUid(ctx context.Context, uid string) (Poi, error) {
+	row := q.db.QueryRowContext(ctx, getPoiByUid, uid)
 	var i Poi
 	err := row.Scan(
 		&i.ID,

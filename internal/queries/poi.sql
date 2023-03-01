@@ -24,9 +24,9 @@ INSERT INTO pois (
 DELETE FROM pois
   WHERE uid = $1;
 
--- name: GetPoi :one
+-- name: GetPoiByUid :one
 SELECT * FROM pois
-  WHERE id = $1;
+  WHERE uid = $1;
 
 -- name: GetPoiByLastUpdated :one
 SELECT * FROM pois
