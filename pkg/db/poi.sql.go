@@ -26,12 +26,13 @@ INSERT INTO pois (
     payment_on_chain,
     payment_ln,
     payment_ln_tap,
+    payment_uri,
     opening_times,
     phone,
     website,
     last_updated
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-  RETURNING id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+  RETURNING id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated, payment_uri
 `
 
 type CreatePoiParams struct {
@@ -48,6 +49,7 @@ type CreatePoiParams struct {
 	PaymentOnChain bool              `db:"payment_on_chain" json:"paymentOnChain"`
 	PaymentLn      bool              `db:"payment_ln" json:"paymentLn"`
 	PaymentLnTap   bool              `db:"payment_ln_tap" json:"paymentLnTap"`
+	PaymentUri     sql.NullString    `db:"payment_uri" json:"paymentUri"`
 	OpeningTimes   sql.NullString    `db:"opening_times" json:"openingTimes"`
 	Phone          sql.NullString    `db:"phone" json:"phone"`
 	Website        sql.NullString    `db:"website" json:"website"`
@@ -69,6 +71,7 @@ func (q *Queries) CreatePoi(ctx context.Context, arg CreatePoiParams) (Poi, erro
 		arg.PaymentOnChain,
 		arg.PaymentLn,
 		arg.PaymentLnTap,
+		arg.PaymentUri,
 		arg.OpeningTimes,
 		arg.Phone,
 		arg.Website,
@@ -94,6 +97,7 @@ func (q *Queries) CreatePoi(ctx context.Context, arg CreatePoiParams) (Poi, erro
 		&i.Phone,
 		&i.Website,
 		&i.LastUpdated,
+		&i.PaymentUri,
 	)
 	return i, err
 }
@@ -109,7 +113,7 @@ func (q *Queries) DeletePoiByUid(ctx context.Context, uid string) error {
 }
 
 const getPoiByLastUpdated = `-- name: GetPoiByLastUpdated :one
-SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated FROM pois
+SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated, payment_uri FROM pois
   ORDER BY last_updated DESC
   LIMIT 1
 `
@@ -136,12 +140,13 @@ func (q *Queries) GetPoiByLastUpdated(ctx context.Context) (Poi, error) {
 		&i.Phone,
 		&i.Website,
 		&i.LastUpdated,
+		&i.PaymentUri,
 	)
 	return i, err
 }
 
 const getPoiByUid = `-- name: GetPoiByUid :one
-SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated FROM pois
+SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated, payment_uri FROM pois
   WHERE uid = $1
 `
 
@@ -167,12 +172,13 @@ func (q *Queries) GetPoiByUid(ctx context.Context, uid string) (Poi, error) {
 		&i.Phone,
 		&i.Website,
 		&i.LastUpdated,
+		&i.PaymentUri,
 	)
 	return i, err
 }
 
 const listPoisByGeom = `-- name: ListPoisByGeom :many
-SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated FROM pois
+SELECT id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated, payment_uri FROM pois
   WHERE ST_Intersects(geom, ST_MakeEnvelope($1::FLOAT, $2::FLOAT, $3::FLOAT, $4::FLOAT, 4326))
   LIMIT 100
 `
@@ -217,6 +223,7 @@ func (q *Queries) ListPoisByGeom(ctx context.Context, arg ListPoisByGeomParams) 
 			&i.Phone,
 			&i.Website,
 			&i.LastUpdated,
+			&i.PaymentUri,
 		); err != nil {
 			return nil, err
 		}
@@ -244,13 +251,14 @@ UPDATE pois SET (
     payment_on_chain,
     payment_ln,
     payment_ln_tap,
+    payment_uri,
     opening_times,
     phone,
     website,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
   WHERE uid = $1
-  RETURNING id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated
+  RETURNING id, uid, source, name, geom, description, address, city, postal_code, tag_key, tag_value, payment_on_chain, payment_ln, payment_ln_tap, opening_times, phone, website, last_updated, payment_uri
 `
 
 type UpdatePoiByUidParams struct {
@@ -266,6 +274,7 @@ type UpdatePoiByUidParams struct {
 	PaymentOnChain bool              `db:"payment_on_chain" json:"paymentOnChain"`
 	PaymentLn      bool              `db:"payment_ln" json:"paymentLn"`
 	PaymentLnTap   bool              `db:"payment_ln_tap" json:"paymentLnTap"`
+	PaymentUri     sql.NullString    `db:"payment_uri" json:"paymentUri"`
 	OpeningTimes   sql.NullString    `db:"opening_times" json:"openingTimes"`
 	Phone          sql.NullString    `db:"phone" json:"phone"`
 	Website        sql.NullString    `db:"website" json:"website"`
@@ -286,6 +295,7 @@ func (q *Queries) UpdatePoiByUid(ctx context.Context, arg UpdatePoiByUidParams) 
 		arg.PaymentOnChain,
 		arg.PaymentLn,
 		arg.PaymentLnTap,
+		arg.PaymentUri,
 		arg.OpeningTimes,
 		arg.Phone,
 		arg.Website,
@@ -311,6 +321,7 @@ func (q *Queries) UpdatePoiByUid(ctx context.Context, arg UpdatePoiByUidParams) 
 		&i.Phone,
 		&i.Website,
 		&i.LastUpdated,
+		&i.PaymentUri,
 	)
 	return i, err
 }
