@@ -1020,6 +1020,7 @@ type Poi struct {
 	Phone          sql.NullString    `db:"phone" json:"phone"`
 	Website        sql.NullString    `db:"website" json:"website"`
 	LastUpdated    time.Time         `db:"last_updated" json:"lastUpdated"`
+	PaymentUri     sql.NullString    `db:"payment_uri" json:"paymentUri"`
 }
 
 type PoiTag struct {

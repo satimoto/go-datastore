@@ -18,6 +18,7 @@ func NewUpdatePoiByUidParams(poi db.Poi) db.UpdatePoiByUidParams {
 		PaymentOnChain: poi.PaymentOnChain,
 		PaymentLn:      poi.PaymentLn,
 		PaymentLnTap:   poi.PaymentLnTap,
+		PaymentUri:     poi.PaymentUri,
 		OpeningTimes:   poi.OpeningTimes,
 		Phone:          poi.Phone,
 		Website:        poi.Website,
