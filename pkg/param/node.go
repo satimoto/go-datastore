@@ -6,7 +6,7 @@ func NewUpdateNodeParams(node db.Node) db.UpdateNodeParams {
 	return db.UpdateNodeParams{
 		ID:         node.ID,
 		NodeAddr:   node.NodeAddr,
-		LspAddr:    node.LspAddr,
+		RpcAddr:    node.RpcAddr,
 		Alias:      node.Alias,
 		Color:      node.Color,
 		CommitHash: node.CommitHash,
@@ -14,5 +14,6 @@ func NewUpdateNodeParams(node db.Node) db.UpdateNodeParams {
 		Channels:   node.Channels,
 		Peers:      node.Peers,
 		IsActive:   node.IsActive,
+		IsLsp:      node.IsLsp,
 	}
 }
