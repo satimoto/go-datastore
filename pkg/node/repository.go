@@ -16,7 +16,7 @@ type NodeRepository interface {
 	GetNodeByUserID(ctx context.Context, id int64) (db.Node, error)
 	GetNodeScid(ctx context.Context, nodeID int64) (db.NodeScid, error)
 	ListNodes(ctx context.Context) ([]db.Node, error)
-	ListActiveNodes(ctx context.Context) ([]db.Node, error)
+	ListActiveNodes(ctx context.Context, isLsp bool) ([]db.Node, error)
 	UpdateNode(ctx context.Context, arg db.UpdateNodeParams) (db.Node, error)
 }
 
