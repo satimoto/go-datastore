@@ -32,7 +32,7 @@ INSERT INTO sessions (
     status,
     last_updated
   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
-  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed
 `
 
 type CreateSessionParams struct {
@@ -106,12 +106,13 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 		&i.LastUpdated,
 		&i.InvoiceRequestID,
 		&i.IsFlagged,
+		&i.IsConfirmed,
 	)
 	return i, err
 }
 
 const getSession = `-- name: GetSession :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
   WHERE id = $1
 `
 
@@ -142,12 +143,13 @@ func (q *Queries) GetSession(ctx context.Context, id int64) (Session, error) {
 		&i.LastUpdated,
 		&i.InvoiceRequestID,
 		&i.IsFlagged,
+		&i.IsConfirmed,
 	)
 	return i, err
 }
 
 const getSessionByAuthorizationID = `-- name: GetSessionByAuthorizationID :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
   WHERE authorization_id = $1::TEXT
   LIMIT 1
 `
@@ -179,12 +181,13 @@ func (q *Queries) GetSessionByAuthorizationID(ctx context.Context, authorization
 		&i.LastUpdated,
 		&i.InvoiceRequestID,
 		&i.IsFlagged,
+		&i.IsConfirmed,
 	)
 	return i, err
 }
 
 const getSessionByLastUpdated = `-- name: GetSessionByLastUpdated :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
   WHERE ($1::BIGINT = -1 OR $1::BIGINT = credential_id) AND
     ($2::TEXT = '' OR $2::TEXT = country_code) AND
     ($3::TEXT = '' OR $3::TEXT = party_id)
@@ -225,12 +228,13 @@ func (q *Queries) GetSessionByLastUpdated(ctx context.Context, arg GetSessionByL
 		&i.LastUpdated,
 		&i.InvoiceRequestID,
 		&i.IsFlagged,
+		&i.IsConfirmed,
 	)
 	return i, err
 }
 
 const getSessionByUid = `-- name: GetSessionByUid :one
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
   WHERE uid = $1
 `
 
@@ -261,12 +265,13 @@ func (q *Queries) GetSessionByUid(ctx context.Context, uid string) (Session, err
 		&i.LastUpdated,
 		&i.InvoiceRequestID,
 		&i.IsFlagged,
+		&i.IsConfirmed,
 	)
 	return i, err
 }
 
 const listInProgressSessionsByNodeID = `-- name: ListInProgressSessionsByNodeID :many
-SELECT s.id, s.uid, s.credential_id, s.country_code, s.party_id, s.authorization_id, s.start_datetime, s.end_datetime, s.kwh, s.auth_id, s.auth_method, s.user_id, s.token_id, s.location_id, s.evse_id, s.connector_id, s.meter_id, s.currency, s.total_cost, s.status, s.last_updated, s.invoice_request_id, s.is_flagged FROM sessions s
+SELECT s.id, s.uid, s.credential_id, s.country_code, s.party_id, s.authorization_id, s.start_datetime, s.end_datetime, s.kwh, s.auth_id, s.auth_method, s.user_id, s.token_id, s.location_id, s.evse_id, s.connector_id, s.meter_id, s.currency, s.total_cost, s.status, s.last_updated, s.invoice_request_id, s.is_flagged, s.is_confirmed FROM sessions s
   INNER JOIN users u ON u.id = s.user_id
   WHERE u.node_id = $1 AND s.status IN ('PENDING', 'ACTIVE')
   ORDER BY s.id
@@ -305,6 +310,7 @@ func (q *Queries) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql
 			&i.LastUpdated,
 			&i.InvoiceRequestID,
 			&i.IsFlagged,
+			&i.IsConfirmed,
 		); err != nil {
 			return nil, err
 		}
@@ -320,7 +326,7 @@ func (q *Queries) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql
 }
 
 const listInProgressSessionsByUserID = `-- name: ListInProgressSessionsByUserID :many
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
   WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
   ORDER BY id DESC
 `
@@ -358,6 +364,7 @@ func (q *Queries) ListInProgressSessionsByUserID(ctx context.Context, userID int
 			&i.LastUpdated,
 			&i.InvoiceRequestID,
 			&i.IsFlagged,
+			&i.IsConfirmed,
 		); err != nil {
 			return nil, err
 		}
@@ -373,7 +380,7 @@ func (q *Queries) ListInProgressSessionsByUserID(ctx context.Context, userID int
 }
 
 const listInvoicedSessionsByUserID = `-- name: ListInvoicedSessionsByUserID :many
-SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged FROM sessions
+SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
   WHERE user_id = $1 AND status = 'INVOICED'
   ORDER BY id DESC
 `
@@ -411,6 +418,7 @@ func (q *Queries) ListInvoicedSessionsByUserID(ctx context.Context, userID int64
 			&i.LastUpdated,
 			&i.InvoiceRequestID,
 			&i.IsFlagged,
+			&i.IsConfirmed,
 		); err != nil {
 			return nil, err
 		}
@@ -437,11 +445,12 @@ UPDATE sessions SET (
     total_cost,
     status,
     invoice_request_id,
+    is_confirmed,
     is_flagged,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
   WHERE uid = $1
-  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged
+  RETURNING id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed
 `
 
 type UpdateSessionByUidParams struct {
@@ -456,6 +465,7 @@ type UpdateSessionByUidParams struct {
 	TotalCost        sql.NullFloat64   `db:"total_cost" json:"totalCost"`
 	Status           SessionStatusType `db:"status" json:"status"`
 	InvoiceRequestID sql.NullInt64     `db:"invoice_request_id" json:"invoiceRequestID"`
+	IsConfirmed      bool              `db:"is_confirmed" json:"isConfirmed"`
 	IsFlagged        bool              `db:"is_flagged" json:"isFlagged"`
 	LastUpdated      time.Time         `db:"last_updated" json:"lastUpdated"`
 }
@@ -473,6 +483,7 @@ func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUid
 		arg.TotalCost,
 		arg.Status,
 		arg.InvoiceRequestID,
+		arg.IsConfirmed,
 		arg.IsFlagged,
 		arg.LastUpdated,
 	)
@@ -501,6 +512,7 @@ func (q *Queries) UpdateSessionByUid(ctx context.Context, arg UpdateSessionByUid
 		&i.LastUpdated,
 		&i.InvoiceRequestID,
 		&i.IsFlagged,
+		&i.IsConfirmed,
 	)
 	return i, err
 }
