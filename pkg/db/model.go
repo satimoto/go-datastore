@@ -901,6 +901,7 @@ type InvoiceRequest struct {
 	TaxFiat        sql.NullFloat64 `db:"tax_fiat" json:"taxFiat"`
 	TaxMsat        sql.NullInt64   `db:"tax_msat" json:"taxMsat"`
 	ReleaseDate    sql.NullTime    `db:"release_date" json:"releaseDate"`
+	SessionID      sql.NullInt64   `db:"session_id" json:"sessionID"`
 }
 
 type Location struct {
@@ -1137,6 +1138,7 @@ type Session struct {
 	LastUpdated      time.Time         `db:"last_updated" json:"lastUpdated"`
 	InvoiceRequestID sql.NullInt64     `db:"invoice_request_id" json:"invoiceRequestID"`
 	IsFlagged        bool              `db:"is_flagged" json:"isFlagged"`
+	IsConfirmed      bool              `db:"is_confirmed" json:"isConfirmed"`
 }
 
 type SessionChargingPeriod struct {
