@@ -17,5 +17,8 @@ func NewUpdateUserParams(user db.User) db.UpdateUserParams {
 		Address:           user.Address,
 		PostalCode:        user.PostalCode,
 		City:              user.City,
+		BatteryCapacity:   user.BatteryCapacity,
+		BatteryPowerAc:    user.BatteryPowerAc,
+		BatteryPowerDc:    user.BatteryPowerDc,
 	}
 }
