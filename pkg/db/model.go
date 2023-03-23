@@ -1264,21 +1264,24 @@ type TokenAuthorizationEvse struct {
 }
 
 type User struct {
-	ID                int64          `db:"id" json:"id"`
-	LinkingPubkey     string         `db:"linking_pubkey" json:"linkingPubkey"`
-	Pubkey            string         `db:"pubkey" json:"pubkey"`
-	DeviceToken       sql.NullString `db:"device_token" json:"deviceToken"`
-	NodeID            sql.NullInt64  `db:"node_id" json:"nodeID"`
-	CommissionPercent float64        `db:"commission_percent" json:"commissionPercent"`
-	IsAdmin           bool           `db:"is_admin" json:"isAdmin"`
-	IsRestricted      bool           `db:"is_restricted" json:"isRestricted"`
-	CircuitUserID     sql.NullInt64  `db:"circuit_user_id" json:"circuitUserID"`
-	LastActiveDate    sql.NullTime   `db:"last_active_date" json:"lastActiveDate"`
-	ReferralCode      sql.NullString `db:"referral_code" json:"referralCode"`
-	Name              sql.NullString `db:"name" json:"name"`
-	Address           sql.NullString `db:"address" json:"address"`
-	PostalCode        sql.NullString `db:"postal_code" json:"postalCode"`
-	City              sql.NullString `db:"city" json:"city"`
+	ID                int64           `db:"id" json:"id"`
+	LinkingPubkey     string          `db:"linking_pubkey" json:"linkingPubkey"`
+	Pubkey            string          `db:"pubkey" json:"pubkey"`
+	DeviceToken       sql.NullString  `db:"device_token" json:"deviceToken"`
+	NodeID            sql.NullInt64   `db:"node_id" json:"nodeID"`
+	CommissionPercent float64         `db:"commission_percent" json:"commissionPercent"`
+	IsAdmin           bool            `db:"is_admin" json:"isAdmin"`
+	IsRestricted      bool            `db:"is_restricted" json:"isRestricted"`
+	CircuitUserID     sql.NullInt64   `db:"circuit_user_id" json:"circuitUserID"`
+	LastActiveDate    sql.NullTime    `db:"last_active_date" json:"lastActiveDate"`
+	ReferralCode      sql.NullString  `db:"referral_code" json:"referralCode"`
+	Name              sql.NullString  `db:"name" json:"name"`
+	Address           sql.NullString  `db:"address" json:"address"`
+	PostalCode        sql.NullString  `db:"postal_code" json:"postalCode"`
+	City              sql.NullString  `db:"city" json:"city"`
+	BatteryCapacity   sql.NullFloat64 `db:"battery_capacity" json:"batteryCapacity"`
+	BatteryPowerAc    sql.NullFloat64 `db:"battery_power_ac" json:"batteryPowerAc"`
+	BatteryPowerDc    sql.NullFloat64 `db:"battery_power_dc" json:"batteryPowerDc"`
 }
 
 type Version struct {

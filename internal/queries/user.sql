@@ -53,8 +53,11 @@ UPDATE users SET (
     name,
     address,
     postal_code,
-    city
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+    city,
+    battery_capacity,
+    battery_power_ac,
+    battery_power_dc
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
   WHERE id = $1
   RETURNING *;
 
