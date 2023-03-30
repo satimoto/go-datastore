@@ -5,6 +5,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -236,6 +237,67 @@ type ListSessionInvoicesParams struct {
 
 func (q *Queries) ListSessionInvoices(ctx context.Context, arg ListSessionInvoicesParams) ([]SessionInvoice, error) {
 	rows, err := q.db.QueryContext(ctx, listSessionInvoices, arg.IsExpired, arg.IsSettled)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SessionInvoice
+	for rows.Next() {
+		var i SessionInvoice
+		if err := rows.Scan(
+			&i.ID,
+			&i.SessionID,
+			&i.UserID,
+			&i.Currency,
+			&i.CurrencyRate,
+			&i.CurrencyRateMsat,
+			&i.PriceFiat,
+			&i.PriceMsat,
+			&i.CommissionFiat,
+			&i.CommissionMsat,
+			&i.TaxFiat,
+			&i.TaxMsat,
+			&i.PaymentRequest,
+			&i.IsSettled,
+			&i.IsExpired,
+			&i.LastUpdated,
+			&i.TotalFiat,
+			&i.TotalMsat,
+			&i.EstimatedEnergy,
+			&i.EstimatedTime,
+			&i.MeteredEnergy,
+			&i.MeteredTime,
+			&i.Signature,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listSessionInvoicesByNodeID = `-- name: ListSessionInvoicesByNodeID :many
+SELECT si.id, si.session_id, si.user_id, si.currency, si.currency_rate, si.currency_rate_msat, si.price_fiat, si.price_msat, si.commission_fiat, si.commission_msat, si.tax_fiat, si.tax_msat, si.payment_request, si.is_settled, si.is_expired, si.last_updated, si.total_fiat, si.total_msat, si.estimated_energy, si.estimated_time, si.metered_energy, si.metered_time, si.signature FROM session_invoices si
+  INNER JOIN sessions s ON s.id = si.session_id
+  INNER JOIN users u ON u.id = s.user_id
+  WHERE u.node_id = $1 AND si.is_settled = $2 AND si.is_expired = $3
+  ORDER BY si.id
+`
+
+type ListSessionInvoicesByNodeIDParams struct {
+	NodeID    sql.NullInt64 `db:"node_id" json:"nodeID"`
+	IsSettled bool          `db:"is_settled" json:"isSettled"`
+	IsExpired bool          `db:"is_expired" json:"isExpired"`
+}
+
+func (q *Queries) ListSessionInvoicesByNodeID(ctx context.Context, arg ListSessionInvoicesByNodeIDParams) ([]SessionInvoice, error) {
+	rows, err := q.db.QueryContext(ctx, listSessionInvoicesByNodeID, arg.NodeID, arg.IsSettled, arg.IsExpired)
 	if err != nil {
 		return nil, err
 	}
