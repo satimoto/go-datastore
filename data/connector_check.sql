@@ -15,6 +15,11 @@ SELECT l.country, COUNT(l.country) AS cc FROM locations l
   GROUP BY country
   ORDER BY cc DESC;
 
+-- Count published by country
+SELECT COUNT(*) AS cc FROM locations l
+  WHERE l.is_published
+  ORDER BY cc DESC;
+
 -- Added in the last week
 SELECT l.country, l.uid, l.country_code, l.party_id, l.is_published, l.added_date, c.* FROM locations l
   LEFT JOIN evses e ON e.location_id = l.id
