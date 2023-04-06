@@ -52,7 +52,7 @@ SELECT s.* FROM sessions s
 
 -- name: ListInProgressSessionsByUserID :many
 SELECT * FROM sessions
-  WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
+  WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE', 'ENDING')
   ORDER BY id DESC;
 
 -- name: ListInvoicedSessionsByUserID :many

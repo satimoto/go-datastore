@@ -327,7 +327,7 @@ func (q *Queries) ListInProgressSessionsByNodeID(ctx context.Context, nodeID sql
 
 const listInProgressSessionsByUserID = `-- name: ListInProgressSessionsByUserID :many
 SELECT id, uid, credential_id, country_code, party_id, authorization_id, start_datetime, end_datetime, kwh, auth_id, auth_method, user_id, token_id, location_id, evse_id, connector_id, meter_id, currency, total_cost, status, last_updated, invoice_request_id, is_flagged, is_confirmed FROM sessions
-  WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE')
+  WHERE user_id = $1 AND status IN ('PENDING', 'ACTIVE', 'ENDING')
   ORDER BY id DESC
 `
 
