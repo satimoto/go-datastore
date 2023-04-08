@@ -8,6 +8,7 @@ import (
 
 type CdrRepository interface {
 	CountCdrsByLocationID(ctx context.Context, locationID int64) (int64, error)
+	CountCdrsByUserID(ctx context.Context, userID int64) (int64, error)
 	CreateCdr(ctx context.Context, arg db.CreateCdrParams) (db.Cdr, error)
 	DeleteCdrChargingPeriods(ctx context.Context, cdrID int64) error
 	GetCdrByAuthorizationID(ctx context.Context, authorizationID string) (db.Cdr, error)
