@@ -21,6 +21,18 @@ func (q *Queries) CountCdrsByLocationID(ctx context.Context, locationID int64) (
 	return count, err
 }
 
+const countCdrsByUserID = `-- name: CountCdrsByUserID :one
+SELECT COUNT(*) FROM cdrs
+  WHERE user_id = $1
+`
+
+func (q *Queries) CountCdrsByUserID(ctx context.Context, userID int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countCdrsByUserID, userID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createCdr = `-- name: CreateCdr :one
 INSERT INTO cdrs (
     uid,
