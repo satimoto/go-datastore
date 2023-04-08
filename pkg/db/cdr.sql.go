@@ -9,6 +9,18 @@ import (
 	"time"
 )
 
+const countCdrsByLocationID = `-- name: CountCdrsByLocationID :one
+SELECT COUNT(*) FROM cdrs
+  WHERE location_id = $1
+`
+
+func (q *Queries) CountCdrsByLocationID(ctx context.Context, locationID int64) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countCdrsByLocationID, locationID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createCdr = `-- name: CreateCdr :one
 INSERT INTO cdrs (
     uid,
