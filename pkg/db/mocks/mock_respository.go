@@ -175,6 +175,7 @@ type MockRepository interface {
 	GetUpdateUserMockData() (db.UpdateUserParams, error)
 	GetUpdateUserByPubkeyMockData() (db.UpdateUserByPubkeyParams, error)
 	SetCountCdrsByLocationIDMockData(response CountMockData)
+	SetCountCdrsByUserIDMockData(response CountMockData)
 	SetCountNodeScidsMockData(response CountMockData)
 	SetCountTokensMockData(response CountMockData)
 	SetGetAuthenticationByCodeMockData(response AuthenticationMockData)
@@ -335,6 +336,8 @@ type MockRepository interface {
 }
 
 type MockRepositoryService struct {
+	countCdrsByLocationIDMockData                          []CountMockData
+	countCdrsByUserIDMockData                              []CountMockData
 	countNodeScidsMockData                                 []CountMockData
 	countTokensMockData                                    []CountMockData
 	createAdditionalGeoLocationMockData                    []db.CreateAdditionalGeoLocationParams
@@ -342,7 +345,6 @@ type MockRepositoryService struct {
 	createBusinessDetailMockData                           []db.CreateBusinessDetailParams
 	createCalibrationMockData                              []db.CreateCalibrationParams
 	createCalibrationValueMockData                         []db.CreateCalibrationValueParams
-	countCdrsByLocationIDMockData                          []CountMockData
 	createCdrMockData                                      []db.CreateCdrParams
 	createChannelRequestMockData                           []db.CreateChannelRequestParams
 	createChannelRequestHtlcMockData                       []db.CreateChannelRequestHtlcParams
