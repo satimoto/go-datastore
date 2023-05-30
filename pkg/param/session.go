@@ -8,20 +8,21 @@ import (
 
 func NewUpdateSessionByUidParams(session db.Session) db.UpdateSessionByUidParams {
 	return db.UpdateSessionByUidParams{
-		Uid:              session.Uid,
-		AuthorizationID:  session.AuthorizationID,
-		StartDatetime:    session.StartDatetime,
-		EndDatetime:      session.EndDatetime,
-		Kwh:              session.Kwh,
-		AuthMethod:       session.AuthMethod,
-		MeterID:          session.MeterID,
-		Currency:         session.Currency,
-		TotalCost:        session.TotalCost,
-		Status:           session.Status,
-		InvoiceRequestID: session.InvoiceRequestID,
-		IsConfirmed:      session.IsConfirmed,
-		IsFlagged:        session.IsFlagged,
-		LastUpdated:      session.LastUpdated,
+		Uid:                session.Uid,
+		AuthorizationID:    session.AuthorizationID,
+		StartDatetime:      session.StartDatetime,
+		EndDatetime:        session.EndDatetime,
+		Kwh:                session.Kwh,
+		AuthMethod:         session.AuthMethod,
+		MeterID:            session.MeterID,
+		Currency:           session.Currency,
+		TotalCost:          session.TotalCost,
+		Status:             session.Status,
+		InvoiceRequestID:   session.InvoiceRequestID,
+		IsConfirmedStarted: session.IsConfirmedStarted,
+		IsConfirmedStopped: session.IsConfirmedStopped,
+		IsFlagged:          session.IsFlagged,
+		LastUpdated:        session.LastUpdated,
 	}
 }
 
