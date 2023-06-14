@@ -180,7 +180,7 @@ func (q *Queries) GetTokenByUid(ctx context.Context, uid string) (Token, error) 
 
 const getTokenByUserID = `-- name: GetTokenByUserID :one
 SELECT id, uid, user_id, type, auth_id, visual_number, issuer, allowed, valid, whitelist, language, last_updated FROM tokens
-  WHERE user_id = $1 AND type = $2
+  WHERE user_id = $1 AND type = $2 AND valid = true
   LIMIT 1
 `
 
