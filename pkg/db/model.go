@@ -1257,6 +1257,7 @@ type Credential struct {
 	LastUpdated      time.Time      `db:"last_updated" json:"lastUpdated"`
 	BusinessDetailID int64          `db:"business_detail_id" json:"businessDetailID"`
 	VersionID        sql.NullInt64  `db:"version_id" json:"versionID"`
+	IsAvailable      bool           `db:"is_available" json:"isAvailable"`
 }
 
 type Currency struct {

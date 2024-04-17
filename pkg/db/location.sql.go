@@ -444,15 +444,16 @@ func (q *Queries) ListLocationsByCountry(ctx context.Context, country string) ([
 }
 
 const listLocationsByGeom = `-- name: ListLocationsByGeom :many
-SELECT id, uid, credential_id, country_code, party_id, type, name, address, city, postal_code, country, geom, geo_location_id, available_evses, total_evses, is_remote_capable, is_rfid_capable, operator_id, suboperator_id, owner_id, time_zone, opening_time_id, charging_when_closed, energy_mix_id, last_updated, is_published, added_date, is_intermediate_cdr_capable, is_removed FROM locations
-  WHERE is_published = true AND is_removed = false AND total_evses > 0 AND 
-    ($1::BOOLEAN = true OR is_intermediate_cdr_capable = true) AND 
+SELECT l.id, l.uid, l.credential_id, l.country_code, l.party_id, l.type, l.name, l.address, l.city, l.postal_code, l.country, l.geom, l.geo_location_id, l.available_evses, l.total_evses, l.is_remote_capable, l.is_rfid_capable, l.operator_id, l.suboperator_id, l.owner_id, l.time_zone, l.opening_time_id, l.charging_when_closed, l.energy_mix_id, l.last_updated, l.is_published, l.added_date, l.is_intermediate_cdr_capable, l.is_removed FROM locations l
+  INNER JOIN credentials c ON c.id = l.credential_id
+  WHERE c.is_available = true AND l.is_published = true AND l.is_removed = false AND l.total_evses > 0 AND 
+    ($1::BOOLEAN = true OR l.is_intermediate_cdr_capable = true) AND 
     (
-      ($2::BOOLEAN = true AND is_remote_capable = true) OR 
-      ($3::BOOLEAN = true AND is_rfid_capable = true)
+      ($2::BOOLEAN = true AND l.is_remote_capable = true) OR 
+      ($3::BOOLEAN = true AND l.is_rfid_capable = true)
     ) AND
-    ST_Intersects(geom, ST_MakeEnvelope($4::FLOAT, $5::FLOAT, $6::FLOAT, $7::FLOAT, 4326)) AND
-    ($8::INT = 0 OR last_updated > NOW() - '1 second'::INTERVAL * $8::INT)
+    ST_Intersects(l.geom, ST_MakeEnvelope($4::FLOAT, $5::FLOAT, $6::FLOAT, $7::FLOAT, 4326)) AND
+    ($8::INT = 0 OR l.last_updated > NOW() - '1 second'::INTERVAL * $8::INT)
   LIMIT 500
 `
 
