@@ -63,15 +63,16 @@ SELECT * FROM locations
   WHERE is_published = true AND is_removed = false AND total_evses > 0 AND country = $1;
 
 -- name: ListLocationsByGeom :many
-SELECT * FROM locations
-  WHERE is_published = true AND is_removed = false AND total_evses > 0 AND 
-    (@is_experimental::BOOLEAN = true OR is_intermediate_cdr_capable = true) AND 
+SELECT l.* FROM locations l
+  INNER JOIN credentials c ON c.id = l.credential_id
+  WHERE c.is_available = true AND l.is_published = true AND l.is_removed = false AND l.total_evses > 0 AND 
+    (@is_experimental::BOOLEAN = true OR l.is_intermediate_cdr_capable = true) AND 
     (
-      (@is_remote_capable::BOOLEAN = true AND is_remote_capable = true) OR 
-      (@is_rfid_capable::BOOLEAN = true AND is_rfid_capable = true)
+      (@is_remote_capable::BOOLEAN = true AND l.is_remote_capable = true) OR 
+      (@is_rfid_capable::BOOLEAN = true AND l.is_rfid_capable = true)
     ) AND
-    ST_Intersects(geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
-    (@interval::INT = 0 OR last_updated > NOW() - '1 second'::INTERVAL * @interval::INT)
+    ST_Intersects(l.geom, ST_MakeEnvelope(@x_min::FLOAT, @y_min::FLOAT, @x_max::FLOAT, @y_max::FLOAT, 4326)) AND
+    (@interval::INT = 0 OR l.last_updated > NOW() - '1 second'::INTERVAL * @interval::INT)
   LIMIT 500;
 
 -- name: UpdateLocation :one

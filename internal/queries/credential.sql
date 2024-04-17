@@ -38,9 +38,10 @@ UPDATE credentials SET (
     url, 
     country_code,
     party_id, 
+    is_available,
     is_hub,
     version_id,
     last_updated
-  ) = ($2, $3, $4, $5, $6, $7, $8, $9)
+  ) = ($2, $3, $4, $5, $6, $7, $8, $9, $10)
   WHERE id = $1
   RETURNING *;
