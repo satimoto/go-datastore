@@ -1,5 +1,5 @@
 -- Connector check
-SELECT l.country, l.uid, c.* FROM locations l
+SELECT l.country, l.uid, l.is_published, c.* FROM locations l
   LEFT JOIN evses e ON e.location_id = l.id
   LEFT JOIN connectors c ON c.evse_id = e.id
   WHERE country_code = 'NL' AND party_id = 'CPI';
@@ -13,6 +13,11 @@ SELECT DISTINCT l.country FROM locations l
 SELECT l.country, COUNT(l.country) AS cc FROM locations l
   WHERE l.is_published
   GROUP BY country
+  ORDER BY cc DESC;
+
+-- Count published by country
+SELECT COUNT(*) AS cc FROM locations l
+  WHERE l.is_published
   ORDER BY cc DESC;
 
 -- Added in the last week
@@ -39,13 +44,13 @@ UPDATE locations l SET is_published = true
 SELECT l.country, l.uid, e.status, c.* FROM locations l
   LEFT JOIN evses e ON e.location_id = l.id
   LEFT JOIN connectors c ON c.evse_id = e.id
-  WHERE l.party_id not in ('V51', 'IPK', 'V75', 'TCB') AND e.status != 'REMOVED' AND 
+  WHERE l.party_id not in ('V51', 'IPK', 'V75', 'TCB', 'EVB') AND e.status != 'REMOVED' AND 
     tariff_id is not null AND c.is_published = false;
 
 UPDATE connectors c SET is_published = true, is_removed = false
   FROM evses e, locations l
   WHERE e.location_id = l.id AND c.evse_id = e.id AND 
-    l.party_id not in ('V51', 'IPK', 'V75', 'TCB') AND e.status != 'REMOVED' AND 
+    l.party_id not in ('V51', 'IPK', 'V75', 'TCB', 'EVB') AND e.status != 'REMOVED' AND 
     tariff_id is not null AND c.is_published = false;
 
 
@@ -79,7 +84,7 @@ UPDATE locations l SET is_published = false
 -- Set location to unpublished by parties
 UPDATE locations l SET is_published = false 
   FROM parties p
-  WHERE p.country_code = l.country_code AND p.party_id = l.party_id AND 
+  WHERE l.is_published = true AND p.country_code = l.country_code AND p.party_id = l.party_id AND 
     p.publish_location = false
 
 -- Select per operator location and evse uid

@@ -2,6 +2,7 @@ package invoicerequest
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -11,6 +12,8 @@ type InvoiceRequestRepository interface {
 	DeleteInvoiceRequest(ctx context.Context, id int64) error
 	GetInvoiceRequest(ctx context.Context, id int64) (db.InvoiceRequest, error)
 	GetUnsettledInvoiceRequest(ctx context.Context, arg db.GetUnsettledInvoiceRequestParams) (db.InvoiceRequest, error)
+	ListInvoiceRequestsByPromotionCodeAndSessionID(ctx context.Context, arg db.ListInvoiceRequestsByPromotionCodeAndSessionIDParams) ([]db.InvoiceRequest, error)
+	ListInvoiceRequestsBySessionID(ctx context.Context, sessionID sql.NullInt64) ([]db.InvoiceRequest, error)
 	ListUnsettledInvoiceRequests(ctx context.Context, userID int64) ([]db.InvoiceRequest, error)
 	UpdateInvoiceRequest(ctx context.Context, arg db.UpdateInvoiceRequestParams) (db.InvoiceRequest, error)
 }

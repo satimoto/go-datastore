@@ -1,3 +1,11 @@
+-- name: CountCdrsByLocationID :one
+SELECT COUNT(*) FROM cdrs
+  WHERE location_id = $1;
+
+-- name: CountCdrsByUserID :one
+SELECT COUNT(*) FROM cdrs
+  WHERE user_id = $1;
+
 -- name: CreateCdr :one
 INSERT INTO cdrs (
     uid,

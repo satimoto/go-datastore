@@ -16,6 +16,26 @@ type CdrsMockData struct {
 	Error error
 }
 
+func (r *MockRepositoryService) CountCdrsByLocationID(ctx context.Context, locationID int64) (int64, error) {
+	if len(r.countCdrsByLocationIDMockData) == 0 {
+		return 0, nil
+	}
+
+	response := r.countCdrsByLocationIDMockData[0]
+	r.countCdrsByLocationIDMockData = r.countCdrsByLocationIDMockData[1:]
+	return response.Count, response.Error
+}
+
+func (r *MockRepositoryService) CountCdrsByUserID(ctx context.Context, userID int64) (int64, error) {
+	if len(r.countCdrsByUserIDMockData) == 0 {
+		return 0, nil
+	}
+
+	response := r.countCdrsByUserIDMockData[0]
+	r.countCdrsByUserIDMockData = r.countCdrsByUserIDMockData[1:]
+	return response.Count, response.Error
+}
+
 func (r *MockRepositoryService) CreateCdr(ctx context.Context, arg db.CreateCdrParams) (db.Cdr, error) {
 	r.createCdrMockData = append(r.createCdrMockData, arg)
 	return db.Cdr{
@@ -98,6 +118,14 @@ func (r *MockRepositoryService) GetUpdateCdrIsFlaggedByUidMockData() (db.UpdateC
 	response := r.updateCdrIsFlaggedByUidMockData[0]
 	r.updateCdrIsFlaggedByUidMockData = r.updateCdrIsFlaggedByUidMockData[1:]
 	return response, nil
+}
+
+func (r *MockRepositoryService) SetCountCdrsByLocationIDMockData(response CountMockData) {
+	r.countCdrsByLocationIDMockData = append(r.countCdrsByLocationIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetCountCdrsByUserIDMockData(response CountMockData) {
+	r.countCdrsByUserIDMockData = append(r.countCdrsByUserIDMockData, response)
 }
 
 func (r *MockRepositoryService) SetGetCdrByAuthorizationIDMockData(response CdrMockData) {

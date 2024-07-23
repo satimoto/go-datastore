@@ -1,0 +1,2 @@
+-- Sessions
+ALTER TYPE session_status_type ADD VALUE IF NOT EXISTS 'ENDING' AFTER 'PENDING';

@@ -2,6 +2,7 @@
 INSERT INTO invoice_requests (
     user_id,
     promotion_id,
+    session_id,
     release_date,
     currency,
     memo,
@@ -15,7 +16,7 @@ INSERT INTO invoice_requests (
     total_msat,
     is_settled, 
     payment_request
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
   RETURNING *;
 
 -- name: DeleteInvoiceRequest :exec
@@ -37,6 +38,19 @@ SELECT * FROM invoice_requests
   WHERE user_id = $1 AND is_settled = false AND payment_request IS NULL AND
     (release_date IS NULL OR NOW() > release_date)
   ORDER BY id;
+
+-- name: ListInvoiceRequestsBySessionID :many
+SELECT * FROM invoice_requests
+  WHERE session_id = $1 AND
+    (release_date IS NULL OR NOW() > release_date)
+  ORDER BY id;
+
+-- name: ListInvoiceRequestsByPromotionCodeAndSessionID :many
+SELECT ir.* FROM invoice_requests ir
+  LEFT JOIN promotions p ON p.id = ir.promotion_id
+  WHERE ir.session_id = $1 AND p.code = $2 AND
+    (ir.release_date IS NULL OR NOW() > ir.release_date)
+  ORDER BY ir.id;
 
 -- name: UpdateInvoiceRequest :one
 UPDATE invoice_requests SET (

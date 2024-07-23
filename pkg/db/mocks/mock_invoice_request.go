@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/satimoto/go-datastore/pkg/db"
 )
@@ -44,6 +45,26 @@ func (r *MockRepositoryService) GetUnsettledInvoiceRequest(ctx context.Context, 
 	response := r.getUnsettledInvoiceRequestMockData[0]
 	r.getUnsettledInvoiceRequestMockData = r.getUnsettledInvoiceRequestMockData[1:]
 	return response.InvoiceRequest, response.Error
+}
+
+func (r *MockRepositoryService) ListInvoiceRequestsByPromotionCodeAndSessionID(ctx context.Context, arg db.ListInvoiceRequestsByPromotionCodeAndSessionIDParams) ([]db.InvoiceRequest, error) {
+	if len(r.listInvoiceRequestsByPromotionCodeAndSessionIDMockData) == 0 {
+		return []db.InvoiceRequest{}, nil
+	}
+
+	response := r.listInvoiceRequestsByPromotionCodeAndSessionIDMockData[0]
+	r.listInvoiceRequestsByPromotionCodeAndSessionIDMockData = r.listInvoiceRequestsByPromotionCodeAndSessionIDMockData[1:]
+	return response.InvoiceRequests, response.Error
+}
+
+func (r *MockRepositoryService) ListInvoiceRequestsBySessionID(ctx context.Context, sessionID sql.NullInt64) ([]db.InvoiceRequest, error) {
+	if len(r.listInvoiceRequestsBySessionIDMockData) == 0 {
+		return []db.InvoiceRequest{}, nil
+	}
+
+	response := r.listInvoiceRequestsBySessionIDMockData[0]
+	r.listInvoiceRequestsBySessionIDMockData = r.listInvoiceRequestsBySessionIDMockData[1:]
+	return response.InvoiceRequests, response.Error
 }
 
 func (r *MockRepositoryService) ListUnsettledInvoiceRequests(ctx context.Context, userID int64) ([]db.InvoiceRequest, error) {
@@ -89,7 +110,15 @@ func (r *MockRepositoryService) SetGetUnsettledInvoiceRequestMockData(response I
 	r.getUnsettledInvoiceRequestMockData = append(r.getUnsettledInvoiceRequestMockData, response)
 }
 
-func (r *MockRepositoryService) SetListInvoiceRequestsMockData(response InvoiceRequestsMockData) {
+func (r *MockRepositoryService) SetListInvoiceRequestsByPromotionCodeAndSessionIDMockData(response InvoiceRequestsMockData) {
+	r.listInvoiceRequestsByPromotionCodeAndSessionIDMockData = append(r.listInvoiceRequestsByPromotionCodeAndSessionIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetListInvoiceRequestsBySessionIDMockData(response InvoiceRequestsMockData) {
+	r.listInvoiceRequestsBySessionIDMockData = append(r.listInvoiceRequestsBySessionIDMockData, response)
+}
+
+func (r *MockRepositoryService) SetListUnsettledInvoiceRequestsMockData(response InvoiceRequestsMockData) {
 	r.listUnsettledInvoiceRequestsMockData = append(r.listUnsettledInvoiceRequestsMockData, response)
 }
 

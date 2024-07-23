@@ -61,7 +61,7 @@ func (r *MockRepositoryService) ListNodes(ctx context.Context) ([]db.Node, error
 	return response.Nodes, response.Error
 }
 
-func (r *MockRepositoryService) ListActiveNodes(ctx context.Context) ([]db.Node, error) {
+func (r *MockRepositoryService) ListActiveNodes(ctx context.Context, isLsp bool) ([]db.Node, error) {
 	if len(r.listActiveNodesMockData) == 0 {
 		return []db.Node{}, nil
 	}

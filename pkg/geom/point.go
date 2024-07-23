@@ -6,7 +6,7 @@ import (
 	"github.com/paulmach/orb"
 )
 
-func NewPoint(latitude string, longitude string) (orb.Point, error) {
+func NewPoint(longitude, latitude string) (orb.Point, error) {
 	var latitudeFloat, longitudeFloat float64
 	var err error
 
@@ -18,5 +18,5 @@ func NewPoint(latitude string, longitude string) (orb.Point, error) {
 		return orb.Point{}, err
 	}
 
-	return orb.Point{latitudeFloat, longitudeFloat}, nil
+	return orb.Point{longitudeFloat, latitudeFloat}, nil
 }

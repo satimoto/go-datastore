@@ -23,5 +23,5 @@ UPDATE command_stops SET (
     status,
     last_updated
   ) = ($2, $3)
-  WHERE session_id = $1 AND status = 'REQUESTED'
+  WHERE session_id = $1
   RETURNING *;

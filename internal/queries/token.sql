@@ -38,7 +38,7 @@ SELECT * FROM tokens
 
 -- name: GetTokenByUserID :one
 SELECT * FROM tokens
-  WHERE user_id = $1 AND type = $2
+  WHERE user_id = $1 AND type = $2 AND valid = true
   LIMIT 1;
 
 -- name: ListTokens :many

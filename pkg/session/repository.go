@@ -26,6 +26,7 @@ type SessionRepository interface {
 	ListInProgressSessionsByUserID(ctx context.Context, userID int64) ([]db.Session, error)
 	ListSessionChargingPeriods(ctx context.Context, sessionID int64) ([]db.ChargingPeriod, error)
 	ListSessionInvoices(ctx context.Context, arg db.ListSessionInvoicesParams) ([]db.SessionInvoice, error)
+	ListSessionInvoicesByNodeID(ctx context.Context, arg db.ListSessionInvoicesByNodeIDParams) ([]db.SessionInvoice, error)
 	ListSessionInvoicesBySessionID(ctx context.Context, sessionID int64) ([]db.SessionInvoice, error)
 	ListSessionInvoicesByUserID(ctx context.Context, arg db.ListSessionInvoicesByUserIDParams) ([]db.SessionInvoice, error)
 	ListSessionUpdatesBySessionID(ctx context.Context, sessionID int64) ([]db.SessionUpdate, error)
